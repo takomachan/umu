@@ -1,0 +1,941 @@
+module struct {
+	val (sin, cos, exp, log)
+} = UMU::MATH
+
+module struct {
+	val random
+} = UMU::IO
+
+;;
+
+
+#############################
+########  CHAPTER 1  ########
+#############################
+
+print "\n\nCHAPTER 1" ;;
+
+
+
+#######################
+#### SECTION 1.1.1 ####
+#######################
+
+print "\n\nSECTION 1.1.1" ;;
+
+#### interpreter examples ####
+
+486 ;;
+# -> 486
+
+137 + 349 ;;
+# -> 486
+
+1000 - 334 ;;
+# -> 666
+
+5 * 99 ;;
+# -> 495
+
+10 / 5 ;;
+# -> 2
+
+2.7 + 10.0 ;;
+# -> 12.7
+
+
+21 + 35 + 12 + 7 ;;
+# -> 75
+
+25 * 4 * 12 ;;
+# -> 1200
+
+
+(3 * 5) + (10 - 6) ;;
+# -> 19
+
+(3 * ((2 * 4) + (3 + 5))) + ((10 - 7) + 6) ;;
+# -> 57
+
+(
+	3 * (
+		(2 * 4) + (3 + 5)
+	)
+) + (
+	(10 - 7) + 6
+) ;;
+# -> 57
+
+
+
+#######################
+#### SECTION 1.1.2 ####
+#######################
+
+print "\n\nSECTION 1.1.2" ;;
+
+val size = 2 ;;
+
+size ;;
+# -> 2
+
+5 + size ;;
+# -> 10
+
+
+val pi = 3.14159 ;;
+
+val radius = 10.0 ;;
+
+pi * (radius * radius) ;;
+# -> 314.159
+
+
+val circumference = 2.0 * pi * radius ;;
+
+circumference ;;
+# -> 62.8318
+
+
+
+#######################
+#### SECTION 1.1.3 ####
+#######################
+
+print "\n\nSECTION 1.1.3" ;;
+
+(2 + (4 * 6)) * (3 + 5 + 7) ;;
+# -> 390
+
+
+
+#######################
+#### SECTION 1.1.4 ####
+#######################
+
+print "\n\nSECTION 1.1.4" ;;
+
+### squqre : 'a -> 'a    where { 'a <- Number }
+fun square = x -> x * x ;;
+
+square 21 ;;
+# -> 41
+
+square (2 + 5) ;;
+# -> 49
+
+square (square 3) ;;
+# -> 81
+
+
+### sum-of-squqres : 'a -> 'a -> 'a    where { 'a <- Number }
+fun sum-of-squares = x y -> square x + square y ;;
+
+sum-of-squares 3 4 ;;
+# -> 25
+
+
+### f : Int -> Int
+fun f = a -> sum-of-squares (a + 1) (a * 2) ;;
+
+f 5 ;;
+# -> 136
+
+
+# f 5
+# ^^^
+# sum-of-squares (5 + 1) (5 * 2)
+#                 ^^^^^   ^^^^^
+# sum-of-squares 6       10
+# ^^^^^^^^^^^^^^^^^^^^^^^^^
+# square 6 + square 10
+# ^^^^^^^^   ^^^^^^^^^
+# (6 * 6)  + (10 * 10)
+#  ^^^^^      ^^^^^^^
+# 36       + 100
+# ^^^^^^^^^^^^^^
+# 136
+
+
+# f 5
+# ^^^
+# sum-of-squares (5 + 1) (5 * 2)
+# ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+# square (5 + 1)      + square (5 * 2)
+# ^^^^^^^^^^^^^         ^^^^^^^^^^^^^
+# ((5 + 1) * (5 + 1)) + ((5 * 2) * (5 * 2))
+#   ^^^^^     ^^^^^       ^^^^^     ^^^^^
+# (6       * 6)       + (10      * 10)
+#  ^^^^^^^^^^^           ^^^^^^^^^^^^
+# 36                  + 100
+# ^^^^^^^^^^^^^^^^^^^^^^^^^
+# 136
+
+
+
+#######################
+#### SECTION 1.1.5 ####
+#######################
+
+print "\n\nSECTION 1.1.5" ;;
+
+### abs : Real -> Real
+fun abs = x -> cond x {
+  (>  0.0) -> x
+| (== 0.0) -> 0.0
+| (<  0.0) -> ~ x
+} ;;
+
+### abs' : Real -> Real
+fun abs' = x -> cond x {
+  (< 0.0)	-> ~ x
+| otherwise	-> x
+} ;;
+
+### abs'' : Real -> Real
+fun abs'' = x -> (
+	if (x < 0.0)	~ x
+	else			x
+) ;;
+
+
+{ x -> x > 5 andalso x < 10 } ;;
+# -> #<fn x -> ....>
+
+### (>=) : 'a -> 'a -> Bool
+fun (>=) = x y -> x > y orelse x == y ;;
+
+### (>=) : 'a -> 'a -> Bool
+fun (>=) = x y -> not (x < y) ;;
+
+
+
+#######################
+#### SECTION 1.1.6 ####
+#######################
+
+print "\n\nSECTION 1.1.6" ;;
+
+
+
+#######################
+#### SECTION 1.1.7 ####
+#######################
+
+print "\n\nSECTION 1.1.7" ;;
+
+### good-enough? : Real -> Real -> Real
+fun good-enough? = guess x -> abs ((square guess) - x) < 0.001
+
+### average : Real -> Real -> Real
+fun average = x y -> (x + y) / 2.0
+
+### improve : Real -> Real -> Real
+fun improve = guess x -> average guess (x / guess)
+
+###		sqrt-iter :  Real -> Real -> Real
+fun rec sqrt-iter = guess x -> (
+	if (good-enough? guess x)	guess
+	else						sqrt-iter (improve guess x) x
+)
+
+### sqrt : Real -> Real
+fun sqrt = x -> sqrt-iter 1.0 x ;;
+
+sqrt 9.0 ;;
+# -> 3.00009155413138
+
+sqrt (100.0 + 37.0) ;;
+# -> 11.704699917758145
+
+sqrt (sqrt 2.0 + sqrt 3.0) ;;
+# -> 1.7739279023207892
+
+square (sqrt 1000.0) ;;
+# -> 1000.000369924366
+
+
+
+#######################
+#### SECTION 1.1.8 ####
+#######################
+
+print "\n\nSECTION 1.1.8" ;;
+
+### squqre : 'a -> 'a    where { 'a <- Number }
+fun square = x -> x * x
+
+### double : 'a -> 'a    where { 'a <- Number }
+fun double = x -> x + x
+
+### squqre' : Real -> Real
+fun square' = x -> exp (double (log x))
+
+;;
+
+
+#### As in 1.1.7 ####
+
+fun good-enough? = guess x -> abs ((square guess) - x) < 0.001
+
+fun improve = guess x -> average guess (x / guess)
+
+fun rec sqrt-iter = guess x -> (
+	if (good-enough? guess x)	guess
+	else						sqrt-iter (improve guess x) x
+)
+
+fun sqrt = x -> sqrt-iter 1.0 x ;;
+
+;;
+
+
+#### Block-structured ####
+
+### sqrt' :  Real -> Real
+fun sqrt' = x -> sqrt-iter 1.0 x where {
+	fun good-enough? = guess x -> abs ((square guess) - x) < 0.001
+
+	fun improve = guess x -> average guess (x / guess)
+
+	fun rec sqrt-iter = guess x ->
+		if (good-enough? guess x)	guess
+		else						sqrt-iter (improve guess x) x
+}
+
+;;
+
+
+#### Taking advantage of lexical scoping ####
+
+### sqrt'' :  Real -> Real
+fun sqrt'' = x -> sqrt-iter 1.0 where {
+	fun good-enough? = guess -> abs ((square guess) - x) < 0.001
+
+	fun improve = guess -> average guess (x / guess)
+
+	fun rec sqrt-iter = guess ->
+		if (good-enough? guess)	guess
+		else					sqrt-iter (improve guess)
+}
+
+;;
+
+
+
+#######################
+#### SECTION 1.2.1 ####
+#######################
+
+print "\n\nSECTION 1.2.1" ;;
+
+(#
+ NOTICE:
+	Current Umu interpreter does NOT support
+				tail-call-optimization (TCO), yet.
+#)
+
+#### Recursive ####
+
+###		factorial : Int -> Int
+fun rec factorial = n -> (
+	if (n == 0)	1
+	else		n * factorial (n - 1)
+)
+
+;;
+
+
+#### Iterative ####
+
+###		fact-iter : Int -> Int -> Int -> Int
+fun rec fact-iter = product counter max-count -> (
+	if (counter > max-count)
+		product
+	else
+		fact-iter (counter * product)
+				  (counter + 1)
+				  max-count
+)
+
+### factorial' : Int -> Int
+fun factorial' = n -> fact-iter 1 1 n
+
+;;
+
+
+#### Iterative, block-structured (from footnote) ####
+
+### factorial'' : Int -> Int
+fun factorial'' = n -> iter 1 1 where {
+	fun rec iter = product counter ->
+		if (counter > n)
+			product
+		else
+			iter (counter * product)
+				 (counter + 1)
+}
+
+;;
+
+
+
+#######################
+#### SECTION 1.2.2 ####
+#######################
+
+print "\n\nSECTION 1.2.2" ;;
+
+#### Recursive ####
+
+###		fib : Int -> Int
+fun rec fib = n -> cond n {
+  (== 0)	-> 0
+| (== 1)	-> 1
+| otherwise	-> fib (n - 1) + fib (n - 2)
+}
+
+;;
+
+
+#### Iterative ####
+
+###		fib-iter : Int -> Int -> Int -> Int
+fun rec fib-iter = a b count -> (
+	if (count == 0)	b
+	else			fib-iter (a + b) a (count - 1)
+)
+
+###	fib' : Int -> Int
+fun fib' = n -> fib-iter 1 0 n
+
+;;
+
+
+#### Counting change ####
+
+### first-denomination : Int -> Int
+fun first-denomination = kinds-of-coins -> cond kinds-of-coins {
+  (== 1) -> 1
+| (== 2) -> 5
+| (== 3) -> 10
+| (== 4) -> 25
+| (== 5) -> 50
+}
+
+###		cc : Int -> Int -> Int
+fun rec cc = amount kinds-of-coins -> (
+	if (amount == 0)
+		1
+	elsif (amount < 0 orelse kinds-of-coins == 0)
+		0
+	else
+		(
+			cc	amount
+				(kinds-of-coins - 1)
+		) + (
+			cc	(amount - first-denomination kinds-of-coins)
+				kinds-of-coins
+		)
+)
+
+### count-change : Int -> Int
+fun count-change = amount -> cc amount 5
+
+;;
+
+
+count-change 10 ;;
+# -> 292
+
+
+
+#######################
+#### SECTION 1.2.3 ####
+#######################
+
+print "\n\nSECTION 1.2.3" ;;
+
+
+
+#######################
+#### SECTION 1.2.4 ####
+#######################
+
+print "\n\nSECTION 1.2.4" ;;
+
+#### Linear recursion ####
+
+###		expt : Int -> Int -> Int
+fun rec expt = b n -> (
+	if (n == 0)	1
+	else		b * expt b (n - 1)
+)
+
+;;
+
+
+#### Linear iteration ####
+
+###		expt-iter : 'a -> Int -> 'a -> 'a    where { 'a <- Number }
+fun rec expt-iter = b counter product -> (
+	if (counter == 0)	product
+	else				expt-iter b (counter - 1) (b * product)
+)
+
+### expt' : Int -> Int -> Int
+fun expt' = b n -> expt-iter b n 1
+
+;;
+
+
+#### Logarithmic iteration ####
+
+### even? : Int -> Bool
+fun even? = n -> n mod 2 == 0
+
+fun rec fast-expt = b n -> (
+	if    (n == 0)	1
+	elsif (even? n)	square (fast-expt b (n - 1))
+	else			b * fast-expt b (n - 1)
+)
+
+;;
+
+
+
+#######################
+#### SECTION 1.2.5 ####
+#######################
+
+print "\n\nSECTION 1.2.5" ;;
+
+###		gdd : Int -> Int -> Int
+fun rec gcd = a b -> (
+	if (b == 0)	a
+	else		gcd b (a mod b)
+) ;;
+
+gcd 16 28 ;;
+# -> 4
+
+gcd 206 40 ;;
+# -> 2
+
+
+
+#######################
+#### SECTION 1.2.6 ####
+#######################
+
+print "\n\nSECTION 1.2.6" ;;
+
+#### prime? ####
+
+### divides? : Int -> Int -> Bool
+fun divides? = a b -> b mod a == 0
+
+###		find-divisor : Int -> Int -> Int
+fun rec find-divisor = n test-divisor -> (
+	if    (square test-divisor > n)	n
+	elsif (divides? test-divisor n)	test-divisor
+	else							find-divisor n (test-divisor + 1)
+)
+
+### smallest-divisor : Int -> Int
+fun smallest-divisor = n -> find-divisor n 2
+
+### prime? : Int -> Bool
+fun prime? = n -> n == smallest-divisor n ;;
+
+[2, 3, 4, 5, 6, 7] |> map { x -> (x, prime? x) } ;;
+# -> [(2, TRUE), (3, TRUE), (4, FALSE), (5, TRUE), (6, FALSE), (7, TRUE)]
+
+
+#### fast-prime? ####
+
+###		expmod : Int -> Int -> Int -> Int
+fun rec expmod = base exp m -> cond exp {
+  (== 0)	-> 1
+| even?		-> square (expmod base (exp / 2) m) mod m
+| otherwise	-> (base * expmod base (exp - 1) m) mod m
+}
+
+### fermat-test : Int -> Bool
+fun fermat-test = n -> (
+	try-it (1 + random (n - 1))
+) where {
+	fun try-it = a -> expmod a n n == a
+}
+
+### fast-prime : Int -> Int -> Bool
+fun rec fast-prime? = n times -> (
+	if    (times == 0)		TRUE
+	elsif (fermat-test n)	fast-prime? n (times - 1)
+	else					FALSE
+) ;;
+
+[2, 3, 4, 5, 6, 7] |> map { x -> (x, fast-prime? x 10) } ;;
+# -> [(2, TRUE), (3, TRUE), (4, FALSE), (5, TRUE), (6, FALSE), (7, TRUE)]
+
+
+
+#####################
+#### SECTION 1.3 ####
+#####################
+
+print "\n\nSECTION 1.3" ;;
+
+### cube : 'a -> 'a    where { 'a <- Number }
+fun cube = x -> x * x * x ;;
+
+
+
+#######################
+#### SECTION 1.3.1 ####
+#######################
+
+print "\n\nSECTION 1.3.1" ;;
+
+###		sum-integers : Int -> Int -> Int
+fun rec sum-integers = a b -> (
+	if (a > b)	0
+	else		a + sum-integers (a + 1) b
+)
+
+###		sum-cubes : Int -> Int -> Int
+fun rec sum-cubes = a b -> (
+	if (a > b)	0
+	else		cube a + sum-cubes (a + 1) b
+)
+
+###		pi-sum : Real -> Real -> Real
+fun rec pi-sum = a b -> (
+	if (a > b)	0.0
+	else		1.0 / (a * (a + 2.0)) + pi-sum (a + 4.0) b
+)
+
+###		sum : ('a -> 'a) -> 'a -> ('a -> 'a) -> 'a -> 'a -> 'a
+###													where { 'a <- Number }
+fun rec sum = term a next b init -> (
+	if (a > b)	init
+	else		term a + sum term (next a) next b init
+)
+
+;;
+
+
+#### Using sum
+
+### inc : Int -> Int
+fun inc = n -> n + 1
+
+### sum-cubes' : Int -> Int -> Int
+fun sum-cubes' = a b -> sum cube a inc b 0 ;;
+
+sum-cubes' 1 10 ;;
+# -> 3025
+
+
+### identity : 'a -> 'a
+fun identity = x -> x
+
+### sum-integers' : Int -> Int -> Int
+fun sum-integers' = a b -> sum identity a inc b 0 ;;
+
+sum-integers' 1 10 ;;
+# -> 55
+
+
+### pi-sum' : Real -> Real -> Real
+fun pi-sum' = a b -> sum pi-term a pi-next b 0.0 where {
+	fun pi-term = x -> 1.0 / (x * (x + 2.0))
+	fun pi-next = x -> x + 4.0
+} ;;
+
+8.0 * pi-sum' 1.0 1000.0 ;;
+# -> 3.139592655589783 
+
+
+### integral : (Real -> Real) -> Real -> Real -> Real -> Real
+fun integral = f a b dx -> (
+	(sum f (a + dx / 2.0) add-dx b 0.0) * dx
+) where {
+	fun add-dx = x -> x + dx
+} ;;
+
+integral cube 0.0 1.0 0.01 ;;
+# -> 0.24998750000000042
+
+# integral cube 0.0 1.0 0.001 ;;
+# -> stack level too deep (SystemStackError)
+
+
+
+#######################
+#### SECTION 1.3.2 ####
+#######################
+
+print "\n\nSECTION 1.3.2" ;;
+
+### pi-sum : Real -> Real -> Real
+fun pi-sum = a b -> (
+	sum	{ x -> 1.0 / (x * (x + 2.0)) }
+		a
+		{ x -> x + 4.0 }
+		b
+		0.0
+)
+
+### integral : (Real -> Real) -> Real -> Real -> Real -> Real
+fun integral = f a b dx -> (
+	sum f
+		(a + dx / 2.0)
+		{ x -> x + dx }
+		b
+		0.0
+) * dx
+
+### plus4 : Int -> Int
+fun plus4 = x -> x + 4
+
+### plus4' : Int -> Int
+val plus4' = { x -> x + 4 }
+
+;;
+
+{ x y z -> x + y + square z } 1 2 3 ;;
+# -> 12
+
+
+#### Using let
+
+### f : Int -> Int -> Int
+fun f = x y -> (
+	f-helper (1 + x * y) (1 - y)
+) where {
+	fun f-helper = a b ->
+		x * square a +
+		y * b +
+		a * b
+}
+
+### f' : Int -> Int -> Int
+fun f' = x y -> (
+	{ a b ->
+		x * square a +
+		y * b +
+		a * b
+	} (1 + x * y) (1 - y)
+)
+
+### f'' : Int -> Int -> Int
+fun f'' = x y -> let {
+	val a = 1 + x * y
+	val b = 1 - y
+in
+	x * square a +
+	y * b +
+	a * b
+} ;;
+
+
+val x = 5 ;;
+
+let {
+	val x = 3
+in
+	x + x * 10
+} ;;
+# -> 38
+
+
+val x = 2 ;;
+
+let {
+	val x = 3
+	val y = x + 2
+in
+	x * y
+} ;;
+# -> 15	(Not a 12)
+
+(#
+ NOTICE:
+	Umu's <let> expression is same to Scheme's <let*> expression
+							like a Standard ML's <let> expression.
+#)
+
+
+### f''' : Int -> Int -> Int
+fun f''' = x y -> (
+	x * square a +
+	y * b +
+	a * b
+) where {
+	val a = 1 + x * y
+	val b = 1 - y
+} ;;
+
+
+
+#######################
+#### SECTION 1.3.3 ####
+#######################
+
+print "\n\nSECTION 1.3.3" ;;
+
+#### Half-interval method ####
+
+### close-enough? : Real -> Bool
+fun close-enough? = x y -> abs (x - y) < 0.001
+
+###		search : (Real -> Bool) -> Real -> Real -> Real
+fun rec search = f neg-point pos-point -> let {
+	val midpoint = average neg-point pos-point
+in
+	if (close-enough? neg-point pos-point)
+		midpoint
+	else let {
+		val test-value = f midpoint
+	in
+		cond test-value {
+		  positive?	-> search f neg-point midpoint
+		| negative?	-> search f midpoint  pos-point
+		| otherwise	-> midpoint
+		}
+	}
+}
+
+### half-interval-method : (Real -> Bool) -> Real -> Real -> Real
+fun half-interval-method = f a b -> let {
+	val a-value = f a
+	val b-value = f b
+in
+	if    (negative? a-value andalso positive? b-value)
+		search f a b
+	elsif (negative? b-value andalso positive? a-value)
+		search f b a
+	else
+		error ("Values are not of opposite sign: " ^ to-s a ^ " " ^ to-s b)
+} ;;
+
+half-interval-method sin 2.0 4.0 ;;
+# -> 3.14111328125
+
+half-interval-method { x -> x * x * x - 2.0 * x - 3.0 } 1.0 2.0 ;;
+# -> 1.89306640625
+
+
+#### Fixed points ####
+
+val tolerance = 0.00001
+
+### fixed-point : (Real -> Bool) -> Real -> Real
+fun fixed-point = f first-guess -> try first-guess where {
+	fun close-enough? = v1 v2 -> abs (v1 - v2) < tolerance
+
+	fun rec try = guess -> let {
+		val next = f guess
+	in
+		if (close-enough? guess next)
+			next
+		else
+			try next
+	}
+} ;;
+
+
+fixed-point cos 1.0 ;;
+# -> 0.7390822985224023
+
+fixed-point { y -> sin y + cos y } 1.0 ;;
+# -> 1.2587315962971173
+
+
+### sqrt : Real -> Real
+fun sqrt = x -> fixed-point { y -> x / y } 1.0
+
+### sqrt : Real -> Real
+fun sqrt = x -> fixed-point { y -> average y (x / y) } 1.0
+
+;;
+
+
+
+#######################
+#### SECTION 1.3.4 ####
+#######################
+
+print "\n\nSECTION 1.3.4" ;;
+
+### average-damp : ('a -> 'a) -> ('a -> 'a)    where { 'a <- Number }
+fun average-damp = f -> {
+	x -> average x (f x)
+} ;;
+
+average-damp square 10.0 ;;
+# -> 55.0
+
+### sqrt : Real -> Real
+fun sqrt = x -> (
+	fixed-point (average-damp { y -> x / y }) 1.0
+) ;;
+
+### cube-root : Real -> Real
+fun cube-root = x -> (
+	fixed-point (average-damp { y -> x / square y }) 1.0
+) ;;
+
+
+#### Newton's method ####
+
+val dx = 0.00001
+
+### deriv : ('a -> 'a) -> ('a -> 'a)
+fun deriv = g -> {
+	x -> (g (x + dx) - g x) / dx
+} ;;
+
+### cube : 'a -> 'a    where { 'a <- Number }
+fun cube = x -> x * x * x ;;
+
+deriv cube 5.0 ;;
+# -> 75.00014999664018
+
+
+### newton-transform : ('a -> 'a) -> ('a -> 'a)    where { 'a <- Number }
+fun newton-transform = g -> {
+	x -> x - g x / deriv g x
+}
+
+### newton-transform : (Real -> Real) -> Real -> Real
+fun newtons-method = g guess -> (
+	fixed-point (newton-transform g) guess
+)
+
+### sqrt : Real -> Real
+fun sqrt = x -> newtons-method { y -> square y - x } 1.0
+
+;;
+
+
+#### Fixed point of transformed function ####
+
+### fixed-point-of-transform :
+###						(Real -> Real) -> (Real -> Real) -> Real -> Real
+fun fixed-point-of-transform = g transform guess -> (
+	fixed-point (transform g) guess
+)
+
+### sqrt : Real -> Real
+fun sqrt = x -> (
+	fixed-point-of-transform { y -> x / y } average-damp 1.0
+)
+
+### sqrt' : Real -> Real
+fun sqrt' = x -> (
+	fixed-point-of-transform { y -> square y - x } newton-transform 1.0
+)
+
+;;

@@ -1,0 +1,177 @@
+module DATUM = UMU::DATUM
+
+
+#############################
+########  CHAPTER 3  ########
+#############################
+
+;; print "\n\nCHAPTER 3"
+;;
+
+
+
+#####################
+#### SECTION 3.3 ####
+#####################
+
+;; print "\n\nSECTION 3.3"
+;;
+
+
+
+#######################
+#### SECTION 3.3.3 ####
+#######################
+
+;; print "\n\nSECTION 3.3.3"
+;;
+
+###		assoc : Symbol -> @['a] -> <OPTION> (Symbol, 'a)
+fun rec assoc = key records -> (
+	if (empty? records)
+		NONE
+	else let {
+		val [record|records'] = records
+	in
+		if (key == fst record)
+			Some record
+		else
+			assoc key records'
+	}
+)
+
+### lookup-1 = Symbol -> <TABLE> @['a] -> <OPTION> 'a
+fun lookup-1 = key table -> let {
+	val opt-record = assoc key (val-of table)
+in
+	if (Some? opt-record)
+		Some (snd (val-of opt-record))
+	else
+		NONE
+}
+
+fun make-table = records -> DATUM::make @Table records
+
+
+;; val t1 = make-table [(@a, 1), (@b, 2), (@c, 3)]
+(#
+	a:	1
+	b:	2
+	c:	3
+#)
+
+;; t1
+# -> Table [(@a, 1), (@b, 2), (@c, 3)]
+
+;; lookup-1 @b t1
+# -> Some 2
+
+;; lookup-1 @d t1
+# -> NONE ()
+;;
+
+
+#### two-dimensional ####
+
+### lookup-2 = Symbol Symbol -> <TABLE> @[@['a]] -> <OPTION> 'a
+fun lookup-2 = key-1 key-2 table -> let {
+	val opt-subtable = assoc key-1 (val-of table)
+in
+	if (Some? opt-subtable) let {
+		val opt-record = assoc key-2 (snd (val-of opt-subtable))
+	in
+		if (Some? opt-record)
+			Some (snd (val-of opt-record))
+		else
+			NONE
+	} else
+		NONE
+}
+
+
+;; val t2 = make-table [
+				(@math,    [(@"+", 43), (@"-", 45), (@"*", 42)]),
+				(@letters, [(@a, 97),   (@b, 98)])
+			]
+(#
+	math:
+		+: 43
+		-: 45
+		*: 42
+	letters:
+		a: 97
+		b: 98
+#)
+
+;; t2
+# -> Table [(@math, [(@+, 43), (@-, 45), (@*, 42)]), (@letters, [(@a, 97), (@b, 98)])]
+
+;; lookup-2 @math @"-" t2
+# -> Some 45
+
+;; lookup-2 @letters @a t2
+# -> Some 97
+
+;; lookup-2 @nath @"-" t2
+# -> NONE ()
+
+;; lookup-2 @math @"/" t2
+# -> NONE ()
+;;
+
+
+#### local tables ####
+
+fun make-table' = records -> let {
+	val local-table = DATUM::make @Table records
+
+	fun lookup = key-1 key-2 -> let {
+		val opt-subtable = assoc key-1 (val-of local-table)
+	in
+		if (Some? opt-subtable) let {
+			val opt-record = assoc key-2 (snd (val-of opt-subtable))
+		in
+			if (Some? opt-record)
+				Some (snd (val-of opt-record))
+			else
+				NONE
+		} else
+			NONE
+	}
+
+	fun dispatch = m -> cond m {
+	  (== @lookup-proc)	-> lookup
+	| otherwise			-> error (
+								"Unknown operation -- TABLE: " ^ inspect m
+							)
+	}
+in
+	dispatch
+}
+
+val operation-table = make-table' [
+						(@math,    [(@"+", 43), (@"-", 45), (@"*", 42)]),
+						(@letters, [(@a, 97),   (@b, 98)])
+					]
+
+val get = operation-table @lookup-proc
+
+
+;; operation-table
+# -> #<dispatch: ....>
+
+;; get
+# -> #<lookup: ....>
+
+;; get @math @"-"
+# -> Some 45
+
+;; get @letters @a
+# -> Some 97
+
+;; get @nath @"-"
+# -> NONE ()
+
+;; get @math @"/"
+# -> NONE ()
+;;

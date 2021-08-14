@@ -1,0 +1,97 @@
+module SET-BASED-ON-LIST = struct {
+	# empty : () -> %('a)
+	fun empty = () -> wrap []
+
+	# empty? : %('a) -> BOOL
+	val empty? = val-of >> empty?
+
+	# cons : 'a -> %('a) -> %('a)
+	fun cons = x -> val-of >>_cons x >> wrap
+
+	# des : %('a) -> ('a, %('a))
+	fun des = xs -> (x, wrap _xs)
+	where { val [x|_xs] = val-of xs }
+
+
+	# make : ['a] -> %('a)
+	val make = _make >> wrap
+
+	# member? : 'a -> %('a) -> BOOL
+	fun member? = x -> val-of >> _member? x
+
+	# union : %('a) -> %('a) -> %('a)
+	fun union = xs ys -> _union (val-of xs) (val-of ys) |> wrap
+
+	# inter : %('a) -> %('a) -> %('a)
+	fun inter = xs ys -> _inter (val-of xs) (val-of ys) |> wrap
+} where {
+	# val wrap = UMU::DATUM::make @Set
+	fun wrap = x -> UMU::DATUM::make @Set x
+
+	# _member? : 'a -> ['a] -> BOOL
+	fun rec _member? = x ys -> cond ys {
+	  empty?	-> FALSE
+	| otherwise	-> if (x == y)
+						TRUE
+					else
+						_member? x ys'
+		where val [y|ys'] = ys
+	}
+
+	# _cons : 'a -> ['a] ->['a]
+	fun _cons = x xs -> if (_member? x xs)
+							xs
+						else
+							[x|xs]
+
+
+	# _make : ['a] -> ['a]
+	fun rec _make = xs -> cond xs {
+	  empty?	-> []
+	| otherwise	-> xs' |> _make |> _cons x
+		where val [x|xs'] = xs
+	}
+
+	# _union : ['a] -> ['a] -> ['a]
+	fun rec _union = xs ys -> cond xs {
+	  empty?	-> ys
+	| otherwise	-> _union xs' ys |> _cons x
+		where val [x|xs'] = xs
+	}
+
+	# _inter : ['a] -> ['a] -> ['a]
+	fun rec _inter = xs ys -> cond xs {
+	  empty?	-> []
+	| otherwise	-> _inter xs' ys
+						|> (
+							if (_member? x ys)
+								_cons x
+							else
+								id
+						)
+		where val [x|xs'] = xs
+	}
+}
+
+;;
+
+
+
+#### Examples ####
+
+module SET = SET-BASED-ON-LIST ;;
+
+SET::make [1, 1, 3, 2, 3] ;;
+# -> Set [1, 2, 3]
+
+SET::member? 1 (SET::make [1, 2, 3]) ;;
+# -> TRUE
+
+SET::member? 4 (SET::make [1, 2, 3]) ;;
+# -> FALSE
+
+SET::union (SET::make [1, 3, 5, 2]) (SET::make [4, 7, 3, 1]) ;;
+# -> Set [5, 2, 4, 7, 3, 1]
+
+SET::inter (SET::make [1, 3, 5, 2]) (SET::make [4, 7, 3, 1]) ;;
+# -> Set [1, 3]

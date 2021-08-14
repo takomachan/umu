@@ -1,0 +1,1622 @@
+module DATUM = UMU::DATUM
+
+module struct {
+	val (PI, sin, cos, atan2 => atan, sqrt)
+} = UMU::MATH
+
+
+
+########################
+#### From CHAPTER 1 ####
+########################
+
+#### From SECTION 1.1.4
+
+### squqre : 'a -> 'a    where { 'a <- Number }
+fun square = x -> x * x
+
+
+#### From SECTION 1.2.2
+
+###		fib : Int -> Int
+fun rec fib = n -> cond n {
+  (== 0)	-> 0
+| (== 1)	-> 1
+| otherwise	-> fib (n - 1) + fib (n - 2)
+}
+
+
+#### From SECTION 1.2.5
+
+###		gcd : Int -> Int -> Int
+fun rec gcd = a b -> (
+	if (b == 0)	a
+	else		gcd b (a mod b)
+)
+
+
+#### From SECTION 1.2.6
+
+### prime? : Int -> Bool
+fun prime? = n -> n == smallest-divisor n where {
+	fun divides? = a b -> b mod a == 0
+
+	fun rec find-divisor = n test-divisor -> (
+		if    (square test-divisor > n)	n
+		elsif (divides? test-divisor n)	test-divisor
+		else							find-divisor n (test-divisor + 1)
+	)
+
+	fun smallest-divisor = n -> find-divisor n 2
+}
+
+
+
+#############################
+########  CHAPTER 2  ########
+#############################
+
+;; print "\n\nCHAPTER 2"
+;;
+
+
+
+#####################
+#### SECTION 2.1 ####
+#####################
+
+;; print "\n\nSECTION 2.1"
+;;
+
+fun linear-combination = a b x y -> (
+	a * x + b * y
+)
+
+fun linear-combination' = a b x y -> (
+	add (mul a x) (mul b y)
+) where {
+	val add = (+)
+	val mul = (*)
+}
+
+
+
+#######################
+#### SECTION 2.1.1 ####
+#######################
+
+;; print "\n\nSECTION 2.1.1"
+;;
+
+val x = (1, 2)
+
+;; fst x
+# -> 1
+
+;; snd x
+# -> 2
+;;
+
+
+val x = (1, 2)
+val y = (3, 4)
+val z = (x, y)
+
+;; fst (fst z)
+# -> 1
+
+;; fst (snd z)
+# -> 3
+;;
+
+
+### make-rat : 'a -> 'b -> ('a, 'b)
+fun make-rat = n d -> (n, d)
+
+### numer : ('a, 'b) -> 'a
+fun numer = x -> fst x
+
+### denom : ('a, 'b) -> 'b
+fun denom = x -> snd x
+
+### print-rat : ('a, 'b) -> ()
+fun print-rat = x -> (
+	nl () ;
+	display (numer x) ;
+	display "/" ;
+	display (denom x)
+)
+
+
+### add-rat : ('a, 'a) -> ('a, 'a) -> ('a, 'a)    where 'a <- Number
+fun add-rat = x y -> (
+	make-rat (numer x * denom y + numer y * denom x)
+			 (denom x * denom y)
+)
+
+### sub-rat : ('a, 'a) -> ('a, 'a) -> ('a, 'a)    where 'a <- Number
+fun sub-rat = x y -> (
+	make-rat (numer x * denom y - numer y * denom x)
+			 (denom x * denom y)
+)
+
+### mul-rat : ('a, 'a) -> ('a, 'a) -> ('a, 'a)    where 'a <- Number
+fun mul-rat = x y -> (
+	make-rat (numer x * numer y)
+			 (denom x * denom y)
+)
+
+### div-rat : ('a, 'a) -> ('a, 'a) -> ('a, 'a)    where 'a <- Number
+fun div-rat = x y -> (
+	make-rat (numer x * denom y)
+			 (denom x * numer y)
+)
+
+
+;; add-rat (make-rat 3 4) (make-rat 1 2)
+# -> (10, 8)
+
+;; sub-rat (make-rat 3 4) (make-rat 1 2)
+# -> (2, 8)
+
+;; mul-rat (make-rat 3 4) (make-rat 1 2)
+# -> (3, 8)
+
+;; div-rat (make-rat 3 4) (make-rat 1 2)
+# -> (6, 4)
+;;
+
+
+val one-half = make-rat 1 2
+
+;; print-rat one-half
+# 1/2
+;;
+
+val one-third = make-rat 1 3
+
+;; print-rat (add-rat one-half one-third)
+# 5/6
+
+;; print-rat (mul-rat one-half one-third)
+# 1/6
+
+;; print-rat (add-rat one-third one-third)
+# 6/9
+;;
+
+
+fun add-rat' = x y -> (
+	make-rat (numer x * denom y + numer y * denom x)
+			 (denom x * denom y)
+) where {
+	fun make-rat = n d -> let {
+		val g = gcd n d
+	in
+		(n / g, d / g)
+	}
+}
+
+;; print-rat (add-rat' one-third one-third)
+# 2/3
+;;
+
+
+#### footnote -- alternative definitions
+
+### alter-make-rat : 'a -> 'b -> ('a, 'b)
+val alter-make-rat = (,)
+
+### alter-numer : ('a, 'b) -> 'a
+val alter-numer = fst
+
+### alter-denom : ('a, 'b) -> 'b
+val alter-denom = snd
+
+
+
+#######################
+#### SECTION 2.1.2 ####
+#######################
+
+;; print "\n\nSECTION 2.1.2"
+;;
+
+
+### make-rat'' : 'a -> 'b -> ('a, 'b)
+fun make-rat'' = n d -> (n, d)
+
+### numer'' : ('a, 'b) -> 'a
+fun numer'' = x -> let {
+	val g = gcd (fst x) (snd x)
+in
+	fst x / g
+}
+
+### denom'' : ('a, 'b) -> 'a
+fun denom'' = x -> let {
+	val g = gcd (fst x) (snd x)
+in
+	snd x / g
+}
+
+
+fun add-rat'' = x y -> (
+	make-rat (numer'' x * denom'' y + numer'' y * denom'' x)
+			 (denom'' x * denom'' y)
+) where {
+	fun make-rat = n d -> (n, d)
+}
+
+
+#######################
+#### SECTION 2.1.3 ####
+#######################
+
+;; print "\n\nSECTION 2.1.3"
+;;
+
+
+fun dispa-cons = x y -> dispatch where {
+	fun dispatch = m -> cond m {
+	  (== 0)	-> x
+	| (== 1)	-> y
+	| otherwise	-> error ("Argument not 0 or 1 -- CONS: " ^ (to-s m))
+	}
+}
+
+fun dispa-car = z -> z 0
+
+fun dispa-cdr = z -> z 1
+
+
+val x = dispa-cons 1 2
+
+;; dispa-car x
+# -> 1
+
+;; dispa-cdr x
+# -> 2
+;;
+
+
+val x = dispa-cons 1 2
+val y = dispa-cons 3 4
+val z = dispa-cons x y
+
+;; dispa-car (dispa-car z)
+# -> 1
+
+;; dispa-car (dispa-cdr z)
+# -> 3
+;;
+
+
+
+#######################
+#### SECTION 2.1.4 ####
+#######################
+
+;; print "\n\nSECTION 2.1.4"
+;;
+
+fun make-interval = a b -> (a, b)
+
+fun lower-bound = x -> fst x
+
+fun upper-bound = x -> snd x
+
+
+fun add-interval = x y -> (
+	make-interval
+		(lower-bound x + lower-bound y)
+		(upper-bound x + upper-bound y)
+)
+
+fun mul-interval = x y -> let {
+	val p1 = lower-bound x * lower-bound y
+	val p2 = lower-bound x * upper-bound y
+	val p3 = upper-bound x * lower-bound y
+	val p4 = upper-bound x * upper-bound y
+in
+	make-interval
+		(min [p1, p2, p3, p4])
+		(max [p1, p2, p3, p4])
+}
+
+fun div-interval = x y -> (
+	mul-interval
+		x
+		(make-interval
+			(1.0 / upper-bound y)
+			(1.0 / lower-bound y)
+		)
+)
+
+
+
+#######################
+#### SECTION 2.2.1 ####
+#######################
+
+;; print "\n\nSECTION 2.2.1"
+;;
+
+;; [1, 2, 3, 4]
+# -> [1, 2, 3, 4]
+;;
+
+
+val one-through-four = [1, 2, 3, 4]
+
+;; one-through-four
+# -> [1, 2, 3, 4]
+
+;; hd one-through-four
+# -> 1
+
+;; tl one-through-four
+# -> [2, 3, 4]
+
+;; [10 | one-through-four]
+# -> [10, 1, 2, 3, 4]
+
+;; [5 | one-through-four]
+# -> [5, 1, 2, 3, 4]
+;;
+
+
+fun rec list-ref = items n -> (
+	if (n == 0)
+		hd items
+	else
+		list-ref (tl items) (n - 1)
+)
+
+val squares = [1, 4, 9, 16, 25]
+
+;; list-ref squares 3
+# -> 16
+;;
+
+
+fun rec length = items -> (
+	if (empty? items)
+		0
+	else
+		1 + length (tl items)
+)
+
+val odds = [1, 3, 5, 7]
+
+;; length odds
+# -> 4
+;;
+
+
+fun length' = items -> (
+	length-iter items 0
+) where {
+	fun rec length-iter = a count -> (
+		if (empty? a)
+			count
+		else
+			length-iter (tl a) (1 + count)
+	)
+}
+
+;; length' odds
+# -> 4
+;;
+
+
+fun rec append = list1 list2 -> (
+	if (empty? list1)
+		list2
+	else
+		[hd list1 | append (tl list1) list2]
+)
+
+;; append squares odds
+# -> [1, 4, 9, 16, 25, 1, 3, 5, 7]
+
+;; append odds squares
+# -> [1, 3, 5, 7, 1, 4, 9, 16, 25]
+;;
+
+
+
+#### Mapping over lists ####
+
+fun rec scale-list = items factor -> (
+	if (empty? items)
+		[]
+	else
+		[hd items * factor | scale-list (tl items) factor]
+)
+
+;; scale-list [1, 2, 3, 4, 5] 10
+# -> [10, 20, 30, 40, 50]
+;;
+
+
+fun map = proc items -> (
+	if (empty? items)
+		[]
+	else
+		[proc (hd items) | map proc (tl items)]
+)
+
+;; map abs [~10, 2.5, ~11.6, 17]
+# -> [10, 2.5, 11.6, 17]
+
+;; map { x -> x * x } [1, 2, 3, 4]
+# -> [1, 4, 9, 16]
+;;
+
+
+fun scale-list' = items factor -> map { x -> x * factor } items
+
+;; scale-list' [1, 2, 3, 4, 5] 10
+# -> [10, 20, 30, 40, 50]
+;;
+
+
+
+#######################
+#### SECTION 2.2.2 ####
+#######################
+
+;; print "\n\nSECTION 2.2.2"
+;;
+
+;; [[1, 2] | [3, 4]]
+# -> [[1, 2], 3, 4]
+;;
+
+
+fun rec count-leaves = x -> (
+	if (x ako? List) (
+		if (empty? x)
+			0
+		else
+			count-leaves (hd x) + count-leaves (tl x)
+	) else
+		1
+)
+
+
+val x = [[1, 2] | [3, 4]]
+
+;; length x
+# -> 3
+
+;; count-leaves x
+# -> 4
+
+;; [x, x]
+# -> [[[1, 2], 3, 4], [[1, 2], 3, 4]]
+
+;; length [x, x]
+# -> 2
+
+;; count-leaves [x, x]
+# -> 8
+;;
+
+
+#### Mapping over trees ####
+
+fun rec scale-tree = tree factor -> (
+	if (tree ako? List) (
+		if (empty? tree)
+			[]
+		else
+			[
+				scale-tree (hd tree) factor
+			|
+				scale-tree (tl tree) factor
+			]
+	) else
+		tree * factor
+)
+
+;; scale-tree [1, [2, [3, 4], 5], [6, 7]] 10
+# -> [10, [20, [30, 40], 50], [60, 70]]
+;;
+
+
+fun rec scale-tree' = tree factor -> map { sub-tree ->
+	if (sub-tree ako? List)
+		scale-tree' sub-tree factor
+	else
+		sub-tree * factor
+} tree
+
+;; scale-tree' [1, [2, [3, 4], 5], [6, 7]] 10
+# -> [10, [20, [30, 40], 50], [60, 70]]
+;;
+
+
+
+#######################
+#### SECTION 2.2.3 ####
+#######################
+
+;; print "\n\nSECTION 2.2.3"
+;;
+
+###     sum-odd-squares : [Int] -> Int
+fun rec sum-odd-squares = tree -> (
+	if (tree ako? List) (
+		if (empty? tree)
+			0
+		else
+			sum-odd-squares (hd tree) + sum-odd-squares (tl tree)
+	) else (
+		if (odd? tree)
+			square tree
+		else
+			0
+	)
+)
+
+### even-fibs : Int -> [Int]
+fun even-fibs = n -> next 0 where {
+	fun rec next = k -> (
+		if (k > n)
+			[]
+		else let {
+			val f = fib k
+		in
+			if (even? f)
+				[f | next (k + 1)]
+			else
+				next (k + 1)
+		}
+	)
+}
+
+
+;; sum-odd-squares [1, [2, [3, 4], 5], [6, 7]]
+# -> 84
+
+
+;; even-fibs 10
+# -> [0, 2, 8, 34]
+;;
+
+
+#### Sequence operations ####
+
+;; map square [1, 2, 3,4, 5]
+# -> [1, 4, 9, 16, 25]
+;;
+
+
+###     filter : ('a -> Bool) -> ['a] -> ['a]    where 'a <- Top
+fun rec filter = predicate sequence -> (
+	if (empty? sequence)
+		[]
+	elsif (predicate (hd sequence))
+		[hd sequence | filter predicate (tl sequence)]
+	else
+		filter predicate (tl sequence)
+)
+
+;; filter odd? [1, 2, 3, 4, 5]
+# -> [1, 3, 5]
+;;
+
+
+###     accumulate : ('a -> 'b -> 'b) -> ['a] -> 'b   where ('a, 'b) <- Top
+fun rec accumulate = op initial sequence -> (
+	if (empty? sequence)
+		initial
+	else
+		op (hd sequence) (accumulate op initial (tl sequence))
+)
+
+;; accumulate (+) 0 [1, 2, 3, 4, 5]
+# -> 15
+
+;; accumulate (*) 1 [1, 2, 3, 4, 5]
+# -> 120
+
+;; accumulate (|) [] [1, 2, 3, 4, 5]
+# -> [1, 2, 3, 4, 5]
+;;
+
+
+fun rec enumerate-interval = low high -> (
+	if (low > high)
+		[]
+	else
+		[low | enumerate-interval (low + 1) high]
+)
+
+;; enumerate-interval 2 7
+# -> [2, 3, 4, 5, 6, 7]
+;;
+
+
+fun rec enumerate-tree = tree -> (
+	if (tree ako? List) (
+		if (empty? tree)
+			[]
+		else
+			enumerate-tree (hd tree) ++ enumerate-tree (tl tree)
+	) else
+		[tree]
+)
+
+;; enumerate-tree [1, [2, [3, 4]], 5]
+# -> [1, 2, 3, 4, 5]
+;;
+
+
+### sum-odd-squares' : [Int] -> Int
+fun sum-odd-squares' = tree -> (
+	accumulate (+) 0 (
+		map square (
+			filter odd? (
+				enumerate-tree tree
+			)
+		)
+	)
+)
+
+;; sum-odd-squares' [1, [2, [3, 4], 5], [6, 7]]
+# -> 84
+;;
+
+
+### sum-odd-squares'' : [Int] -> Int
+fun sum-odd-squares'' = tree -> (
+	tree
+	|> enumerate-tree
+	|> filter odd?
+	|> map square
+	|> accumulate (+) 0
+)
+
+;; sum-odd-squares'' [1, [2, [3, 4], 5], [6, 7]]
+# -> 84
+;;
+
+
+### sum-odd-squares''' : [Int] -> Int
+val sum-odd-squares''' = (
+	enumerate-tree
+>>	filter odd?
+>>	map	square
+>>	accumulate (+) 0
+)
+
+;; sum-odd-squares''' [1, [2, [3, 4], 5], [6, 7]]
+# -> 84
+;;
+
+
+### even-fibs' : Int -> [Int]
+fun even-fibs' = n -> (
+	accumulate (|) [] (
+		filter even? (
+			map fib (
+				enumerate-interval 0 n
+			)
+		)
+	)
+)
+
+;; even-fibs' 10
+# -> [0, 2, 8, 34]
+;;
+
+
+### even-fibs'' : Int -> [Int]
+fun even-fibs'' = n -> (
+	n
+	|> enumerate-interval 0
+	|> map fib
+	|> filter even?
+	|> accumulate (|) []
+)
+
+;; even-fibs'' 10
+# -> [0, 2, 8, 34]
+;;
+
+
+### even-fibs''' : Int -> [Int]
+val even-fibs''' = (
+	enumerate-interval 0
+>>	map fib
+>>	filter even?
+>>	accumulate (|) []
+)
+
+;; even-fibs''' 10
+# -> [0, 2, 8, 34]
+;;
+
+
+### list-fib-squares : Int -> [Int]
+fun list-fib-squares = n -> (
+	accumulate (|) [] (
+		map square (
+			map fib (
+				enumerate-interval 0 n
+			)
+		)
+	)
+)
+
+;; list-fib-squares 10
+# -> [0, 1, 1, 4, 9, 25, 64, 169, 441, 1156, 3025]
+;;
+
+
+### product-of-squares-of-odd-elements : [Int] -> Int
+fun product-of-squares-of-odd-elements = sequence -> (
+	accumulate (*) 1 (
+		map square (
+			filter odd? sequence
+		)
+	)
+)
+
+;; product-of-squares-of-odd-elements [1, 2, 3, 4, 5] ;;
+# -> 225
+;;
+
+
+(#
+fun salary-of-highest-paid-programmer = records -> (
+	accumulate { x y -> max [x, y] } 0 (
+		map salary (
+			filter programmer? records
+		)
+	)
+)
+
+fun salary-of-highest-paid-programmer' = records -> (
+	max (
+		map salary (
+			filter programmer? records
+		)
+	)
+)
+#)
+
+
+#### Nested mappings ####
+
+fun enumerate-pair = n -> (
+	accumulate (++) [] (
+		map { i ->
+			map { j -> (i, j) } (
+				enumerate-interval 1 (i - 1)
+			)
+		} (
+			enumerate-interval 1 n
+		)
+	)
+)
+
+;; enumerate-pair 4
+# -> [(2, 1), (3, 1), (3, 2), (4, 1), (4, 2), (4, 3), (5, 1), (5, 2), (5, 3), (5, 4), (6, 1), (6, 2), (6, 3), (6, 4), (6, 5)]
+;;
+
+
+fun flatmap = proc seq -> accumulate (++) [] (map proc seq)
+
+fun prime-sum-pairs = n -> (
+	map make-pair-sum (
+		filter prime-sum? (
+			flatmap { i ->
+				map { j -> (i, j) } (
+					enumerate-interval 1 (i - 1)
+				)
+			} (
+				enumerate-interval 1 n
+			)
+		)
+	)
+) where {
+	fun make-pair-sum = (i, j) -> (i, j, i + j)
+
+	fun prime-sum? = (i, j) -> prime? (i + j)
+}
+
+;; prime-sum-pairs 6
+# -> [(2, 1, 3), (3, 2, 5), (4, 1, 5), (4, 3, 7), (5, 2, 7), (6, 1, 7), (6, 5, 11)]
+;;
+
+
+fun rec permutations = s -> (
+	if (empty? s)				## empty set?
+		[[]]					## sequence containing empty set
+	else
+		flatmap { x ->
+			map { p -> [x|p] } (
+				permutations (remove x s)
+			)
+		} s
+) where {
+	fun remove = item sequence -> filter { x -> x \= item } sequence
+}
+
+;; permutations []
+# -> [[]]
+
+;; permutations [1]
+# -> [[1]]
+
+;; permutations [1, 2]
+# -> [[1, 2], [2, 1]]
+
+;; permutations [1, 2, 3]
+# -> [[1, 2, 3], [1, 3, 2], [2, 1, 3], [2, 3, 1], [3, 1, 2], [3, 2, 1]]
+;;
+
+
+
+#######################
+#### SECTION 2.2.4 ####
+#######################
+
+;; print "\n\nSECTION 2.2.4"
+;;
+
+
+
+
+#####################
+#### SECTION 2.3 ####
+#####################
+
+;; print "\n\nSECTION 2.3"
+;;
+
+
+
+#######################
+#### SECTION 2.3.1 ####
+#######################
+
+;; print "\n\nSECTION 2.3.1"
+;;
+
+
+;; [@a, @b, @c, @d]
+# -> [@a, @b, @c, @d]
+
+;; [23, 45, 17]
+# -> [23, 45, 17]
+
+;; [(@Norah, 17), (@Molly, 14), (@Anna, 11), (@Lauren, 11), (@Charlotte, 8)]
+# -> [(@Norah, 17) (@Molly, 14) (@Anna, 11) (@Lauren, 11) (@Charlotte, 8)]
+;;
+
+
+# (23 + 45) * (x + 9)
+
+# fun rec fact = n -> if (n == 1) 1 else fact (n - 1)
+
+
+val a = 1
+val b = 2
+
+;; [a, b]
+# -> [1, 2]
+
+;; [@a, @b]
+# -> [@a, @b]
+
+;; [@a, 2]
+# -> [@a, 2]
+
+
+;; hd [@a, @b, @c]
+# -> @a
+
+;; tl [@a, @b, @c]
+# -> [@b, @c]
+;;
+
+
+fun rec memq = item x -> (
+	if (empty? x)
+		FALSE
+	elsif (item == hd x)
+		x
+	else
+		memq item (tl x)
+)
+
+;; memq @apple [@pear, @banana, @prune]
+# -> FALSE
+
+;; memq @apple [@x, [@apple, @sauce], @y, @apple, @pear]
+# -> [@apple, @pear]
+;;
+
+
+
+#######################
+#### SECTION 2.3.2 ####
+#######################
+
+;; print "\n\nSECTION 2.3.2"
+;;
+
+#### representing algebraic expressions
+
+fun number? = x -> x ako? Int
+
+fun variable? = x -> x ako? Symbol
+
+fun same-variable? = v1 v2 -> (
+	variable? v1 andalso variable? v2 andalso v1 == v2
+)
+
+fun make-sum = a1 a2 -> (@"+", a1, a2)
+
+fun make-product = a1 a2 -> (@"*", a1, a2)
+
+fun sum? = x -> x ako? Tuple andalso x.1 == @"+"
+
+fun addend = s -> s.2
+
+fun augend = s -> s.3
+
+fun product? = x -> x ako? Tuple andalso x.1 == @"*"
+
+fun multiplier = s -> s.2
+
+fun multiplicand = s -> s.3
+
+
+fun rec deriv = exp var -> cond exp {
+  number?	-> 0
+| variable?	-> if (same-variable? exp var) 1 else 0
+| sum?		-> make-sum
+					(deriv (addend exp) var)
+					(deriv (augend exp) var)
+| product?	-> make-sum
+					(make-product
+						(multiplier exp)
+						(deriv (multiplicand exp) var)
+					) (make-product
+						(deriv (multiplier exp) var)
+						(multiplicand exp)
+					)
+| otherwise	-> error ("unknown expression type -- DERIV: " ^ inspect exp)
+}
+
+;; deriv (@"+", @x, 3) @x
+# (@+, 1, 0)
+
+;; deriv (@"*", @x, @y) @x
+# (@+, (@*, @x, 0), (@*, 1, @y))
+
+;; deriv (@"*", (@"*", @x, @y), (@"+", @x, 3)) @x
+# (@+, (@*, (@*, @x, @y), (@+, 1, 0)),
+#      (@*, (@+, (@*, @x, 0), (@*, 1, @y)),
+#      (@+, @x, 3)))
+;;
+
+
+#### With simplification
+
+fun eq-number? = exp num -> number? exp andalso exp == num
+
+fun make-sum' = a1 a2 -> (
+	if    (eq-number? a1 0) a2
+	elsif (eq-number? a1 0) a1
+	elsif (number? a1 andalso number? a2) a1 + a2
+	else  (@"+", a1, a2)
+)
+
+fun make-product' = m1 m2 -> (
+	if    (eq-number? m1 0 orelse eq-number? m2 0) 0
+	elsif (eq-number? m1 1) m2
+	elsif (eq-number? m2 1) m1
+	elsif (number? m1 andalso number? m2) m1 * m2
+	else  (@"*", m1, m2)
+)
+
+fun rec deriv' = exp var -> cond exp {
+  number?	-> 0
+| variable?	-> if (same-variable? exp var) 1 else 0
+| sum?		-> make-sum'
+					(deriv' (addend exp) var)
+					(deriv' (augend exp) var)
+| product?	-> make-sum'
+					(make-product'
+						(multiplier exp)
+						(deriv' (multiplicand exp) var)
+					) (make-product'
+						(deriv' (multiplier exp) var)
+						(multiplicand exp)
+					)
+| otherwise	-> error ("unknown expression type -- DERIV: " ^ inspect exp)
+}
+
+;; deriv' (@"+", @x, 3) @x
+# 1
+
+;; deriv' (@"*", @x, @y) @x
+# @y
+
+;; deriv' (@"*", (@"*", @x, @y), (@"+", @x, 3)) @x
+# (@+, (@*, @x, @y), (@*, @y, (@+, @x, 3)))
+;;
+
+
+
+#######################
+#### SECTION 2.3.3 ####
+#######################
+
+;; print "\n\nSECTION 2.3.3"
+;;
+
+#### UNORDERED
+
+fun rec element-of-set? = x set -> (
+	if    (empty? set)	FALSE
+	elsif (x == hd set)	TRUE
+	else				element-of-set? x (tl set)
+)
+
+fun adjoin-set = x set -> (
+	if (element-of-set? x set)	set
+	else						[x|set]
+)
+
+fun rec intersection-set = set1 set2 -> (
+	if (empty? set1 orelse empty? set2)
+		[]
+	elsif (element-of-set? (hd set1) set2)
+		[hd set1 | intersection-set (tl set1) set2]
+	else
+		intersection-set (tl set1) set2
+)
+
+;; intersection-set [1, 3, 5, 2] [4, 7, 3, 1]
+# -> [1, 3]
+;;
+
+
+#### ORDERED
+
+fun rec element-of-set'? = x set -> (
+	if    (empty? set)	FALSE
+	elsif (x == hd set)	TRUE
+	elsif (x <  hd set)	FALSE
+	else				element-of-set'? x (tl set)
+)
+
+fun rec intersection-set' = set1 set2 -> (
+	if (empty? set1 orelse empty? set2)
+		[]
+	else let {
+		val x1 = hd set1
+		val x2 = hd set2
+	in
+		cond x1 {
+		  (== x2) -> [x1 | intersection-set' (tl set1) (tl set2)]
+		| (<  x2) -> intersection-set' (tl set1) set2
+		| (>  x2) -> intersection-set' set1      (tl set2)
+		}
+	}
+)
+
+;; intersection-set' [1, 2, 3, 5] [1, 3, 4, 7]
+# -> [1, 3]
+;;
+
+
+#### BINARY TREES
+
+fun entry = tree -> tree.1
+
+fun left-branch = tree -> tree.2
+
+fun right-branch = tree -> tree.3
+
+fun make-tree = entry left right -> (entry, left, right)
+
+fun rec element-of-set? = x set -> (
+	if (set ako? List andalso empty? set)
+		FALSE
+	elsif (x == entry set)
+		TRUE
+	elsif (x <  entry set)
+		element-of-set? x (left-branch set)
+	elsif (x >  entry set)
+			element-of-set? x (right-branch set)
+	else
+		error "ABORT"
+)
+
+fun rec adjoin-set = x set -> (
+	if (set ako? List andalso empty? set)
+		make-tree x [] []
+	elsif (x == entry set)
+		set
+	elsif (x <  entry set)
+		make-tree
+			(entry set)
+			(adjoin-set x (left-branch set))
+			(right-branch set)
+	elsif (x >  entry set)
+		make-tree
+			(entry set)
+			(left-branch set)
+			(adjoin-set x (right-branch set))
+	else
+		error "ABORT"
+)
+
+val s = (7, (3, (1, [], []), (5, [], [])), (9, [], (11, [], [])))
+(#
+	7 --+-- 3 --+-- 1
+		|		+-- 5
+		|
+		+-- 9 --+-- none
+				+-- 11
+#)
+
+;; adjoin-set 4 s
+# -> (7, (3, (1, [], []), (5, (4, [], []), [])), (9, [], (11, [], [])))
+(#
+	7 --+-- 3 --+-- 1
+		|		+-- 5 --+-- 4
+		|				+-- none
+		|
+		+-- 9 --+-- none
+				+-- 11
+#)
+
+;; adjoin-set 6 s
+# -> (7, (3, (1, [], []), (5, [], (6, [], []))), (9, [], (11, [], [])))
+(#
+	7 --+-- 3 --+-- 1
+		|		+-- 5 --+-- none
+		|				+-- 6
+		|
+		+-- 9 --+-- none
+				+-- 11
+#)
+
+;; adjoin-set 8 s
+# -> (7, (3, (1, [], []), (5, [], [])), (9, (8, [], []), (11, [], [])))
+(#
+	7 --+-- 3 --+-- 1
+		|		+-- 5
+		|
+		+-- 9 --+-- 8
+				+-- 11
+#)
+
+;; adjoin-set 12 s
+# -> (7, (3, (1, [], []), (5, [], [])), (9, [], (11, [], (12, [], []))))
+(#
+	7 --+-- 3 --+-- 1
+		|		+-- 5
+		|
+		+-- 9 --+-- none
+				+-- 11 --+-- none
+						 +-- 12
+#)
+;;
+
+
+#### INFORMATION RETRIEVAL
+
+(#
+fun lookup = given-key set-of-records -> (
+	if (empty? set-of-records)
+		FALSE
+	elsif (given-key == key (hd set-of-records))
+		hd set-of-records
+	else
+		lookup given-key (tl set-of-records)
+)
+#)
+
+
+
+#######################
+#### SECTION 2.3.4 ####
+#######################
+
+;; print "\n\nSECTION 2.3.4"
+;;
+
+#### representing ####
+
+fun make-leaf = symbol weight -> (@leaf, symbol, weight)
+
+fun leaf? = object -> object ako? Tuple andalso object.1 == @leaf
+
+fun symbol-leaf = x -> x.2
+
+fun weight-leaf = x -> x.3
+
+
+fun symbols = tree -> (
+	if (leaf? tree)
+		[symbol-leaf tree]
+	else
+		tree.3
+)
+
+fun weight = tree -> (
+	if (leaf? tree)
+		weight-leaf tree
+	else
+		tree.4
+)
+
+fun make-code-tree = left right -> (
+	left,
+	right,
+	symbols left ++ symbols right,
+	weight left  +  weight right
+)
+
+fun left-branch = tree -> tree.1
+
+fun right-branch = tree -> tree.2
+
+
+#### decoding ####
+
+fun decode = bits tree -> decode-1 bits tree where {
+	fun choose-branch = bit branch -> cond bit {
+	  (== 0)	-> left-branch branch
+	| (== 1)	-> right-branch branch
+	| otherwise	-> error ("bad bit -- CHOOSE-BRANCH: " ^ inspect bit)
+	}
+
+	fun rec decode-1 = bits current-branch -> (
+		if (empty? bits)
+			[]
+		else let {
+			val next-branch = choose-branch (hd bits) current-branch
+		in
+			if (leaf? next-branch)
+				[symbol-leaf next-branch | decode-1 (tl bits) tree]
+			else
+				decode-1 (tl bits) next-branch
+		}
+	)
+}
+
+
+val tree = (make-code-tree
+	(make-leaf @A 8)
+	(make-code-tree
+		(make-code-tree
+			(make-leaf @B 3)
+			(make-code-tree
+				(make-leaf @C 1)
+				(make-leaf @D 1)
+			)
+		)
+		(make-code-tree
+			(make-code-tree
+				(make-leaf @E 1)
+				(make-leaf @F 1)
+			)
+			(make-code-tree
+				(make-leaf @G 1)
+				(make-leaf @H 1)
+			)
+		)
+	)
+)
+
+;; tree
+(# -> (
+	(@leaf, @A, 8),
+	(
+		(
+			(@leaf, @B, 3),
+			(
+				(@leaf, @C, 1),
+				(@leaf, @D, 1),
+				[@C, @D],
+				2
+			),
+			[@B, @C, @D], 5
+		),
+		(
+			(
+				(@leaf, @E, 1),
+				(@leaf, @F, 1),
+				[@E, @F], 2
+			),
+			(
+				(@leaf, @G, 1),
+				(@leaf, @H, 1),
+				[@G, @H], 2
+			),
+			[@E, @F, @G, @H], 4
+		),
+		[@B, @C, @D, @E, @F, @G, @H], 9
+	),
+	[@A, @B, @C, @D, @E, @F, @G, @H], 17
+)
+#)
+;;
+
+val bits = [
+	1, 0, 0, 0, 1, 0, 1, 0, 0, 1,
+	0, 1, 1, 0, 1, 1, 0, 0, 0, 1,
+	1, 0, 1, 0, 1, 0, 0, 1, 0, 0,
+	0, 0, 0, 1, 1, 1, 0, 0, 1, 1,
+	1, 1
+]
+
+;; decode bits tree
+# -> [@B, @A, @C, @A, @D, @A, @E, @A, @F, @A, @B, @B, @A, @A, @A, @G, @A, @H]
+;;
+
+
+#### sets ####
+
+
+
+#####################
+#### SECTION 2.4 ####
+#####################
+
+;; print "\n\nSECTION 2.4"
+;;
+
+
+
+#######################
+#### SECTION 2.4.1 ####
+#######################
+
+;; print "\n\nSECTION 2.4.1"
+;;
+
+(#
+;; make-from-real-imag (real-part x) (imag-part x)
+
+;; make-from-mag-ang (magnitude z) (angle z)
+#)
+;;
+
+
+(#
+fun add-complex = z1 z2 -> (
+	make-from-real-imag	(real-part z1 + real-part z2)
+						(imag-part z1 + imag-part z2)
+)
+
+fun sub-complex = z1 z2 -> (
+	make-from-real-imag	(real-part z1 - real-part z2)
+						(imag-part z1 - imag-part z2)
+)
+
+fun mul-complex = z1 z2 -> (
+	make-from-mag-ang	(magnitude z1 * magnitude z2)
+						(angle z1     + angle z2)
+)
+
+fun div-complex = z1 z2 -> (
+	make-from-mag-ang	(magnitude z1 / magnitude z2)
+						(angle z1     - angle z2)
+)
+#)
+
+
+#### Ben (rectangular) ####
+
+(#
+fun real-part = z -> fst z
+
+fun imag-part = z -> snd z
+
+fun magnitude = z -> sqrt (
+	square (real-part z) + square (imag-part z)
+)
+
+fun angle = z -> (
+	atan (imag-part z) (real-part z)
+)
+
+fun make-from-real-imag = x y -> (x, y)
+
+fun make-from-mag-ang = r a -> (r * cos a, r * sin a)
+#)
+
+
+#### Alyssa (polar) ####
+
+(#
+fun magnitude = z -> z.1
+
+fun angle = z -> z.2
+
+fun real-part = z -> magnitude z * cos (angle z)
+
+fun imag-part = z -> magnitude z * sin (angle z)
+
+fun make-from-real-imag = x y -> (
+	(sqrt (square x + square y), atan y x)
+)
+
+fun make-from-mag-ang = r a -> (r, a)
+#)
+
+
+
+#######################
+#### SECTION 2.4.2 ####
+#######################
+
+;; print "\n\nSECTION 2.4.2"
+;;
+
+fun attach-tag = type-tag contents -> DATUM::make type-tag contents
+
+fun type-tag = datum' -> DATUM::tag datum'
+
+fun contents = datum' -> DATUM::content datum'
+
+
+fun rectanglar? = z -> type-tag z == @Rectanglar
+
+fun polar? = z -> type-tag z == @Polar
+
+
+#### Ben (rectangular) ####
+
+fun real-part-rectanglar = z -> fst z
+
+fun imag-part-rectanglar = z -> snd z
+
+fun magnitude-rectanglar = z -> sqrt (
+	square (real-part-rectanglar z) + square (imag-part-rectanglar z)
+)
+
+fun angle-rectanglar = z -> (
+	atan (imag-part-rectanglar z) (real-part-rectanglar z)
+)
+
+fun make-from-real-imag-rectanglar = x y -> (
+	attach-tag @Rectanglar (x, y)
+)
+
+fun make-from-mag-ang-rectanglar = r a -> (
+	attach-tag @Rectanglar (r * cos a, r * sin a)
+)
+
+
+#### Alyssa (polar) ####
+
+fun magnitude-polar = z -> z.1
+
+fun angle-polar = z -> z.2
+
+fun real-part-polar = z -> magnitude-polar z * cos (angle-polar z)
+
+fun imag-part-polar = z -> magnitude-polar z * sin (angle-polar z)
+
+fun make-from-real-imag-polar = x y -> (
+	attach-tag @Polar (sqrt (square x + square y), atan y x)
+)
+
+fun make-from-mag-ang-polar = r a -> (
+	attach-tag @Polar (r, a)
+)
+
+
+#### Generic selectors ####
+
+fun real-part = z -> cond z {
+  rectanglar?	-> real-part-rectanglar (contents z)
+| polar?		-> real-part-polar      (contents z)
+| otherwise		-> error ("Unknown type -- REAL-PART: " ^ inspect z)
+}
+
+
+fun imag-part = z -> cond z {
+  rectanglar?	-> imag-part-rectanglar (contents z)
+| polar?		-> imag-part-polar      (contents z)
+| otherwise		-> error ("Unknown type -- IMAG-PART: " ^ inspect z)
+}
+
+
+fun magnitude = z -> cond z {
+  rectanglar?	-> magnitude-rectanglar (contents z)
+| polar?		-> magnitude-polar      (contents z)
+| otherwise		-> error ("Unknown type -- MAGNITUDE: " ^ inspect z)
+}
+
+
+fun angle = z -> cond z {
+  rectanglar?	-> angle-rectanglar (contents z)
+| polar?		-> angle-polar      (contents z)
+| otherwise		-> error ("Unknown type -- ANGLE: " ^ inspect z)
+}
+
+
+#### Constructors for complex numbers ####
+
+fun make-from-real-imag = x y -> make-from-real-imag-rectanglar x y
+
+fun make-from-mag-ang =  r a -> make-from-mag-ang-polar r a
+
+
+#### same as before ####
+
+fun add-complex = z1 z2 -> (
+	make-from-real-imag
+		(real-part z1 + real-part z2)
+		(imag-part z1 + imag-part z2)
+)
+
+fun sub-complex = z1 z2 -> (
+	make-from-real-imag
+		(real-part z1 - real-part z2)
+		(imag-part z1 - imag-part z2)
+)
+
+fun mul-complex = z1 z2 -> (
+	make-from-mag-ang
+		(magnitude z1 * magnitude z2)
+		(angle z1     + angle z2)
+)
+
+fun div-complex = z1 z2 -> (
+	make-from-mag-ang
+		(magnitude z1 / magnitude z2)
+		(angle z1     - angle z2)
+)
+
+
+;; make-from-real-imag 1.0 2.0
+# -> Rectanglar (1.0, 2.0)
+
+;; make-from-mag-ang 2.0 0.0
+# -> Polar (2.0, 0.0)
+
+;; make-from-mag-ang 2.0 PI
+# -> Polar (2.0, 3.141592653589793)
+
+;; add-complex (make-from-real-imag 1.0 2.0) (make-from-real-imag 2.0 3.0)
+# -> Rectanglar (3.0, 5.0)
+
+;; sub-complex (make-from-real-imag 1.0 2.0) (make-from-real-imag 2.0 3.0)
+# -> Rectanglar (~1.0, ~1.0)
+
+;; mul-complex (make-from-real-imag 1.0 2.0) (make-from-real-imag 2.0 3.0)
+# -> Polar (8.06225774829855, 1.0516502125483735) ??? --> FIXME!!
+
+
+
+#######################
+#### SECTION 2.4.3 ####
+#######################
+
+;; print "\n\nSECTION 2.4.3"
+;;
+
+
+
+#####################
+#### SECTION 2.5 ####
+#####################
+
+;; print "\n\nSECTION 2.5"
+;;

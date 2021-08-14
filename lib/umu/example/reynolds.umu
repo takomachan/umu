@@ -1,0 +1,562 @@
+(#
+ Implementation of REYNOLDS's Definional Interpretor
+
+ Reynolds, J. C. :
+   Definitional Interpretors
+   for Higher-Oreder Programming Languages,
+   Higer-Order and Symbolic Computation, 11, 363-397 (1998),
+   Proceedings of 25h ACM National Conference, 1971, pp. 717-740
+
+ 木村泉, 米澤明憲 :
+   第9章 算法表現(プログラム)の意味論,
+   算法表現論, 岩波講座情報科学12, 岩波書店, 1982
+
+	   上記論文のInterpreter I と II を元にして、
+	   古典的な操作的意味論を解説
+#)
+
+
+
+######## Error ########
+
+module ERROR = struct {
+	# abort : (String, 'a) -> ()
+	fun abort		= (msg, x) -> _error ("Assertion Fail",		msg, x)
+
+	# syntax : (String, 'a) -> ()
+	fun syntax		= (msg, x) -> _error ("Syntax Error",		msg, x)
+
+	# name : (String, 'a) -> ()
+	fun name		= (msg, x) -> _error ("Name Error",			msg, x)
+
+	# application : (String, 'a) -> ()
+	fun application	= (msg, x) -> _error ("Application Error",	msg, x)
+
+	# type' : (String, 'a) -> ()
+	fun type'		= (msg, x) -> _error ("Type Error",			msg, x)
+} where {
+	fun _error = (category, msg, x) ->
+		error ("[" ^ category ^ "] " ^ msg ^ inspect x)
+}
+
+
+
+(######## Expression ########
+
+<EXP> = <CONST> + <VAR> + <APPL> + <LAMBDA> + <COND> + <LETREC>
+
+<APPL>   = [opr: <EXP>, opnd: <EXP>]
+<LAMBDA> = [fp: <VAR>, body: <EXP>]
+<COND>   = [prem: <EXP>, conc: <EXP>, altr: <EXP>]
+<LETREC> = [dvar: <VAR>, dexp: <LAMBDA>, body: <EXP>]
+
+############################)
+
+module EXP = struct {
+	#### Constructor ####
+
+	# mk-const : Int -> <CONST>
+	fun mk-const = x -> DATUM::make @Const x
+
+	# mk-var : Symbol -> <VAR>
+	fun mk-var = x -> DATUM::make @Var x
+
+	# mk-appl : (<EXP>, <EXP>) -> <APPL>
+	fun mk-appl = (opr, opnd) -> DATUM::make @Appl (opr, opnd)
+
+	# mk-lambda : (<VAR>, <EXP>) -> <LAMBDA>
+	fun mk-lambda = (fp, body) -> DATUM::make @Lambda (fp, body)
+
+	# mk-cond : (<EXP>, <EXP>, <EXP>) -> <COND>
+	fun mk-cond = (prem, conc, altr) ->
+		DATUM::make @Cond (prem, conc, altr)
+
+	# mk-letrec : (<VAR>, <LAMBDA>, <EXP>) -> <LETREC>
+	fun mk-letrec = (dvar, dexp, body) ->
+		DATUM::make @Letrec (dvar, dexp, body)
+
+
+	#### Classifier ####
+
+	# const? : <EXP> -> Bool
+	fun const? = exp -> DATUM::tag exp == @Const
+
+	# var? : <EXP> -> Bool
+	fun var? = exp -> DATUM::tag exp == @Var
+
+	# appl? : <EXP> -> Bool
+	fun appl? = exp -> DATUM::tag exp == @Appl
+
+	# lambda? : <EXP> -> Bool
+	fun lambda? = exp -> DATUM::tag exp == @Lambda
+
+	# cond? : <EXP> -> Bool
+	fun cond? = exp -> DATUM::tag exp == @Cond
+
+	# letrec? : <EXP> -> Bool
+	fun letrec? = exp -> DATUM::tag exp == @Letrec
+} where {
+	module DATUM = UMU::DATUM
+}
+
+
+
+(######## Value ########
+
+<VAL> = <INTEGER> + <BOOLEAN> + <FUNVAL>
+
+################)
+
+module VAL = struct {
+	#### Constructor ####
+
+	# Int -> <INTEGER>
+	fun mk-integer = x -> DATUM::make @Integer x
+
+	# Bool -> <BOOLEAN>
+	fun mk-boolean = x -> DATUM::make @Boolean x
+
+	# Function -> <FUNVAL>
+	fun mk-funval = x -> DATUM::make @Funval x
+
+
+	#### Classifier ####
+
+	# <VAL> -> Bool
+	fun integer? = exp -> DATUM::tag exp == @Integer
+
+	# <VAL> -> Bool
+	fun boolean? = exp -> DATUM::tag exp == @Boolean
+
+	# <VAL> -> Bool
+	fun funval?	 = exp -> DATUM::tag exp == @Funval
+} where {
+	module DATUM = UMU::DATUM
+}
+
+
+
+(######## Parser ########
+
+ <Exp> ::= <Const>	/* Undefined */
+         | <Var>	/* Undefined */
+		 | <Form>
+
+
+ <Form> ::= <Lambda> | <If> | <Letrec> | <Apply>
+
+
+ <Lambda> ::= "[" LAMBDA "," "[" <Var> ("," <Var>)* "]" "," <Exp> "]"
+
+ <If>     ::= "[" IF "," <Exp> "," <Exp> "," <Exp> "]"
+
+ <Letrec> ::= "[" LETREC "," <Var> "," <Lambda> "," <Exp> "]"
+
+ <Apply>  ::= "[" <Exp> ("," <Exp>)+ "]"
+
+########################)
+
+# parse : 'a -> <EXP>
+fun rec parse = exp -> cond exp {
+  const?	-> EXP::mk-const exp
+| var?		-> EXP::mk-var exp
+| form?		-> parse-form exp
+| otherwise	-> ERROR::syntax ("Unknown Expression: ", exp)
+} where {
+	# const? : 'a -> Bool
+	fun const? = exp -> exp ako? Int
+
+	# var? : 'a -> Bool
+	fun var? = exp -> exp ako? Symbol
+
+	# form? : 'a -> Bool
+	fun form? = exp -> exp ako? List andalso length exp >= 2
+
+
+	#### <Form> ####
+	# parse-form : List 'a -> <EXP>
+	fun parse-form = exp ->
+		if (keyword ako? Symbol)
+			cond keyword {
+			  (== @LAMBDA)	-> parse-lambda	args
+			| (== @IF)		-> parse-if		args
+			| (== @LETREC)	-> parse-letrec	args
+			| otherwise		-> parse-apply	exp
+			}
+		else
+			parse-apply	exp
+	where {
+		val [keyword|args] = exp
+
+		#### <Lambda> ####
+		# parse-lambda : List 'a -> <LAMBDA>
+		fun parse-lambda = args ->
+			fps' |> fold init-body-exp { fp body-exp ->
+					EXP::mk-lambda (parse fp, body-exp)
+				where val _ = unless (var? fp)
+								ERROR::syntax (
+									"In LAMBDA, expected a VAR, but: ",
+									fp
+								)
+			}
+		where {
+			val argc = length args
+			val _ = unless (argc == 2)
+						ERROR::syntax (
+							"For LAMBDA's arity, expected 2, but: ",
+							argc
+						)
+			val [fps, body] = args
+			val _ = unless (fps ako? List)
+						ERROR::syntax (
+							"In LAMBDA, expected a List of VAR, but: ",
+							fps
+						)
+			val _ = unless (length fps >= 1)
+						ERROR::syntax (
+							"In LAMBDA, " ^
+								"expected length of VARs is " ^
+								"1 or more, but: ",
+							fps
+						)
+			val [init-fp|fps'] = reverse fps
+			val init-body-exp = EXP::mk-lambda (parse init-fp, parse body)
+		}
+
+		#### <If> ####
+		# parse-if : List 'a -> <COND>
+		fun parse-if = args ->
+			EXP::mk-cond (parse prem, parse conc, parse altr)
+		where {
+			val argc = length args
+			val _ = unless (argc == 3)
+						ERROR::syntax (
+							"For IF's arity, expected 3, but: ",
+							argc
+						)
+			val [prem, conc, altr] = args
+		}
+
+		#### <Letrec> ####
+		# parse-letrec : List 'a -> <LETREC>
+		fun parse-letrec = args ->
+			EXP::mk-letrec (parse dvar, parse dexp, parse body)
+		where {
+			val argc = length args
+			val _ = unless (argc == 3)
+						ERROR::syntax (
+							"For LETREC's arity, expected 3, but: ",
+							argc
+						)
+			val [dvar, dexp, body] = args
+			val _ = unless (var? dvar)
+						ERROR::syntax (
+							"In LETREC, expected VAR, but: ",
+							dvar
+						) 
+			val _ = unless (form? dexp)
+						ERROR::syntax (
+							"In LETREC, expected <Form>, but: ",
+							dexp
+						) 
+			val [keyword|_] = dexp
+			val _ = unless (keyword == @LAMBDA)
+						ERROR::syntax (
+							"In LETREC, expected LAMBDA, but: ",
+							keyword
+						) 
+		}
+
+		#### <Apply> ####
+		# parse-apply : List 'a -> <APPL>
+		fun parse-apply = form ->
+			opnds |> fold init-opr-exp { opnd opr-exp ->
+				EXP::mk-appl (opr-exp, parse opnd)
+			}
+		where {
+			val [opr, init-opnd|opnds] = form
+			val init-opr-exp = EXP::mk-appl (parse opr, parse init-opnd)
+		}
+	}
+}
+
+
+
+######## Interpreter I ########
+
+# interpret-I : <EXP> -> <VAL>
+fun interpret-I = r -> eval (r, initenv)
+where {
+
+	######## Evaluator ########
+
+	# eval : (<EXP>, <ENV>) -> <VAL>		where { <ENV> = <VAR> -> <VAL> }
+	fun rec eval = (r, e) -> cond r {
+
+	#### CONST ####
+	  EXP::const? -> evcon r
+		where
+			# evcon : CONST -> INTEGER
+			fun evcon = r -> VAL::mk-integer (val-of r)
+
+	#### VAR ####
+	| EXP::var? -> e r
+
+	#### APPL ####
+	| EXP::appl? -> (val-of va-opr) va-opnd
+		where
+			val (opr, opnd) = val-of r
+
+			val va-opr  = eval (opr, e)
+			val _ = unless (VAL::funval? va-opr)
+						ERROR::application (
+							"In APPL, Expected a FUNVAL, but: ",
+							va-opr
+						)
+			val va-opnd = eval (opnd, e)
+
+	#### LAMBDA ####
+	| EXP::lambda? -> evlambda (r, e)
+
+	#### COND ####
+	| EXP::cond? -> if (val-of va-prem)
+						eval (conc, e)
+					else
+						eval (altr, e)
+		where
+			val (prem, conc, altr) = val-of r
+
+			val va-prem = eval (prem, e)
+			val _ = unless (VAL::boolean? va-prem)
+						ERROR::type' (
+							"In COND, expected a BOOLEAN, but: ",
+							va-prem
+						)
+
+	#### LETREC ####
+	| EXP::letrec? -> eval (body, e')
+		where
+			val (dvar, dexp, body)	= val-of r
+
+			val _ = unless (EXP::lambda? dexp)
+						ERROR::abort (
+							"In LETREC, expected a LAMBDA, but: ",
+							r
+						)
+
+			# e' : ENV		where { ENV = VAR -> VAL }
+			fun rec e' = x -> if (val-of x == val-of dvar)
+									evlambda (dexp, e')
+								else
+									e x
+
+	| otherwise -> ERROR::abort ("Unknown EXP: ", r)
+
+	} where {
+		# evlambda : (<LAMBDA>, <ENV>) -> <FUNVAL>
+		#				where { <ENV> = <VAR> -> <VAL> }
+		fun evlambda = (l, e) -> VAL::mk-funval {
+										a -> eval (body, ext (fp, a, e))
+									}
+		where {
+			val (fp, body) = val-of r
+
+			# ext : (VAR, VAL, ENV) -> ENV		where { ENV = VAR -> VAL }
+			fun ext = (z, a, e) -> {
+				x -> if (val-of x == val-of z)
+							a
+						else
+							e x
+			}
+		}
+	}
+
+
+
+	######## Environment ########
+
+	# initenv : <ENV>	where { <ENV> = <VAR> -> <VAL> }
+	fun initenv = x -> cond (val-of x) {
+	#### Constant
+	  (== @TRUE)	-> VAL::mk-boolean TRUE
+	| (== @FALSE)	-> VAL::mk-boolean FALSE
+
+	#### Number
+	| (== @NEG)		-> mk-unop	~     VAL::mk-integer
+	| (== @SUCC)	-> mk-unop	(+ 1) VAL::mk-integer
+	| (== @PRED)	-> mk-unop	(- 1) VAL::mk-integer
+	| (== @ADD)		-> mk-binop	(+)   VAL::mk-integer
+	| (== @SUB)		-> mk-binop	(-)   VAL::mk-integer
+	| (== @MUL)		-> mk-binop	(*)   VAL::mk-integer
+	| (== @DIV)		-> mk-binop	(/)   VAL::mk-integer
+
+	#### Relational
+	| (== @EQ)		-> mk-binop (==) VAL::mk-boolean
+	| (== @LT)		-> mk-binop (<)  VAL::mk-boolean
+
+	| otherwise		-> ERROR::name ("Unknown VAR: ", x)
+	} where {
+		# int : <VAL> -> Int
+		fun int = x ->
+			if (VAL::integer? x)
+				val-of x
+			else
+				ERROR::type' ("Expected a Int, but: ", x)
+
+		# mk-unop : (Int -> 'a) -> ('a -> <VAL>) -> <FUNVAL>
+		fun mk-unop = unop mk ->
+			VAL::mk-funval { x -> unop (int x) |> mk }
+
+		# mk-binop : (Int -> Int -> 'a) -> ('a -> <VAL>) -> <FUNVAL>
+		fun mk-binop = binop mk ->
+			VAL::mk-funval { x ->
+				VAL::mk-funval { y -> binop (int x) (int y) |> mk }
+			}
+	}
+}
+
+
+
+######## Prelude ########
+
+# Keyword
+val LAMBDA = @LAMBDA
+val IF     = @IF
+val LETREC = @LETREC
+
+# Primitive constant
+val T = @TRUE
+val F = @FALSE
+
+# Primitive numeric function
+val NEG  = @NEG
+val SUCC = @SUCC
+val PRED = @PRED
+val ADD  = @ADD
+val SUB  = @SUB
+val MUL  = @MUL
+val DIV  = @DIV
+
+# Primitive relational function
+val EQ = @EQ
+val LT = @LT
+
+# Built-in logical function
+val NOT = [LAMBDA, [@x], [IF, @x, F, T]]
+
+# Built-in relational function
+val NE = [LAMBDA, [@x, @y], [NOT, [EQ, @x, @y]]]
+val LE = [LAMBDA, [@x, @y], [NOT, [LT, @y, @x]]]
+val GT = [LAMBDA, [@x, @y],       [LT, @y, @x]]
+val GE = [LAMBDA, [@x, @y], [NOT, [LT, @x, @y]]]
+
+
+
+######## Example Runner ########
+
+fun example-run = interpret -> (
+	  print "[CONSTANT]" ;
+
+		#[INPUT] 100
+		run 100 ;
+		#[OUTPUT] -> 100
+
+		nl ()
+
+	; print "[VARIABLE]" ;
+
+		#[INPUT] TRUE
+		run T ;
+		#[OUTPUT] -> TRUE
+
+		#[INPUT] succ
+		run SUCC ;
+		#[OUTPUT] -> #<fn x -> ...>
+
+		nl ()
+
+	; print "[CONDITIONAL]" ;
+
+		#[INPUT] if TRUE 1 else 2
+		run [IF, T, 1, 2] ;
+		#[OUTPUT] -> 1
+
+		#[INPUT] if FALSE 1 else 2
+		run [IF, F, 1, 2] ;
+		#[OUTPUT] -> 2
+
+		nl ()
+
+	; print "[APPLY PRIMITIVE]" ;
+
+		#[INPUT] succ 2
+		run [SUCC, 2] ;
+		#[OUTPUT] --> 3
+
+		#[INPUT] succ succ succ 2
+		run [SUCC, [SUCC, [SUCC, 2]]] ;
+		#[OUTPUT] --> 5
+
+		#[INPUT] 1 + 2
+		run [ADD, 1, 2] ;
+		#[OUTPUT] --> 3
+
+		#[INPUT] 1 = 1
+		run [EQ, 1, 1] ;
+		#[OUTPUT] --> TRUE
+
+		nl ()
+
+	; print "[APPLY LAMBDA]" ;
+
+		#[INPUT] {x -> succ x} 2
+		run [
+			[LAMBDA, [@x], [SUCC, @x]],
+			2
+		] ;
+		#[OUTPUT] --> 3
+
+		#[INPUT] {x y z -> x - y - z} 10 1 2
+		run [
+			[LAMBDA, [@x, @y, @z], [SUB, [SUB, @x, @y], @z]],
+			10, 1, 2
+		] ;
+		#[OUTPUT] --> 7
+
+		nl ()
+
+	; print "[LETREC]" ;
+
+		#[INPUT] letrec f = x -> succ x in f 2 
+		run [LETREC, @f, [LAMBDA, [@x], [SUCC, @x]], [@f, 2]] ;
+		#[OUTPUT] --> 3
+
+		#[INPUT] letrec
+		#				fact = x -> if (x <= 1) 1 else x * fact (x - 1)
+		#			in
+		#				fact 4 
+		run [LETREC,
+			@fact, [LAMBDA, [@x],
+				[IF, [LE, @x, 1],
+					1,
+					[MUL, @x, [@fact, [SUB, @x, 1]]]
+				]
+			],
+
+			[@fact, 4]
+		] ;
+		#[OUTPUT] --> 24
+
+		nl ()
+
+) where {
+	val run = parse >> interpret >> p
+}
+
+;;
+
+
+
+# Example Runs
+
+example-run interpret-I ;;

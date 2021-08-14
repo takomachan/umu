@@ -1,0 +1,33 @@
+## Add
+fun add       = (x, y)  -> x + y
+fun curry-add = x y		-> x + y
+
+
+## factorial
+fun rec fact = x ->
+	if (x <= 1)
+		1
+	else
+		x * fact (x - 1)
+
+
+## map
+fun rec map = f xs -> cond xs {
+  empty?	-> []
+| otherwise	-> [f x | map f xs']
+	where val [x|xs'] = xs
+}
+
+
+## evev/odd
+
+fun rec	even? = x -> if (x == 0) TRUE  else odd?  (x - 1)
+and		odd?  = x -> if (x == 0) FALSE else even? (x - 1)
+
+;;
+
+
+(add (1, 2), curry-add 1 2) ;;
+fact 3 ;;
+[1,2] |> map { x -> x + 1 } ;;
+([even? 0, even? 1, even? 2], [odd? 0, odd? 1, odd? 2]) ;;

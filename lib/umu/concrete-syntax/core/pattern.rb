@@ -1,0 +1,5 @@
+require 'umu/concrete-syntax/core/pattern/result'
+require 'umu/concrete-syntax/core/pattern/abstract'
+require 'umu/concrete-syntax/core/pattern/variable'
+require 'umu/concrete-syntax/core/pattern/unit'
+require 'umu/concrete-syntax/core/pattern/container'

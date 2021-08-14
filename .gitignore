@@ -1,0 +1,14 @@
+/.bundle/
+/.yardoc
+/_yardoc/
+/coverage/
+/doc/
+/pkg/
+/spec/reports/
+/tmp/
+.DS_Store
+lib/umu/concrete-syntax/grammar.tab.rb
+lib/umu/tmdoc.home.docbook.epub
+lib/umu/tmdoc/LOG.txt
+lib/umu/tmdoc/dbook/
+lib/umu/tmdoc/html/

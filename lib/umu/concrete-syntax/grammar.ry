@@ -1,0 +1,567 @@
+class Umu::ConcreteSyntax::Parser
+
+
+convert
+	AKO		':AKO?'
+end
+
+prechigh
+	left	POW
+	left	'*' '/' MOD
+	left	'+' '-' '^'
+	left	'==' '\\=' '<' '>' '<=' '>='
+	left	'++'
+	left	'>>'
+	right	'<<'
+	left	'|>'
+	right	'<|'
+	left	AKO
+	left	ANDALSO ORELSE
+preclow
+
+
+
+rule
+
+# Program
+
+progs:
+  prog				{ result = val[0] }
+| prog ';;' progs	{ result = val[0] + val[2] }
+
+prog:
+  opt_modu_decls	{ result = val[0] }
+| expr				{ result = [val[0]] }
+
+
+
+#########################################
+####  Declaration (Module Language)  ####
+#########################################
+
+opt_modu_decls:
+  /* empty */				{ result = [] }
+| modu_decl opt_modu_decls	{ result = [val[0]] + val[1] }
+
+
+modu_decl:
+  MODULE modu_pat '=' modu_expr {
+	result = SCMD.make_module val[0].pos, val[1], val[3]
+}
+| core_decl {
+	result = SCMD.make_core val[0].pos, val[0]
+}
+
+
+
+########################################
+####  Expression (Module Language)  ####
+########################################
+
+modu_expr:
+  STRUCT '{' opt_modu_decls '}' opt_modu_where_decls {
+	result = SCME.make_struct val[0].pos, val[2], val[4]
+}
+| modu_long_ident
+
+
+# WHERE declaration (Module Language)
+
+opt_modu_where_decls:
+  /* empty */					{ result = [] }
+| WHERE '{' opt_modu_decls '}'	{ result = val[2] }
+
+
+# Long identifier (Module Language)
+
+modu_long_ident: ID opt_modu_idents {
+	result = SCME.make_long_identifier(
+					val[0].pos,
+					SCME.make_identifier(val[0].pos, val[0].sym),
+					val[1]
+				)
+}
+
+opt_modu_idents:
+  /* empty */ {
+	result = []
+}
+| '::' ID opt_modu_idents {
+	result = [SCME.make_identifier(val[1].pos, val[1].sym)] + val[2]
+}
+
+
+
+#####################################
+####  Pattern (Module Language)  ####
+#####################################
+
+modu_pat:
+# Variable
+  modu_var_pat
+
+# Structure
+| STRUCT '{' opt_stru_flds_pats '}' {
+	result = SCMP.make_struct val[0].pos, val[2]
+}
+
+
+# Seq of structure fields pattern
+
+opt_stru_flds_pats:
+  /* empty */			 			{ result = [] }
+| stru_flds_pat opt_stru_flds_pats	{ result = val[0] + val[1] }
+
+
+# Structure fields pattern
+
+stru_flds_pat: VAL stru_flds_pat_	{ result = val[1] }
+
+stru_flds_pat_:
+	atom_stru_fld_pat {
+	result = [val[0]]
+}
+|	'(' atom_stru_fld_pat ',' comma_stru_fld_pats ')' {
+	result = [val[1]] + val[3]
+}
+
+
+# Comma separated seq of structure field pattern
+
+comma_stru_fld_pats:
+  atom_stru_fld_pat							{ result = [val[0]] }
+| atom_stru_fld_pat ',' comma_stru_fld_pats	{ result = [val[0]] + val[2] }
+
+
+# Atomic structure field pattern
+
+atom_stru_fld_pat: var_pat opt_stru_var_pat {
+	result = SCMP.make_struct_field val[0].pos, val[0].var_sym, val[1]
+}
+
+opt_stru_var_pat:
+  /* empty */	{ result = nil }
+| '=>' var_pat	{ result = val[1].var_sym }
+
+
+# Variable pattern
+
+modu_var_pat:
+  ID						{
+  	result = SCMP.make_variable val[0].pos, val[0].sym
+}
+| '(' spec_infix_opr ')'	{
+	result = SCMP.make_variable val[1].pos, val[1].sym
+}
+
+
+
+#######################################
+####  Declaration (Core Language)  ####
+#######################################
+
+opt_core_decls:
+  /* empty */				{ result = [] }
+| core_decl opt_core_decls	{ result = [val[0]] + val[1] }
+
+core_decl:
+  VAL pat '=' expr opt_outer_where_decls {
+	result = SCCD.make_value(
+					val[0].pos, val[1], val[3], val[4]
+				)
+}
+| FUN var_pat '=' fun_body {
+	pats, expr, decls = val[3]
+
+	result = SCCD.make_function(
+		val[1].pos,
+		SCCE.make_named_lambda(
+			val[1].pos,
+			pats, expr, decls,
+			val[1].var_sym
+		)
+	)
+}
+| FUN REC recu_binds {
+	result = SCCD.make_recursive val[0].pos, val[2]
+}
+
+
+# Recursive binding
+
+recu_binds:
+  recu_bind					{ result = [val[0]] }
+| recu_bind AND recu_binds	{ result = [val[0]] + val[2] }
+
+recu_bind: ID '=' fun_body {
+	pats, expr, decls = val[2]
+
+	result = SCCD.make_recursive_function(
+		val[1].pos,
+		SCCE.make_named_lambda(
+			val[0].pos,
+			pats, expr, decls,
+			val[0].sym
+		)
+	)
+}
+
+
+# Function body
+
+fun_body: pats '->' expr opt_outer_where_decls {
+	result = [val[0], val[2], val[3]]
+}
+
+
+# WHERE declaration (Core Language)
+
+opt_outer_where_decls:
+  /* empty */					{ result = [] }
+| WHERE '{' opt_core_decls '}'	{ result = val[2] }
+
+
+opt_inner_where_decls:
+  /* empty */					{ result = [] }
+| WHERE opt_core_decls			{ result = val[1] }
+
+
+######################################
+####  Expression (Core Language)  ####
+######################################
+
+expr:
+  infix_expr
+| IF if_rules ELSE expr {
+	result = SCCE.make_if val[0].pos, val[1], val[3]
+}
+| UNLESS if_rule {
+	result = SCCE.make_unless val[0].pos, val[1]
+}
+| COND atom_expr '{' cond_rules '}' {
+	result = SCCE.make_cond val[0].pos, val[1], val[3]
+}
+| LET '{' opt_core_decls IN expr '}' {
+	result = SCCE.make_let val[0].pos, val[2], val[4]
+}
+
+if_rules:
+  if_rule					{ result = [val[0]] }
+| if_rule ELSIF if_rules	{ result = [val[0]] + val[2] }
+
+if_rule: atom_expr expr {
+	result = SCCE.make_if_rule val[0].pos, val[0], val[1]
+}
+
+cond_rules:
+  cond_rule					{ result = [val[0]] }
+| cond_rule '|' cond_rules 	{ result = [val[0]] + val[2] }
+
+cond_rule: expr '->' expr opt_inner_where_decls {
+	result = SCCE.make_cond_rule val[0].pos, val[0], val[2], val[3]
+}
+
+
+# Infix operator expression
+
+infix_expr:
+  send_expr
+| infix_expr_ {
+	v = val[0]
+
+	result = SCCE.make_infix v[1].pos, v[0], v[1].sym, v[2]
+}
+
+infix_expr_:
+  infix_expr '+'  		infix_expr	{ result = val }
+| infix_expr '-'  		infix_expr	{ result = val }
+| infix_expr '^'  		infix_expr	{ result = val }
+| infix_expr '*'  		infix_expr	{ result = val }
+| infix_expr '/'  		infix_expr	{ result = val }
+| infix_expr MOD  		infix_expr	{
+	result = [
+				val[0],
+				LT.make_reserved_symbol(val[1].pos, 'mod'),
+				val[2]
+			]
+}
+| infix_expr POW  		infix_expr	{
+	result = [
+				val[0],
+				LT.make_reserved_symbol(val[1].pos, 'pow'),
+				val[2]
+			]
+}
+| infix_expr '=='		infix_expr	{ result = val }
+| infix_expr '\\='		infix_expr	{ result = val }
+| infix_expr '<'		infix_expr	{ result = val }
+| infix_expr '>'		infix_expr	{ result = val }
+| infix_expr '<='		infix_expr	{ result = val }
+| infix_expr '>='		infix_expr	{ result = val }
+| infix_expr '++'		infix_expr	{ result = val }
+| infix_expr '<<'		infix_expr	{ result = val }
+| infix_expr '>>'		infix_expr	{ result = val }
+| infix_expr '<|'		infix_expr	{ result = val }
+| infix_expr '|>'		infix_expr	{ result = val }
+| infix_expr AKO		infix_expr	{ result = val }
+| infix_expr ANDALSO	infix_expr	{ result = val }
+| infix_expr ORELSE		infix_expr	{ result = val }
+
+
+# Send expression
+
+send_expr: apply_expr opt_messages {
+	result = if val[1].empty?
+					val[0]
+				else
+					SCCE.make_send val[0].pos, val[0], val[1]
+				end
+}
+
+opt_messages:
+  /* empty */			{ result = [] }
+| messages 				{ result = val[0] }
+
+messages:
+  '.' message 			{ result = [val[1]] }
+| '.' message messages	{ result = [val[1]] + val[2] }
+
+message:
+  INT {
+	result = SCCE.make_selector(
+						val[0].pos, val[0].val
+					)
+}
+| ID {
+	result = SCCE.make_method(
+						val[0].pos, val[0].sym, []
+					)
+}
+| '(' ID expr ')' {
+	result = SCCE.make_method(
+						val[1].pos, val[1].sym, [val[2]]
+					)
+}
+| '(' infix_opr expr ')' {
+	result = SCCE.make_method(
+						val[1].pos, val[1].sym, [val[2]]
+					)
+}
+| '(' ID expr ',' comma_exprs ')' {
+	result = SCCE.make_method(
+						val[1].pos, val[1].sym, [val[2]] + val[4]
+					)
+}
+
+
+# Apply expression
+
+apply_expr: atom_expr opt_atom_exprs {
+	result = if val[1].empty?
+					val[0]
+				else
+					SCCE.make_apply val[0].pos, val[0], val[1]
+				end
+}
+
+
+# Atomic expression
+
+opt_atom_exprs:
+  /* empty */				{ result = [] }
+| atom_expr opt_atom_exprs	{ result = [val[0]] + val[1] }
+
+atom_expr:
+# Identifier
+  long_ident
+
+# Constant
+| INT		{ result = SCCE.make_int	val[0].pos, val[0].val }
+| REAL		{ result = SCCE.make_real	val[0].pos, val[0].val }
+| STRING	{ result = SCCE.make_string	val[0].pos, val[0].val }
+| SYMBOL	{ result = SCCE.make_symbol	val[0].pos, val[0].sym }
+| __FILE__ {
+	pos = val[0].pos
+
+	result = SCCE.make_string pos, pos.file_name
+}
+| __LINE__ {
+	pos = val[0].pos
+
+	result = SCCE.make_int pos, pos.line_num
+}
+
+# Braket: ( ... )
+| '(' ')' {
+	result = SCCE.make_unit val[0].pos
+}
+| '(' expr ')' {
+	result = val[1]
+}
+| '(' infix_opr expr ')' {
+	result = SCCE.make_prefix val[1].pos, val[1].sym, val[2]
+}
+| '(' expr ',' comma_exprs ')' {
+	result = SCCE.make_tuple val[0].pos, [val[1]] + val[3]
+}
+| '(' expr ';' semi_exprs ')' {
+	result = SCCE.make_sequence val[0].pos, [val[1]] + val[3]
+}
+| '@(' ID ')' {
+	result = SCCE.make_class val[1].pos, val[1].sym
+}
+| '@(' ID '.' ID ')' {
+	result = SCCE.make_class_method val[1].pos, val[1].sym, val[3].sym
+}
+| '@(' ID '.' infix_opr ')' {
+	result = SCCE.make_class_method val[1].pos, val[1].sym, val[3].sym
+}
+| '@(' ID '$' ID ')' {
+	result = SCCE.make_instance_method val[1].pos, val[1].sym, val[3].sym
+}
+| '@(' ID '$' infix_opr ')' {
+	result = SCCE.make_instance_method val[1].pos, val[1].sym, val[3].sym
+}
+
+# Braket: [ ... ]
+| '[' ']' {
+	result = SCCE.make_list val[0].pos, [],     nil
+}
+| '[' comma_exprs opt_last_expr ']' {
+	result = SCCE.make_list val[0].pos, val[1], val[2]
+}
+
+# Braket: { ... }
+| '{' pats '->' expr opt_inner_where_decls '}' {
+	result = SCCE.make_lambda val[0].pos, val[1], val[3], val[4]
+}
+
+
+# Long identifier
+
+long_ident: short_ident opt_short_idents {
+	result = SCCE.make_long_identifier val[0].pos, val[0], val[1]
+}
+
+opt_short_idents:
+  /* empty */						{ result = [] }
+| '::' short_ident opt_short_idents	{ result = [val[1]] + val[2] }
+
+short_ident:
+  ID						{
+  	result = SCCE.make_identifier val[0].pos, val[0].sym
+}
+| '(' spec_infix_opr ')'	{
+	result = SCCE.make_identifier val[1].pos, val[1].sym
+}
+
+
+# Semi-colon separated seq of expresseion
+
+semi_exprs:
+  expr					{ result = [val[0]] }
+| expr ';' semi_exprs	{ result = [val[0]] + val[2] }
+
+
+# Comma separated seq of expresseion
+
+comma_exprs:
+  expr					{ result = [val[0]] }
+| expr ',' comma_exprs	{ result = [val[0]] + val[2] }
+
+
+# Last of collection expression
+
+opt_last_expr:
+  /* empty */	{ result = nil }
+| '|' expr		{ result = val[1] }
+
+
+
+###################################
+####  Pattern (Core Language)  ####
+###################################
+
+pats:
+  pat		{ result = [val[0]] }
+| pat pats	{ result = [val[0]] + val[1] }
+
+pat:
+# Variable
+  var_pat
+
+# Braket: ( ... )
+| '(' ')' {
+	result = SCCP.make_unit val[0].pos
+}
+| '(' var_pat ')' {
+	result = val[1]
+}
+| '(' var_pat ',' comma_pats ')' {
+	result = SCCP.make_tuple val[0].pos, [val[1]] + val[3]
+}
+
+# Braket: [ ... ]
+| '[' ']' {
+	result = SCCP.make_list val[0].pos, [],     nil
+}
+| '[' comma_pats opt_last_pat ']' {
+	result = SCCP.make_list val[0].pos, val[1], val[2]
+}
+
+# Braket: { ... }
+| '{' '}' {
+	result = SCCP.make_record val[0].pos, []
+}
+
+
+# Comma separated seq of pattern
+
+comma_pats:
+  var_pat					{ result = [val[0]] }
+| var_pat ',' comma_pats	{ result = [val[0]] + val[2] }
+
+
+# Last of collection pattern
+
+opt_last_pat:
+  /* empty */	{ result = nil }
+| '|' var_pat	{ result = val[1] }
+
+
+# Variable pattern
+
+var_pat:
+  ID						{
+  	result = SCCP.make_variable val[0].pos, val[0].sym
+}
+| '(' spec_infix_opr ')'	{
+	result = SCCP.make_variable val[1].pos, val[1].sym
+}
+| '_'						{
+	result = SCCP.make_variable val[0].pos, WILDCARD
+}
+
+
+
+#######################
+####  Common Rule  ####
+#######################
+
+
+# Special infix operator
+
+spec_infix_opr: infix_opr | ',' | '|'
+
+
+# Normal infix operator
+
+infix_opr:
+  '+' | '-' | '*' | '/'
+| MOD	 { result = LT.make_reserved_symbol(val[0].pos, 'mod') }
+| POW	 { result = LT.make_reserved_symbol(val[0].pos, 'pow') }
+| '==' | '\\=' | '<'  | '>'  | '<=' | '>='
+| '<|' | '|>' | '<<' | '>>'
+| '^'  |'++'
+
+end

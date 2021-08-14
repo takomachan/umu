@@ -1,0 +1,5 @@
+require 'umu/abstract-syntax/core/expression/abstract'
+require 'umu/abstract-syntax/core/expression/unit'
+require 'umu/abstract-syntax/core/expression/unary'
+require 'umu/abstract-syntax/core/expression/binary'
+require 'umu/abstract-syntax/core/expression/n-ary'
