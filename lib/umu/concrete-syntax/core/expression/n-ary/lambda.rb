@@ -46,10 +46,8 @@ private
 	def __desugar__(env, event)
 		new_env = env.enter event
 
-		init_decls = self.decls.map { |decl| decl.desugar new_env }
-
-		lamb_idents, final_decls = self.pats.each_with_index.inject(
-			 [[],		init_decls]
+		lamb_idents, lamb_decls = self.pats.each_with_index.inject(
+			 [[],		[]]
 		) {
 			|(idents,	decls),			(pat, index)|
 			ASSERT.kind_of idents,	::Array
@@ -63,12 +61,11 @@ private
 			[idents + [result.ident], decls + result.decls]
 		}
 
-		final_expr = self.expr.desugar new_env
-		lamb_expr = if final_decls.empty?
-						final_expr
-					else
-						SACE.make_let self.pos, final_decls, final_expr
-					end
+		lamb_expr = SACE.make_let(
+			self.pos,
+			lamb_decls + self.decls.map { |decl| decl.desugar new_env },
+			self.expr.desugar(new_env)
+		)
 
 		SACE.make_lambda self.pos, lamb_idents, lamb_expr, __name_sym__
 	end

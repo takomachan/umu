@@ -359,7 +359,7 @@ where {
 										a -> eval (body, ext (fp, a, e))
 									}
 		where {
-			val (fp, body) = val-of r
+			val (fp, body) = val-of l
 
 			# ext : (VAR, VAL, ENV) -> ENV		where { ENV = VAR -> VAL }
 			fun ext = (z, a, e) -> {
