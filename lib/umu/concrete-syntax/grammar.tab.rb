@@ -1839,7 +1839,7 @@ module_eval(<<'.,.,', 'grammar.ry', 508)
 
 module_eval(<<'.,.,', 'grammar.ry', 513)
   def _reduce_129(val, _values, result)
-    	result = SCCP.make_record val[0].pos, []
+    	result = SCCP.make_struct val[0].pos, []
 
     result
   end

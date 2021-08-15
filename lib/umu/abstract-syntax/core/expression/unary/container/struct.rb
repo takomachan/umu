@@ -13,7 +13,7 @@ module Unary
 
 module Container
 
-module Record
+module Struct
 
 class Field < Abstraction::LabelValuePair
 
@@ -42,7 +42,7 @@ class Entry < Abstraction::HashBased
 			ASSERT.kind_of label,	::Symbol
 			ASSERT.kind_of expr,	SACE::Abstract
 
-			yield SACE.make_record_field self.pos, label, expr
+			yield SACE.make_struct_field self.pos, label, expr
 		end
 	end
 
@@ -61,7 +61,7 @@ private
 
 		new_env = env.enter event
 
-		VC.make_record(
+		VC.make_struct(
 			self.pos,
 
 			self.expr_by_label.inject({}) { |hash, (label, expr)|
@@ -78,7 +78,7 @@ private
 	end
 end
 
-end	# Umu::AbstractSyntax::Core::Expression::Unary::Container::Record
+end	# Umu::AbstractSyntax::Core::Expression::Unary::Container::Struct
 
 end	# Umu::AbstractSyntax::Core::Expression::Unary::Container
 
@@ -87,20 +87,20 @@ end	# Umu::AbstractSyntax::Core::Expression::Unary
 
 module_function
 
-	def make_record_field(pos, label, expr)
+	def make_struct_field(pos, label, expr)
 		ASSERT.kind_of pos,		L::Position
 		ASSERT.kind_of label,	::Symbol
 		ASSERT.kind_of expr,	SACE::Abstract
 
-		Unary::Container::Record::Field.new(pos, label, expr).freeze
+		Unary::Container::Struct::Field.new(pos, label, expr).freeze
 	end
 
 
-	def make_record(pos, expr_by_label)
+	def make_struct(pos, expr_by_label)
 		ASSERT.kind_of pos,				L::Position
 		ASSERT.kind_of expr_by_label,	::Hash
 
-		Unary::Container::Record::Entry.new(
+		Unary::Container::Struct::Entry.new(
 			pos, expr_by_label.freeze
 		).freeze
 	end

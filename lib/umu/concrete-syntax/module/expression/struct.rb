@@ -68,18 +68,18 @@ private
 			}
 		)
 
-		record_expr	= SACE.make_record self.pos, expr_by_label
+		struct_expr	= SACE.make_struct self.pos, expr_by_label
 		decls		= self.local_decls + self.body_decls
 
 		if decls.empty?
-			record_expr
+			struct_expr
 		else
 			new_env = env.enter event
 
 			SACE.make_let(
 				self.pos,
 				decls.map { |decl| decl.desugar new_env },
-				record_expr
+				struct_expr
 			)
 		end
 	end

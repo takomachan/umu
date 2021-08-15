@@ -105,7 +105,7 @@ SRCS	= commander.rb \
 			abstract-syntax/core/expression/unary/container.rb \
 			abstract-syntax/core/expression/unary/container/abstraction.rb \
 			abstract-syntax/core/expression/unary/container/tuple.rb \
-			abstract-syntax/core/expression/unary/container/record.rb \
+			abstract-syntax/core/expression/unary/container/struct.rb \
 			abstract-syntax/core/expression/unary/container/list.rb \
 			abstract-syntax/core/expression/binary.rb \
 			abstract-syntax/core/expression/binary/abstract.rb \
@@ -134,7 +134,7 @@ SRCS	= commander.rb \
 			value/core/product.rb \
 			value/core/product/abstract.rb \
 			value/core/product/tuple.rb \
-			value/core/product/record.rb \
+			value/core/product/struct.rb \
 			value/core/union.rb \
 			value/core/union/abstract.rb \
 			value/core/union/datum.rb \

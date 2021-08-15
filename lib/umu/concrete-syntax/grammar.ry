@@ -511,7 +511,7 @@ pat:
 
 # Braket: { ... }
 | '{' '}' {
-	result = SCCP.make_record val[0].pos, []
+	result = SCCP.make_struct val[0].pos, []
 }
 
 

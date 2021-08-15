@@ -94,11 +94,11 @@ class ByLabel < Abstraction::Selector
 		ASSERT.kind_of rec_value,	VC::Top
 		ASSERT.kind_of env,			E::Entry
 
-		unless rec_value.kind_of? VCP::Record::Entry
+		unless rec_value.kind_of? VCP::Struct::Entry
 			raise X::TypeError.new(
 				self.pos,
 				env,
-				"Selection operator '.' require a Record, but %s : %s",
+				"Selection operator '.' require a Struct, but %s : %s",
 					rec_value.to_s,
 					rec_value.type_sym.to_s
 			)

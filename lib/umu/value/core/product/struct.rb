@@ -10,7 +10,7 @@ module Core
 
 module Product
 
-module Record
+module Struct
 
 class Field < Umu::Abstraction::LabelValuePair
 	def initialize(pos, label, value)
@@ -30,7 +30,7 @@ end
 
 
 class Entry < Product::Abstract
-	TYPE_SYM = :Record
+	TYPE_SYM = :Struct
 
 	alias value_by_label objs
 
@@ -47,7 +47,7 @@ class Entry < Product::Abstract
 			ASSERT.kind_of label,	::Symbol
 			ASSERT.kind_of value,	VC::Top
 
-			yield VC.make_record_field self.pos, label, value
+			yield VC.make_struct_field self.pos, label, value
 		end
 	end
 
@@ -75,7 +75,7 @@ class Entry < Product::Abstract
 
 
 	def modify(other, pos, env)
-		ASSERT.kind_of other,	Record::Entry
+		ASSERT.kind_of other,	Struct::Entry
 		ASSERT.kind_of pos,		L::Position
 
 		other.value_by_label.each_key do |label|
@@ -88,7 +88,7 @@ class Entry < Product::Abstract
 			end
 		end
 
-		VC.make_record(
+		VC.make_struct(
 			self.pos,
 
 			self.value_by_label.merge(other.value_by_label)
@@ -127,27 +127,27 @@ private
 	end
 end
 
-end	# Umu::Value::Core::Product::Record
+end	# Umu::Value::Core::Product::Struct
 
 end	# Umu::Value::Core::Product
 
 
 module_function
 
-	def make_record_field(pos, label, value)
+	def make_struct_field(pos, label, value)
 		ASSERT.kind_of pos,		L::Position
 		ASSERT.kind_of label,	::Symbol
 		ASSERT.kind_of value,	VC::Top
 
-		Product::Record::Field.new(pos, label, value).freeze
+		Product::Struct::Field.new(pos, label, value).freeze
 	end
 
 
-	def make_record(pos, value_by_label)
+	def make_struct(pos, value_by_label)
 		ASSERT.kind_of pos,				L::Position
 		ASSERT.kind_of value_by_label,	::Hash
 
-		Product::Record::Entry.new(pos, value_by_label.freeze).freeze
+		Product::Struct::Entry.new(pos, value_by_label.freeze).freeze
 	end
 
 end	# Umu::Value::Core
