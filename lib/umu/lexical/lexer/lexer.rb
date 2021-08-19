@@ -37,11 +37,14 @@ module_function
 
 			break [tokens, lexer] if scanner.eos?
 
-			opt_token, next_lexer = lexer.lex scanner
+			event, matched, opt_token, next_lexer = lexer.lex scanner
+
+			if block_given?
+				yield event, matched, opt_token, next_lexer, before_line_num
+			end
 
 			if opt_token
 				token = opt_token
-				yield token, before_line_num if block_given?
 
 				[tokens + [token], next_lexer, token.pos.line_num]
 			else

@@ -127,7 +127,18 @@ class Entry < Abstraction::CartesianProduct
 	def update_trace_mode(bool)
 		ASSERT.bool bool
 
-		self.update_preference self.pref.update_trace_mode(bool)
+		self.update_preference(
+			self.pref.update_trace_mode(bool)
+		)
+	end
+
+
+	def update_lex_trace_mode(bool)
+		ASSERT.bool bool
+
+		self.update_preference(
+			self.pref.update_lex_trace_mode(bool)
+		)
 	end
 
 

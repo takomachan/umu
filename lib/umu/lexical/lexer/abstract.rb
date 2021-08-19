@@ -25,6 +25,15 @@ class Abstract
 	end
 
 
+	def to_s
+		format("%s {braket_stack=%s} -- %s",
+			E::Tracer.class_to_string(self.class),
+			self.braket_stack.inspect,
+			self.pos.to_s
+		)
+	end
+
+
 	def comment_depth
 		0
 	end

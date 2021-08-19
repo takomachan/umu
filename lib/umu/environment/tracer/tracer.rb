@@ -132,6 +132,8 @@ module_function
 
 
 	ABBREVIATABLE_MODULE_NAMES = [
+		[['Lexical'],											'L'],
+		[['Lexical', 'Lexer'],									'LL'],
 		[['ConcreteSyntax'],									'SC'],
 		[['ConcreteSyntax',	'Module'],							'SCM'],
 		[['ConcreteSyntax',	'Module',	'Declaration'],			'SCMD'],

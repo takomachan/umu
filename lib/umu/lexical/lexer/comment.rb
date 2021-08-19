@@ -31,6 +31,17 @@ class Comment < Abstract
 	end
 
 
+	def to_s
+		format("%s {braket_stack=%s, buf=%s, saved_pos=%s} -- %s",
+			E::Tracer.class_to_string(self.class),
+			self.braket_stack.inspect,
+			self.buf.inspect,
+			self.saved_pos.to_s,
+			self.pos.to_s
+		)
+	end
+
+
 	def in_comment?
 		self.comment_depth != 0
 	end
@@ -43,6 +54,10 @@ class Comment < Abstract
 		# Begin-Comment
 		when scanner.scan(/\(#/)
 			[
+				:BeginComment,
+
+				scanner.matched,
+
 				nil,
 
 				__make_comment__(
@@ -55,6 +70,10 @@ class Comment < Abstract
 		# End-Comment
 		when scanner.scan(/#\)/)
 			[
+				:EndComment,
+
+				scanner.matched,
+
 				LT.make_comment(
 					self.saved_pos,	# Load Begin-Comment's position 
 					self.buf
@@ -74,6 +93,10 @@ class Comment < Abstract
 		# New-line
 		when scanner.skip(/\n/)
 			[
+				:NewLine,
+
+				scanner.matched,
+
 				nil,
 
 				__make_comment__(
@@ -87,6 +110,10 @@ class Comment < Abstract
 		# Others
 		when scanner.scan(/./)
 			[
+				:Other,
+
+				scanner.matched,
+				
 				nil,
 
 				__make_comment__(

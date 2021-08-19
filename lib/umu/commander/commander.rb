@@ -110,6 +110,7 @@ end
 
 				line_num,
 
+
 				if lexer.in_braket?
 					format(":%s:%d",
 							lexer.braket_stack.reverse.map { |bb|
@@ -123,7 +124,7 @@ end
 
 				if lexer.in_comment?
 					format(":%s:%d",
-							'(*' * lexer.comment_depth,
+							'(#' * lexer.comment_depth,
 							lexer.comment_depth
 					)
 				else
@@ -131,7 +132,7 @@ end
 				end,
 
 				if lexer.in_comment?
-					'*'
+					'#'
 				elsif lexer.in_braket?
 					'|'
 				else
@@ -184,11 +185,11 @@ end
 	end
 
 
-	def process_line(line, line_num, tokens, lexer, env)
+	def process_line(line, line_num, tokens, init_lexer, env)
 		ASSERT.kind_of line,		::String
 		ASSERT.kind_of line_num,	::Integer
 		ASSERT.kind_of tokens,		::Array
-		ASSERT.kind_of lexer,		LL::Abstract
+		ASSERT.kind_of init_lexer,	LL::Abstract
 		ASSERT.kind_of env,			E::Entry
 
 		pref		= env.pref
@@ -203,23 +204,44 @@ end
 		if pref.trace_mode?
 			STDERR.puts
 			STDERR.printf "________ Tokens: '%s' ________", file_name
+			if pref.lex_trace_mode?
+				STDERR.printf "\nINIT-LEXTER: %s\n", init_lexer.to_s
+			end
 		end
 
 		scanner = ::StringScanner.new line
 		next_tokens, next_lexer = LL.lex(
-			tokens, lexer, 0, scanner, pref
-		) do |token, before_line_num|
+			tokens, init_lexer, 0, scanner, pref
+		) do |event, matched, opt_token, lexer, before_line_num|
 
 			if pref.trace_mode?
-				line_num = token.pos.line_num
+				if pref.lex_trace_mode?
+					STDERR.printf("\nPATTERN: %s \"%s\"\n",
+									event.to_s,
+									L::Escape.unescape(matched)
+					)
+					if opt_token
+						token = opt_token
+						STDERR.printf("    TOKEN: %s -- %s\n",
+									token.to_s,
+									token.pos.to_s
+						)
+					end
+					STDERR.printf "    NEXT-LEXER: %s\n", lexer.to_s
+				else
+					if opt_token
+						token		= opt_token
+						line_num	= token.pos.line_num
 
-				if line_num != before_line_num
-					STDERR.printf "\n%04d: ", line_num
-				end
+						if line_num != before_line_num
+							STDERR.printf "\n%04d: ", line_num
+						end
 
-				unless token && token.separator?
-					STDERR.printf "%s ", token.to_s
-					STDERR.flush
+						unless token && token.separator?
+							STDERR.printf "%s ", token.to_s
+							STDERR.flush
+						end
+					end
 				end
 			end
 		end

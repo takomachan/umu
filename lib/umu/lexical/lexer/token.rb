@@ -181,6 +181,10 @@ SYMBOL_PATTERNS = [
 		# Real or Int
 		when scanner.scan(/\d+(\.\d+)?/)
 			[
+				:Number,
+
+				scanner.matched,
+
 				if scanner[1]
 					LT.make_real pos, scanner.matched.to_f
 				else
@@ -193,6 +197,10 @@ SYMBOL_PATTERNS = [
 		# Begin-String
 		when scanner.scan(/(@)?"/)
 			[
+				:BeginString,
+
+				scanner.matched,
+
 				nil,
 
 				if scanner[1]
@@ -209,6 +217,10 @@ SYMBOL_PATTERNS = [
 			body_matched = scanner[2]
 
 			[
+				:Word,
+
+				scanner.matched,
+
 				if head_matched
 					LT.make_user_symbol pos, body_matched
 				else
@@ -229,18 +241,30 @@ SYMBOL_PATTERNS = [
 
 			if RESERVED_SYMBOLS[matched]
 				[
+					:ReservedSymbol,
+
+					scanner.matched,
+
 					LT.make_reserved_symbol(pos, matched),
 
 					__make_separator__
 				]
 			elsif IDENTIFIER_SYMBOLS[matched]
 				[
+					:IdentifierSymbol,
+
+					scanner.matched,
+
 					LT.make_identifier(pos, matched),
 
 					__make_separator__
 				]
 			elsif BEGIN_BRAKET_SYMBOLS[matched]
 				[
+					:BeginBraket,
+
+					scanner.matched,
+
 					LT.make_reserved_symbol(pos, matched),
 
 					__make_separator__(pos, [matched] + self.braket_stack)
@@ -261,6 +285,10 @@ SYMBOL_PATTERNS = [
 
 				if matched == eb
 					[
+						:EndBraket,
+
+						scanner.matched,
+						
 						LT.make_reserved_symbol(pos, matched),
 
 						__make_separator__(pos, stack)

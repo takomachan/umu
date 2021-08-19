@@ -14,11 +14,15 @@ module_function
 		name, *args = line.split
 
 		new_env = case name
-			when ':trace'
-				env.update_trace_mode true
-			when ':notrace'
-				env.update_trace_mode false
-			when ':class'
+		when ':trace'
+			env.update_trace_mode true
+		when ':notrace'
+			env.update_trace_mode false
+		when ':lextrace'
+			env.update_lex_trace_mode true
+		when ':nolextrace'
+			env.update_lex_trace_mode false
+		when ':class'
 				case args.size
 				when 0
 					Subcommand.print_class_tree(

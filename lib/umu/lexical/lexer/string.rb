@@ -30,6 +30,16 @@ class Abstract < Lexer::Abstract
 	end
 
 
+	def to_s
+		format("%s {braket_stack=%s, buf=%s} -- %s",
+			E::Tracer.class_to_string(self.class),
+			self.braket_stack.inspect,
+			self.buf.inspect,
+			self.pos.to_s
+		)
+	end
+
+
 	def lex(scanner)
 		ASSERT.kind_of scanner, ::StringScanner
 
@@ -37,6 +47,10 @@ class Abstract < Lexer::Abstract
 		# End-String
 		when scanner.scan(/"/)
 			[
+				:EndString,
+
+				scanner.matched,
+
 				__make_token__(pos, self.buf),
 
 				__make_separator__
@@ -61,6 +75,10 @@ class Abstract < Lexer::Abstract
 			end
 
 			[
+				:Escape,
+
+				scanner.matched,
+
 				nil,
 
 				__make_state__(self.buf + opt_esc)
@@ -69,6 +87,10 @@ class Abstract < Lexer::Abstract
 		# Others
 		when scanner.scan(/./)
 			[
+				:Other,
+
+				scanner.matched,
+				
 				nil,
 
 				__make_state__(self.buf + scanner.matched)

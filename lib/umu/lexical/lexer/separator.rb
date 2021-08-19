@@ -20,6 +20,10 @@ class Separator < Abstract
 		# Begin-Comment
 		when scanner.scan(/\(#/)
 			[
+				:BeginComment,
+
+				scanner.matched,
+
 				nil,
 
 				__make_comment__(
@@ -32,6 +36,10 @@ class Separator < Abstract
 		# New-line with optional Line-comment
 		when scanner.scan(/(#.*)?\n/)
 			[
+				:NewLine,
+
+				scanner.matched,
+
 				LT.make_newline(pos, scanner.matched),
 
 				__make_separator__(self.pos.next_line_num)
@@ -40,6 +48,10 @@ class Separator < Abstract
 		# Other white-chars -- space, tab, or carriage-return
 		when scanner.scan(/[ \t\r]+/)
 			[
+				:White,
+
+				scanner.matched,
+
 				LT.make_white(pos, scanner.matched),
 
 				self
@@ -48,6 +60,10 @@ class Separator < Abstract
 		# Unmatched
 		else
 			[
+				:Unmatched,
+
+				'',
+				
 				nil,
 
 				__make_token__

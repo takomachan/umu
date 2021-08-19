@@ -509,11 +509,6 @@ pat:
 	result = SCCP.make_list val[0].pos, val[1], val[2]
 }
 
-# Braket: { ... }
-| '{' '}' {
-	result = SCCP.make_struct val[0].pos, []
-}
-
 
 # Comma separated seq of pattern
 
