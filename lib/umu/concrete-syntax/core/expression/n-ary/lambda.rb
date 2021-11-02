@@ -61,11 +61,15 @@ private
 			[idents + [result.ident], decls + result.decls]
 		}
 
-		lamb_expr = SACE.make_let(
-			self.pos,
-			lamb_decls + self.decls.map { |decl| decl.desugar new_env },
-			self.expr.desugar(new_env)
-		)
+		local_decls = lamb_decls + self.decls.map { |decl|
+							decl.desugar new_env
+						}
+		body_expr  = self.expr.desugar new_env
+		lamb_expr = if local_decls.empty?
+						body_expr
+					else
+						SACE.make_let self.pos, local_decls, body_expr
+					end
 
 		SACE.make_lambda self.pos, lamb_idents, lamb_expr, __name_sym__
 	end
