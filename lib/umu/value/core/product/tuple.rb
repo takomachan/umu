@@ -94,8 +94,6 @@ class Tuple < Abstract
 				|(self_value, other_value), index|
 
 				unless other_value.kind_of?(self_value.class)
-					ty_context = env.ty_context
-
 					raise X::TypeError.new(
 						pos,
 						env,

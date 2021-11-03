@@ -41,7 +41,7 @@ def update_method_info_of_symbol(info_of_symbol, infos, klass)
 		infos.inject({}) { |hash, info|
 			ASSERT.kind_of info, ::Array
 
-			meth_sym, ret_class, sym, *param_classes = info
+			meth_sym, ret_class, sym, *_param_classes = info
 			ASSERT.kind_of		meth_sym,	::Symbol
 			ASSERT.subclass_of	ret_class,	VC::Top
 			ASSERT.kind_of		sym,		::Symbol

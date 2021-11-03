@@ -91,21 +91,6 @@ module_function
 		Union::Datum.new(pos, tag_sym, content).freeze
 	end
 
-
-	def make_some(pos, content)
-		ASSERT.kind_of pos,		L::Position
-		ASSERT.kind_of content,	VC::Top
-
-		VC.make_datum(pos, :Some, content).freeze
-	end
-
-
-	def make_none(pos)
-		ASSERT.kind_of pos,	L::Position
-
-		VC.make_datum(pos, :None, VC.make_unit(pos)).freeze
-	end
-
 end	# Umu::Core
 
 end	# Umu::Value

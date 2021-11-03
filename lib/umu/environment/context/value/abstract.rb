@@ -57,7 +57,7 @@ class Abstract < Abstraction::Collection
 		pair = __extend__ sym, target
 		ASSERT.tuple_of pair, [::Hash, Abstract]
 
-		ECV.make_bindings *pair
+		ECV.make_bindings(*pair)
 	end
 
 
