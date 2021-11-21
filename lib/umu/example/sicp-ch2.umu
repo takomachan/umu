@@ -20,9 +20,9 @@ fun square = x -> x * x
 
 ###		fib : Int -> Int
 fun rec fib = n -> cond n {
-  (== 0)	-> 0
-| (== 1)	-> 1
-| otherwise	-> fib (n - 1) + fib (n - 2)
+  (== 0)	=> 0
+| (== 1)	=> 1
+| otherwise	=> fib (n - 1) + fib (n - 2)
 }
 
 
@@ -259,9 +259,9 @@ fun add-rat'' = x y -> (
 
 fun dispa-cons = x y -> dispatch where {
 	fun dispatch = m -> cond m {
-	  (== 0)	-> x
-	| (== 1)	-> y
-	| otherwise	-> error ("Argument not 0 or 1 -- CONS: " ^ (to-s m))
+	  (== 0)	=> x
+	| (== 1)	=> y
+	| otherwise	=> error ("Argument not 0 or 1 -- CONS: " ^ (to-s m))
 	}
 }
 
@@ -979,12 +979,12 @@ fun multiplicand = s -> s.3
 
 
 fun rec deriv = exp var -> cond exp {
-  number?	-> 0
-| variable?	-> if (same-variable? exp var) 1 else 0
-| sum?		-> make-sum
+  number?	=> 0
+| variable?	=> if (same-variable? exp var) 1 else 0
+| sum?		=> make-sum
 					(deriv (addend exp) var)
 					(deriv (augend exp) var)
-| product?	-> make-sum
+| product?	=> make-sum
 					(make-product
 						(multiplier exp)
 						(deriv (multiplicand exp) var)
@@ -992,7 +992,7 @@ fun rec deriv = exp var -> cond exp {
 						(deriv (multiplier exp) var)
 						(multiplicand exp)
 					)
-| otherwise	-> error ("unknown expression type -- DERIV: " ^ inspect exp)
+| otherwise	=> error ("unknown expression type -- DERIV: " ^ inspect exp)
 }
 
 ;; deriv (@"+", @x, 3) @x
@@ -1028,12 +1028,12 @@ fun make-product' = m1 m2 -> (
 )
 
 fun rec deriv' = exp var -> cond exp {
-  number?	-> 0
-| variable?	-> if (same-variable? exp var) 1 else 0
-| sum?		-> make-sum'
+  number?	=> 0
+| variable?	=> if (same-variable? exp var) 1 else 0
+| sum?		=> make-sum'
 					(deriv' (addend exp) var)
 					(deriv' (augend exp) var)
-| product?	-> make-sum'
+| product?	=> make-sum'
 					(make-product'
 						(multiplier exp)
 						(deriv' (multiplicand exp) var)
@@ -1041,7 +1041,7 @@ fun rec deriv' = exp var -> cond exp {
 						(deriv' (multiplier exp) var)
 						(multiplicand exp)
 					)
-| otherwise	-> error ("unknown expression type -- DERIV: " ^ inspect exp)
+| otherwise	=> error ("unknown expression type -- DERIV: " ^ inspect exp)
 }
 
 ;; deriv' (@"+", @x, 3) @x
@@ -1107,9 +1107,9 @@ fun rec intersection-set' = set1 set2 -> (
 		val x2 = hd set2
 	in
 		cond x1 {
-		  (== x2) -> [x1 | intersection-set' (tl set1) (tl set2)]
-		| (<  x2) -> intersection-set' (tl set1) set2
-		| (>  x2) -> intersection-set' set1      (tl set2)
+		  (== x2) => [x1 | intersection-set' (tl set1) (tl set2)]
+		| (<  x2) => intersection-set' (tl set1) set2
+		| (>  x2) => intersection-set' set1      (tl set2)
 		}
 	}
 )
@@ -1278,9 +1278,9 @@ fun right-branch = tree -> tree.2
 
 fun decode = bits tree -> decode-1 bits tree where {
 	fun choose-branch = bit branch -> cond bit {
-	  (== 0)	-> left-branch branch
-	| (== 1)	-> right-branch branch
-	| otherwise	-> error ("bad bit -- CHOOSE-BRANCH: " ^ inspect bit)
+	  (== 0)	=> left-branch branch
+	| (== 1)	=> right-branch branch
+	| otherwise	=> error ("bad bit -- CHOOSE-BRANCH: " ^ inspect bit)
 	}
 
 	fun rec decode-1 = bits current-branch -> (
@@ -1524,30 +1524,30 @@ fun make-from-mag-ang-polar = r a -> (
 #### Generic selectors ####
 
 fun real-part = z -> cond z {
-  rectanglar?	-> real-part-rectanglar (contents z)
-| polar?		-> real-part-polar      (contents z)
-| otherwise		-> error ("Unknown type -- REAL-PART: " ^ inspect z)
+  rectanglar?	=> real-part-rectanglar (contents z)
+| polar?		=> real-part-polar      (contents z)
+| otherwise		=> error ("Unknown type -- REAL-PART: " ^ inspect z)
 }
 
 
 fun imag-part = z -> cond z {
-  rectanglar?	-> imag-part-rectanglar (contents z)
-| polar?		-> imag-part-polar      (contents z)
-| otherwise		-> error ("Unknown type -- IMAG-PART: " ^ inspect z)
+  rectanglar?	=> imag-part-rectanglar (contents z)
+| polar?		=> imag-part-polar      (contents z)
+| otherwise		=> error ("Unknown type -- IMAG-PART: " ^ inspect z)
 }
 
 
 fun magnitude = z -> cond z {
-  rectanglar?	-> magnitude-rectanglar (contents z)
-| polar?		-> magnitude-polar      (contents z)
-| otherwise		-> error ("Unknown type -- MAGNITUDE: " ^ inspect z)
+  rectanglar?	=> magnitude-rectanglar (contents z)
+| polar?		=> magnitude-polar      (contents z)
+| otherwise		=> error ("Unknown type -- MAGNITUDE: " ^ inspect z)
 }
 
 
 fun angle = z -> cond z {
-  rectanglar?	-> angle-rectanglar (contents z)
-| polar?		-> angle-polar      (contents z)
-| otherwise		-> error ("Unknown type -- ANGLE: " ^ inspect z)
+  rectanglar?	=> angle-rectanglar (contents z)
+| polar?		=> angle-polar      (contents z)
+| otherwise		=> error ("Unknown type -- ANGLE: " ^ inspect z)
 }
 
 

@@ -140,8 +140,8 @@ fun make-table' = records -> let {
 	}
 
 	fun dispatch = m -> cond m {
-	  (== @lookup-proc)	-> lookup
-	| otherwise			-> error (
+	  (== @lookup-proc)	=> lookup
+	| otherwise			=> error (
 								"Unknown operation -- TABLE: " ^ inspect m
 							)
 	}

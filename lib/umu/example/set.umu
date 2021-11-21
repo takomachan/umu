@@ -30,8 +30,8 @@ module SET-BASED-ON-LIST = struct {
 
 	# _member? : 'a -> ['a] -> BOOL
 	fun rec _member? = x ys -> cond ys {
-	  empty?	-> FALSE
-	| otherwise	-> if (x == y)
+	  empty?	=> FALSE
+	| otherwise	=> if (x == y)
 						TRUE
 					else
 						_member? x ys'
@@ -47,22 +47,22 @@ module SET-BASED-ON-LIST = struct {
 
 	# _make : ['a] -> ['a]
 	fun rec _make = xs -> cond xs {
-	  empty?	-> []
-	| otherwise	-> xs' |> _make |> _cons x
+	  empty?	=> []
+	| otherwise	=> xs' |> _make |> _cons x
 		where val [x|xs'] = xs
 	}
 
 	# _union : ['a] -> ['a] -> ['a]
 	fun rec _union = xs ys -> cond xs {
-	  empty?	-> ys
-	| otherwise	-> _union xs' ys |> _cons x
+	  empty?	=> ys
+	| otherwise	=> _union xs' ys |> _cons x
 		where val [x|xs'] = xs
 	}
 
 	# _inter : ['a] -> ['a] -> ['a]
 	fun rec _inter = xs ys -> cond xs {
-	  empty?	-> []
-	| otherwise	-> _inter xs' ys
+	  empty?	=> []
+	| otherwise	=> _inter xs' ys
 						|> (
 							if (_member? x ys)
 								_cons x

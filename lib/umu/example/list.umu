@@ -13,8 +13,8 @@ module LIST = struct {
 
 	# singleton? : ['a] -> BOOL
 	fun singleton? = xs -> cond xs {
-	  empty?	-> FALSE
-	| otherwise	-> empty? xs'
+	  empty?	=> FALSE
+	| otherwise	=> empty? xs'
 		where val [_|xs'] = xs
 	}
 
@@ -46,32 +46,32 @@ module LIST = struct {
 
 	# fold : 'b -> ('a -> 'b -> 'b) -> ['a] -> 'b
 	fun rec fold = a f xs -> cond xs {
-	  empty?	-> a
-	| otherwise	-> fold (f x a) f xs'
+	  empty?	=> a
+	| otherwise	=> fold (f x a) f xs'
 		where val [x|xs'] = xs
 	}
 
 
 	# foldr : 'b -> ('a -> 'b -> 'b) -> ['a] -> 'b
 	fun rec foldr = a f xs -> cond xs {
-	  empty?	-> a
-	| otherwise	-> f x (foldr a f xs')
+	  empty?	=> a
+	| otherwise	=> f x (foldr a f xs')
 		where val [x|xs'] = xs
 	}
 
 
 	# foldl : 'b -> ('b -> 'a -> 'b) -> ['a] -> 'b
 	fun rec foldl = a f xs -> cond xs {
-	  empty?	-> a
-	| otherwise	-> foldl (f a x) f xs'
+	  empty?	=> a
+	| otherwise	=> foldl (f a x) f xs'
 		where val [x|xs'] = xs
 	}
 
 
 	# length : ['a] -> INT
 	fun rec length = xs -> cond xs {
-	  empty?	-> 0
-	| otherwise	-> length xs' + 1
+	  empty?	=> 0
+	| otherwise	=> length xs' + 1
 		where val [_|xs'] = xs
 	}
 
@@ -80,8 +80,8 @@ module LIST = struct {
 
 	# sum : [INT] -> INT
 	fun rec sum = xs -> cond xs {
-	  empty?	-> 0
-	| otherwise	-> x + sum xs'
+	  empty?	=> 0
+	| otherwise	=> x + sum xs'
 		where val [x|xs'] = xs
 	}
 
@@ -90,8 +90,8 @@ module LIST = struct {
 
 	# map : ('a -> 'b) -> ['a] -> ['b]
 	fun rec map = f xs -> cond xs {
-	  empty?	-> []
-	| otherwise	-> [f x | map f xs']
+	  empty?	=> []
+	| otherwise	=> [f x | map f xs']
 		where val [x|xs'] = xs
 	}
 
@@ -100,8 +100,8 @@ module LIST = struct {
 
 	# filter : ('a -> BOOL) -> ['a] -> ['a]
 	fun rec filter = f xs -> cond xs {
-	  empty?	-> []
-	| otherwise	-> if (f x)
+	  empty?	=> []
+	| otherwise	=> if (f x)
 							[x|xs'']
 						else
 							xs''
@@ -131,8 +131,8 @@ module LIST = struct {
 
 	# concat : [['a]] -> ['a]
 	fun rec concat = xss -> cond xss {
-	  empty?	-> []
-	| otherwise	-> xs ++ concat xss'
+	  empty?	=> []
+	| otherwise	=> xs ++ concat xss'
 		where val [xs|xss'] = xss
 	}
 
@@ -142,8 +142,8 @@ module LIST = struct {
 
 	# join-string : STRING -> [STRING] -> STRING
 	fun join-string = j xs -> cond xs {
-	  empty?	-> ""
-	| otherwise	-> if (empty? xs')
+	  empty?	=> ""
+	| otherwise	=> if (empty? xs')
 							x
 						else
 							x ^ fold "" { x' s -> s ^ j ^ x' } xs'
@@ -153,16 +153,16 @@ module LIST = struct {
 
 	# reverse : ['a] -> ['a]
 	fun rec reverse = xs -> cond xs {
-	  empty?	-> []
-	| otherwise	-> reverse xs' ++ [x]
+	  empty?	=> []
+	| otherwise	=> reverse xs' ++ [x]
 		where val [x|xs'] = xs
 	}
 
 	val reverse' = rev []
 	where {
 		fun rec rev = a xs -> cond xs {
-		  empty?	-> a
-		| otherwise	-> rev [x|a] xs'
+		  empty?	=> a
+		| otherwise	=> rev [x|a] xs'
 			where val [x|xs'] = xs
 		}
 	}
@@ -186,8 +186,8 @@ module LIST = struct {
 	val zip' = foldr (const []) f
 	where {
 		fun f = x g ys -> cond ys {
-		  empty?	-> []
-		| otherwise	-> [(x, y) | g ys']
+		  empty?	=> []
+		| otherwise	=> [(x, y) | g ys']
 			where val (y, ys') = ys.des
 		}
 	}
@@ -195,8 +195,8 @@ module LIST = struct {
 
 	# unzip : [('a, 'b)] -> (['a], ['b])
 	fun rec unzip = xs -> cond xs {
-	  empty?	-> ([], [])
-	| otherwise	-> ([y|ys'], [z|zs'])
+	  empty?	=> ([], [])
+	| otherwise	=> ([y|ys'], [z|zs'])
 		where
 			val [pair|xs']	= xs
 			val (y, z)		= pair
@@ -208,8 +208,8 @@ module LIST = struct {
 
 	# partition : ('a -> BOOL) -> ['a] -> (['a], ['a])
 	fun rec partition = f xs -> cond xs {
-	  empty?	-> ([], [])
-	| otherwise	-> if (f x)
+	  empty?	=> ([], [])
+	| otherwise	=> if (f x)
 						([x|ys],    zs)
 					else
 						(   ys,  [x|zs])
@@ -228,8 +228,8 @@ module LIST = struct {
 
 	# sort : ('a -> 'a -> BOOL) -> ['a] -> ['a]
 	fun rec sort = lt? xs -> cond xs {
-	  empty?	-> []
-	| otherwise	-> sort lt? littles ++ [pivot] ++ sort lt? bigs
+	  empty?	=> []
+	| otherwise	=> sort lt? littles ++ [pivot] ++ sort lt? bigs
 		where
 			val [pivot|xs']		= xs
 			val (littles, bigs)	= partition { x -> lt? x pivot } xs'
