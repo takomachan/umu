@@ -161,7 +161,7 @@ fun rec parse = exp -> cond exp {
   const?	=> EXP::mk-const exp
 | var?		=> EXP::mk-var exp
 | form?		=> parse-form exp
-| otherwise	=> ERROR::syntax ("Unknown Expression: ", exp)
+  else		=> ERROR::syntax ("Unknown Expression: ", exp)
 } where {
 	# const? : 'a -> Bool
 	fun const? = exp -> exp ako? Int
@@ -181,7 +181,7 @@ fun rec parse = exp -> cond exp {
 			  (== @LAMBDA)	=> parse-lambda	args
 			| (== @IF)		=> parse-if		args
 			| (== @LETREC)	=> parse-letrec	args
-			| otherwise		=> parse-apply	exp
+			  else			=> parse-apply	exp
 			}
 		else
 			parse-apply	exp
@@ -394,7 +394,7 @@ where {
 	| (== @EQ)		=> mk-binop (==) VAL::mk-boolean
 	| (== @LT)		=> mk-binop (<)  VAL::mk-boolean
 
-	| otherwise		=> ERROR::name ("Unknown VAR: ", x)
+	  else			=> ERROR::name ("Unknown VAR: ", x)
 	} where {
 		# int : <VAL> -> Int
 		fun int = x ->

@@ -189,14 +189,8 @@ fun abs = x -> cond x {
 ### abs' : Real -> Real
 fun abs' = x -> cond x {
   (< 0.0)	=> ~ x
-| otherwise	=> x
+  else		=> x
 } ;;
-
-### abs'' : Real -> Real
-fun abs'' = x -> (
-	if (x < 0.0)	~ x
-	else			x
-) ;;
 
 
 { x -> x > 5 andalso x < 10 } ;;
@@ -392,7 +386,7 @@ print "\n\nSECTION 1.2.2" ;;
 fun rec fib = n -> cond n {
   (== 0)	=> 0
 | (== 1)	=> 1
-| otherwise	=> fib (n - 1) + fib (n - 2)
+  else		=> fib (n - 1) + fib (n - 2)
 }
 
 ;;
@@ -558,7 +552,7 @@ fun prime? = n -> n == smallest-divisor n ;;
 fun rec expmod = base exp m -> cond exp {
   (== 0)	=> 1
 | even?		=> square (expmod base (exp / 2) m) mod m
-| otherwise	=> (base * expmod base (exp - 1) m) mod m
+  else		=> (base * expmod base (exp - 1) m) mod m
 }
 
 ### fermat-test : Int -> Bool
@@ -802,7 +796,7 @@ in
 		cond test-value {
 		  positive?	=> search f neg-point midpoint
 		| negative?	=> search f midpoint  pos-point
-		| otherwise	=> midpoint
+		  else		=> midpoint
 		}
 	}
 }

@@ -26,21 +26,17 @@ module DATUM = UMU::DATUM
 ;; print "\n\nSECTION 3.3.3"
 ;;
 
-###		assoc : Symbol -> @['a] -> <OPTION> (Symbol, 'a)
-fun rec assoc = key records -> (
-	if (empty? records)
-		NONE
-	else let {
-		val [record|records'] = records
-	in
-		if (key == fst record)
-			Some record
-		else
-			assoc key records'
-	}
-)
+###		assoc : Symbol -> [(Symbol, 'a)] -> <OPTION> (Symbol, 'a)
+fun rec assoc = key records -> cond records {
+	empty?	=> NONE
+	else	=> if (key == fst x)
+					Some x
+			   else
+					assoc key xs
+				where val [x|xs] = records
+}
 
-### lookup-1 = Symbol -> <TABLE> @['a] -> <OPTION> 'a
+### lookup-1 = Symbol -> <TABLE> [(Symbol, 'a)] -> <OPTION> 'a
 fun lookup-1 = key table -> let {
 	val opt-record = assoc key (val-of table)
 in
@@ -67,13 +63,17 @@ fun make-table = records -> DATUM::make @Table records
 # -> Some 2
 
 ;; lookup-1 @d t1
-# -> NONE ()
+# -> NONE
 ;;
 
 
 #### two-dimensional ####
 
-### lookup-2 = Symbol Symbol -> <TABLE> @[@['a]] -> <OPTION> 'a
+(### lookup-2 = Symbol ->
+				Symbol ->
+				<TABLE> [(Symbol, [(Symbol, 'a)])] ->
+				<OPTION> 'a
+###)
 fun lookup-2 = key-1 key-2 table -> let {
 	val opt-subtable = assoc key-1 (val-of table)
 in
@@ -113,10 +113,10 @@ in
 # -> Some 97
 
 ;; lookup-2 @nath @"-" t2
-# -> NONE ()
+# -> NONE
 
 ;; lookup-2 @math @"/" t2
-# -> NONE ()
+# -> NONE
 ;;
 
 
@@ -141,7 +141,7 @@ fun make-table' = records -> let {
 
 	fun dispatch = m -> cond m {
 	  (== @lookup-proc)	=> lookup
-	| otherwise			=> error (
+	  else				=> error (
 								"Unknown operation -- TABLE: " ^ inspect m
 							)
 	}
@@ -170,8 +170,8 @@ val get = operation-table @lookup-proc
 # -> Some 97
 
 ;; get @nath @"-"
-# -> NONE ()
+# -> NONE
 
 ;; get @math @"/"
-# -> NONE ()
+# -> NONE
 ;;

@@ -238,19 +238,17 @@ module UMU = struct {
 		# equal-with? : ('a -> 'b -> Bool) -> ['a] -> ['b] -> Bool
 		fun rec equal-with? = eq? xs ys ->
 			if (xs ako? List andalso ys ako? List)
-				if (Empty? xs)
-					Empty? ys
-				else
-					if (Empty? ys)
-						FALSE
-					else let {
-						val [x|xs'] = xs
-						val [y|ys'] = ys
-					in
-						eq? x y andalso equal-with? eq? xs' ys'
+				cond xs {
+					Empty?	=> Empty? ys
+					else	=> cond ys {
+				  		Empty?	=> BOOL::FALSE
+						else	=> eq? x y andalso equal-with? eq? xs' ys'
+									where val [x|xs'] = xs
+										  val [y|ys'] = ys
 					}
+				}
 			else
-				FALSE
+				BOOL::FALSE
 
 
 		# equal? : ['a] -> ['b] -> Bool
@@ -258,47 +256,35 @@ module UMU = struct {
 
 
 		# fold : 'b -> ('a -> 'b -> 'b) -> ['a] -> 'b
-		fun rec fold = a f xs ->
-			if (Empty? xs)
-				a
-			else let {
-				val [x|xs'] = xs
-			in
-				fold (f x a) f xs'
-			}
+		fun rec fold = a f xs -> cond xs {
+			Empty?	=> a
+			else	=> fold (f x a) f xs'
+						where val [x|xs'] = xs
+		}
 
 
 		# fold1 : ('a -> 'a -> 'a) -> ['a] -> 'a
-		fun rec fold1 = f xs ->
-			if (Empty? xs)
-				@(String$error) "Empty list"
-			else let {
-				val [x|xs'] = xs
-			in
-				fold x f xs'
-			}
+		fun rec fold1 = f xs -> cond xs {
+			Empty?	=> @(String$error) "Empty list"
+			else	=> fold x f xs'
+						where val [x|xs'] = xs
+		}
 
 
 		# foldr : 'b -> ('a -> 'b -> 'b) -> ['a] -> 'b
-		fun rec foldr = a f xs ->
-			if (Empty? xs)
-				a
-			else let {
-				val [x|xs'] = xs
-			in
-				f x (foldr a f xs')
-			}
+		fun rec foldr = a f xs -> cond xs {
+			Empty?	=> a
+			else	=> f x (foldr a f xs')
+						where val [x|xs'] = xs
+		}
 
 
 		# foldl : 'b -> ('b -> 'a -> 'b) -> ['a] -> 'b
-		fun rec foldl = a f xs ->
-			if (Empty? xs)
-				a
-			else let {
-				val [x|xs'] = xs
-			in
-				foldl (f a x) f xs'
-			}
+		fun rec foldl = a f xs -> cond xs {
+			Empty?	=> a
+			else	=> foldl (f a x) f xs'
+						where val [x|xs'] = xs
+		}
 
 
 		# length : ['a] -> Int
@@ -338,14 +324,11 @@ module UMU = struct {
 		where {
 			fun e = _ -> []
 
-			fun g = x h ys ->
-				if (Empty? ys)
-					[]
-				else let {
-					val [y|ys'] = ys
-				in
-					[f x y | h ys']
-				}
+			fun g = x h ys -> cond ys {
+				Empty?	=> []
+				else	=> [f x y | h ys']
+							where val [y|ys'] = ys
+			}
 		}
 
 
@@ -367,15 +350,13 @@ module UMU = struct {
 
 
 		# sort-with : ('a -> 'a -> Bool) -> ['a] -> ['a]
-		fun rec sort-with = f xs ->
-			if (Empty? xs)
-				[]
-			else let {
-				val [pivot|xs']		= xs
-				val (littles, bigs)	= partition { x -> f x pivot } xs'
-			in
+		fun rec sort-with = f xs -> cond xs {
+			Empty?	=> []
+			else	=>
 				concat [sort-with f littles, [pivot], sort-with f bigs]
-			}
+				where val [pivot|xs']	  = xs
+					  val (littles, bigs) = partition { x -> f x pivot } xs'
+		}
 
 
 		# sort : ['a] -> ['a]
@@ -392,23 +373,17 @@ module UMU = struct {
 
 
 		# join : String -> [String] -> String
-		fun join = j xs ->
-			if (LIST::Empty? xs)
-				""
-			else let {
-				val [x|xs'] = xs
-			in
-				if (LIST::Empty? xs')
-					x
-				else
-					@(String$^)
-						x
-						(LIST::fold
-							""
-							{ x' s -> @(String$^) (@(String$^) s j) x' }
-							xs'
-						)
+		fun join = j xs -> cond xs {
+			LIST::Empty?	=> ""
+			else			=> cond xs' {
+				LIST::empty?	=> x
+				else			=> @(String$^) x xs''
+					where val [x|xs'] = xs
+						  val xs'' = LIST::fold
+								""
+								{ x' s -> @(String$^) (@(String$^) s j) x' }
 			}
+		}
 
 
 		# concat : [String] -> String
