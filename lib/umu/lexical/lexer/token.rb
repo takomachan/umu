@@ -42,7 +42,7 @@ RESERVED_WORDS = [
 	# Not used, but reserved for future
 
 	# For pattern matching
-	'as', 'case',
+	'as', 'case', 'match',
 
 	# For pragma
 	'package', 'pragma', 'useing',
@@ -50,22 +50,19 @@ RESERVED_WORDS = [
 	# For module language
 	'functor', 'including', 'opening', 'signat',
 
-	# For declaration of data type
+	# For data type declaration
 	'data',	'datum', 'newtype', 'type',
 
 	# For object type
 	'abstract', 'alias', 'class', 'def', 'isa', 'new', 'self', 'super',
 
-	# For declaration of infix operator
+	# For infix operator declaration
 	'infix', 'infixr', 'nofix',
 
 	# For continuation
-	'callcc', 'escape',
+	'callcc', 'throw',
 
-	# For exception handling
-	'catch', 'exception', 'handle', 'raise', 'throw',
-
-	# For lazy evaluation
+	# For delayed evaluation
 	'delay', 'force', 'lazy',
 
 	# For non-determinism
@@ -94,8 +91,8 @@ RESERVED_SYMBOLS = [
 
 	# Not used, but reserved for future
 
-	# For declaration of data type
-	':',
+	# For data type declaration
+	':', '<:',
 
 	# For refernce type
 	'!', ':=',
@@ -123,17 +120,17 @@ IDENTIFIER_SYMBOLS = [
 
 BRAKET_PAIRS = [
 	['(',	')'],	# Tuple, etc
-	['@(',	')'],	# Method, Class
+	['@(',	')'],	# Method
 	['[',	']'],	# List
 	['{',	'}'],	# Lambda, etc
 
 
 	# Not used, but reserved for future
 
-	['@[',	']'],	# Dictionary
+	['%[',	']'],	# Stream
 	['%(',	')'],	# Set
-	['%[',	']'],	# Vector
-	['%{',	'}']	# Map
+	['%{',	'}'],	# Map
+	['@[',	']']	# Dictionary(Key-Value list)
 ]
 
 
