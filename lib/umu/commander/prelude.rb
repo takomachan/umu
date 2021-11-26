@@ -433,9 +433,6 @@ module UMU = struct {
 		# not		: Bool -> Bool
 		val not = @(Bool$not)
 
-		# otherwise	: 'a -> Bool
-		fun otherwise = _ -> TRUE
-
 
 		#### Number ####
 
@@ -700,7 +697,7 @@ module struct {
 	#### Bool ####
 	val (
 		TRUE, FALSE,
-		not, otherwise
+		not
 	)
 
 	#### Number ####

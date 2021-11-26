@@ -350,7 +350,7 @@ where {
 								else
 									e x
 
-	| otherwise => ERROR::abort ("Unknown EXP: ", r)
+	  else => ERROR::abort ("Unknown EXP: ", r)
 
 	} where {
 		# evlambda : (<LAMBDA>, <ENV>) -> <FUNVAL>
