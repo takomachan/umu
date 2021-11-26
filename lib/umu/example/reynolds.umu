@@ -20,23 +20,23 @@
 ######## Error ########
 
 module ERROR = struct {
-	# abort : (String, 'a) -> ()
-	fun abort		= (msg, x) -> _error ("Assertion Fail",		msg, x)
+	# failure : (String, 'a) -> ()
+	fun failure		= (msg, x) -> error ("Assertion Failure",	msg, x)
 
 	# syntax : (String, 'a) -> ()
-	fun syntax		= (msg, x) -> _error ("Syntax Error",		msg, x)
+	fun syntax		= (msg, x) -> error ("Syntax Error",		msg, x)
 
 	# name : (String, 'a) -> ()
-	fun name		= (msg, x) -> _error ("Name Error",			msg, x)
+	fun name		= (msg, x) -> error ("Name Error",			msg, x)
 
 	# application : (String, 'a) -> ()
-	fun application	= (msg, x) -> _error ("Application Error",	msg, x)
+	fun application	= (msg, x) -> error ("Application Error",	msg, x)
 
 	# type' : (String, 'a) -> ()
-	fun type'		= (msg, x) -> _error ("Type Error",			msg, x)
+	fun type'		= (msg, x) -> error ("Type Error",			msg, x)
 } where {
-	fun _error = (category, msg, x) ->
-		error ("[" ^ category ^ "] " ^ msg ^ inspect x)
+	fun error = (category, msg, x) ->
+		abort ("[" ^ category ^ "] " ^ msg ^ inspect x)
 }
 
 
@@ -339,7 +339,7 @@ where {
 			val (dvar, dexp, body)	= val-of r
 
 			val _ = unless (EXP::lambda? dexp)
-						ERROR::abort (
+						ERROR::failure (
 							"In LETREC, expected a LAMBDA, but: ",
 							r
 						)
@@ -350,7 +350,7 @@ where {
 								else
 									e x
 
-	  else => ERROR::abort ("Unknown EXP: ", r)
+	  else => ERROR::failure ("Unknown EXP: ", r)
 
 	} where {
 		# evlambda : (<LAMBDA>, <ENV>) -> <FUNVAL>

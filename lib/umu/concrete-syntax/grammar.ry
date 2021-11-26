@@ -238,12 +238,8 @@ expr:
 | UNLESS if_rule {
 	result = SCCE.make_unless val[0].pos, val[1]
 }
-| COND atom_expr '{' cond_rules opt_else_rule '}' {
-	opt_else_expr, else_decls = val[4]
-
-	result = SCCE.make_cond(
-					val[0].pos, val[1], val[3], opt_else_expr, else_decls
-				)
+| COND atom_expr '{' cond_rules ELSE '=>' expr opt_inner_where_decls '}' {
+	result = SCCE.make_cond val[0].pos, val[1], val[3], val[6], val[7]
 }
 | LET '{' opt_core_decls IN expr '}' {
 	result = SCCE.make_let val[0].pos, val[2], val[4]
@@ -264,10 +260,6 @@ cond_rules:
 cond_rule: expr '=>' expr opt_inner_where_decls {
 	result = SCCE.make_cond_rule val[0].pos, val[0], val[2], val[3]
 }
-
-opt_else_rule:
-  /* empty */							{ result = [nil,    []] }
-| ELSE '=>' expr opt_inner_where_decls	{ result = [val[2], val[3]] }
 
 
 # Infix operator expression

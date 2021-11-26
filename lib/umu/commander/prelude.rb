@@ -265,7 +265,7 @@ module UMU = struct {
 
 		# fold1 : ('a -> 'a -> 'a) -> ['a] -> 'a
 		fun rec fold1 = f xs -> cond xs {
-			Empty?	=> @(String$error) "Empty list"
+			Empty?	=> @(String$abort) "Empty list"
 			else	=> fold x f xs'
 						where val [x|xs'] = xs
 		}
@@ -368,8 +368,8 @@ module UMU = struct {
 	######## String ########
 
 	module STRING = struct {
-		# error : String -> ()
-		val error = @(String$error)
+		# abort : String -> ()
+		val abort = @(String$abort)
 
 
 		# join : String -> [String] -> String
@@ -499,8 +499,8 @@ module UMU = struct {
 
 		#### String ####
 
-		# error		: String -> ()
-		val error = STRING::error
+		# abort		: String -> ()
+		val abort = STRING::abort
 
 		# (^)		: String -> String -> String
 		val (^) = @(String$^)
@@ -714,7 +714,7 @@ module struct {
 	)
 
 	#### String ####
-	val (error, (^), join)
+	val (abort, (^), join)
 
 	#### I/O ####
 	val (gets, puts, display, tab, nl, print, p)

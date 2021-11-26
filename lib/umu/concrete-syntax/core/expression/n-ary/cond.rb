@@ -15,22 +15,22 @@ module Expression
 module Nary
 
 class Cond < Expression::Abstract
-	attr_reader :expr, :rules, :opt_else_expr, :else_decls
+	attr_reader :expr, :rules, :else_expr, :else_decls
 
 
-	def initialize(pos, expr, rules, opt_else_expr, else_decls)
-		ASSERT.kind_of		expr,			SCCE::Abstract
-		ASSERT.kind_of		rules,			::Array
+	def initialize(pos, expr, rules, else_expr, else_decls)
+		ASSERT.kind_of expr,		SCCE::Abstract
+		ASSERT.kind_of rules,		::Array
 		ASSERT.assert rules.count >= 1
-		ASSERT.opt_kind_of	opt_else_expr,	SCCE::Abstract
-		ASSERT.kind_of		else_decls,		::Array
+		ASSERT.kind_of else_expr,	SCCE::Abstract
+		ASSERT.kind_of else_decls,	::Array
 
 		super(pos)
 
-		@expr			= expr
-		@rules			= rules
-		@opt_else_expr	= opt_else_expr
-		@else_decls		= else_decls
+		@expr		= expr
+		@rules		= rules
+		@else_expr	= else_expr
+		@else_decls	= else_decls
 	end
 
 
@@ -40,21 +40,17 @@ class Cond < Expression::Abstract
 
 			rules.map(&:to_s).join(' | '),
 
-			if self.opt_else_expr
-				format(" else %s%s",
-					self.opt_else_expr.to_s,
+			format(" else %s%s",
+				self.else_expr.to_s,
 
-					unless self.else_decls.empty?
-						format(" where %s",
-							self.else_decls.map(&:to_s).join(' ')
-						)
-					else
-						''
-					end
-				)
-			else
-				''
-			end
+				unless self.else_decls.empty?
+					format(" where %s",
+						self.else_decls.map(&:to_s).join(' ')
+					)
+				else
+					''
+				end
+			)
 		)
 	end
 
@@ -64,8 +60,9 @@ private
 	def __desugar__(env, event)
 		new_env = env.enter event
 
-		opnd_expr	= self.expr.desugar(new_env)
-		rules		= self.rules.map { |rule|
+		opnd_expr = self.expr.desugar(new_env)
+
+		rules = self.rules.map { |rule|
 			ASSERT.kind_of rule, Rule::Cond
 
 			opr_expr	= rule.test_expr.desugar(new_env)
@@ -85,22 +82,18 @@ private
 
 			SACE.make_rule rule.pos, test_expr, then_expr
 		}
-		else_expr	= if self.opt_else_expr
-							else_expr_ = self.opt_else_expr.desugar(new_env)
 
-							unless self.else_decls.empty?
-								SACE.make_let(
-									else_expr_.pos,
-									self.else_decls.map { |decl|
-										decl.desugar new_env
-									},
-									else_expr_
-								)
-							else
+		else_expr_ = self.else_expr.desugar(new_env)
+		else_expr	= unless self.else_decls.empty?
+							SACE.make_let(
+								else_expr_.pos,
+								self.else_decls.map { |decl|
+									decl.desugar new_env
+								},
 								else_expr_
-							end
+							)
 						else
-							SACE.make_unit(self.pos)
+							else_expr_
 						end
 
 		SACE.make_if self.pos, rules, else_expr
@@ -112,14 +105,14 @@ end	# Umu::ConcreteSyntax::Core::Expression::Nary
 
 module_function
 
-	def make_cond(pos, expr, rules, opt_else_expr, else_decls)
-		ASSERT.kind_of		pos,			L::Position
-		ASSERT.kind_of		expr,			SCCE::Abstract
-		ASSERT.kind_of		rules,			::Array
-		ASSERT.opt_kind_of	opt_else_expr,	SCCE::Abstract
+	def make_cond(pos, expr, rules, else_expr, else_decls)
+		ASSERT.kind_of pos,			L::Position
+		ASSERT.kind_of expr,		SCCE::Abstract
+		ASSERT.kind_of rules,		::Array
+		ASSERT.kind_of else_expr,	SCCE::Abstract
 		ASSERT.kind_of		else_decls,		::Array
 
-		Nary::Cond.new(pos, expr, rules, opt_else_expr, else_decls).freeze
+		Nary::Cond.new(pos, expr, rules, else_expr, else_decls).freeze
 	end
 
 end	# Umu::ConcreteSyntax::Core::Expression

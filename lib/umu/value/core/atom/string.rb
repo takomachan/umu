@@ -15,8 +15,8 @@ class String < Abstract
 		[:meth_less_than,	VCA::Bool,
 			:'<',			self],
 
-		[:meth_error,		VC::Unit,
-			:error],
+		[:meth_abort,		VC::Unit,
+			:abort],
 		[:meth_append,		self,
 			:'^',			self]
 	]
@@ -44,8 +44,8 @@ class String < Abstract
 	end
 
 
-	def meth_error(env, event)
-		raise X::UserError.new(self.pos, env, self.val)
+	def meth_abort(env, event)
+		raise X::Abort.new(self.pos, env, self.val)
 	end
 
 

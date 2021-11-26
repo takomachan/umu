@@ -261,7 +261,7 @@ fun dispa-cons = x y -> dispatch where {
 	fun dispatch = m -> cond m {
 	  (== 0)	=> x
 	| (== 1)	=> y
-	  else		=> error ("Argument not 0 or 1 -- CONS: " ^ (to-s m))
+	  else		=> abort ("Argument not 0 or 1 -- CONS: " ^ (to-s m))
 	}
 }
 
@@ -967,7 +967,7 @@ fun rec deriv = exp var -> cond exp {
 						(deriv (multiplier exp) var)
 						(multiplicand exp)
 					)
-  else		=> error ("unknown expression type -- DERIV: " ^ inspect exp)
+  else		=> abort ("unknown expression type -- DERIV: " ^ inspect exp)
 }
 
 ;; deriv (@"+", @x, 3) @x
@@ -1016,7 +1016,7 @@ fun rec deriv' = exp var -> cond exp {
 						(deriv' (multiplier exp) var)
 						(multiplicand exp)
 					)
-  else		=> error ("unknown expression type -- DERIV: " ^ inspect exp)
+  else		=> abort ("unknown expression type -- DERIV: " ^ inspect exp)
 }
 
 ;; deriv' (@"+", @x, 3) @x
@@ -1078,9 +1078,9 @@ fun rec element-of-set'? = e set -> cond set {
 		val [x|xs] = set
 	in
 		cond e {
-			(== x)	=> TRUE
-		|	(<  x)	=> FALSE
-			else	=> element-of-set'? e xs
+		  (== x) => TRUE
+		| (<  x) => FALSE
+		  else	 => element-of-set'? e xs
 		}
 	}
 }
@@ -1096,6 +1096,7 @@ fun rec intersection-set' = set1 set2 -> (
 		  (== x2) => [x1 | intersection-set' xs1  xs2]
 		| (<  x2) => 	   intersection-set' xs1  set2
 		| (>  x2) => 	   intersection-set' set1 xs2
+		  else	  => abort "ABORT"
 		}
 	}
 )
@@ -1125,7 +1126,7 @@ fun rec element-of-set? = e set -> (
 			(== x)	=> TRUE
 		|	(<  x)	=> element-of-set? e (left-branch set)
 		|	(>  x)	=> element-of-set? e (right-branch set)
-			else	=> error "ABORT"
+			else	=> abort "ABORT"
 		}
 	}
 )
@@ -1146,7 +1147,7 @@ fun rec adjoin-set = e set -> (
 						x
 						(left-branch set)
 						(adjoin-set e (right-branch set))
-			else	=> error "ABORT"
+			else	=> abort "ABORT"
 		}
 	}
 )
@@ -1267,7 +1268,7 @@ fun decode = bits tree -> decode-1 bits tree where {
 	fun choose-branch = bit branch -> cond bit {
 		(== 0)	=> left-branch branch
 	|	(== 1)	=> right-branch branch
-		else	=> error ("bad bit -- CHOOSE-BRANCH: " ^ inspect bit)
+		else	=> abort ("bad bit -- CHOOSE-BRANCH: " ^ inspect bit)
 	}
 
 	fun rec decode-1 = bits current-branch -> cond bits {
@@ -1511,28 +1512,28 @@ fun make-from-mag-ang-polar = r a -> (
 fun real-part = z -> cond z {
 	rectanglar?	=> real-part-rectanglar (contents z)
 |	polar?		=> real-part-polar      (contents z)
-	else		=> error ("Unknown type -- REAL-PART: " ^ inspect z)
+	else		=> abort ("Unknown type -- REAL-PART: " ^ inspect z)
 }
 
 
 fun imag-part = z -> cond z {
 	rectanglar?	=> imag-part-rectanglar (contents z)
 |	polar?		=> imag-part-polar      (contents z)
-	else		=> error ("Unknown type -- IMAG-PART: " ^ inspect z)
+	else		=> abort ("Unknown type -- IMAG-PART: " ^ inspect z)
 }
 
 
 fun magnitude = z -> cond z {
 	rectanglar?	=> magnitude-rectanglar (contents z)
 |	polar?		=> magnitude-polar      (contents z)
-	else		=> error ("Unknown type -- MAGNITUDE: " ^ inspect z)
+	else		=> abort ("Unknown type -- MAGNITUDE: " ^ inspect z)
 }
 
 
 fun angle = z -> cond z {
 	rectanglar?	=> angle-rectanglar (contents z)
 |	polar?		=> angle-polar      (contents z)
-	else		=> error ("Unknown type -- ANGLE: " ^ inspect z)
+	else		=> abort ("Unknown type -- ANGLE: " ^ inspect z)
 }
 
 

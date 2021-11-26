@@ -108,12 +108,12 @@ class TypeError				< Abstraction::RuntimeError; end
 class ArgumentError			< Abstraction::RuntimeError; end
 class ApplicationError		< Abstraction::RuntimeError; end
 class SelectionError		< Abstraction::RuntimeError; end
-class UserError				< Abstraction::RuntimeError; end
 class EqualityError			< Abstraction::RuntimeError; end
 class OrderError			< Abstraction::RuntimeError; end
 class NoMethodError			< Abstraction::RuntimeError; end
 class ZeroDivisionError		< Abstraction::RuntimeError; end
 class EmptyError			< Abstraction::RuntimeError; end
+class Abort					< Abstraction::RuntimeError; end
 
 
 
