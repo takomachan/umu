@@ -321,9 +321,12 @@ class Entry < Abstraction::CartesianProduct
 		ASSERT.kind_of rhs_spec,	ECTSC::Base
 
 		lhs_spec = self.class_spec_of lhs_value
-		ASSERT.kind_of lhs_spec, ECTSC::Base
+		ASSERT.kind_of lhs_spec, ECTSC::Abstract
 
-		result = if lhs_spec == rhs_spec
+		result = (
+					lhs_spec.kind_of? ECTSC::Base
+				) && (
+					if lhs_spec == rhs_spec
 						true
 					else
 						rhs_specs = self.descendants_of rhs_spec
@@ -331,6 +334,7 @@ class Entry < Abstraction::CartesianProduct
 
 						rhs_specs.member? lhs_spec
 					end
+				)
 		ASSERT.bool result
 	end
 
