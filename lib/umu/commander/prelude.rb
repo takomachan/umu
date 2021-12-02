@@ -264,11 +264,8 @@ module UMU = struct {
 
 
 		# fold1 : ('a -> 'a -> 'a) -> ['a] -> 'a
-		fun rec fold1 = f xs -> cond xs {
-			Empty?	=> @(String$abort) "Empty list"
-			else	=> fold x f xs'
-						where val [x|xs'] = xs
-		}
+		fun fold1 = f xs -> fold x f xs'
+							where { val [x|xs'] = xs }
 
 
 		# foldr : 'b -> ('a -> 'b -> 'b) -> ['a] -> 'b
@@ -349,18 +346,14 @@ module UMU = struct {
 		}
 
 
-		# sort-with : ('a -> 'a -> Bool) -> ['a] -> ['a]
-		fun rec sort-with = f xs -> cond xs {
+		# sort : ('a -> 'a -> Bool) -> ['a] -> ['a]
+		fun rec sort = f xs -> cond xs {
 			Empty?	=> []
 			else	=>
-				concat [sort-with f littles, [pivot], sort-with f bigs]
+				concat [sort f littles, [pivot], sort f bigs]
 				where val [pivot|xs']	  = xs
 					  val (littles, bigs) = partition { x -> f x pivot } xs'
 		}
-
-
-		# sort : ['a] -> ['a]
-		val sort = sort-with @(Top$<)
 	}
 
 
