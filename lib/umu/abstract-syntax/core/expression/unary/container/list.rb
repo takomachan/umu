@@ -65,7 +65,7 @@ private
 
 					tail_value
 				else
-					VC.make_empty pos
+					VC.make_nil pos
 				end
 
 		self.exprs.reverse_each do |x|

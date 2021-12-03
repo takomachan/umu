@@ -12,16 +12,16 @@ module List
 
 class Abstract < Top
 	CLASS_METHOD_INFOS = [
-		[:meth_make_empty,	self,
-			:'make-empty'],
+		[:meth_make_nil,	self,
+			:'make-nil'],
 		[:meth_make_cons,	self,
 			:'make-cons',	VC::Top, self]
 	]
 
 
 	INSTANCE_METHOD_INFOS = [
-		[ :meth_empty?,	VCA::Bool,
-			:empty?],
+		[ :meth_nil?,	VCA::Bool,
+			:nil?],
 		[ :meth_cons?,	VCA::Bool,
 			:cons?],
 		[ :meth_cons,	self,
@@ -34,8 +34,8 @@ class Abstract < Top
 	include Enumerable
 
 
-	def self.meth_make_empty(env, event)
-		VC.make_empty L.make_position(__FILE__, __LINE__)
+	def self.meth_make_nil(env, event)
+		VC.make_nil L.make_position(__FILE__, __LINE__)
 	end
 
 
@@ -51,7 +51,7 @@ class Abstract < Top
 		return self.to_enum unless block_given?
 
 		xs = self
-		until xs.empty?
+		until xs.nil?
 			begin
 				yield xs.head
 			rescue StopIteration
@@ -70,7 +70,7 @@ class Abstract < Top
 	end
 
 
-	def empty?
+	def nil?
 		raise X::SubclassResponsibility
 	end
 
@@ -88,7 +88,7 @@ class Abstract < Top
 	end
 
 
-	def meth_empty?(_env, _event)
+	def meth_nil?(_env, _event)
 		raise X::SubclassResponsibility
 	end
 
@@ -113,12 +113,12 @@ end
 
 
 class Nil < Abstract
-	def empty?
+	def nil?
 		true
 	end
 
 
-	def meth_empty?(_env, _event)
+	def meth_nil?(_env, _event)
 		VC.make_true self.pos
 	end
 
@@ -154,12 +154,12 @@ class Cons < Abstract
 	end
 
 
-	def empty?
+	def nil?
 		false
 	end
 
 
-	def meth_empty?(_env, _event)
+	def meth_nil?(_env, _event)
 		VC.make_false self.pos
 	end
 
@@ -179,7 +179,7 @@ end	# Umu::Value::Core::List
 
 module_function
 
-	def make_empty(pos)
+	def make_nil(pos)
 		ASSERT.kind_of pos, L::Position
 
 		List::Nil.new(pos).freeze

@@ -207,16 +207,16 @@ module UMU = struct {
 	######## List ########
 
 	module LIST = struct {
-		# Empty : () -> ['a]
-		val Empty = @(List.make-empty)
+		# Nil : () -> ['a]
+		val Nil = @(List.make-nil)
 
 
 		# Cons : 'a -> ['a] -> ['a]
 		val Cons = @(List.make-cons)
 
 
-		# Empty? : ['a] -> Bool
-		val Empty? = @(List$empty?)
+		# Nil? : ['a] -> Bool
+		val Nil? = @(List$nil?)
 
 
 		# Cons? : ['a] -> Bool
@@ -239,9 +239,9 @@ module UMU = struct {
 		fun rec equal-with? = eq? xs ys ->
 			if (xs ako? List andalso ys ako? List)
 				cond xs {
-					Empty?	=> Empty? ys
+					Nil?	=> Nil? ys
 					else	=> cond ys {
-				  		Empty?	=> BOOL::FALSE
+				  		Nil?	=> BOOL::FALSE
 						else	=> eq? x y andalso equal-with? eq? xs' ys'
 									where val [x|xs'] = xs
 										  val [y|ys'] = ys
@@ -257,7 +257,7 @@ module UMU = struct {
 
 		# fold : 'b -> ('a -> 'b -> 'b) -> ['a] -> 'b
 		fun rec fold = a f xs -> cond xs {
-			Empty?	=> a
+			Nil?	=> a
 			else	=> fold (f x a) f xs'
 						where val [x|xs'] = xs
 		}
@@ -270,7 +270,7 @@ module UMU = struct {
 
 		# foldr : 'b -> ('a -> 'b -> 'b) -> ['a] -> 'b
 		fun rec foldr = a f xs -> cond xs {
-			Empty?	=> a
+			Nil?	=> a
 			else	=> f x (foldr a f xs')
 						where val [x|xs'] = xs
 		}
@@ -278,7 +278,7 @@ module UMU = struct {
 
 		# foldl : 'b -> ('b -> 'a -> 'b) -> ['a] -> 'b
 		fun rec foldl = a f xs -> cond xs {
-			Empty?	=> a
+			Nil?	=> a
 			else	=> foldl (f a x) f xs'
 						where val [x|xs'] = xs
 		}
@@ -322,7 +322,7 @@ module UMU = struct {
 			fun e = _ -> []
 
 			fun g = x h ys -> cond ys {
-				Empty?	=> []
+				Nil?	=> []
 				else	=> [f x y | h ys']
 							where val [y|ys'] = ys
 			}
@@ -348,7 +348,7 @@ module UMU = struct {
 
 		# sort : ('a -> 'a -> Bool) -> ['a] -> ['a]
 		fun rec sort = f xs -> cond xs {
-			Empty?	=> []
+			Nil?	=> []
 			else	=>
 				concat [sort f littles, [pivot], sort f bigs]
 				where val [pivot|xs']	  = xs
@@ -367,10 +367,10 @@ module UMU = struct {
 
 		# join : String -> [String] -> String
 		fun join = j xs -> cond xs {
-			LIST::Empty?	=> ""
-			else			=> cond xs' {
-				LIST::empty?	=> x
-				else			=> @(String$^) x xs''
+			LIST::Nil?	=> ""
+			else		=> cond xs' {
+				LIST::Nil?	=> x
+				else		=> @(String$^) x xs''
 					where val [x|xs'] = xs
 						  val xs'' = LIST::fold
 								""
@@ -568,7 +568,7 @@ module UMU = struct {
 		val (++) = LIST::append
 
 		# empty?	: ['a] -> Bool
-		val empty? = LIST::Empty?
+		val empty? = LIST::Nil?
 
 		# des		: ['a] -> ('a, ['a])
 		val des = LIST::des

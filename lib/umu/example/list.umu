@@ -223,7 +223,7 @@ module LIST = struct {
 	}
 } where {
 	module struct {
-		val (Empty? => empty?, Cons => cons)
+		val (Nil? => empty?, Cons => cons)
 	} = UMU::LIST
 }
 
