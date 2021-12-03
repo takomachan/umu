@@ -28,7 +28,7 @@ module LIST = struct {
 		then TRUE, else FALSE
 	#)
 	fun rec equal? = eq? xs ys ->
-		if (xs ako? List andalso ys ako? List)
+		if (xs isa? List andalso ys isa? List)
 			cond xs {
 				empty?	=> empty? ys
 				else	=> cond ys {

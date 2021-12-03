@@ -467,7 +467,7 @@ fun scale-list' = items factor -> map { x -> x * factor } items
 
 
 fun rec count-leaves = xs -> (
-	if (xs ako? List)
+	if (xs isa? List)
 		cond xs {
 			empty?	=> 0
 			else	=> count-leaves x + count-leaves xs'
@@ -500,7 +500,7 @@ val x = [[1, 2] | [3, 4]]
 #### Mapping over trees ####
 
 fun rec scale-tree = tree factor -> (
-	if (tree ako? List)
+	if (tree isa? List)
 		cond tree {
 			empty?	=> []
 			else	=> [scale-tree x factor | scale-tree xs factor]
@@ -516,7 +516,7 @@ fun rec scale-tree = tree factor -> (
 
 
 fun rec scale-tree' = tree factor -> map { sub-tree ->
-	if (sub-tree ako? List)	scale-tree' sub-tree factor
+	if (sub-tree isa? List)	scale-tree' sub-tree factor
 	else					sub-tree * factor
 } tree
 
@@ -535,7 +535,7 @@ fun rec scale-tree' = tree factor -> map { sub-tree ->
 
 ###     sum-odd-squares : [Int] -> Int
 fun rec sum-odd-squares = tree -> (
-	if (tree ako? List)
+	if (tree isa? List)
 		cond tree {
 			empty?	=> 0
 			else	=> sum-odd-squares x + sum-odd-squares xs
@@ -617,7 +617,7 @@ fun rec enumerate-interval = low high -> (
 
 
 fun rec enumerate-tree = tree -> (
-	if (tree ako? List)
+	if (tree isa? List)
 		cond tree {
 			empty?	=> []
 			else	=> enumerate-tree x ++ enumerate-tree xs
@@ -926,9 +926,9 @@ fun rec memq = item sequence -> cond sequence {
 
 #### representing algebraic expressions
 
-fun number? = x -> x ako? Int
+fun number? = x -> x isa? Int
 
-fun variable? = x -> x ako? Symbol
+fun variable? = x -> x isa? Symbol
 
 fun same-variable? = v1 v2 -> (
 	variable? v1 andalso
@@ -940,13 +940,13 @@ fun make-sum = a1 a2 -> (@"+", a1, a2)
 
 fun make-product = a1 a2 -> (@"*", a1, a2)
 
-fun sum? = x -> x ako? Tuple andalso x.1 == @"+"
+fun sum? = x -> x isa? Tuple andalso x.1 == @"+"
 
 fun addend = s -> s.2
 
 fun augend = s -> s.3
 
-fun product? = x -> x ako? Tuple andalso x.1 == @"*"
+fun product? = x -> x isa? Tuple andalso x.1 == @"*"
 
 fun multiplier = s -> s.2
 
@@ -1117,7 +1117,7 @@ fun right-branch = tree -> tree.3
 fun make-tree = entry left right -> (entry, left, right)
 
 fun rec element-of-set? = e set -> (
-	if (set ako? List andalso empty? set)
+	if (set isa? List andalso empty? set)
 		FALSE
 	else let {
 		val x = entry set
@@ -1132,7 +1132,7 @@ fun rec element-of-set? = e set -> (
 )
 
 fun rec adjoin-set = e set -> (
-	if (set ako? List andalso empty? set)
+	if (set isa? List andalso empty? set)
 		make-tree x [] []
 	else let {
 		val x = entry set
@@ -1229,7 +1229,7 @@ fun lookup = given-key set-of-records -> cond set-of-records {
 
 fun make-leaf = symbol weight -> (@leaf, symbol, weight)
 
-fun leaf? = object -> object ako? Tuple andalso object.1 == @leaf
+fun leaf? = object -> object isa? Tuple andalso object.1 == @leaf
 
 fun symbol-leaf = x -> x.2
 

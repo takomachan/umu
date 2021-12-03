@@ -237,7 +237,7 @@ module UMU = struct {
 
 		# equal-with? : ('a -> 'b -> Bool) -> ['a] -> ['b] -> Bool
 		fun rec equal-with? = eq? xs ys ->
-			if (xs ako? List andalso ys ako? List)
+			if (xs isa? List andalso ys isa? List)
 				cond xs {
 					Nil?	=> Nil? ys
 					else	=> cond ys {

@@ -660,7 +660,7 @@ racc_shift_n = 293
 racc_token_table = {
   false => 0,
   :error => 1,
-  :AKO? => 2,
+  :ISA? => 2,
   :POW => 3,
   "*" => 4,
   "/" => 5,
@@ -744,7 +744,7 @@ Racc_arg = [
 Racc_token_to_s_table = [
   "$end",
   "error",
-  "AKO",
+  "ISA",
   "POW",
   "\"*\"",
   "\"/\"",

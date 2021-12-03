@@ -78,13 +78,13 @@ private
 			else
 				case opr_sym
 				# Typing
-				when :AKO?
+				when :ISA?
 					unless rhs_opnd.kind_of?(
 										SACE::Unary::Identifier::Abstract
 									)
 						raise X::SyntaxError.new(
 							rhs_opnd.pos,
-							"RHS of 'ako?' operator " +
+							"RHS of 'isa?' operator " +
 								"require a identifier, but: %s",
 							rhs_opnd.to_s
 						)

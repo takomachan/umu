@@ -2,7 +2,7 @@ class Umu::ConcreteSyntax::Parser
 
 
 convert
-	AKO		':AKO?'
+	ISA		':ISA?'
 end
 
 prechigh
@@ -15,7 +15,7 @@ prechigh
 	right	'<<'
 	left	'|>'
 	right	'<|'
-	left	AKO
+	left	ISA
 	left	ANDALSO ORELSE
 preclow
 
@@ -303,7 +303,7 @@ infix_expr_:
 | infix_expr '>>'		infix_expr	{ result = val }
 | infix_expr '<|'		infix_expr	{ result = val }
 | infix_expr '|>'		infix_expr	{ result = val }
-| infix_expr AKO		infix_expr	{ result = val }
+| infix_expr ISA		infix_expr	{ result = val }
 | infix_expr ANDALSO	infix_expr	{ result = val }
 | infix_expr ORELSE		infix_expr	{ result = val }
 

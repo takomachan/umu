@@ -164,19 +164,19 @@ fun rec parse = exp -> cond exp {
   else		=> ERROR::syntax ("Unknown Expression: ", exp)
 } where {
 	# const? : 'a -> Bool
-	fun const? = exp -> exp ako? Int
+	fun const? = exp -> exp isa? Int
 
 	# var? : 'a -> Bool
-	fun var? = exp -> exp ako? Symbol
+	fun var? = exp -> exp isa? Symbol
 
 	# form? : 'a -> Bool
-	fun form? = exp -> exp ako? List andalso length exp >= 2
+	fun form? = exp -> exp isa? List andalso length exp >= 2
 
 
 	#### <Form> ####
 	# parse-form : List 'a -> <EXP>
 	fun parse-form = exp ->
-		if (keyword ako? Symbol)
+		if (keyword isa? Symbol)
 			cond keyword {
 			  (== @LAMBDA)	=> parse-lambda	args
 			| (== @IF)		=> parse-if		args
@@ -207,7 +207,7 @@ fun rec parse = exp -> cond exp {
 							argc
 						)
 			val [fps, body] = args
-			val _ = unless (fps ako? List)
+			val _ = unless (fps isa? List)
 						ERROR::syntax (
 							"In LAMBDA, expected a List of VAR, but: ",
 							fps

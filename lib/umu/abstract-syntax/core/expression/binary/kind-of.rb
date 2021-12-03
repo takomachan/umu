@@ -27,7 +27,7 @@ class KindOf < Binary::Abstract
 
 
 	def to_s
-		format "(%s ako? %s)", self.expr.to_s, self.type_sym.to_s
+		format "(%s isa? %s)", self.expr.to_s, self.type_sym.to_s
 	end
 
 

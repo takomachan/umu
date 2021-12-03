@@ -23,11 +23,11 @@ WORD_PATTERN	= Regexp.new(
 
 RESERVED_WORDS = [
 	'__FILE__',		'__LINE__',
-	'ako?',			'and',			'andalso',
+	'and',			'andalso',
 	'cond',
 	'else',			'elsif',
 	'fun',
-	'if', 			'in',
+	'if', 			'in',			'isa?',
 	'let',
 	'mod',			'module',
 	'orelse',
