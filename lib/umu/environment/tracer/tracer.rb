@@ -9,7 +9,7 @@ module Environment
 
 module Tracer
 
-class Event < Abstraction::CartesianProduct
+class Event < Abstraction::Record
 	attr_reader :label
 	attr_reader :klass
 	attr_reader :pos

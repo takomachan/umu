@@ -6,7 +6,7 @@ module Umu
 
 module Environment
 
-class Preference < Abstraction::CartesianProduct
+class Preference < Abstraction::Record
 	attr_reader :interactive_mode
 	attr_reader :trace_mode
 	attr_reader :lex_trace_mode

@@ -1,7 +1,7 @@
 module Umu
 	module Abstraction
 		class Model; end
-		class CartesianProduct; end
+		class Record; end
 		class Collection; end
 	end
 	module Lexical

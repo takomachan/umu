@@ -11,7 +11,7 @@ module Type
 
 module Specification
 
-class Method < Abstraction::CartesianProduct
+class Method < Abstraction::Record
 	attr_reader	:meth_sym
 	attr_reader	:ret_class_spec
 	attr_reader	:symbol

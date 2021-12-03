@@ -10,7 +10,7 @@ module Umu
 
 module Environment
 
-class Entry < Abstraction::CartesianProduct
+class Entry < Abstraction::Record
 	attr_reader :ty_context
 	attr_reader :va_context
 	attr_reader :pref

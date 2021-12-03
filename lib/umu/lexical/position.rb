@@ -6,7 +6,7 @@ module Umu
 
 module Lexical
 
-class Position < Abstraction::CartesianProduct
+class Position < Abstraction::Record
 	attr_reader :file_name
 	attr_reader :line_num
 

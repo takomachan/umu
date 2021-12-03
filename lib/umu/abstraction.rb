@@ -76,7 +76,7 @@ end
 
 
 
-class CartesianProduct; end
+class Record; end
 
 
 

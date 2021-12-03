@@ -261,7 +261,7 @@ DESCENDANTS_OF_ANCESTOR.freeze
 
 
 
-class Entry < Abstraction::CartesianProduct
+class Entry < Abstraction::Record
 	def classes
 		CLASSES
 	end
