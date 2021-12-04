@@ -13,7 +13,7 @@ module Specification
 
 module Class
 
-class Abstract < Abstraction::Record
+class Abstract
 	def lookup_instance_method(sym, pos, env)
 		raise X::SubclassResponsibility
 	end

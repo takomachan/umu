@@ -18,6 +18,17 @@ class Entry < Abstraction::Record
 	attr_reader :sources
 
 
+	def self.deconstruct_keys
+		{
+			ty_context:		ECT::Entry,
+			va_context:		ECV::Abstract,
+			pref:			Preference,
+			trace_stack:	Tracer::Stack::Abstract,
+			sources:		::Hash
+		}.freeze
+	end
+
+
 	def initialize(ty_context, va_context, pref, trace_stack, sources)
 		ASSERT.kind_of ty_context,	ECT::Entry
 		ASSERT.kind_of va_context,	ECV::Abstract
@@ -114,13 +125,7 @@ class Entry < Abstraction::Record
 	def update_va_context(va_context)
 		ASSERT.kind_of va_context, ECV::Abstract
 
-		Environment.make_entry(
-			self.ty_context,
-			va_context,
-			self.pref,
-			self.trace_stack,
-			self.sources
-		)
+		self.update(va_context: va_context)
 	end
 
 
@@ -145,13 +150,7 @@ class Entry < Abstraction::Record
 	def update_preference(pref)
 		ASSERT.kind_of pref, Preference
 
-		Environment.make_entry(
-			self.ty_context,
-			self.va_context,
-			pref,
-			self.trace_stack,
-			self.sources
-		)
+		self.update(pref: pref)
 	end
 
 
@@ -226,26 +225,14 @@ private
 	def __update_trace_stack__(stack)
 		ASSERT.kind_of stack, Tracer::Stack::Abstract
 
-		Environment.make_entry(
-			self.ty_context,
-			self.va_context,
-			self.pref,
-			stack,
-			self.sources
-		)
+		self.update(trace_stack: stack)
 	end
 
 
 	def __update_sources__(sources)
 		ASSERT.kind_of sources,		::Hash
 
-		Environment.make_entry(
-			self.ty_context,
-			self.va_context,
-			self.pref,
-			self.trace_stack,
-			sources
-		)
+		self.update(sources: sources)
 	end
 
 

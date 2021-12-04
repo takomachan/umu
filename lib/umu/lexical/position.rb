@@ -11,6 +11,14 @@ class Position < Abstraction::Record
 	attr_reader :line_num
 
 
+	def self.deconstruct_keys
+		{
+			file_name:	::String,
+			line_num:	::Integer
+		}.freeze
+	end
+
+
 	def initialize(file_name, line_num)
 		ASSERT.kind_of file_name, ::String
 		ASSERT.kind_of line_num,  ::Integer
@@ -35,14 +43,12 @@ class Position < Abstraction::Record
 	def next_line_num(n = 1)
 		ASSERT.kind_of n, ::Integer
 
-		new_position = self.class.new self.file_name, self.line_num + n
-
-		ASSERT.kind_of new_position, Position
+		self.update(line_num: line_num + n)
 	end
 end
 
 
-INITIAL_POSITION = Position.new '', 0
+INITIAL_POSITION = Position.new('', 0).freeze
 
 
 module_function

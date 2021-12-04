@@ -11,7 +11,7 @@ module Type
 
 module Specification
 
-class Method < Abstraction::Record
+class Method
 	attr_reader	:meth_sym
 	attr_reader	:ret_class_spec
 	attr_reader	:symbol

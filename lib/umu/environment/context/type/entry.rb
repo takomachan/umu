@@ -261,7 +261,7 @@ DESCENDANTS_OF_ANCESTOR.freeze
 
 
 
-class Entry < Abstraction::Record
+class Entry
 	def classes
 		CLASSES
 	end
