@@ -12,6 +12,15 @@ class Preference < Abstraction::Record
 	attr_reader :lex_trace_mode
 
 
+	def self.deconstruct_keys
+		{
+			interactive_mode:	::Object,
+			trace_mode:			::Object,
+			lex_trace_mode:		::Object
+		}.freeze
+	end
+
+
 	def initialize(
 			interactive_mode,
 			trace_mode,
@@ -44,27 +53,21 @@ class Preference < Abstraction::Record
 	def update_interactive_mode(bool)
 		ASSERT.bool bool
 
-		Environment.make_preference(
-			bool, self.trace_mode, self.lex_trace_mode
-		)
+		self.update(interactive_mode: bool)
 	end
 
 
 	def update_trace_mode(bool)
 		ASSERT.bool bool
 
-		Environment.make_preference(
-			self.interactive_mode, bool, self.lex_trace_mode
-		)
+		self.update(trace_mode: bool)
 	end
 
 
 	def update_lex_trace_mode(bool)
 		ASSERT.bool bool
 
-		Environment.make_preference(
-			self.interactive_mode, self.trace_mode, bool
-		)
+		self.update(lex_trace_mode: bool)
 	end
 end
 
