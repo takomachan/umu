@@ -19,6 +19,13 @@ class Abstract < Lexer::Abstract
 	attr_reader :buf
 
 
+	def self.deconstruct_keys
+		{
+			:buf => ::String
+		}
+	end
+
+
 	def initialize(pos, braket_stack, buf)
 		ASSERT.kind_of pos,				L::Position
 		ASSERT.kind_of braket_stack,	::Array

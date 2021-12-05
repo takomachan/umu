@@ -154,7 +154,6 @@ end
 				else
 					Commander.process_line(
 						line + "\n",
-						line_num,
 						tokens,
 						lexer,
 						env.update_line(STDIN_FILE_NAME, line_num, line)
@@ -185,15 +184,15 @@ end
 	end
 
 
-	def process_line(line, line_num, tokens, init_lexer, env)
+	def process_line(line, tokens, init_lexer, env)
 		ASSERT.kind_of line,		::String
-		ASSERT.kind_of line_num,	::Integer
 		ASSERT.kind_of tokens,		::Array
 		ASSERT.kind_of init_lexer,	LL::Abstract
 		ASSERT.kind_of env,			E::Entry
 
 		pref		= env.pref
 		file_name	= STDIN_FILE_NAME
+		line_num	= init_lexer.pos.line_num
 
 		if pref.trace_mode?
 			STDERR.puts
@@ -211,7 +210,7 @@ end
 
 		scanner = ::StringScanner.new line
 		next_tokens, next_lexer = LL.lex(
-			tokens, init_lexer, 0, scanner, pref
+			tokens, init_lexer, scanner, pref
 		) do |event, matched, opt_token, lexer, before_line_num|
 
 			if pref.trace_mode?
@@ -231,10 +230,10 @@ end
 				else
 					if opt_token
 						token		= opt_token
-						line_num	= token.pos.line_num
+						tk_line_num	= token.pos.line_num
 
-						if line_num != before_line_num
-							STDERR.printf "\n%04d: ", line_num
+						if tk_line_num != before_line_num
+							STDERR.printf "\n%04d: ", tk_line_num
 						end
 
 						unless token && token.separator?
@@ -312,7 +311,7 @@ end
 		init_lexer	= LL.make_initial_lexer file_name, init_line_num
 		scanner		= ::StringScanner.new source
 		tokens, _lexer = LL.lex(
-			init_tokens, init_lexer, 0, scanner, pref
+			init_tokens, init_lexer, scanner, pref
 		) do |token, before_line_num|
 
 			if pref.trace_mode?

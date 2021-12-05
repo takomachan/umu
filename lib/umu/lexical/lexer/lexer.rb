@@ -24,15 +24,13 @@ module_function
 	end
 
 
-	def lex(init_tokens, init_lexer, init_line_num, scanner, pref)
+	def lex(init_tokens, init_lexer, scanner, pref)
 		ASSERT.kind_of init_tokens,		::Array
-		ASSERT.kind_of init_lexer,		LL::Abstract
-		ASSERT.kind_of init_line_num,	::Integer
 		ASSERT.kind_of scanner,			::StringScanner
 		ASSERT.kind_of pref,			E::Preference
 
 		pair = loop.inject(
-			 [init_tokens, init_lexer, init_line_num  ]
+			 [init_tokens, init_lexer, 0  ]
 		) { |(tokens,      lexer,      before_line_num), _|
 
 			break [tokens, lexer] if scanner.eos?
