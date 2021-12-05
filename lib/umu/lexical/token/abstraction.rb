@@ -11,22 +11,17 @@ module Token
 
 module Abstraction
 
-class Abstract
+class Abstract < Umu::Abstraction::Model
 	attr_reader :val
-	attr_reader :pos
 
 
 	def initialize(pos, val)
 		ASSERT.kind_of pos,	L::Position
 		ASSERT.kind_of val,	::Object
 
-		@pos	= pos
-		@val	= val
-	end
+		super(pos)
 
-
-	def to_s
-		raise X::SubclassResponsibility
+		@val = val
 	end
 
 

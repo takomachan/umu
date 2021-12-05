@@ -13,7 +13,18 @@ module Lexical
 module Lexer
 
 class Comment < Abstract
-	attr_reader :buf, :saved_pos, :comment_depth
+	attr_reader :buf
+	attr_reader :saved_pos
+	attr_reader :comment_depth
+
+
+	def self.deconstruct_keys
+		{
+			:buf			=> ::String,
+			:saved_pos		=> L::Position,
+			:comment_depth	=> ::Integer
+		}
+	end
 
 
 	def initialize(pos, braket_stack, buf, saved_pos, comment_depth)

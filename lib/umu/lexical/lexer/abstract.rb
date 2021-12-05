@@ -12,8 +12,17 @@ module Lexical
 
 module Lexer
 
-class Abstract
-	attr_reader	:pos, :braket_stack
+class Abstract < Abstraction::Record
+	attr_reader	:pos
+	attr_reader	:braket_stack
+
+
+	def self.deconstruct_keys
+		{
+			:pos			=> L::Position,
+			:braket_stack	=> ::Array
+		}
+	end
 
 
 	def initialize(pos, braket_stack)
