@@ -98,12 +98,13 @@ end
 		init_tokens	= []
 		init_lexer	= LL.make_initial_lexer STDIN_FILE_NAME, 1
 		final_env = loop.inject(
-			 [1,        init_tokens, init_lexer, init_env]
-		) { |(line_num, tokens,      lexer,      env     ), _|
-			ASSERT.kind_of line_num,	::Integer
+			 [init_tokens, init_lexer, init_env]
+		) { |(tokens,      lexer,      env     ), _|
 			ASSERT.kind_of tokens,		::Array
 			ASSERT.kind_of lexer,		LL::Abstract
 			ASSERT.kind_of env,			E::Entry
+
+			line_num = lexer.pos.line_num
 
 			prompt = format(
 				"%04d%s%s%s ",
@@ -139,45 +140,45 @@ end
 					'>'
 				end
 			)
-			opt_line = Commander.input prompt
 
+			opt_line = Commander.input prompt
 			break env if opt_line.nil?
 			line = opt_line
 
 			next_tokens, next_lexer, next_env = begin
-				if lexer.between_braket? && /^:/ =~ line
-					[
-						[],
-						init_lexer,
-						Subcommand.execute(line, line_num, env)
-					]
-				else
-					Commander.process_line(
-						line + "\n",
-						tokens,
-						lexer,
-						env.update_line(STDIN_FILE_NAME, line_num, line)
-					)
+					if lexer.between_braket? && /^:/ =~ line
+						[
+							[],
+							lexer,
+							Subcommand.execute(line, line_num, env)
+						]
+					else
+						Commander.process_line(
+							line + "\n",
+							tokens,
+							lexer,
+							env.update_line(STDIN_FILE_NAME, line_num, line)
+						)
+					end
+				rescue X::Abstraction::RuntimeError => e
+					e.print_backtrace
+					STDERR.puts
+					STDERR.puts e.to_s
+
+					[[], lexer, env]
+				rescue X::Abstraction::Expected, ::SystemCallError => e
+					STDERR.puts
+					STDERR.puts e.to_s
+
+					[[], lexer, env]
+				rescue ::Interrupt
+					STDERR.puts
+					STDERR.puts 'Interrupt!!'
+
+					[[], lexer, env]
 				end
-			rescue X::Abstraction::RuntimeError => e
-				e.print_backtrace
-				STDERR.puts
-				STDERR.puts e.to_s
 
-				[[], init_lexer, env]
-			rescue X::Abstraction::Expected, ::SystemCallError => e
-				STDERR.puts
-				STDERR.puts e.to_s
-
-				[[], init_lexer, env]
-			rescue ::Interrupt
-				STDERR.puts
-				STDERR.puts 'Interrupt!!'
-
-				[[], init_lexer, env]
-			end
-
-			[line_num + 1, next_tokens, next_lexer, next_env]
+			[next_tokens, next_lexer, next_env]
 		}
 
 		ASSERT.kind_of final_env, E::Entry
