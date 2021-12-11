@@ -74,6 +74,18 @@ class Abstract < Abstraction::Record
 	end
 
 
+	def next_line_num(n = 1)
+		ASSERT.kind_of n, ::Integer
+
+		self.update(pos: self.pos.next_line_num(n))
+	end
+
+
+	def recover
+		Separator.new(self.pos.next_line_num, [].freeze).freeze
+	end
+
+
 	def lex(scanner)
 		raise X::SubclassResponsibility
 	end

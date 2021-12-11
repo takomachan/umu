@@ -90,9 +90,7 @@ class Record
 			else
 				{}.freeze
 			end
-		) { |key, _, _|
-			ASSERT.abort "Duplicated key: %s", key
-		}.freeze
+		).freeze
 	end
 
 
