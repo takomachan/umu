@@ -82,7 +82,7 @@ class Abstract < Abstraction::Record
 
 
 	def recover
-		Separator.new(self.pos.next_line_num, [].freeze).freeze
+		__make_separator__ self.pos.next_line_num, []
 	end
 
 
