@@ -14,10 +14,9 @@ module Lexer
 
 class Token < Abstract
 
-HEAD_WORD		= '[a-zA-Z][a-zA-Z0-9]*'
-REST_WORD		= '[a-zA-Z0-9]+'
+ATOM_WORD		= '[a-zA-Z][a-zA-Z0-9]*'
 WORD_PATTERN	= Regexp.new(
-						"(@)?(_*#{HEAD_WORD}(\\-#{REST_WORD})*_*'*\\??)"
+						"(@)?(_*#{ATOM_WORD}(\\-#{ATOM_WORD})*_*'*\\??)"
 					)
 
 
