@@ -11,6 +11,24 @@ unless ::Object.new.respond_to?(:yield_self)	# Ruby 2.5 or after
 end
 
 
+unless ::Numeric.new.respond_to?(:positive?)	# Ruby 2.3 or after
+	class ::Numeric
+		def positive?
+			self > 0
+		end
+	end
+end
+
+
+unless ::Numeric.new.respond_to?(:negative?)	# Ruby 2.3 or after
+	class ::Numeric
+		def negative?
+			self > 0
+		end
+	end
+end
+
+
 module_function
 
 begin
