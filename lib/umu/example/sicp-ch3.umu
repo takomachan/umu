@@ -36,8 +36,8 @@ fun rec assoc = key records -> cond records {
 				where val [x|xs] = records
 }
 
-### lookup-1 = Symbol -> <TABLE> [(Symbol, 'a)] -> <OPTION> 'a
-fun lookup-1 = key table -> let {
+### lookup1 = Symbol -> <TABLE> [(Symbol, 'a)] -> <OPTION> 'a
+fun lookup1 = key table -> let {
 	val opt-record = assoc key (val-of table)
 in
 	if (Some? opt-record)
@@ -59,26 +59,26 @@ fun make-table = records -> DATUM::make @Table records
 ;; t1
 # -> Table [(@a, 1), (@b, 2), (@c, 3)]
 
-;; lookup-1 @b t1
+;; lookup1 @b t1
 # -> Some 2
 
-;; lookup-1 @d t1
+;; lookup1 @d t1
 # -> NONE
 ;;
 
 
 #### two-dimensional ####
 
-(### lookup-2 = Symbol ->
+(### lookup2 = Symbol ->
 				Symbol ->
 				<TABLE> [(Symbol, [(Symbol, 'a)])] ->
 				<OPTION> 'a
 ###)
-fun lookup-2 = key-1 key-2 table -> let {
-	val opt-subtable = assoc key-1 (val-of table)
+fun lookup2 = key1 key2 table -> let {
+	val opt-subtable = assoc key1 (val-of table)
 in
 	if (Some? opt-subtable) let {
-		val opt-record = assoc key-2 (snd (val-of opt-subtable))
+		val opt-record = assoc key2 (snd (val-of opt-subtable))
 	in
 		if (Some? opt-record)
 			Some (snd (val-of opt-record))
@@ -106,16 +106,16 @@ in
 ;; t2
 # -> Table [(@math, [(@+, 43), (@-, 45), (@*, 42)]), (@letters, [(@a, 97), (@b, 98)])]
 
-;; lookup-2 @math @"-" t2
+;; lookup2 @math @"-" t2
 # -> Some 45
 
-;; lookup-2 @letters @a t2
+;; lookup2 @letters @a t2
 # -> Some 97
 
-;; lookup-2 @nath @"-" t2
+;; lookup2 @nath @"-" t2
 # -> NONE
 
-;; lookup-2 @math @"/" t2
+;; lookup2 @math @"/" t2
 # -> NONE
 ;;
 
@@ -125,11 +125,11 @@ in
 fun make-table' = records -> let {
 	val local-table = DATUM::make @Table records
 
-	fun lookup = key-1 key-2 -> let {
-		val opt-subtable = assoc key-1 (val-of local-table)
+	fun lookup = key1 key2 -> let {
+		val opt-subtable = assoc key1 (val-of local-table)
 	in
 		if (Some? opt-subtable) let {
-			val opt-record = assoc key-2 (snd (val-of opt-subtable))
+			val opt-record = assoc key2 (snd (val-of opt-subtable))
 		in
 			if (Some? opt-record)
 				Some (snd (val-of opt-record))

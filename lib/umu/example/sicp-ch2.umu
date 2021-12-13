@@ -1264,19 +1264,19 @@ fun right-branch = tree -> tree.2
 
 #### decoding ####
 
-fun decode = bits tree -> decode-1 bits tree where {
+fun decode = bits tree -> decode1 bits tree where {
 	fun choose-branch = bit branch -> cond bit {
 		(== 0)	=> left-branch branch
 	|	(== 1)	=> right-branch branch
 		else	=> abort ("bad bit -- CHOOSE-BRANCH: " ^ inspect bit)
 	}
 
-	fun rec decode-1 = bits current-branch -> cond bits {
+	fun rec decode1 = bits current-branch -> cond bits {
 		empty?	=> []
 		else	=> if (leaf? next-branch)
-						[symbol-leaf next-branch | decode-1 xs tree]
+						[symbol-leaf next-branch | decode1 xs tree]
 				   else
-						decode-1 xs next-branch
+						decode1 xs next-branch
 					where
 						val [x|xs] = bits
 						val next-branch = choose-branch x current-branch
