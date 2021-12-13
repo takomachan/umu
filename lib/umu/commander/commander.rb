@@ -153,6 +153,9 @@ end
 			opt_line = begin
 					Commander.input prompt
 				rescue ::Interrupt
+					STDERR.puts
+					STDERR.puts '^C'
+
 					''
 				end
 			break env if opt_line.nil?
@@ -186,7 +189,7 @@ end
 					[[], lexer.recover, env]
 				rescue ::Interrupt
 					STDERR.puts
-					STDERR.puts 'Interrupt!!'
+					STDERR.puts '^C'
 
 					[[], lexer.recover, env]
 				end
@@ -326,13 +329,14 @@ end
 		scanner		= ::StringScanner.new source
 		tokens, _lexer = LL.lex(
 			init_tokens, init_lexer, scanner, pref
-		) do |token, before_line_num|
+		) do |_event, _matched, opt_token, _lexer, before_line_num|
 
-			if pref.trace_mode?
-				line_num = token.pos.line_num
+			if pref.trace_mode? && opt_token
+				token		= opt_token
+				tk_line_num = token.pos.line_num
 
-				if line_num != before_line_num
-					STDERR.printf "\n%04d: ", line_num
+				if tk_line_num != before_line_num
+					STDERR.printf "\n%04d: ", tk_line_num
 				end
 
 				unless token && token.separator?
