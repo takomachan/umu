@@ -150,9 +150,9 @@ module VAL = struct {
 
  <If>     ::= "[" IF "," <Exp> "," <Exp> "," <Exp> "]"
 
- <Letrec> ::= "[" LETREC "," <Var> "," <Lambda> "," <Exp> "]"
+ <Letrec> ::= "[" LETREC "," <Exp> "," <Var> "," <Lambda> "]"
 
- <Apply>  ::= "[" <Exp> ("," <Exp>)+ "]"
+ <Apply>  ::= "[" <Exp> "," <Exp> ("," <Exp>)* "]"
 
 ########################)
 
@@ -248,7 +248,7 @@ fun rec parse = exp -> cond exp {
 							"For LETREC's arity, expected 3, but: ",
 							argc
 						)
-			val [dvar, dexp, body] = args
+			val [body, dvar, dexp] = args
 			val _ = unless (var? dvar)
 						ERROR::syntax (
 							"In LETREC, expected VAR, but: ",
@@ -389,6 +389,7 @@ where {
 	| (== @SUB)		=> mk-binop	(-)   VAL::mk-integer
 	| (== @MUL)		=> mk-binop	(*)   VAL::mk-integer
 	| (== @DIV)		=> mk-binop	(/)   VAL::mk-integer
+	| (== @MOD)		=> mk-binop	(mod) VAL::mk-integer
 
 	#### Relational
 	| (== @EQ)		=> mk-binop (==) VAL::mk-boolean
@@ -436,6 +437,7 @@ val ADD  = @ADD
 val SUB  = @SUB
 val MUL  = @MUL
 val DIV  = @DIV
+val MOD  = @MOD
 
 # Primitive relational function
 val EQ = @EQ
@@ -509,14 +511,14 @@ fun example-run = interpret -> (
 
 	; print "[APPLY LAMBDA]" ;
 
-		#[INPUT] {x -> succ x} 2
+		#[INPUT] (fn x => succ x) 2
 		run [
 			[LAMBDA, [@x], [SUCC, @x]],
 			2
 		] ;
 		#[OUTPUT] --> 3
 
-		#[INPUT] {x y z -> x - y - z} 10 1 2
+		#[INPUT] (fn x y z => x - y - z) 10 1 2
 		run [
 			[LAMBDA, [@x, @y, @z], [SUB, [SUB, @x, @y], @z]],
 			10, 1, 2
@@ -527,25 +529,41 @@ fun example-run = interpret -> (
 
 	; print "[LETREC]" ;
 
-		#[INPUT] letrec f = x -> succ x in f 2 
-		run [LETREC, @f, [LAMBDA, [@x], [SUCC, @x]], [@f, 2]] ;
+		#[INPUT] { f 2 whererec f = fn x => succ x }
+		run [LETREC, [@f, 2], @f, [LAMBDA, [@x], [SUCC, @x]]] ;
 		#[OUTPUT] --> 3
 
-		#[INPUT] letrec
+		#[INPUT]  { fact 4 
+		#			whererec
 		#				fact = x -> if (x <= 1) 1 else x * fact (x - 1)
-		#			in
-		#				fact 4 
+		#		  }
 		run [LETREC,
-			@fact, [LAMBDA, [@x],
-				[IF, [LE, @x, 1],
-					1,
-					[MUL, @x, [@fact, [SUB, @x, 1]]]
-				]
-			],
+				[@fact, 4],
 
-			[@fact, 4]
+				@fact, [LAMBDA, [@x],
+					[IF, [LE, @x, 1],
+						1,
+						[MUL, @x, [@fact, [SUB, @x, 1]]]
+					]
+				]
 		] ;
 		#[OUTPUT] --> 24
+
+		#[INPUT]  { gcd 16 28
+		#			whererec
+		#				gcd = a b -> if (b = 0) a else gcd b (a mod b)
+		#		  }
+		run [LETREC,
+				[@gcd, 16, 28],
+
+				@gcd, [LAMBDA, [@a, @b],
+					[IF, [EQ, @b, 0],
+						@a,
+						[@gcd, @b, [MOD, @a, @b]]
+					]
+				]
+		] ;
+		#[OUTPUT] --> 4
 
 		nl ()
 
