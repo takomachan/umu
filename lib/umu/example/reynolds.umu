@@ -138,21 +138,21 @@ module VAL = struct {
 
 (######## Parser ########
 
- <Exp> ::= <Const>	/* Undefined */
-         | <Var>	/* Undefined */
+ <Exp> ::= <Const>	/* Undefined, Umu's Int */
+         | <Var>	/* Undefined, Umu's Symbol */
 		 | <Form>
 
 
- <Form> ::= <Lambda> | <If> | <Letrec> | <Apply>
+ <Form> ::= <If> | <Lambda> | <Apply> | <Letrec>
 
-
- <Lambda> ::= "[" LAMBDA "," "[" <Var> ("," <Var>)* "]" "," <Exp> "]"
 
  <If>     ::= "[" IF "," <Exp> "," <Exp> "," <Exp> "]"
 
- <Letrec> ::= "[" LETREC "," <Exp> "," <Var> "," <Lambda> "]"
+ <Lambda> ::= "[" LAMBDA "," "[" <Var1> "," ... "," <VarN> "]" "," <Exp> "]"
+ 																/* N >= 1 */
+ <Apply>  ::= "[" <Exp1> "," ... "," <ExpN> "]"  /* N >= 2 */
 
- <Apply>  ::= "[" <Exp> "," <Exp> ("," <Exp>)* "]"
+ <Letrec> ::= "[" LETREC "," <Exp> "," "[" <Var> "|" <Lambda> "]" "]"
 
 ########################)
 
@@ -174,12 +174,12 @@ fun rec parse = exp -> cond exp {
 
 
 	#### <Form> ####
-	# parse-form : List 'a -> <EXP>
+	# parse-form : ['a] -> <EXP>
 	fun parse-form = exp ->
 		if (keyword isa? Symbol)
 			cond keyword {
-			  (== @LAMBDA)	=> parse-lambda	args
-			| (== @IF)		=> parse-if		args
+			  (== @IF)		=> parse-if		args
+			| (== @LAMBDA)	=> parse-lambda	args
 			| (== @LETREC)	=> parse-letrec	args
 			  else			=> parse-apply	exp
 			}
@@ -188,8 +188,21 @@ fun rec parse = exp -> cond exp {
 	where {
 		val [keyword|args] = exp
 
+		#### <If> ####
+		# parse-if : ['a] -> <COND>
+		fun parse-if = args ->
+			EXP::mk-cond (parse prem, parse conc, parse altr)
+		where {
+			val _ = unless (length args == 3)
+						ERROR::syntax (
+							"For IF's arity, expected 3, but: ",
+							args
+						)
+			val [prem, conc, altr] = args
+		}
+
 		#### <Lambda> ####
-		# parse-lambda : List 'a -> <LAMBDA>
+		# parse-lambda : ['a] -> <LAMBDA>
 		fun parse-lambda = args ->
 			fps' |> fold init-body-exp { fp body-exp ->
 					EXP::mk-lambda (parse fp, body-exp)
@@ -200,11 +213,10 @@ fun rec parse = exp -> cond exp {
 								)
 			}
 		where {
-			val argc = length args
-			val _ = unless (argc == 2)
+			val _ = unless (length args == 2)
 						ERROR::syntax (
 							"For LAMBDA's arity, expected 2, but: ",
-							argc
+							args
 						)
 			val [fps, body] = args
 			val _ = unless (fps isa? List)
@@ -221,34 +233,43 @@ fun rec parse = exp -> cond exp {
 						)
 			val [init-fp|fps'] = reverse fps
 			val init-body-exp = EXP::mk-lambda (parse init-fp, parse body)
-		}
+				where { val _ = unless (var? init-fp)
+								ERROR::syntax (
+									"In LAMBDA, expected a VAR, but: ",
+									init-fp
+								)
+				}
+			}
 
-		#### <If> ####
-		# parse-if : List 'a -> <COND>
-		fun parse-if = args ->
-			EXP::mk-cond (parse prem, parse conc, parse altr)
+		#### <Apply> ####
+		# parse-apply : ['a] -> <APPL>
+		fun parse-apply = form ->
+			opnds |> fold init-opr-exp { opnd opr-exp ->
+				EXP::mk-appl (opr-exp, parse opnd)
+			}
 		where {
-			val argc = length args
-			val _ = unless (argc == 3)
-						ERROR::syntax (
-							"For IF's arity, expected 3, but: ",
-							argc
-						)
-			val [prem, conc, altr] = args
+			val [opr, init-opnd|opnds] = form
+			val init-opr-exp = EXP::mk-appl (parse opr, parse init-opnd)
 		}
 
 		#### <Letrec> ####
-		# parse-letrec : List 'a -> <LETREC>
+		# parse-letrec : ['a] -> <LETREC>
 		fun parse-letrec = args ->
-			EXP::mk-letrec (parse dvar, parse dexp, parse body)
+			EXP::mk-letrec (parse dvar, parse-lambda lam, parse body)
 		where {
-			val argc = length args
-			val _ = unless (argc == 3)
+			val _ = unless (length args == 2)
 						ERROR::syntax (
-							"For LETREC's arity, expected 3, but: ",
-							argc
+							"For LETREC's arity, expected 2, but: ",
+							args
 						)
-			val [body, dvar, dexp] = args
+			val [body, bind] = args
+			val _ = unless (bind isa? List andalso length bind >= 2)
+						ERROR::syntax (
+							"For LETREC's binding, " ^
+							"expected 2 or more List, but: ",
+							bind
+						)
+			val [dvar|dexp] = bind
 			val _ = unless (var? dvar)
 						ERROR::syntax (
 							"In LETREC, expected VAR, but: ",
@@ -259,23 +280,12 @@ fun rec parse = exp -> cond exp {
 							"In LETREC, expected <Form>, but: ",
 							dexp
 						) 
-			val [keyword|_] = dexp
+			val [keyword|lam] = dexp
 			val _ = unless (keyword == @LAMBDA)
 						ERROR::syntax (
 							"In LETREC, expected LAMBDA, but: ",
 							keyword
 						) 
-		}
-
-		#### <Apply> ####
-		# parse-apply : List 'a -> <APPL>
-		fun parse-apply = form ->
-			opnds |> fold init-opr-exp { opnd opr-exp ->
-				EXP::mk-appl (opr-exp, parse opnd)
-			}
-		where {
-			val [opr, init-opnd|opnds] = form
-			val init-opr-exp = EXP::mk-appl (parse opr, parse init-opnd)
 		}
 	}
 }
@@ -290,7 +300,7 @@ where {
 
 	######## Evaluator ########
 
-	# eval : (<EXP>, <ENV>) -> <VAL>		where { <ENV> = <VAR> -> <VAL> }
+	# eval : (<EXP>, <ENV>) -> <VAL>
 	fun rec eval = (r, e) -> cond r {
 
 	#### CONST ####
@@ -344,8 +354,8 @@ where {
 							r
 						)
 
-			# e' : ENV		where { ENV = VAR -> VAL }
-			fun rec e' = x -> if (val-of x == val-of dvar)
+			# e' : <ENV>
+			fun rec e' = x -> if (x == dvar)
 									evlambda (dexp, e')
 								else
 									e x
@@ -354,16 +364,15 @@ where {
 
 	} where {
 		# evlambda : (<LAMBDA>, <ENV>) -> <FUNVAL>
-		#				where { <ENV> = <VAR> -> <VAL> }
 		fun evlambda = (l, e) -> VAL::mk-funval {
 										a -> eval (body, ext (fp, a, e))
 									}
 		where {
 			val (fp, body) = val-of l
 
-			# ext : (VAR, VAL, ENV) -> ENV		where { ENV = VAR -> VAL }
+			# ext : (<VAR>, <VAL>, <ENV>) -> <ENV>
 			fun ext = (z, a, e) -> {
-				x -> if (val-of x == val-of z)
+				x -> if (x == z)
 							a
 						else
 							e x
@@ -479,11 +488,11 @@ fun example-run = interpret -> (
 
 	; print "[CONDITIONAL]" ;
 
-		#[INPUT] if TRUE 1 else 2
+		#[INPUT] if TRUE then 1 else 2
 		run [IF, T, 1, 2] ;
 		#[OUTPUT] -> 1
 
-		#[INPUT] if FALSE 1 else 2
+		#[INPUT] if FALSE then 1 else 2
 		run [IF, F, 1, 2] ;
 		#[OUTPUT] -> 2
 
@@ -530,17 +539,17 @@ fun example-run = interpret -> (
 	; print "[LETREC]" ;
 
 		#[INPUT] { f 2 whererec f = fn x => succ x }
-		run [LETREC, [@f, 2], @f, [LAMBDA, [@x], [SUCC, @x]]] ;
+		run [LETREC, [@f, 2], [@f, LAMBDA, [@x], [SUCC, @x]]] ;
 		#[OUTPUT] --> 3
 
 		#[INPUT]  { fact 4 
 		#			whererec
-		#				fact = x -> if (x <= 1) 1 else x * fact (x - 1)
+		#				fact = x -> if x <= 1 then 1 else x * fact (x - 1)
 		#		  }
 		run [LETREC,
 				[@fact, 4],
 
-				@fact, [LAMBDA, [@x],
+				[@fact, LAMBDA, [@x],
 					[IF, [LE, @x, 1],
 						1,
 						[MUL, @x, [@fact, [SUB, @x, 1]]]
@@ -551,12 +560,12 @@ fun example-run = interpret -> (
 
 		#[INPUT]  { gcd 16 28
 		#			whererec
-		#				gcd = a b -> if (b = 0) a else gcd b (a mod b)
+		#				gcd = a b -> if b = 0 then a else gcd b (a mod b)
 		#		  }
 		run [LETREC,
 				[@gcd, 16, 28],
 
-				@gcd, [LAMBDA, [@a, @b],
+				[@gcd, LAMBDA, [@a, @b],
 					[IF, [EQ, @b, 0],
 						@a,
 						[@gcd, @b, [MOD, @a, @b]]
