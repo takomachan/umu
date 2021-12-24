@@ -143,14 +143,22 @@ module VAL = struct {
 		 | <Form>
 
 
- <Form> ::= <If> | <Lambda> | <Apply> | <Letrec>
+ <Form> ::= <If> | <Lambda> | <Apply> | <Let> | <Letrec>
+
 
 
  <If>     ::= "[" IF "," <Exp> "," <Exp> "," <Exp> "]"
 
+
  <Lambda> ::= "[" LAMBDA "," "[" <Var1> "," ... "," <VarN> "]" "," <Exp> "]"
  																/* N >= 1 */
+
  <Apply>  ::= "[" <Exp1> "," ... "," <ExpN> "]"  /* N >= 2 */
+
+
+ <Let>    ::= "[" LET "," <Exp> "," <Bind1> "," ... "," <BindN> "]"
+ <Bind> ::= "[" <Var> "," <Exp> "]"								/* N >= 0 */
+
 
  <Letrec> ::= "[" LETREC "," <Exp> "," "[" <Var> "|" <Lambda> "]" "]"
 
@@ -180,6 +188,7 @@ fun rec parse = exp -> cond exp {
 			cond keyword {
 			  (== @IF)		=> parse-if		args
 			| (== @LAMBDA)	=> parse-lambda	args
+			| (== @LET)		=> parse-let	args
 			| (== @LETREC)	=> parse-letrec	args
 			  else			=> parse-apply	exp
 			}
@@ -206,11 +215,11 @@ fun rec parse = exp -> cond exp {
 		fun parse-lambda = args ->
 			fps' |> fold init-body-exp { fp body-exp ->
 					EXP::mk-lambda (parse fp, body-exp)
-				where val _ = unless (var? fp)
-								ERROR::syntax (
-									"In LAMBDA, expected a VAR, but: ",
-									fp
-								)
+			where val _ = unless (var? fp)
+							ERROR::syntax (
+								"In LAMBDA, expected a VAR, but: ",
+								fp
+							)
 			}
 		where {
 			val _ = unless (length args == 2)
@@ -250,6 +259,39 @@ fun rec parse = exp -> cond exp {
 		where {
 			val [opr, init-opnd|opnds] = form
 			val init-opr-exp = EXP::mk-appl (parse opr, parse init-opnd)
+		}
+
+		#### <Let> ####
+		# parse-let : ['a] -> <APPL>
+		fun parse-let = args ->
+			binds |> foldr (parse body) { bind body-exp ->
+				mk-let (parse dvar, parse dexp, body-exp)
+			where
+				val _ = unless (bind isa? List andalso length bind == 2)
+							ERROR::syntax (
+								"For LET's binding, " ^
+								"expected pair List, but: ",
+								bind
+							)
+				val [dvar, dexp] = bind
+				val _ = unless (var? dvar)
+							ERROR::syntax (
+								"In LET, expected VAR, but: ",
+								dvar
+							) 
+			}
+		where {
+			val _ = unless (length args >= 1)
+						ERROR::syntax (
+							"For LET's arity, expected 1 or more, but: ",
+							args
+						)
+			val [body|binds] = args
+
+			fun mk-let = (dvar, dexp, body) -> EXP::mk-appl (
+				EXP::mk-lambda (dvar, body),
+				dexp
+			)
 		}
 
 		#### <Letrec> ####
@@ -430,8 +472,9 @@ where {
 ######## Prelude ########
 
 # Keyword
-val LAMBDA = @LAMBDA
 val IF     = @IF
+val LAMBDA = @LAMBDA
+val LET    = @LET
 val LETREC = @LETREC
 
 # Primitive constant
@@ -536,6 +579,37 @@ fun example-run = interpret -> (
 
 		nl ()
 
+	; print "[LET]" ;
+
+		#[INPUT] { succ 1 where }
+		run [LET, [SUCC, 1]] ;
+		#[OUTPUT] --> 2
+
+		#[INPUT] { succ x where x = 2 }
+		run [LET, [SUCC, @x],
+			[@x, 2]
+		] ;
+		#[OUTPUT] --> 3
+
+		#[INPUT] { x * x + y * y where x = 2, y = 3 }
+		run [LET, [ADD, [MUL, @x, @x], [MUL, @y, @y]],
+			[@x, 2],
+			[@y, 3]
+		] ;
+		#[OUTPUT] --> 13
+
+		#[INPUT] {{ x + y where y = x, x = 2 } where x = 1 }
+		run [LET,
+			[LET, [ADD, @x, @y],
+				[@y, @x],
+				[@x, 2]
+			],
+			[@x, 1]
+		] ;
+		#[OUTPUT] --> 3
+
+		nl ()
+
 	; print "[LETREC]" ;
 
 		#[INPUT] { f 2 whererec f = fn x => succ x }
@@ -546,15 +620,13 @@ fun example-run = interpret -> (
 		#			whererec
 		#				fact = x -> if x <= 1 then 1 else x * fact (x - 1)
 		#		  }
-		run [LETREC,
-				[@fact, 4],
-
-				[@fact, LAMBDA, [@x],
-					[IF, [LE, @x, 1],
-						1,
-						[MUL, @x, [@fact, [SUB, @x, 1]]]
-					]
+		run [LETREC, [@fact, 4],
+			[@fact, LAMBDA, [@x],
+				[IF, [LE, @x, 1],
+					1,
+					[MUL, @x, [@fact, [SUB, @x, 1]]]
 				]
+			]
 		] ;
 		#[OUTPUT] --> 24
 
@@ -562,19 +634,18 @@ fun example-run = interpret -> (
 		#			whererec
 		#				gcd = a b -> if b = 0 then a else gcd b (a mod b)
 		#		  }
-		run [LETREC,
-				[@gcd, 16, 28],
-
-				[@gcd, LAMBDA, [@a, @b],
-					[IF, [EQ, @b, 0],
-						@a,
-						[@gcd, @b, [MOD, @a, @b]]
-					]
+		run [LETREC, [@gcd, 16, 28],
+			[@gcd, LAMBDA, [@a, @b],
+				[IF, [EQ, @b, 0],
+					@a,
+					[@gcd, @b, [MOD, @a, @b]]
 				]
+			]
 		] ;
 		#[OUTPUT] --> 4
 
 		nl ()
+
 
 ) where {
 	val run = parse >> interpret >> p
