@@ -12,7 +12,7 @@ module Expression
 
 module Unary
 
-module Atom
+module Base
 
 class Abstract < Unary::Abstract
 	def evaluate(env)
@@ -31,7 +31,7 @@ class Abstract < Unary::Abstract
 	end
 end
 
-end # Umu::AbstractSyntax::Core::Expression::Unary::Atom
+end # Umu::AbstractSyntax::Core::Expression::Unary::Base
 
 end # Umu::AbstractSyntax::Core::Expression::Unary
 

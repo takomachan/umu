@@ -12,11 +12,11 @@ module Union
 class Datum < Abstract
 	CLASS_METHOD_INFOS = [
 		[:meth_make,	self,
-			:'make',	VCA::Symbol, VC::Top]
+			:'make',	VCB::Symbol, VC::Top]
 	]
 
 	INSTANCE_METHOD_INFOS = [
-		[:meth_tag,		VCA::Symbol,
+		[:meth_tag,		VCB::Symbol,
 			:tag]
 	]
 
@@ -35,7 +35,7 @@ class Datum < Abstract
 
 
 	def self.meth_make(env, _event, tag, content)
-		ASSERT.kind_of tag,		VCA::Symbol
+		ASSERT.kind_of tag,		VCB::Symbol
 		ASSERT.kind_of content,	VC::Top
 
 		VC.make_datum tag.pos, tag.val, content

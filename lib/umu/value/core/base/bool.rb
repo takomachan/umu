@@ -7,7 +7,7 @@ module Value
 
 module Core
 
-module Atom
+module Base
 
 class Bool < Abstract
 	CLASS_METHOD_INFOS = [
@@ -74,7 +74,7 @@ class Bool < Abstract
 	end
 end
 
-end # Umu::Value::Core::Atom
+end # Umu::Value::Core::Base
 
 
 
@@ -83,14 +83,14 @@ module_function
 	def make_true(pos)
 		ASSERT.kind_of pos,	L::Position
 
-		Atom::Bool.new(pos, true).freeze
+		Base::Bool.new(pos, true).freeze
 	end
 
 
 	def make_false(pos)
 		ASSERT.kind_of pos,	L::Position
 
-		Atom::Bool.new(pos, false).freeze
+		Base::Bool.new(pos, false).freeze
 	end
 
 

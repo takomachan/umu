@@ -44,11 +44,11 @@ SRCS	= commander.rb \
 			concrete-syntax/core/expression/unit.rb \
 			concrete-syntax/core/expression/unary.rb \
 			concrete-syntax/core/expression/unary/abstract.rb \
-			concrete-syntax/core/expression/unary/atom.rb \
-			concrete-syntax/core/expression/unary/atom/abstract.rb \
-			concrete-syntax/core/expression/unary/atom/number.rb \
-			concrete-syntax/core/expression/unary/atom/string.rb \
-			concrete-syntax/core/expression/unary/atom/symbol.rb \
+			concrete-syntax/core/expression/unary/base.rb \
+			concrete-syntax/core/expression/unary/base/abstract.rb \
+			concrete-syntax/core/expression/unary/base/number.rb \
+			concrete-syntax/core/expression/unary/base/string.rb \
+			concrete-syntax/core/expression/unary/base/symbol.rb \
 			concrete-syntax/core/expression/unary/prefix.rb \
 			concrete-syntax/core/expression/unary/identifier.rb \
 			concrete-syntax/core/expression/unary/class.rb \
@@ -93,12 +93,12 @@ SRCS	= commander.rb \
 			abstract-syntax/core/expression/unit.rb \
 			abstract-syntax/core/expression/unary.rb \
 			abstract-syntax/core/expression/unary/abstract.rb \
-			abstract-syntax/core/expression/unary/atom.rb \
-			abstract-syntax/core/expression/unary/atom/abstract.rb \
-			abstract-syntax/core/expression/unary/atom/bool.rb \
-			abstract-syntax/core/expression/unary/atom/number.rb \
-			abstract-syntax/core/expression/unary/atom/string.rb \
-			abstract-syntax/core/expression/unary/atom/symbol.rb \
+			abstract-syntax/core/expression/unary/base.rb \
+			abstract-syntax/core/expression/unary/base/abstract.rb \
+			abstract-syntax/core/expression/unary/base/bool.rb \
+			abstract-syntax/core/expression/unary/base/number.rb \
+			abstract-syntax/core/expression/unary/base/string.rb \
+			abstract-syntax/core/expression/unary/base/symbol.rb \
 			abstract-syntax/core/expression/unary/identifier.rb \
 			abstract-syntax/core/expression/unary/class.rb \
 			abstract-syntax/core/expression/unary/method.rb \
@@ -121,15 +121,15 @@ SRCS	= commander.rb \
 			value/core/top.rb \
 			value/core/class.rb \
 			value/core/unit.rb \
-			value/core/atom.rb \
-			value/core/atom/abstract.rb \
-			value/core/atom/bool.rb \
-			value/core/atom/number.rb \
-			value/core/atom/number/abstract.rb \
-			value/core/atom/number/int.rb \
-			value/core/atom/number/real.rb \
-			value/core/atom/string.rb \
-			value/core/atom/symbol.rb \
+			value/core/base.rb \
+			value/core/base/abstract.rb \
+			value/core/base/bool.rb \
+			value/core/base/number.rb \
+			value/core/base/number/abstract.rb \
+			value/core/base/number/int.rb \
+			value/core/base/number/real.rb \
+			value/core/base/string.rb \
+			value/core/base/symbol.rb \
 			value/core/io.rb \
 			value/core/product.rb \
 			value/core/product/abstract.rb \

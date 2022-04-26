@@ -11,15 +11,15 @@ module Core
 class Top < Abstraction::Model
 	INSTANCE_METHOD_INFOS = [
 		# String
-		[:meth_inspect,		VCA::String,
+		[:meth_inspect,		VCB::String,
 			:inspect],
-		[:meth_to_string,	VCA::String,
+		[:meth_to_string,	VCB::String,
 			:'to-s'],
 
 		# Relational
-		[:meth_equal,		VCA::Bool,
+		[:meth_equal,		VCB::Bool,
 			:'==',			self],
-		[:meth_less_than,	VCA::Bool,
+		[:meth_less_than,	VCB::Bool,
 			:'<',			self]
 	]
 

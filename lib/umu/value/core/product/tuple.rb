@@ -12,7 +12,7 @@ module Product
 
 class Tuple < Abstract
 	INSTANCE_METHOD_INFOS = [
-		[:meth_less_than,	VCA::Bool,
+		[:meth_less_than,	VCB::Bool,
 			:'<',			self]
 	]
 

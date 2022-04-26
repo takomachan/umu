@@ -8,11 +8,11 @@ module Value
 
 module Core
 
-module Atom
+module Base
 
 class String < Abstract
 	INSTANCE_METHOD_INFOS = [
-		[:meth_less_than,	VCA::Bool,
+		[:meth_less_than,	VCB::Bool,
 			:'<',			self],
 
 		[:meth_abort,		VC::Unit,
@@ -57,7 +57,7 @@ class String < Abstract
 end
 
 
-end # Umu::Value::Core::Atom
+end # Umu::Value::Core::Base
 
 
 module_function
@@ -66,7 +66,7 @@ module_function
 		ASSERT.kind_of pos,	L::Position
 		ASSERT.kind_of val,	::String
 
-		Atom::String.new(pos, val.freeze).freeze
+		Base::String.new(pos, val.freeze).freeze
 	end
 
 end	# Umu::Value::Core

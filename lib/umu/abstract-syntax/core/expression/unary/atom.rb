@@ -1,5 +1,0 @@
-require 'umu/abstract-syntax/core/expression/unary/atom/abstract'
-require 'umu/abstract-syntax/core/expression/unary/atom/bool'
-require 'umu/abstract-syntax/core/expression/unary/atom/number'
-require 'umu/abstract-syntax/core/expression/unary/atom/string'
-require 'umu/abstract-syntax/core/expression/unary/atom/symbol'

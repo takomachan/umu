@@ -20,9 +20,9 @@ class Abstract < Union::Abstract
 	]
 
 	INSTANCE_METHOD_INFOS = [
-		[:meth_some?,		VCA::Bool,
+		[:meth_some?,		VCB::Bool,
 			:some?],
-		[:meth_none?,		VCA::Bool,
+		[:meth_none?,		VCB::Bool,
 			:none?]
 	]
 

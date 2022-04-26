@@ -20,9 +20,9 @@ class Abstract < Top
 
 
 	INSTANCE_METHOD_INFOS = [
-		[ :meth_nil?,	VCA::Bool,
+		[ :meth_nil?,	VCB::Bool,
 			:nil?],
-		[ :meth_cons?,	VCA::Bool,
+		[ :meth_cons?,	VCB::Bool,
 			:cons?],
 		[ :meth_cons,	self,
 			:cons,		VC::Top],

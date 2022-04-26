@@ -13,9 +13,9 @@ module Expression
 
 module Unary
 
-module Atom
+module Base
 
-class String < Atom::Abstract
+class String < Base::Abstract
 	def initialize(pos, obj)
 		ASSERT.kind_of obj, ::String
 
@@ -35,7 +35,7 @@ private
 	end
 end
 
-end	# Umu::ConcreteSyntax::Core::Expression::Unary::Atom
+end	# Umu::ConcreteSyntax::Core::Expression::Unary::Base
 
 end	# Umu::ConcreteSyntax::Core::Expression::Unary
 
@@ -47,7 +47,7 @@ module_function
 		ASSERT.kind_of pos,	L::Position
 		ASSERT.kind_of obj, ::String
 
-		Unary::Atom::String.new(pos, obj.freeze).freeze
+		Unary::Base::String.new(pos, obj.freeze).freeze
 	end
 
 end	# Umu::ConcreteSyntax::Core::Expression

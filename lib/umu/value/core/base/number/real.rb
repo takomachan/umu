@@ -7,7 +7,7 @@ module Value
 
 module Core
 
-module Atom
+module Base
 
 module Number
 
@@ -17,9 +17,9 @@ class Real < Abstract
 			:'make-nan'],
 		[:meth_make_infinity,	self,
 			:'make-infinity'],
-		[:meth_make_pi,		self,
+		[:meth_make_pi,			self,
 			:'make-pi'],
-		[:meth_make_e,		self,
+		[:meth_make_e,			self,
 			:'make-e']
 	]
 
@@ -30,7 +30,7 @@ class Real < Abstract
 			:'~'],
 		[:meth_absolute,		self,
 			:abs],
-		[:meth_less_than,		VCA::Bool,
+		[:meth_less_than,		VCB::Bool,
 			:'<',				self],
 		[:meth_add,				self,
 			:'+',				self],
@@ -46,11 +46,11 @@ class Real < Abstract
 			:pow,				self],
 
 		# Math
-		[:meth_nan?,			VCA::Bool,
+		[:meth_nan?,			VCB::Bool,
 			:nan?],
-		[:meth_infinite?,		VCA::Bool,
+		[:meth_infinite?,		VCB::Bool,
 			:infinite?],
-		[:meth_finite?,			VCA::Bool,
+		[:meth_finite?,			VCB::Bool,
 			:finite?],
 		[:meth_sin,				self,
 			:sin],
@@ -85,7 +85,7 @@ class Real < Abstract
 		[:meth_floor,			self,
 			:floor],
 		[:meth_ldexp,			self,
-			:ldexp,				VCAN::Int],
+			:ldexp,				VCBN::Int],
 		[:meth_frexp,			VCP::Tuple,
 			:frexp],
 		[:meth_divmod,			VCP::Tuple,
@@ -241,7 +241,7 @@ class Real < Abstract
 
 
 	def meth_ldexp(env, _event, other)
-		ASSERT.kind_of other, VCAN::Int
+		ASSERT.kind_of other, VCBN::Int
 
 		VC.make_real self.pos, Math.ldexp(self.val, other.val)
 	end
@@ -275,9 +275,9 @@ class Real < Abstract
 	end
 end
 
-end # Umu::Value::Core::Atom::Number
+end # Umu::Value::Core::Base::Number
 
-end # Umu::Value::Core::Atom
+end # Umu::Value::Core::Base
 
 
 module_function
@@ -286,7 +286,7 @@ module_function
 		ASSERT.kind_of pos,	L::Position
 		ASSERT.kind_of val,	::Float
 
-		Atom::Number::Real.new(pos, val).freeze
+		Base::Number::Real.new(pos, val).freeze
 	end
 
 

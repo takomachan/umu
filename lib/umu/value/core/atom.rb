@@ -1,5 +1,0 @@
-require 'umu/value/core/atom/abstract'
-require 'umu/value/core/atom/bool'
-require 'umu/value/core/atom/number'
-require 'umu/value/core/atom/string'
-require 'umu/value/core/atom/symbol'

@@ -1,0 +1,5 @@
+require 'umu/value/core/base/abstract'
+require 'umu/value/core/base/bool'
+require 'umu/value/core/base/number'
+require 'umu/value/core/base/string'
+require 'umu/value/core/base/symbol'
