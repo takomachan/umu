@@ -156,11 +156,12 @@ module VAL = struct {
  <Apply>  ::= "[" <Exp1> "," ... "," <ExpN> "]"  /* N >= 2 */
 
 
- <Let>    ::= "[" LET "," <Exp> "," <Bind1> "," ... "," <BindN> "]"
- <Bind> ::= "[" <Var> "," <Exp> "]"								/* N >= 0 */
+ <Let>    ::= "[" LET "," <Exp> "," <ValBind1> "," ... "," <ValBindN> "]"
+ <ValBind> ::= "[" <Var> "," <Exp> "]"							/* N >= 0 */
 
 
- <Letrec> ::= "[" LETREC "," <Exp> "," "[" <Var> "|" <Lambda> "]" "]"
+ <Letrec> ::= "[" LETREC "," <Exp> "," <LamBind1> "," ... "," <LamBindN> "]"
+ <LamBind> ::= "[" <Var> "|" <Lambda> "]"						/* N >= 0 */
 
 ########################)
 
@@ -297,37 +298,40 @@ fun rec parse = exp -> cond exp {
 		#### <Letrec> ####
 		# parse-letrec : ['a] -> <LETREC>
 		fun parse-letrec = args ->
-			EXP::mk-letrec (parse dvar, parse-lambda lam, parse body)
+			binds |> foldr (parse body) { bind body-exp ->
+				EXP::mk-letrec (parse dvar, parse-lambda lam, body-exp)
+			where
+				val _ = unless (bind isa? List andalso length bind >= 2)
+							ERROR::syntax (
+								"For LETREC's binding, " ^
+								"expected 2 or more List, but: ",
+								bind
+							)
+				val [dvar|dexp] = bind
+				val _ = unless (var? dvar)
+							ERROR::syntax (
+								"In LETREC, expected VAR, but: ",
+								dvar
+							) 
+				val _ = unless (form? dexp)
+							ERROR::syntax (
+								"In LETREC, expected <Form>, but: ",
+								dexp
+							) 
+				val [keyword|lam] = dexp
+				val _ = unless (keyword == @LAMBDA)
+							ERROR::syntax (
+								"In LETREC, expected LAMBDA, but: ",
+								keyword
+							) 
+			}
 		where {
-			val _ = unless (length args == 2)
+			val _ = unless (length args >= 1)
 						ERROR::syntax (
-							"For LETREC's arity, expected 2, but: ",
+							"For LETREC's arity, expected 1 or more, but: ",
 							args
 						)
-			val [body, bind] = args
-			val _ = unless (bind isa? List andalso length bind >= 2)
-						ERROR::syntax (
-							"For LETREC's binding, " ^
-							"expected 2 or more List, but: ",
-							bind
-						)
-			val [dvar|dexp] = bind
-			val _ = unless (var? dvar)
-						ERROR::syntax (
-							"In LETREC, expected VAR, but: ",
-							dvar
-						) 
-			val _ = unless (form? dexp)
-						ERROR::syntax (
-							"In LETREC, expected <Form>, but: ",
-							dexp
-						) 
-			val [keyword|lam] = dexp
-			val _ = unless (keyword == @LAMBDA)
-						ERROR::syntax (
-							"In LETREC, expected LAMBDA, but: ",
-							keyword
-						) 
+			val [body|binds] = args
 		}
 	}
 }
@@ -612,14 +616,29 @@ fun example-run = interpret -> (
 
 	; print "[LETREC]" ;
 
+		#[INPUT] { succ 1 whererec }
+		run [LETREC, [SUCC, 1]] ;
+		#[OUTPUT] --> 2
+
 		#[INPUT] { f 2 whererec f = fn x => succ x }
 		run [LETREC, [@f, 2], [@f, LAMBDA, [@x], [SUCC, @x]]] ;
 		#[OUTPUT] --> 3
 
-		#[INPUT]  { fact 4 
+		#[INPUT] { add (mul 2 3) (mul 4 5)
+		#			whererec
+		#				add = fn x y => x + y,
+		#				mul = fn x y => x * y
+		#		 }
+		run [LETREC, [@add, [@mul, 2, 3], [@mul, 4, 5]],
+			[@add, LAMBDA, [@x, @y], [ADD, @x, @y]],
+			[@mul, LAMBDA, [@x, @y], [MUL, @x, @y]]
+		] ;
+		#[OUTPUT] --> 26
+
+		#[INPUT] { fact 4 
 		#			whererec
 		#				fact = x -> if x <= 1 then 1 else x * fact (x - 1)
-		#		  }
+		#		 }
 		run [LETREC, [@fact, 4],
 			[@fact, LAMBDA, [@x],
 				[IF, [LE, @x, 1],
@@ -630,10 +649,10 @@ fun example-run = interpret -> (
 		] ;
 		#[OUTPUT] --> 24
 
-		#[INPUT]  { gcd 16 28
+		#[INPUT] { gcd 16 28
 		#			whererec
 		#				gcd = a b -> if b = 0 then a else gcd b (a mod b)
-		#		  }
+		#		 }
 		run [LETREC, [@gcd, 16, 28],
 			[@gcd, LAMBDA, [@a, @b],
 				[IF, [EQ, @b, 0],
