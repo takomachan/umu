@@ -11,7 +11,7 @@ module Base
 
 module Number
 
-class Int < Abstract
+class Integer < Abstract
 	INSTANCE_METHOD_INFOS = [
 		# Number
 		[:meth_odd?,			VCB::Bool,
@@ -72,11 +72,11 @@ end # Umu::Value::Core::Base
 
 module_function
 
-	def make_int(pos, val)
+	def make_integer(pos, val)
 		ASSERT.kind_of pos,	L::Position
 		ASSERT.kind_of val,	::Integer
 
-		Base::Number::Int.new(pos, val).freeze
+		Base::Number::Integer.new(pos, val).freeze
 	end
 
 end # Umu::Value::Core

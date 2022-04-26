@@ -86,7 +86,7 @@ end
 
 
 
-class Int < Abstraction::Abstract
+class Integer < Abstraction::Abstract
 	def initialize(pos, val)
 		ASSERT.kind_of val, ::Integer
 
@@ -95,12 +95,12 @@ class Int < Abstraction::Abstract
 
 
 	def to_s
-		format "INT(%d)", self.val
+		format "INTEGER(%d)", self.val
 	end
 
 
 	def to_racc_token
-		:INT
+		:INTEGER
 	end
 end
 
@@ -168,11 +168,11 @@ module_function
 	end
 
 
-	def make_int(pos, val)
+	def make_integer(pos, val)
 		ASSERT.kind_of pos, L::Position
 		ASSERT.kind_of val, ::Integer
 
-		Int.new(pos, val).freeze
+		Integer.new(pos, val).freeze
 	end
 
 

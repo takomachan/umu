@@ -66,7 +66,7 @@ module LIST = struct {
 	}
 
 
-	# length : ['a] -> INT
+	# length : ['a] -> INTEGER
 	fun rec length = xs -> cond xs {
 		empty?	-> 0
 		else	-> length xs' + 1
@@ -76,7 +76,7 @@ module LIST = struct {
 	val length' = fold 0 { _ len -> len + 1 }
 
 
-	# sum : [INT] -> INT
+	# sum : [INTEGER] -> INTEGER
 	fun rec sum = xs -> cond xs {
 		empty?	-> 0
 		else	-> x + sum xs'

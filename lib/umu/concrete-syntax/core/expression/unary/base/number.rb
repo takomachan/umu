@@ -30,7 +30,7 @@ class Abstract < Base::Abstract
 end
 
 
-class Int < Abstract
+class Integer < Abstract
 	def initialize(pos, obj)
 		ASSERT.kind_of obj, ::Integer
 
@@ -41,7 +41,7 @@ class Int < Abstract
 private
 
 	def __desugar__(_env, _event)
-		SACE.make_int self.pos, self.obj
+		SACE.make_integer self.pos, self.obj
 	end
 end
 
@@ -71,11 +71,11 @@ end	# Umu::ConcreteSyntax::Expression::Core::Unary
 
 module_function
 
-	def make_int(pos, obj)
+	def make_integer(pos, obj)
 		ASSERT.kind_of pos,	L::Position
 		ASSERT.kind_of obj, ::Integer
 
-		Unary::Base::Number::Int.new(pos, obj).freeze
+		Unary::Base::Number::Integer.new(pos, obj).freeze
 	end
 
 

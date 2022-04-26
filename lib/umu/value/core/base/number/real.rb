@@ -85,7 +85,7 @@ class Real < Abstract
 		[:meth_floor,			self,
 			:floor],
 		[:meth_ldexp,			self,
-			:ldexp,				VCBN::Int],
+			:ldexp,				VCBN::Integer],
 		[:meth_frexp,			VCP::Tuple,
 			:frexp],
 		[:meth_divmod,			VCP::Tuple,
@@ -241,7 +241,7 @@ class Real < Abstract
 
 
 	def meth_ldexp(env, _event, other)
-		ASSERT.kind_of other, VCBN::Int
+		ASSERT.kind_of other, VCBN::Integer
 
 		VC.make_real self.pos, Math.ldexp(self.val, other.val)
 	end
@@ -254,7 +254,7 @@ class Real < Abstract
 			self.pos,
 			[
 				VC.make_real(self.pos, fract.to_f),
-				VC.make_int( self.pos, expon.to_i)
+				VC.make_integer( self.pos, expon.to_i)
 			]
 		)
 	end

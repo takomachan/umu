@@ -135,7 +135,7 @@ sum-of-squares 3 4 ;;
 # -> 25
 
 
-### f : Int -> Int
+### f : Integer -> Integer
 fun f = a -> sum-of-squares (a + 1) (a * 2) ;;
 
 f 5 ;;
@@ -332,7 +332,7 @@ print "\n\nSECTION 1.2.1" ;;
 
 #### Recursive ####
 
-###		factorial : Int -> Int
+###		factorial : Integer -> Integer
 fun rec factorial = n -> (
 	if (n == 0)	1
 	else		n * factorial (n - 1)
@@ -343,7 +343,7 @@ fun rec factorial = n -> (
 
 #### Iterative ####
 
-###		fact-iter : Int -> Int -> Int -> Int
+###		fact-iter : Integer -> Integer -> Integer -> Integer
 fun rec fact-iter = product counter max-count -> (
 	if (counter > max-count)
 		product
@@ -353,7 +353,7 @@ fun rec fact-iter = product counter max-count -> (
 				  max-count
 )
 
-### factorial' : Int -> Int
+### factorial' : Integer -> Integer
 fun factorial' = n -> fact-iter 1 1 n
 
 ;;
@@ -361,7 +361,7 @@ fun factorial' = n -> fact-iter 1 1 n
 
 #### Iterative, block-structured (from footnote) ####
 
-### factorial'' : Int -> Int
+### factorial'' : Integer -> Integer
 fun factorial'' = n -> iter 1 1 where {
 	fun rec iter = product counter ->
 		if (counter > n)
@@ -383,7 +383,7 @@ print "\n\nSECTION 1.2.2" ;;
 
 #### Recursive ####
 
-###		fib : Int -> Int
+###		fib : Integer -> Integer
 fun rec fib = n -> cond n {
   (== 0)	-> 0
 | (== 1)	-> 1
@@ -395,13 +395,13 @@ fun rec fib = n -> cond n {
 
 #### Iterative ####
 
-###		fib-iter : Int -> Int -> Int -> Int
+###		fib-iter : Integer -> Integer -> Integer -> Integer
 fun rec fib-iter = a b count -> (
 	if (count == 0)	b
 	else			fib-iter (a + b) a (count - 1)
 )
 
-###	fib' : Int -> Int
+###	fib' : Integer -> Integer
 fun fib' = n -> fib-iter 1 0 n
 
 ;;
@@ -409,7 +409,7 @@ fun fib' = n -> fib-iter 1 0 n
 
 #### Counting change ####
 
-### first-denomination : Int -> Int
+### first-denomination : Integer -> Integer
 fun first-denomination = kinds-of-coins -> cond kinds-of-coins {
   (== 1) -> 1
 | (== 2) -> 5
@@ -419,7 +419,7 @@ fun first-denomination = kinds-of-coins -> cond kinds-of-coins {
   else	 -> abort "Abort"
 }
 
-###		cc : Int -> Int -> Int
+###		cc : Integer -> Integer -> Integer
 fun rec cc = amount kinds-of-coins -> (
 	if (amount == 0)
 		1
@@ -435,7 +435,7 @@ fun rec cc = amount kinds-of-coins -> (
 		)
 )
 
-### count-change : Int -> Int
+### count-change : Integer -> Integer
 fun count-change = amount -> cc amount 5
 
 ;;
@@ -462,7 +462,7 @@ print "\n\nSECTION 1.2.4" ;;
 
 #### Linear recursion ####
 
-###		expt : Int -> Int -> Int
+###		expt : Integer -> Integer -> Integer
 fun rec expt = b n -> (
 	if (n == 0)	1
 	else		b * expt b (n - 1)
@@ -473,13 +473,13 @@ fun rec expt = b n -> (
 
 #### Linear iteration ####
 
-###		expt-iter : 'a -> Int -> 'a -> 'a    where { 'a <- Number }
+###		expt-iter : 'a -> Integer -> 'a -> 'a    where { 'a <- Number }
 fun rec expt-iter = b counter product -> (
 	if (counter == 0)	product
 	else				expt-iter b (counter - 1) (b * product)
 )
 
-### expt' : Int -> Int -> Int
+### expt' : Integer -> Integer -> Integer
 fun expt' = b n -> expt-iter b n 1
 
 ;;
@@ -487,7 +487,7 @@ fun expt' = b n -> expt-iter b n 1
 
 #### Logarithmic iteration ####
 
-### even? : Int -> Bool
+### even? : Integer -> Bool
 fun even? = n -> n mod 2 == 0
 
 fun rec fast-expt = b n -> (
@@ -506,7 +506,7 @@ fun rec fast-expt = b n -> (
 
 print "\n\nSECTION 1.2.5" ;;
 
-###		gdd : Int -> Int -> Int
+###		gdd : Integer -> Integer -> Integer
 fun rec gcd = a b -> (
 	if (b == 0)	a
 	else		gcd b (a mod b)
@@ -528,20 +528,20 @@ print "\n\nSECTION 1.2.6" ;;
 
 #### prime? ####
 
-### divides? : Int -> Int -> Bool
+### divides? : Integer -> Integer -> Bool
 fun divides? = a b -> b mod a == 0
 
-###		find-divisor : Int -> Int -> Int
+###		find-divisor : Integer -> Integer -> Integer
 fun rec find-divisor = n test-divisor -> (
 	if    (square test-divisor > n)	n
 	elsif (divides? test-divisor n)	test-divisor
 	else							find-divisor n (test-divisor + 1)
 )
 
-### smallest-divisor : Int -> Int
+### smallest-divisor : Integer -> Integer
 fun smallest-divisor = n -> find-divisor n 2
 
-### prime? : Int -> Bool
+### prime? : Integer -> Bool
 fun prime? = n -> n == smallest-divisor n ;;
 
 [2, 3, 4, 5, 6, 7] |> map { x -> (x, prime? x) } ;;
@@ -550,21 +550,21 @@ fun prime? = n -> n == smallest-divisor n ;;
 
 #### fast-prime? ####
 
-###		expmod : Int -> Int -> Int -> Int
+###		expmod : Integer -> Integer -> Integer -> Integer
 fun rec expmod = base exp m -> cond exp {
   (== 0)	-> 1
 | even?		-> square (expmod base (exp / 2) m) mod m
   else		-> (base * expmod base (exp - 1) m) mod m
 }
 
-### fermat-test : Int -> Bool
+### fermat-test : Integer -> Bool
 fun fermat-test = n -> (
 	try-it (1 + random (n - 1))
 ) where {
 	fun try-it = a -> expmod a n n == a
 }
 
-### fast-prime : Int -> Int -> Bool
+### fast-prime : Integer -> Integer -> Bool
 fun rec fast-prime? = n times -> (
 	if    (times == 0)		TRUE
 	elsif (fermat-test n)	fast-prime? n (times - 1)
@@ -593,13 +593,13 @@ fun cube = x -> x * x * x ;;
 
 print "\n\nSECTION 1.3.1" ;;
 
-###		sum-integers : Int -> Int -> Int
+###		sum-integers : Integer -> Integer -> Integer
 fun rec sum-integers = a b -> (
 	if (a > b)	0
 	else		a + sum-integers (a + 1) b
 )
 
-###		sum-cubes : Int -> Int -> Int
+###		sum-cubes : Integer -> Integer -> Integer
 fun rec sum-cubes = a b -> (
 	if (a > b)	0
 	else		cube a + sum-cubes (a + 1) b
@@ -623,10 +623,10 @@ fun rec sum = term a next b init -> (
 
 #### Using sum
 
-### inc : Int -> Int
+### inc : Integer -> Integer
 fun inc = n -> n + 1
 
-### sum-cubes' : Int -> Int -> Int
+### sum-cubes' : Integer -> Integer -> Integer
 fun sum-cubes' = a b -> sum cube a inc b 0 ;;
 
 sum-cubes' 1 10 ;;
@@ -636,7 +636,7 @@ sum-cubes' 1 10 ;;
 ### identity : 'a -> 'a
 fun identity = x -> x
 
-### sum-integers' : Int -> Int -> Int
+### sum-integers' : Integer -> Integer -> Integer
 fun sum-integers' = a b -> sum identity a inc b 0 ;;
 
 sum-integers' 1 10 ;;
@@ -692,10 +692,10 @@ fun integral = f a b dx -> (
 		0.0
 ) * dx
 
-### plus4 : Int -> Int
+### plus4 : Integer -> Integer
 fun plus4 = x -> x + 4
 
-### plus4' : Int -> Int
+### plus4' : Integer -> Integer
 val plus4' = { x -> x + 4 }
 
 ;;
@@ -706,7 +706,7 @@ val plus4' = { x -> x + 4 }
 
 #### Using let
 
-### f : Int -> Int -> Int
+### f : Integer -> Integer -> Integer
 fun f = x y -> (
 	f-helper (1 + x * y) (1 - y)
 ) where {
@@ -716,7 +716,7 @@ fun f = x y -> (
 		a * b
 }
 
-### f' : Int -> Int -> Int
+### f' : Integer -> Integer -> Integer
 fun f' = x y -> (
 	{ a b ->
 		x * square a +
@@ -725,7 +725,7 @@ fun f' = x y -> (
 	} (1 + x * y) (1 - y)
 )
 
-### f'' : Int -> Int -> Int
+### f'' : Integer -> Integer -> Integer
 fun f'' = x y -> let {
 	val a = 1 + x * y
 	val b = 1 - y
@@ -763,7 +763,7 @@ in
 #)
 
 
-### f''' : Int -> Int -> Int
+### f''' : Integer -> Integer -> Integer
 fun f''' = x y -> (
 	x * square a +
 	y * b +

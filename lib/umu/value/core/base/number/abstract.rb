@@ -22,7 +22,7 @@ class Abstract < Base::Abstract
 			:'~'],
 		[:meth_absolute,	self,
 			:abs],
-		[:meth_to_int,		VCBN::Int,
+		[:meth_to_int,		VCBN::Integer,
 			:'to-i'],
 		[:meth_to_real,		VCBN::Real,
 			:'to-r'],
@@ -85,7 +85,7 @@ class Abstract < Base::Abstract
 
 	def meth_to_int(env, _event)
 		begin
-			VC.make_int self.pos, self.val.to_i
+			VC.make_integer self.pos, self.val.to_i
 		rescue ::FloatDomainError
 			raise X::ArgumentError.new(
 				self.pos,

@@ -13,16 +13,16 @@ require 'umu/lexical/lexer/lexer'
 #######################################
 
 	DATATYPE Token =
-	  TkNewline		(String, Int)
-	| TkWhite		(String, Int)
-	| TkComment		(String, Int)
-	| TkBeginBraket	(String, Int)
-	| TkEndBraket	(String, Int)
-	| TkNumber		(Number, Int)
-	| TkReserved	(Atom,   Int)
-	| TkIdentifier	(Atom,   Int)
-	| TkAtom		(Atom,   Int)
-	| TkString		(String, Int)
+	  TkNewline		(String, Integer)
+	| TkWhite		(String, Integer)
+	| TkComment		(String, Integer)
+	| TkBeginBraket	(String, Integer)
+	| TkEndBraket	(String, Integer)
+	| TkNumber		(Number, Integer)
+	| TkReserved	(Atom,   Integer)
+	| TkIdentifier	(Atom,   Integer)
+	| TkAtom		(Atom,   Integer)
+	| TkString		(String, Integer)
 
 	DATATYPE Pattern =
 	  BeginComment	String
@@ -42,7 +42,7 @@ require 'umu/lexical/lexer/lexer'
 
 
 	ABSTRACT STATE Abstract = {
-		line-num:		Int,
+		line-num:		Integer,
 		braket-stack:	String List
 	}
 	ABSTRACT STATE AbstractString ISA Abstract = {
@@ -52,8 +52,8 @@ require 'umu/lexical/lexer/lexer'
 	STATE Separator ISA Abstract
 	STATE Comment   ISA Abstract = {
 		buf:			String,
-		saved-line-num:	Int,
-		comment-depth:	Int
+		saved-line-num:	Integer,
+		comment-depth:	Integer
 	}
 	STATE Token     ISA Abstract WITH {
 		VAL braket-map = %{"(" => ")", "[" => "]", "{" => "}", ....}

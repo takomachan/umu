@@ -18,7 +18,7 @@ fun square = x -> x * x
 
 #### From SECTION 1.2.2
 
-###		fib : Int -> Int
+###		fib : Integer -> Integer
 fun rec fib = n -> cond n {
   (== 0)	-> 0
 | (== 1)	-> 1
@@ -28,7 +28,7 @@ fun rec fib = n -> cond n {
 
 #### From SECTION 1.2.5
 
-###		gcd : Int -> Int -> Int
+###		gcd : Integer -> Integer -> Integer
 fun rec gcd = a b -> (
 	if (b == 0)	a
 	else		gcd b (a mod b)
@@ -37,7 +37,7 @@ fun rec gcd = a b -> (
 
 #### From SECTION 1.2.6
 
-### prime? : Int -> Bool
+### prime? : Integer -> Bool
 fun prime? = n -> n == smallest-divisor n where {
 	fun divides? = a b -> b mod a == 0
 
@@ -533,7 +533,7 @@ fun rec scale-tree' = tree factor -> map { sub-tree ->
 ;; print "\n\nSECTION 2.2.3"
 ;;
 
-###     sum-odd-squares : [Int] -> Int
+###     sum-odd-squares : [Integer] -> Integer
 fun rec sum-odd-squares = tree -> (
 	if (tree isa? List)
 		cond tree {
@@ -548,7 +548,7 @@ fun rec sum-odd-squares = tree -> (
 		}
 )
 
-### even-fibs : Int -> [Int]
+### even-fibs : Integer -> [Integer]
 fun even-fibs = n -> next 0 where {
 	fun rec next = k -> cond k {
 		(> n)	-> []
@@ -632,7 +632,7 @@ fun rec enumerate-tree = tree -> (
 ;;
 
 
-### sum-odd-squares' : [Int] -> Int
+### sum-odd-squares' : [Integer] -> Integer
 fun sum-odd-squares' = tree -> (
 	accumulate (+) 0 (
 		map square (
@@ -648,7 +648,7 @@ fun sum-odd-squares' = tree -> (
 ;;
 
 
-### sum-odd-squares'' : [Int] -> Int
+### sum-odd-squares'' : [Integer] -> Integer
 fun sum-odd-squares'' = tree -> (
 	tree
 	|> enumerate-tree
@@ -662,7 +662,7 @@ fun sum-odd-squares'' = tree -> (
 ;;
 
 
-### sum-odd-squares''' : [Int] -> Int
+### sum-odd-squares''' : [Integer] -> Integer
 val sum-odd-squares''' = (
 	enumerate-tree
 >>	filter odd?
@@ -675,7 +675,7 @@ val sum-odd-squares''' = (
 ;;
 
 
-### even-fibs' : Int -> [Int]
+### even-fibs' : Integer -> [Integer]
 fun even-fibs' = n -> (
 	accumulate (|) [] (
 		filter even? (
@@ -691,7 +691,7 @@ fun even-fibs' = n -> (
 ;;
 
 
-### even-fibs'' : Int -> [Int]
+### even-fibs'' : Integer -> [Integer]
 fun even-fibs'' = n -> (
 	n
 	|> enumerate-interval 0
@@ -705,7 +705,7 @@ fun even-fibs'' = n -> (
 ;;
 
 
-### even-fibs''' : Int -> [Int]
+### even-fibs''' : Integer -> [Integer]
 val even-fibs''' = (
 	enumerate-interval 0
 >>	map fib
@@ -718,7 +718,7 @@ val even-fibs''' = (
 ;;
 
 
-### list-fib-squares : Int -> [Int]
+### list-fib-squares : Integer -> [Integer]
 fun list-fib-squares = n -> (
 	accumulate (|) [] (
 		map square (
@@ -734,7 +734,7 @@ fun list-fib-squares = n -> (
 ;;
 
 
-### product-of-squares-of-odd-elements : [Int] -> Int
+### product-of-squares-of-odd-elements : [Integer] -> Integer
 fun product-of-squares-of-odd-elements = sequence -> (
 	accumulate (*) 1 (
 		map square (
@@ -926,7 +926,7 @@ fun rec memq = item sequence -> cond sequence {
 
 #### representing algebraic expressions
 
-fun number? = x -> x isa? Int
+fun number? = x -> x isa? Integer
 
 fun variable? = x -> x isa? Atom
 

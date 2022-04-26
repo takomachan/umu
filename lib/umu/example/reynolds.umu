@@ -55,7 +55,7 @@ module ERROR = struct {
 module EXP = struct {
 	#### Constructor ####
 
-	# mk-const : Int -> <CONST>
+	# mk-const : Integer -> <CONST>
 	fun mk-const = x -> DATUM::make @Const x
 
 	# mk-var : Atom -> <VAR>
@@ -110,7 +110,7 @@ module EXP = struct {
 module VAL = struct {
 	#### Constructor ####
 
-	# Int -> <INTEGER>
+	# Integer -> <INTEGER>
 	fun mk-integer = x -> DATUM::make @Integer x
 
 	# Bool -> <BOOLEAN>
@@ -138,7 +138,7 @@ module VAL = struct {
 
 (######## Parser ########
 
- <Exp> ::= <Const>	/* Undefined, Umu's Int */
+ <Exp> ::= <Const>	/* Undefined, Umu's Integer */
          | <Var>	/* Undefined, Umu's Atom */
 		 | <Form>
 
@@ -173,7 +173,7 @@ fun rec parse = exp -> cond exp {
   else		-> ERROR::syntax ("Unknown Expression: ", exp)
 } where {
 	# const? : 'a -> Bool
-	fun const? = exp -> exp isa? Int
+	fun const? = exp -> exp isa? Integer
 
 	# var? : 'a -> Bool
 	fun var? = exp -> exp isa? Atom
@@ -452,18 +452,18 @@ where {
 
 	  else			-> ERROR::name ("Unknown VAR: ", x)
 	} where {
-		# int : <VAL> -> Int
+		# int : <VAL> -> Integer
 		fun int = x ->
 			if (VAL::integer? x)
 				val-of x
 			else
-				ERROR::type' ("Expected a Int, but: ", x)
+				ERROR::type' ("Expected a Integer, but: ", x)
 
-		# mk-unop : (Int -> 'a) -> ('a -> <VAL>) -> <FUNVAL>
+		# mk-unop : (Integer -> 'a) -> ('a -> <VAL>) -> <FUNVAL>
 		fun mk-unop = unop mk ->
 			VAL::mk-funval { x -> unop (int x) |> mk }
 
-		# mk-binop : (Int -> Int -> 'a) -> ('a -> <VAL>) -> <FUNVAL>
+		# mk-binop : (Integer -> Integer -> 'a) -> ('a -> <VAL>) -> <FUNVAL>
 		fun mk-binop = binop mk ->
 			VAL::mk-funval { x ->
 				VAL::mk-funval { y -> binop (int x) (int y) |> mk }

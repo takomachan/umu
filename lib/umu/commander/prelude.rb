@@ -148,7 +148,7 @@ module UMU = struct {
 		# floor			: Real -> Real
 		val floor = @(Real$floor)
 
-		# ldexp			: Real -> Int -> Real
+		# ldexp			: Real -> Integer -> Real
 		val ldexp = @(Real$ldexp)
 
 		# frexp			: Real -> (Real, Real)
@@ -172,7 +172,7 @@ module UMU = struct {
 		# display : 'a -> ()
 		fun display = x -> _STDOUT.(fputs x.to-s)
 
-		# tab : Int -> ()
+		# tab : Integer -> ()
 		fun rec tab = n ->
 			if (0.(< n)) (
 				_STDOUT.(fputs " ")
@@ -282,7 +282,7 @@ module UMU = struct {
 		}
 
 
-		# length : ['a] -> Int
+		# length : ['a] -> Integer
 		val length = fold 0 { _ len -> len.(+ 1) }
 
 
@@ -433,11 +433,11 @@ module UMU = struct {
 		# 	negative?	: Number -> Bool
 		val negative? = @(Number$negative?)
 
-		# 	odd?		: Int -> Bool
-		val odd? = @(Int$odd?)
+		# 	odd?		: Integer -> Bool
+		val odd? = @(Integer$odd?)
 
-		# 	even?		: Int -> Bool
-		val even? = @(Int$even?)
+		# 	even?		: Integer -> Bool
+		val even? = @(Integer$even?)
 
 		# ~				: 'a -> 'a	where { 'a <- Number }
 		val ~ = @(Number$~)
@@ -445,7 +445,7 @@ module UMU = struct {
 		# abs			: 'a -> 'a	where { 'a <- Number }
 		val abs = @(Number$abs)
 
-		# to-i			: Number -> Int
+		# to-i			: Number -> Integer
 		val to-i = @(Number$to-i)
 
 		# to-r			: Number -> Real
@@ -511,7 +511,7 @@ module UMU = struct {
 		# display	: 'a -> ()
 		val display = IO::display
 
-		# tab		: Int -> ()
+		# tab		: Integer -> ()
 		val tab = IO::tab
 
 		# nl		: () -> ()
@@ -592,7 +592,7 @@ module UMU = struct {
 		# foldl		: 'b -> ('b -> 'a -> 'b) -> ['a] -> 'b
 		val foldl = LIST::foldl
 
-		# length	: ['a] -> Int
+		# length	: ['a] -> Integer
 		val length = LIST::length
 
 		# reverse	: ['a] -> ['a]

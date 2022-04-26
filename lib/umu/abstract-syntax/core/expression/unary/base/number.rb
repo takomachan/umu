@@ -29,7 +29,7 @@ class Abstract < Base::Abstract
 end
 
 
-class Int < Abstract
+class Integer < Abstract
 	def initialize(pos, obj)
 		ASSERT.kind_of obj, ::Integer
 
@@ -38,7 +38,7 @@ class Int < Abstract
 
 
 	def __evaluate__(_env, _event)
-		VC.make_int self.pos, self.obj
+		VC.make_integer self.pos, self.obj
 	end
 end
 
@@ -65,11 +65,11 @@ end # Umu::AbstractSyntax::Core::Expression::Unary
 
 module_function
 
-	def make_int(pos, obj)
+	def make_integer(pos, obj)
 		ASSERT.kind_of pos,	L::Position
 		ASSERT.kind_of obj,	::Integer
 
-		Unary::Base::Number::Int.new(pos, obj).freeze
+		Unary::Base::Number::Integer.new(pos, obj).freeze
 	end
 
 

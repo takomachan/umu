@@ -327,7 +327,7 @@ messages:
 | '.' message messages	{ result = [val[1]] + val[2] }
 
 message:
-  INT {
+  INTEGER {
 	result = SCCE.make_selector(
 						val[0].pos, val[0].val
 					)
@@ -376,10 +376,10 @@ atom_expr:
   ident
 
 # Constant
-| INT		{ result = SCCE.make_int	val[0].pos, val[0].val }
-| REAL		{ result = SCCE.make_real	val[0].pos, val[0].val }
-| STRING	{ result = SCCE.make_string	val[0].pos, val[0].val }
-| ATOM		{ result = SCCE.make_atom	val[0].pos, val[0].sym }
+| INTEGER	{ result = SCCE.make_integer	val[0].pos, val[0].val }
+| REAL		{ result = SCCE.make_real		val[0].pos, val[0].val }
+| STRING	{ result = SCCE.make_string		val[0].pos, val[0].val }
+| ATOM		{ result = SCCE.make_atom		val[0].pos, val[0].sym }
 | __FILE__ {
 	pos = val[0].pos
 
@@ -388,7 +388,7 @@ atom_expr:
 | __LINE__ {
 	pos = val[0].pos
 
-	result = SCCE.make_int pos, pos.line_num
+	result = SCCE.make_integer pos, pos.line_num
 }
 
 # Braket: ( ... )
