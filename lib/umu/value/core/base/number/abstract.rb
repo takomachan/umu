@@ -24,7 +24,7 @@ class Abstract < Base::Abstract
 			:abs],
 		[:meth_to_int,		VCBN::Integer,
 			:'to-i'],
-		[:meth_to_real,		VCBN::Real,
+		[:meth_to_float,	VCBN::Float,
 			:'to-r'],
 		[:meth_add,			self,
 			:'+',			self],
@@ -90,7 +90,7 @@ class Abstract < Base::Abstract
 			raise X::ArgumentError.new(
 				self.pos,
 				env,
-				"Domain error on real number %s : %s",
+				"Domain error on float number %s : %s",
 						self.to_s,
 						self.type_sym.to_s
 			)
@@ -98,8 +98,8 @@ class Abstract < Base::Abstract
 	end
 
 
-	def meth_to_real(env, _event)
-		VC.make_real self.pos, self.val.to_f
+	def meth_to_float(env, _event)
+		VC.make_float self.pos, self.val.to_f
 	end
 
 
@@ -179,7 +179,7 @@ class Abstract < Base::Abstract
 					raise X::ArgumentError.new(
 						self.pos,
 						env,
-						"Domain error on real number %s : %s",
+						"Domain error on float number %s : %s",
 								self.to_s,
 								self.type_sym.to_s
 					)

@@ -38,7 +38,7 @@ module Umu
 				module Number
 					class Abstract < Base::Abstract; end
 					class Integer < Abstract; end
-					class Real < Abstract; end
+					class Float < Abstract; end
 				end
 				class String < Abstract; end
 			end

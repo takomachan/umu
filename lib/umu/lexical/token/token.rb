@@ -95,7 +95,7 @@ class Integer < Abstraction::Abstract
 
 
 	def to_s
-		format "INTEGER(%d)", self.val
+		format "INTEGER(%s)", self.val.to_s
 	end
 
 
@@ -106,7 +106,7 @@ end
 
 
 
-class Real < Abstraction::Abstract
+class Float < Abstraction::Abstract
 	def initialize(pos, val)
 		ASSERT.kind_of val, ::Float
 
@@ -115,12 +115,12 @@ class Real < Abstraction::Abstract
 
 
 	def to_s
-		format "REAL(%d)", self.val
+		format "FLOAT(%s)", self.val.to_s
 	end
 
 
 	def to_racc_token
-		:REAL
+		:FLOAT
 	end
 end
 
@@ -176,11 +176,11 @@ module_function
 	end
 
 
-	def make_real(pos, val)
+	def make_float(pos, val)
 		ASSERT.kind_of pos, L::Position
 		ASSERT.kind_of val, ::Float
 
-		Real.new(pos, val).freeze
+		Float.new(pos, val).freeze
 	end
 
 end # Umu::Lexical::Token

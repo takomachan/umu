@@ -179,7 +179,7 @@ f 5 ;;
 
 print "\n\nSECTION 1.1.5" ;;
 
-### abs : Real -> Real
+### abs : Float -> Float
 fun abs = x -> cond x {
   (>  0.0) -> x
 | (== 0.0) -> 0.0
@@ -187,7 +187,7 @@ fun abs = x -> cond x {
   else	   -> abort "ABORT"
 } ;;
 
-### abs' : Real -> Real
+### abs' : Float -> Float
 fun abs' = x -> cond x {
   (< 0.0)	-> ~ x
   else		-> x
@@ -219,22 +219,22 @@ print "\n\nSECTION 1.1.6" ;;
 
 print "\n\nSECTION 1.1.7" ;;
 
-### good-enough? : Real -> Real -> Real
+### good-enough? : Float -> Float -> Float
 fun good-enough? = guess x -> abs ((square guess) - x) < 0.001
 
-### average : Real -> Real -> Real
+### average : Float -> Float -> Float
 fun average = x y -> (x + y) / 2.0
 
-### improve : Real -> Real -> Real
+### improve : Float -> Float -> Float
 fun improve = guess x -> average guess (x / guess)
 
-###		sqrt-iter :  Real -> Real -> Real
+###		sqrt-iter :  Float -> Float -> Float
 fun rec sqrt-iter = guess x -> (
 	if (good-enough? guess x)	guess
 	else						sqrt-iter (improve guess x) x
 )
 
-### sqrt : Real -> Real
+### sqrt : Float -> Float
 fun sqrt = x -> sqrt-iter 1.0 x ;;
 
 sqrt 9.0 ;;
@@ -263,7 +263,7 @@ fun square = x -> x * x
 ### double : 'a -> 'a    where { 'a <- Number }
 fun double = x -> x + x
 
-### squqre' : Real -> Real
+### squqre' : Float -> Float
 fun square' = x -> exp (double (log x))
 
 ;;
@@ -287,7 +287,7 @@ fun sqrt = x -> sqrt-iter 1.0 x ;;
 
 #### Block-structured ####
 
-### sqrt' :  Real -> Real
+### sqrt' :  Float -> Float
 fun sqrt' = x -> sqrt-iter 1.0 x where {
 	fun good-enough? = guess x -> abs ((square guess) - x) < 0.001
 
@@ -303,7 +303,7 @@ fun sqrt' = x -> sqrt-iter 1.0 x where {
 
 #### Taking advantage of lexical scoping ####
 
-### sqrt'' :  Real -> Real
+### sqrt'' :  Float -> Float
 fun sqrt'' = x -> sqrt-iter 1.0 where {
 	fun good-enough? = guess -> abs ((square guess) - x) < 0.001
 
@@ -605,7 +605,7 @@ fun rec sum-cubes = a b -> (
 	else		cube a + sum-cubes (a + 1) b
 )
 
-###		pi-sum : Real -> Real -> Real
+###		pi-sum : Float -> Float -> Float
 fun rec pi-sum = a b -> (
 	if (a > b)	0.0
 	else		1.0 / (a * (a + 2.0)) + pi-sum (a + 4.0) b
@@ -643,7 +643,7 @@ sum-integers' 1 10 ;;
 # -> 55
 
 
-### pi-sum' : Real -> Real -> Real
+### pi-sum' : Float -> Float -> Float
 fun pi-sum' = a b -> sum pi-term a pi-next b 0.0 where {
 	fun pi-term = x -> 1.0 / (x * (x + 2.0))
 	fun pi-next = x -> x + 4.0
@@ -653,7 +653,7 @@ fun pi-sum' = a b -> sum pi-term a pi-next b 0.0 where {
 # -> 3.139592655589783 
 
 
-### integral : (Real -> Real) -> Real -> Real -> Real -> Real
+### integral : (Float -> Float) -> Float -> Float -> Float -> Float
 fun integral = f a b dx -> (
 	(sum f (a + dx / 2.0) add-dx b 0.0) * dx
 ) where {
@@ -674,7 +674,7 @@ integral cube 0.0 1.0 0.01 ;;
 
 print "\n\nSECTION 1.3.2" ;;
 
-### pi-sum : Real -> Real -> Real
+### pi-sum : Float -> Float -> Float
 fun pi-sum = a b -> (
 	sum	{ x -> 1.0 / (x * (x + 2.0)) }
 		a
@@ -683,7 +683,7 @@ fun pi-sum = a b -> (
 		0.0
 )
 
-### integral : (Real -> Real) -> Real -> Real -> Real -> Real
+### integral : (Float -> Float) -> Float -> Float -> Float -> Float
 fun integral = f a b dx -> (
 	sum f
 		(a + dx / 2.0)
@@ -783,10 +783,10 @@ print "\n\nSECTION 1.3.3" ;;
 
 #### Half-interval method ####
 
-### close-enough? : Real -> Bool
+### close-enough? : Float -> Bool
 fun close-enough? = x y -> abs (x - y) < 0.001
 
-###		search : (Real -> Bool) -> Real -> Real -> Real
+###		search : (Float -> Bool) -> Float -> Float -> Float
 fun rec search = f neg-point pos-point -> let {
 	val midpoint = average neg-point pos-point
 in
@@ -803,7 +803,7 @@ in
 	}
 }
 
-### half-interval-method : (Real -> Bool) -> Real -> Real -> Real
+### half-interval-method : (Float -> Bool) -> Float -> Float -> Float
 fun half-interval-method = f a b -> let {
 	val a-value = f a
 	val b-value = f b
@@ -827,7 +827,7 @@ half-interval-method { x -> x * x * x - 2.0 * x - 3.0 } 1.0 2.0 ;;
 
 val tolerance = 0.00001
 
-### fixed-point : (Real -> Bool) -> Real -> Real
+### fixed-point : (Float -> Bool) -> Float -> Float
 fun fixed-point = f first-guess -> try first-guess where {
 	fun close-enough? = v1 v2 -> abs (v1 - v2) < tolerance
 
@@ -849,10 +849,10 @@ fixed-point { y -> sin y + cos y } 1.0 ;;
 # -> 1.2587315962971173
 
 
-### sqrt : Real -> Real
+### sqrt : Float -> Float
 fun sqrt = x -> fixed-point { y -> x / y } 1.0
 
-### sqrt : Real -> Real
+### sqrt : Float -> Float
 fun sqrt = x -> fixed-point { y -> average y (x / y) } 1.0
 
 ;;
@@ -873,12 +873,12 @@ fun average-damp = f -> {
 average-damp square 10.0 ;;
 # -> 55.0
 
-### sqrt : Real -> Real
+### sqrt : Float -> Float
 fun sqrt = x -> (
 	fixed-point (average-damp { y -> x / y }) 1.0
 ) ;;
 
-### cube-root : Real -> Real
+### cube-root : Float -> Float
 fun cube-root = x -> (
 	fixed-point (average-damp { y -> x / square y }) 1.0
 ) ;;
@@ -905,12 +905,12 @@ fun newton-transform = g -> {
 	x -> x - g x / deriv g x
 }
 
-### newton-transform : (Real -> Real) -> Real -> Real
+### newton-transform : (Float -> Float) -> Float -> Float
 fun newtons-method = g guess -> (
 	fixed-point (newton-transform g) guess
 )
 
-### sqrt : Real -> Real
+### sqrt : Float -> Float
 fun sqrt = x -> newtons-method { y -> square y - x } 1.0
 
 ;;
@@ -919,17 +919,17 @@ fun sqrt = x -> newtons-method { y -> square y - x } 1.0
 #### Fixed point of transformed function ####
 
 ### fixed-point-of-transform :
-###						(Real -> Real) -> (Real -> Real) -> Real -> Real
+###					(Float -> Float) -> (Float -> Float) -> Float -> Float
 fun fixed-point-of-transform = g transform guess -> (
 	fixed-point (transform g) guess
 )
 
-### sqrt : Real -> Real
+### sqrt : Float -> Float
 fun sqrt = x -> (
 	fixed-point-of-transform { y -> x / y } average-damp 1.0
 )
 
-### sqrt' : Real -> Real
+### sqrt' : Float -> Float
 fun sqrt' = x -> (
 	fixed-point-of-transform { y -> square y - x } newton-transform 1.0
 )

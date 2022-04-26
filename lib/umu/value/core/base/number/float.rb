@@ -11,7 +11,7 @@ module Base
 
 module Number
 
-class Real < Abstract
+class Float < Abstract
 	CLASS_METHOD_INFOS = [
 		[:meth_make_nan,		self,
 			:'make-nan'],
@@ -134,12 +134,12 @@ class Real < Abstract
 
 
 	def self.meth_make_pi(env, _event)
-		VC.make_real L.make_position(__FILE__, __LINE__), Math::PI
+		VC.make_float L.make_position(__FILE__, __LINE__), Math::PI
 	end
 
 
 	def self.meth_make_e(env, _event)
-		VC.make_real L.make_position(__FILE__, __LINE__), Math::E
+		VC.make_float L.make_position(__FILE__, __LINE__), Math::E
 	end
 
 
@@ -159,91 +159,91 @@ class Real < Abstract
 
 
 	def meth_sin(env, _event)
-		VC.make_real self.pos, Math.sin(self.val)
+		VC.make_float self.pos, Math.sin(self.val)
 	end
 
 
 	def meth_cos(env, _event)
-		VC.make_real self.pos, Math.cos(self.val)
+		VC.make_float self.pos, Math.cos(self.val)
 	end
 
 
 	def meth_tan(env, _event)
-		VC.make_real self.pos, Math.tan(self.val)
+		VC.make_float self.pos, Math.tan(self.val)
 	end
 
 
 	def meth_asin(env, _event)
-		VC.make_real self.pos, Math.asin(self.val)
+		VC.make_float self.pos, Math.asin(self.val)
 	end
 
 
 	def meth_acos(env, _event)
-		VC.make_real self.pos, Math.acos(self.val)
+		VC.make_float self.pos, Math.acos(self.val)
 	end
 
 
 	def meth_atan(env, _event)
-		VC.make_real self.pos, Math.atan(self.val)
+		VC.make_float self.pos, Math.atan(self.val)
 	end
 
 
 	def meth_atan2(env, _event, other)
-		ASSERT.kind_of other, Real
+		ASSERT.kind_of other, Float
 
-		VC.make_real self.pos, Math.atan2(other.val, self.val)
+		VC.make_float self.pos, Math.atan2(other.val, self.val)
 	end
 
 
 	def meth_sinh(env, _event)
-		VC.make_real self.pos, Math.sinh(self.val)
+		VC.make_float self.pos, Math.sinh(self.val)
 	end
 
 
 	def meth_cosh(env, _event)
-		VC.make_real self.pos, Math.cosh(self.val)
+		VC.make_float self.pos, Math.cosh(self.val)
 	end
 
 
 	def meth_tanh(env, _event)
-		VC.make_real self.pos, Math.tanh(self.val)
+		VC.make_float self.pos, Math.tanh(self.val)
 	end
 
 
 	def meth_exp(env, _event)
-		VC.make_real self.pos, Math.exp(self.val)
+		VC.make_float self.pos, Math.exp(self.val)
 	end
 
 
 	def meth_log(env, _event)
-		VC.make_real self.pos, Math.log(self.val)
+		VC.make_float self.pos, Math.log(self.val)
 	end
 
 
 	def meth_log10(env, _event)
-		VC.make_real self.pos, Math.log10(self.val)
+		VC.make_float self.pos, Math.log10(self.val)
 	end
 
 
 	def meth_sqrt(env, _event)
-		VC.make_real self.pos, Math.sqrt(self.val)
+		VC.make_float self.pos, Math.sqrt(self.val)
 	end
 
 
 	def meth_ceil(env, _event)
-		VC.make_real self.pos, self.val.ceil.to_f
+		VC.make_float self.pos, self.val.ceil.to_f
 	end
 
 
 	def meth_floor(env, _event)
-		VC.make_real self.pos, self.val.floor.to_f
+		VC.make_float self.pos, self.val.floor.to_f
 	end
 
 
 	def meth_ldexp(env, _event, other)
 		ASSERT.kind_of other, VCBN::Integer
 
-		VC.make_real self.pos, Math.ldexp(self.val, other.val)
+		VC.make_float self.pos, Math.ldexp(self.val, other.val)
 	end
 
 
@@ -253,7 +253,7 @@ class Real < Abstract
 		VC.make_tuple(
 			self.pos,
 			[
-				VC.make_real(self.pos, fract.to_f),
+				VC.make_float(self.pos, fract.to_f),
 				VC.make_integer( self.pos, expon.to_i)
 			]
 		)
@@ -261,15 +261,15 @@ class Real < Abstract
 
 
 	def meth_divmod(env, _event, other)
-		ASSERT.kind_of other, Real
+		ASSERT.kind_of other, VCBN::Float
 
 		fract, integ = self.val.divmod other.val
 
 		VC.make_tuple(
 			self.pos,
 			[
-				VC.make_real(self.pos, fract.to_f),
-				VC.make_real(self.pos, integ.to_f)
+				VC.make_float(self.pos, fract.to_f),
+				VC.make_float(self.pos, integ.to_f)
 			]
 		)
 	end
@@ -282,25 +282,25 @@ end # Umu::Value::Core::Base
 
 module_function
 
-	def make_real(pos, val)
+	def make_float(pos, val)
 		ASSERT.kind_of pos,	L::Position
 		ASSERT.kind_of val,	::Float
 
-		Base::Number::Real.new(pos, val).freeze
+		Base::Number::Float.new(pos, val).freeze
 	end
 
 
 	def make_nan(pos)
 		ASSERT.kind_of pos,	L::Position
 
-		make_real pos, ::Float::NAN
+		make_float pos, ::Float::NAN
 	end
 
 
 	def make_infinity(pos)
 		ASSERT.kind_of pos,	L::Position
 
-		make_real pos, ::Float::INFINITY
+		make_float pos, ::Float::INFINITY
 	end
 
 end	# Umu::Value::Core

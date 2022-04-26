@@ -46,7 +46,7 @@ private
 end
 
 
-class Real < Abstract
+class Float < Abstract
 	def initialize(pos, obj)
 		ASSERT.kind_of obj, ::Float
 
@@ -57,7 +57,7 @@ class Real < Abstract
 private
 
 	def __desugar__(_env, _event)
-		SACE.make_real self.pos, self.obj
+		SACE.make_float self.pos, self.obj
 	end
 end
 
@@ -79,11 +79,11 @@ module_function
 	end
 
 
-	def make_real(pos, obj)
+	def make_float(pos, obj)
 		ASSERT.kind_of pos,	L::Position
 		ASSERT.kind_of obj, ::Float
 
-		Unary::Base::Number::Real.new(pos, obj).freeze
+		Unary::Base::Number::Float.new(pos, obj).freeze
 	end
 
 end	# Umu::ConcreteSyntax::Expression::Core

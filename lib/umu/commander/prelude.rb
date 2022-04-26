@@ -79,83 +79,83 @@ module UMU = struct {
 	#### Math ####
 
 	module MATH = struct {
-		# NAN 			: Real
-		val NAN = @(Real.make-nan) ()
+		# NAN 			: Float
+		val NAN = @(Float.make-nan) ()
 
-		# INFINITY	 	: Real
-		val INFINITY = @(Real.make-infinity) ()
+		# INFINITY	 	: Float
+		val INFINITY = @(Float.make-infinity) ()
 
-		# PI 			: Real
-		val PI = @(Real.make-pi) ()
+		# PI 			: Float
+		val PI = @(Float.make-pi) ()
 
-		# E 			: Real
-		val E = @(Real.make-e) ()
+		# E 			: Float
+		val E = @(Float.make-e) ()
 
-		# nan?			: Real -> Bool
-		val nan? = @(Real$nan?)
+		# nan?			: Float -> Bool
+		val nan? = @(Float$nan?)
 
-		# infinite?		: Real -> Bool
-		val infinite? = @(Real$infinite?)
+		# infinite?		: Float -> Bool
+		val infinite? = @(Float$infinite?)
 
-		# finite?		: Real -> Bool
-		val finite? = @(Real$finite?)
+		# finite?		: Float -> Bool
+		val finite? = @(Float$finite?)
 
-		# sin			: Real -> Real
-		val sin = @(Real$sin)
+		# sin			: Float -> Float
+		val sin = @(Float$sin)
 
-		# cos			: Real -> Real
-		val cos = @(Real$cos)
+		# cos			: Float -> Float
+		val cos = @(Float$cos)
 
-		# tan			: Real -> Real
-		val tan = @(Real$tan)
+		# tan			: Float -> Float
+		val tan = @(Float$tan)
 
-		# asin			: Real -> Real
-		val asin = @(Real$asin)
+		# asin			: Float -> Float
+		val asin = @(Float$asin)
 
-		# acos			: Real -> Real
-		val acos = @(Real$acos)
+		# acos			: Float -> Float
+		val acos = @(Float$acos)
 
-		# atan			: Real -> Real
-		val atan = @(Real$atan)
+		# atan			: Float -> Float
+		val atan = @(Float$atan)
 
-		# atan2			: Real -> Real -> Real
-		val atan2 = @(Real$atan2)
+		# atan2			: Float -> Float -> Float
+		val atan2 = @(Float$atan2)
 
-		# sinh			: Real -> Real
-		val sinh = @(Real$sinh)
+		# sinh			: Float -> Float
+		val sinh = @(Float$sinh)
 
-		# cosh			: Real -> Real
-		val cosh = @(Real$cosh)
+		# cosh			: Float -> Float
+		val cosh = @(Float$cosh)
 
-		# tanh			: Real -> Real
-		val tanh = @(Real$tanh)
+		# tanh			: Float -> Float
+		val tanh = @(Float$tanh)
 
-		# exp			: Real -> Real
-		val exp = @(Real$exp)
+		# exp			: Float -> Float
+		val exp = @(Float$exp)
 
-		# log			: Real -> Real
-		val log = @(Real$log)
+		# log			: Float -> Float
+		val log = @(Float$log)
 
-		# log10			: Real -> Real
-		val log10 = @(Real$log10)
+		# log10			: Float -> Float
+		val log10 = @(Float$log10)
 
-		# sqrt			: Real -> Real
-		val sqrt = @(Real$sqrt)
+		# sqrt			: Float -> Float
+		val sqrt = @(Float$sqrt)
 
-		# ceil			: Real -> Real
-		val ceil = @(Real$ceil)
+		# ceil			: Float -> Float
+		val ceil = @(Float$ceil)
 
-		# floor			: Real -> Real
-		val floor = @(Real$floor)
+		# floor			: Float -> Float
+		val floor = @(Float$floor)
 
-		# ldexp			: Real -> Integer -> Real
-		val ldexp = @(Real$ldexp)
+		# ldexp			: Float -> Integer -> Float
+		val ldexp = @(Float$ldexp)
 
-		# frexp			: Real -> (Real, Real)
-		val frexp = @(Real$frexp)
+		# frexp			: Float -> (Float, Float)
+		val frexp = @(Float$frexp)
 
-		# divmod		: Real -> Real -> (Real, Real)
-		val divmod = @(Real$divmod)
+		# divmod		: Float -> Float -> (Float, Float)
+		val divmod = @(Float$divmod)
 	}
 
 
@@ -448,7 +448,7 @@ module UMU = struct {
 		# to-i			: Number -> Integer
 		val to-i = @(Number$to-i)
 
-		# to-r			: Number -> Real
+		# to-r			: Number -> Float
 		val to-r = @(Number$to-r)
 
 		# (+)			: 'a -> 'a -> 'a		where { 'a <- Number }
@@ -472,19 +472,19 @@ module UMU = struct {
 
 		#### Math ####
 
-		# NAN		: Real
+		# NAN		: Float
 		val NAN = MATH::NAN
 
-		# INFINITY	: Real
+		# INFINITY	: Float
 		val INFINITY = MATH::INFINITY
 
-		# nan?		: Real -> Bool
+		# nan?		: Float -> Bool
 		val nan? = MATH::nan?
 
-		# infinite?	: Real -> Bool
+		# infinite?	: Float -> Bool
 		val infinite? = MATH::infinite?
 
-		# finite?	: Real -> Bool
+		# finite?	: Float -> Bool
 		val finite? = MATH::finite?
 
 

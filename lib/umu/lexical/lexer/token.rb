@@ -174,7 +174,7 @@ SYMBOL_PATTERNS = [
 		ASSERT.kind_of scanner, ::StringScanner
 
 		case
-		# Real or Integer
+		# Float or Integer
 		when scanner.scan(/\d+(\.\d+)?/)
 			[
 				:Number,
@@ -182,7 +182,7 @@ SYMBOL_PATTERNS = [
 				scanner.matched,
 
 				if scanner[1]
-					LT.make_real pos, scanner.matched.to_f
+					LT.make_float pos, scanner.matched.to_f
 				else
 					LT.make_integer pos, scanner.matched.to_i
 				end,

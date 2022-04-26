@@ -377,7 +377,7 @@ atom_expr:
 
 # Constant
 | INTEGER	{ result = SCCE.make_integer	val[0].pos, val[0].val }
-| REAL		{ result = SCCE.make_real		val[0].pos, val[0].val }
+| FLOAT		{ result = SCCE.make_float		val[0].pos, val[0].val }
 | STRING	{ result = SCCE.make_string		val[0].pos, val[0].val }
 | ATOM		{ result = SCCE.make_atom		val[0].pos, val[0].sym }
 | __FILE__ {
