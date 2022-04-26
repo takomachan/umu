@@ -237,10 +237,10 @@ module UMU = struct {
 		fun rec equal-with? = eq? xs ys ->
 			if (xs isa? List andalso ys isa? List)
 				cond xs {
-					Nil?	=> Nil? ys
-					else	=> cond ys {
-				  		Nil?	=> BOOL::FALSE
-						else	=> eq? x y andalso equal-with? eq? xs' ys'
+					Nil?	-> Nil? ys
+					else	-> cond ys {
+				  		Nil?	-> BOOL::FALSE
+						else	-> eq? x y andalso equal-with? eq? xs' ys'
 									where val [x|xs'] = xs
 										  val [y|ys'] = ys
 					}
@@ -255,8 +255,8 @@ module UMU = struct {
 
 		# fold : 'b -> ('a -> 'b -> 'b) -> ['a] -> 'b
 		fun rec fold = a f xs -> cond xs {
-			Nil?	=> a
-			else	=> fold (f x a) f xs'
+			Nil?	-> a
+			else	-> fold (f x a) f xs'
 						where val [x|xs'] = xs
 		}
 
@@ -268,16 +268,16 @@ module UMU = struct {
 
 		# foldr : 'b -> ('a -> 'b -> 'b) -> ['a] -> 'b
 		fun rec foldr = a f xs -> cond xs {
-			Nil?	=> a
-			else	=> f x (foldr a f xs')
+			Nil?	-> a
+			else	-> f x (foldr a f xs')
 						where val [x|xs'] = xs
 		}
 
 
 		# foldl : 'b -> ('b -> 'a -> 'b) -> ['a] -> 'b
 		fun rec foldl = a f xs -> cond xs {
-			Nil?	=> a
-			else	=> foldl (f a x) f xs'
+			Nil?	-> a
+			else	-> foldl (f a x) f xs'
 						where val [x|xs'] = xs
 		}
 
@@ -320,8 +320,8 @@ module UMU = struct {
 			fun e = _ -> []
 
 			fun g = x h ys -> cond ys {
-				Nil?	=> []
-				else	=> [f x y | h ys']
+				Nil?	-> []
+				else	-> [f x y | h ys']
 							where val [y|ys'] = ys
 			}
 		}
@@ -346,8 +346,8 @@ module UMU = struct {
 
 		# sort : ('a -> 'a -> Bool) -> ['a] -> ['a]
 		fun rec sort = f xs -> cond xs {
-			Nil?	=> []
-			else	=>
+			Nil?	-> []
+			else	->
 				concat [sort f littles, [pivot], sort f bigs]
 				where val [pivot|xs']	  = xs
 					  val (littles, bigs) = partition { x -> f x pivot } xs'
@@ -365,10 +365,10 @@ module UMU = struct {
 
 		# join : String -> [String] -> String
 		fun join = j xs -> cond xs {
-			LIST::Nil?	=> ""
-			else		=> cond xs' {
-				LIST::Nil?	=> x
-				else		=> x.(^ xs'')
+			LIST::Nil?	-> ""
+			else		-> cond xs' {
+				LIST::Nil?	-> x
+				else		-> x.(^ xs'')
 					where val [x|xs'] = xs
 						  val xs'' = LIST::fold
 											""

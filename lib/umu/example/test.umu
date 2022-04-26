@@ -13,8 +13,8 @@ fun rec fact = x ->
 
 ## map
 fun rec map = f xs -> cond xs {
-  empty?	=> []
-  else		=> [f x | map f xs']
+  empty?	-> []
+  else		-> [f x | map f xs']
 	where val [x|xs'] = xs
 }
 

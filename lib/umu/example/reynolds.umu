@@ -167,10 +167,10 @@ module VAL = struct {
 
 # parse : 'a -> <EXP>
 fun rec parse = exp -> cond exp {
-  const?	=> EXP::mk-const exp
-| var?		=> EXP::mk-var exp
-| form?		=> parse-form exp
-  else		=> ERROR::syntax ("Unknown Expression: ", exp)
+  const?	-> EXP::mk-const exp
+| var?		-> EXP::mk-var exp
+| form?		-> parse-form exp
+  else		-> ERROR::syntax ("Unknown Expression: ", exp)
 } where {
 	# const? : 'a -> Bool
 	fun const? = exp -> exp isa? Int
@@ -187,11 +187,11 @@ fun rec parse = exp -> cond exp {
 	fun parse-form = exp ->
 		if (keyword isa? Symbol)
 			cond keyword {
-			  (== @IF)		=> parse-if		args
-			| (== @LAMBDA)	=> parse-lambda	args
-			| (== @LET)		=> parse-let	args
-			| (== @LETREC)	=> parse-letrec	args
-			  else			=> parse-apply	exp
+			  (== @IF)		-> parse-if		args
+			| (== @LAMBDA)	-> parse-lambda	args
+			| (== @LET)		-> parse-let	args
+			| (== @LETREC)	-> parse-letrec	args
+			  else			-> parse-apply	exp
 			}
 		else
 			parse-apply	exp
@@ -350,16 +350,16 @@ where {
 	fun rec eval = (r, e) -> cond r {
 
 	#### CONST ####
-	  EXP::const? => evcon r
+	  EXP::const? -> evcon r
 		where
 			# evcon : CONST -> INTEGER
 			fun evcon = r -> VAL::mk-integer (val-of r)
 
 	#### VAR ####
-	| EXP::var? => e r
+	| EXP::var? -> e r
 
 	#### APPL ####
-	| EXP::appl? => (val-of va-opr) va-opnd
+	| EXP::appl? -> (val-of va-opr) va-opnd
 		where
 			val (opr, opnd) = val-of r
 
@@ -372,10 +372,10 @@ where {
 			val va-opnd = eval (opnd, e)
 
 	#### LAMBDA ####
-	| EXP::lambda? => evlambda (r, e)
+	| EXP::lambda? -> evlambda (r, e)
 
 	#### COND ####
-	| EXP::cond? => if (val-of va-prem)
+	| EXP::cond? -> if (val-of va-prem)
 						eval (conc, e)
 					else
 						eval (altr, e)
@@ -390,7 +390,7 @@ where {
 						)
 
 	#### LETREC ####
-	| EXP::letrec? => eval (body, e')
+	| EXP::letrec? -> eval (body, e')
 		where
 			val (dvar, dexp, body)	= val-of r
 
@@ -406,7 +406,7 @@ where {
 								else
 									e x
 
-	  else => ERROR::failure ("Unknown EXP: ", r)
+	  else -> ERROR::failure ("Unknown EXP: ", r)
 
 	} where {
 		# evlambda : (<LAMBDA>, <ENV>) -> <FUNVAL>
@@ -433,24 +433,24 @@ where {
 	# initenv : <ENV>	where { <ENV> = <VAR> -> <VAL> }
 	fun initenv = x -> cond (val-of x) {
 	#### Constant
-	  (== @TRUE)	=> VAL::mk-boolean TRUE
-	| (== @FALSE)	=> VAL::mk-boolean FALSE
+	  (== @TRUE)	-> VAL::mk-boolean TRUE
+	| (== @FALSE)	-> VAL::mk-boolean FALSE
 
 	#### Number
-	| (== @NEG)		=> mk-unop	~     VAL::mk-integer
-	| (== @SUCC)	=> mk-unop	(+ 1) VAL::mk-integer
-	| (== @PRED)	=> mk-unop	(- 1) VAL::mk-integer
-	| (== @ADD)		=> mk-binop	(+)   VAL::mk-integer
-	| (== @SUB)		=> mk-binop	(-)   VAL::mk-integer
-	| (== @MUL)		=> mk-binop	(*)   VAL::mk-integer
-	| (== @DIV)		=> mk-binop	(/)   VAL::mk-integer
-	| (== @MOD)		=> mk-binop	(mod) VAL::mk-integer
+	| (== @NEG)		-> mk-unop	~     VAL::mk-integer
+	| (== @SUCC)	-> mk-unop	(+ 1) VAL::mk-integer
+	| (== @PRED)	-> mk-unop	(- 1) VAL::mk-integer
+	| (== @ADD)		-> mk-binop	(+)   VAL::mk-integer
+	| (== @SUB)		-> mk-binop	(-)   VAL::mk-integer
+	| (== @MUL)		-> mk-binop	(*)   VAL::mk-integer
+	| (== @DIV)		-> mk-binop	(/)   VAL::mk-integer
+	| (== @MOD)		-> mk-binop	(mod) VAL::mk-integer
 
 	#### Relational
-	| (== @EQ)		=> mk-binop (==) VAL::mk-boolean
-	| (== @LT)		=> mk-binop (<)  VAL::mk-boolean
+	| (== @EQ)		-> mk-binop (==) VAL::mk-boolean
+	| (== @LT)		-> mk-binop (<)  VAL::mk-boolean
 
-	  else			=> ERROR::name ("Unknown VAR: ", x)
+	  else			-> ERROR::name ("Unknown VAR: ", x)
 	} where {
 		# int : <VAL> -> Int
 		fun int = x ->

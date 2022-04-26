@@ -141,7 +141,7 @@ atom_stru_fld_pat: var_pat opt_stru_var_pat {
 
 opt_stru_var_pat:
   /* empty */	{ result = nil }
-| '=>' var_pat	{ result = val[1].var_sym }
+| '->' var_pat	{ result = val[1].var_sym }
 
 
 # Variable pattern
@@ -238,7 +238,7 @@ expr:
 | UNLESS if_rule {
 	result = SCCE.make_unless val[0].pos, val[1]
 }
-| COND atom_expr '{' cond_rules ELSE '=>' expr opt_inner_where_decls '}' {
+| COND atom_expr '{' cond_rules ELSE '->' expr opt_inner_where_decls '}' {
 	result = SCCE.make_cond val[0].pos, val[1], val[3], val[6], val[7]
 }
 | LET '{' opt_core_decls IN expr '}' {
@@ -257,7 +257,7 @@ cond_rules:
   cond_rule					{ result = [val[0]] }
 | cond_rule '|' cond_rules 	{ result = [val[0]] + val[2] }
 
-cond_rule: expr '=>' expr opt_inner_where_decls {
+cond_rule: expr '->' expr opt_inner_where_decls {
 	result = SCCE.make_cond_rule val[0].pos, val[0], val[2], val[3]
 }
 

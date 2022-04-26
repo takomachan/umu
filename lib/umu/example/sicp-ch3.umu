@@ -28,8 +28,8 @@ module DATUM = UMU::DATUM
 
 ###		assoc : Symbol -> [(Symbol, 'a)] -> <OPTION> (Symbol, 'a)
 fun rec assoc = key records -> cond records {
-	empty?	=> NONE
-	else	=> if (key == fst x)
+	empty?	-> NONE
+	else	-> if (key == fst x)
 					Some x
 			   else
 					assoc key xs
@@ -140,8 +140,8 @@ fun make-table' = records -> let {
 	}
 
 	fun dispatch = m -> cond m {
-	  (== @lookup-proc)	=> lookup
-	  else				=> abort (
+	  (== @lookup-proc)	-> lookup
+	  else				-> abort (
 								"Unknown operation -- TABLE: " ^ inspect m
 							)
 	}

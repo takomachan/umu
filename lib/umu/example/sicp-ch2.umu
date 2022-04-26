@@ -1,7 +1,7 @@
 module DATUM = UMU::DATUM
 
 module struct {
-	val (PI, sin, cos, atan2 => atan, sqrt)
+	val (PI, sin, cos, atan2 -> atan, sqrt)
 } = UMU::MATH
 
 
@@ -20,9 +20,9 @@ fun square = x -> x * x
 
 ###		fib : Int -> Int
 fun rec fib = n -> cond n {
-  (== 0)	=> 0
-| (== 1)	=> 1
-  else		=> fib (n - 1) + fib (n - 2)
+  (== 0)	-> 0
+| (== 1)	-> 1
+  else		-> fib (n - 1) + fib (n - 2)
 }
 
 
@@ -259,9 +259,9 @@ fun add-rat'' = x y -> (
 
 fun dispa-cons = x y -> dispatch where {
 	fun dispatch = m -> cond m {
-	  (== 0)	=> x
-	| (== 1)	=> y
-	  else		=> abort ("Argument not 0 or 1 -- CONS: " ^ (to-s m))
+	  (== 0)	-> x
+	| (== 1)	-> y
+	  else		-> abort ("Argument not 0 or 1 -- CONS: " ^ (to-s m))
 	}
 }
 
@@ -379,8 +379,8 @@ val squares = [1, 4, 9, 16, 25]
 
 
 fun rec length = items -> cond items {
-	empty?	=> 0
-	else	=> 1 + length (tl items)
+	empty?	-> 0
+	else	-> 1 + length (tl items)
 }
 
 val odds = [1, 3, 5, 7]
@@ -394,8 +394,8 @@ fun length' = items -> (
 	length-iter items 0
 ) where {
 	fun rec length-iter = a count -> cond a {
-		empty?	=> count
-		else	=> length-iter (tl a) (1 + count)
+		empty?	-> count
+		else	-> length-iter (tl a) (1 + count)
 	}
 }
 
@@ -405,8 +405,8 @@ fun length' = items -> (
 
 
 fun rec append = list1 list2 -> cond list1 {
-	empty?	=> list2
-	else	=> [x1 | append xs1 list2]
+	empty?	-> list2
+	else	-> [x1 | append xs1 list2]
 				where val [x1|xs1] = list1
 }
 
@@ -422,8 +422,8 @@ fun rec append = list1 list2 -> cond list1 {
 #### Mapping over lists ####
 
 fun rec scale-list = items factor -> cond items {
-	empty?	=> []
-	else	=> [x * factor | scale-list xs factor]
+	empty?	-> []
+	else	-> [x * factor | scale-list xs factor]
 				where val [x|xs] = items
 }
 
@@ -433,8 +433,8 @@ fun rec scale-list = items factor -> cond items {
 
 
 fun map = proc items -> cond items {
-	empty?	=> []
-	else	=> [proc x | map proc xs]
+	empty?	-> []
+	else	-> [proc x | map proc xs]
 				where val [x|xs] = items
 }
 
@@ -469,8 +469,8 @@ fun scale-list' = items factor -> map { x -> x * factor } items
 fun rec count-leaves = xs -> (
 	if (xs isa? List)
 		cond xs {
-			empty?	=> 0
-			else	=> count-leaves x + count-leaves xs'
+			empty?	-> 0
+			else	-> count-leaves x + count-leaves xs'
 						where val [x|xs'] = xs
 		}
 	else
@@ -502,8 +502,8 @@ val x = [[1, 2] | [3, 4]]
 fun rec scale-tree = tree factor -> (
 	if (tree isa? List)
 		cond tree {
-			empty?	=> []
-			else	=> [scale-tree x factor | scale-tree xs factor]
+			empty?	-> []
+			else	-> [scale-tree x factor | scale-tree xs factor]
 						where val [x|xs] = tree
 		}
 	else
@@ -537,22 +537,22 @@ fun rec scale-tree' = tree factor -> map { sub-tree ->
 fun rec sum-odd-squares = tree -> (
 	if (tree isa? List)
 		cond tree {
-			empty?	=> 0
-			else	=> sum-odd-squares x + sum-odd-squares xs
+			empty?	-> 0
+			else	-> sum-odd-squares x + sum-odd-squares xs
 						where val [x|xs] = tree
 		}
 	else
 		cond tree {
-			odd?	=> square tree
-			else	=> 0
+			odd?	-> square tree
+			else	-> 0
 		}
 )
 
 ### even-fibs : Int -> [Int]
 fun even-fibs = n -> next 0 where {
 	fun rec next = k -> cond k {
-		(> n)	=> []
-		else	=> if (even? f)	[f | next (k + 1)]
+		(> n)	-> []
+		else	-> if (even? f)	[f | next (k + 1)]
 				   else			next (k + 1)
 					where val f = fib k
 	}
@@ -577,8 +577,8 @@ fun even-fibs = n -> next 0 where {
 
 ###     filter : ('a -> Bool) -> ['a] -> ['a]    where 'a <- Top
 fun rec filter = predicate sequence -> cond sequence {
-	empty?	=> []
-	else	=> if (predicate x)	[x | filter predicate xs]
+	empty?	-> []
+	else	-> if (predicate x)	[x | filter predicate xs]
 			   else				filter predicate xs
 				where val [x|xs] = sequence
 }
@@ -590,8 +590,8 @@ fun rec filter = predicate sequence -> cond sequence {
 
 ###     accumulate : ('a -> 'b -> 'b) -> ['a] -> 'b   where ('a, 'b) <- Top
 fun rec accumulate = op initial sequence -> cond sequence {
-	empty?	=> initial
-	else	=> op x (accumulate op initial xs)
+	empty?	-> initial
+	else	-> op x (accumulate op initial xs)
 				where val [x|xs] = sequence
 }
 
@@ -619,8 +619,8 @@ fun rec enumerate-interval = low high -> (
 fun rec enumerate-tree = tree -> (
 	if (tree isa? List)
 		cond tree {
-			empty?	=> []
-			else	=> enumerate-tree x ++ enumerate-tree xs
+			empty?	-> []
+			else	-> enumerate-tree x ++ enumerate-tree xs
 						where val [x|xs] = tree
 		}
 	else
@@ -812,8 +812,8 @@ fun prime-sum-pairs = n -> (
 
 
 fun rec permutations = s -> cond s {
-	empty?	=> [[]]		## IF empty set? THEN sequence containing empty set
-	else	=> flatmap { x ->
+	empty?	-> [[]]		## IF empty set? THEN sequence containing empty set
+	else	-> flatmap { x ->
 					map { p -> [x|p] } (
 						permutations (remove x s)
 					)
@@ -902,8 +902,8 @@ val b = 2
 
 
 fun rec memq = item sequence -> cond sequence {
-	empty?	=> NONE
-	else	=> if (item == x)	Some sequence
+	empty?	-> NONE
+	else	-> if (item == x)	Some sequence
 			   else				memq item xs
 				where val [x|xs] = sequence
 }
@@ -954,12 +954,12 @@ fun multiplicand = s -> s.3
 
 
 fun rec deriv = exp var -> cond exp {
-  number?	=> 0
-| variable?	=> if (same-variable? exp var) 1 else 0
-| sum?		=> make-sum
+  number?	-> 0
+| variable?	-> if (same-variable? exp var) 1 else 0
+| sum?		-> make-sum
 					(deriv (addend exp) var)
 					(deriv (augend exp) var)
-| product?	=> make-sum
+| product?	-> make-sum
 					(make-product
 						(multiplier exp)
 						(deriv (multiplicand exp) var)
@@ -967,7 +967,7 @@ fun rec deriv = exp var -> cond exp {
 						(deriv (multiplier exp) var)
 						(multiplicand exp)
 					)
-  else		=> abort ("unknown expression type -- DERIV: " ^ inspect exp)
+  else		-> abort ("unknown expression type -- DERIV: " ^ inspect exp)
 }
 
 ;; deriv (@"+", @x, 3) @x
@@ -1003,12 +1003,12 @@ fun make-product' = m1 m2 -> (
 )
 
 fun rec deriv' = exp var -> cond exp {
-  number?	=> 0
-| variable?	=> if (same-variable? exp var) 1 else 0
-| sum?		=> make-sum'
+  number?	-> 0
+| variable?	-> if (same-variable? exp var) 1 else 0
+| sum?		-> make-sum'
 					(deriv' (addend exp) var)
 					(deriv' (augend exp) var)
-| product?	=> make-sum'
+| product?	-> make-sum'
 					(make-product'
 						(multiplier exp)
 						(deriv' (multiplicand exp) var)
@@ -1016,7 +1016,7 @@ fun rec deriv' = exp var -> cond exp {
 						(deriv' (multiplier exp) var)
 						(multiplicand exp)
 					)
-  else		=> abort ("unknown expression type -- DERIV: " ^ inspect exp)
+  else		-> abort ("unknown expression type -- DERIV: " ^ inspect exp)
 }
 
 ;; deriv' (@"+", @x, 3) @x
@@ -1041,8 +1041,8 @@ fun rec deriv' = exp var -> cond exp {
 #### UNORDERED
 
 fun rec element-of-set? = e set -> cond set {
-	empty?	=> FALSE
-	else	=> if (e == x)	TRUE
+	empty?	-> FALSE
+	else	-> if (e == x)	TRUE
 			   else			element-of-set? e xs
 			   	where val [x|xs] = set
 }
@@ -1073,14 +1073,14 @@ fun rec intersection-set = set1 set2 -> (
 #### ORDERED
 
 fun rec element-of-set'? = e set -> cond set {
-	empty?	=> FALSE
-	else	=> let {
+	empty?	-> FALSE
+	else	-> let {
 		val [x|xs] = set
 	in
 		cond e {
-		  (== x) => TRUE
-		| (<  x) => FALSE
-		  else	 => element-of-set'? e xs
+		  (== x) -> TRUE
+		| (<  x) -> FALSE
+		  else	 -> element-of-set'? e xs
 		}
 	}
 }
@@ -1093,10 +1093,10 @@ fun rec intersection-set' = set1 set2 -> (
 		val [x2|xs2] = set2
 	in
 		cond x1 {
-		  (== x2) => [x1 | intersection-set' xs1  xs2]
-		| (<  x2) => 	   intersection-set' xs1  set2
-		| (>  x2) => 	   intersection-set' set1 xs2
-		  else	  => abort "ABORT"
+		  (== x2) -> [x1 | intersection-set' xs1  xs2]
+		| (<  x2) -> 	   intersection-set' xs1  set2
+		| (>  x2) -> 	   intersection-set' set1 xs2
+		  else	  -> abort "ABORT"
 		}
 	}
 )
@@ -1123,10 +1123,10 @@ fun rec element-of-set? = e set -> (
 		val x = entry set
 	in
 		cond e {
-			(== x)	=> TRUE
-		|	(<  x)	=> element-of-set? e (left-branch set)
-		|	(>  x)	=> element-of-set? e (right-branch set)
-			else	=> abort "ABORT"
+			(== x)	-> TRUE
+		|	(<  x)	-> element-of-set? e (left-branch set)
+		|	(>  x)	-> element-of-set? e (right-branch set)
+			else	-> abort "ABORT"
 		}
 	}
 )
@@ -1138,16 +1138,16 @@ fun rec adjoin-set = e set -> (
 		val x = entry set
 	in
 		cond e {
-			(== x)	=> set
-		|	(<  x)	=> make-tree
+			(== x)	-> set
+		|	(<  x)	-> make-tree
 						x
 						(adjoin-set e (left-branch set))
 						(right-branch set)
-		|	(>  x)	=> make-tree
+		|	(>  x)	-> make-tree
 						x
 						(left-branch set)
 						(adjoin-set e (right-branch set))
-			else	=> abort "ABORT"
+			else	-> abort "ABORT"
 		}
 	}
 )
@@ -1210,8 +1210,8 @@ val s = (7, (3, (1, [], []), (5, [], [])), (9, [], (11, [], [])))
 
 (#
 fun lookup = given-key set-of-records -> cond set-of-records {
-	empty?	=> FALSE
-	else	=> if (given-key == key x) x else lookup given-key xs
+	empty?	-> FALSE
+	else	-> if (given-key == key x) x else lookup given-key xs
 				where [x|xs] = set-of-records
 }
 #)
@@ -1266,14 +1266,14 @@ fun right-branch = tree -> tree.2
 
 fun decode = bits tree -> decode1 bits tree where {
 	fun choose-branch = bit branch -> cond bit {
-		(== 0)	=> left-branch branch
-	|	(== 1)	=> right-branch branch
-		else	=> abort ("bad bit -- CHOOSE-BRANCH: " ^ inspect bit)
+		(== 0)	-> left-branch branch
+	|	(== 1)	-> right-branch branch
+		else	-> abort ("bad bit -- CHOOSE-BRANCH: " ^ inspect bit)
 	}
 
 	fun rec decode1 = bits current-branch -> cond bits {
-		empty?	=> []
-		else	=> if (leaf? next-branch)
+		empty?	-> []
+		else	-> if (leaf? next-branch)
 						[symbol-leaf next-branch | decode1 xs tree]
 				   else
 						decode1 xs next-branch
@@ -1510,30 +1510,30 @@ fun make-from-mag-ang-polar = r a -> (
 #### Generic selectors ####
 
 fun real-part = z -> cond z {
-	rectanglar?	=> real-part-rectanglar (contents z)
-|	polar?		=> real-part-polar      (contents z)
-	else		=> abort ("Unknown type -- REAL-PART: " ^ inspect z)
+	rectanglar?	-> real-part-rectanglar (contents z)
+|	polar?		-> real-part-polar      (contents z)
+	else		-> abort ("Unknown type -- REAL-PART: " ^ inspect z)
 }
 
 
 fun imag-part = z -> cond z {
-	rectanglar?	=> imag-part-rectanglar (contents z)
-|	polar?		=> imag-part-polar      (contents z)
-	else		=> abort ("Unknown type -- IMAG-PART: " ^ inspect z)
+	rectanglar?	-> imag-part-rectanglar (contents z)
+|	polar?		-> imag-part-polar      (contents z)
+	else		-> abort ("Unknown type -- IMAG-PART: " ^ inspect z)
 }
 
 
 fun magnitude = z -> cond z {
-	rectanglar?	=> magnitude-rectanglar (contents z)
-|	polar?		=> magnitude-polar      (contents z)
-	else		=> abort ("Unknown type -- MAGNITUDE: " ^ inspect z)
+	rectanglar?	-> magnitude-rectanglar (contents z)
+|	polar?		-> magnitude-polar      (contents z)
+	else		-> abort ("Unknown type -- MAGNITUDE: " ^ inspect z)
 }
 
 
 fun angle = z -> cond z {
-	rectanglar?	=> angle-rectanglar (contents z)
-|	polar?		=> angle-polar      (contents z)
-	else		=> abort ("Unknown type -- ANGLE: " ^ inspect z)
+	rectanglar?	-> angle-rectanglar (contents z)
+|	polar?		-> angle-polar      (contents z)
+	else		-> abort ("Unknown type -- ANGLE: " ^ inspect z)
 }
 
 

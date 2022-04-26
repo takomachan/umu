@@ -85,7 +85,7 @@ RESERVED_SYMBOLS = [
 	'^',	'++',
 	'=',	'$',	'|',	'_',
 	'.',	',',	';',
-	'->',	'=>',	'::',	';;',
+	'->',	'::',	';;',
 
 
 	# Not used, but reserved for future
