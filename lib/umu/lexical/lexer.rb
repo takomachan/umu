@@ -19,9 +19,9 @@ require 'umu/lexical/lexer/lexer'
 	| TkBeginBraket	(String, Int)
 	| TkEndBraket	(String, Int)
 	| TkNumber		(Number, Int)
-	| TkReserved	(Symbol, Int)
-	| TkIdentifier	(Symbol, Int)
-	| TkSymbol		(Symbol, Int)
+	| TkReserved	(Atom,   Int)
+	| TkIdentifier	(Atom,   Int)
+	| TkAtom		(Atom,   Int)
 	| TkString		(String, Int)
 
 	DATATYPE Pattern =
@@ -58,8 +58,8 @@ require 'umu/lexical/lexer/lexer'
 	STATE Token     ISA Abstract WITH {
 		VAL braket-map = %{"(" => ")", "[" => "]", "{" => "}", ....}
 	}
-	STATE BasicString      ISA AbstractString
-	STATE SymbolizedString ISA AbstractString
+	STATE BasicString    ISA AbstractString
+	STATE AtomizedString ISA AbstractString
 
 	INITIAL STATE Separator {line-num = 1, braket-stack = []}
 
@@ -100,8 +100,8 @@ require 'umu/lexical/lexer/lexer'
 			ABORT
 	| FROM Token {line-num, braket-stack = stack}
 		WHEN BeginString
-			IF symbol?
-				TO SymbolizedString {buf = ""}
+			IF atom?
+				TO AtomizedString {buf = ""}
 			ELSE
 				TO BasicString {buf = ""}
 			END
@@ -127,13 +127,13 @@ require 'umu/lexical/lexer/lexer'
 			OUTPUT TkNumber (to-number matched, line-num)
 			TO Separator
 		WHEN Word matched
-			IF symbol?
-				OUTPUT TkSymbol (to-symbol matched, line-num)
+			IF atom?
+				OUTPUT TkAtom (to-atom matched, line-num)
 			ELSE
 				IF reserved?
-					OUTPUT TkReserved (to-symbol matched, line-num)
+					OUTPUT TkReserved (to-atom matched, line-num)
 				ELSE
-					OUTPUT TkIdentifier (to-symbol matched, line-num)
+					OUTPUT TkIdentifier (to-atom matched, line-num)
 				END
 			END
 			TO Separator
@@ -150,9 +150,9 @@ require 'umu/lexical/lexer/lexer'
 			TO Separator
 		WHEN _
 			ABORT
-	| FROM SymbolizedString {line-num, buf ..}
+	| FROM AtomizedString {line-num, buf ..}
 		WHEN EndString
-			OUTPUT TkSymbol (buf, line-num)
+			OUTPUT TkAtom (buf, line-num)
 			TO Separator
 		WHEN _
 			ABORT

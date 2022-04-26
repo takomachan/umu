@@ -58,7 +58,7 @@ module EXP = struct {
 	# mk-const : Int -> <CONST>
 	fun mk-const = x -> DATUM::make @Const x
 
-	# mk-var : Symbol -> <VAR>
+	# mk-var : Atom -> <VAR>
 	fun mk-var = x -> DATUM::make @Var x
 
 	# mk-appl : (<EXP>, <EXP>) -> <APPL>
@@ -139,7 +139,7 @@ module VAL = struct {
 (######## Parser ########
 
  <Exp> ::= <Const>	/* Undefined, Umu's Int */
-         | <Var>	/* Undefined, Umu's Symbol */
+         | <Var>	/* Undefined, Umu's Atom */
 		 | <Form>
 
 
@@ -176,7 +176,7 @@ fun rec parse = exp -> cond exp {
 	fun const? = exp -> exp isa? Int
 
 	# var? : 'a -> Bool
-	fun var? = exp -> exp isa? Symbol
+	fun var? = exp -> exp isa? Atom
 
 	# form? : 'a -> Bool
 	fun form? = exp -> exp isa? List andalso length exp >= 2
@@ -185,7 +185,7 @@ fun rec parse = exp -> cond exp {
 	#### <Form> ####
 	# parse-form : ['a] -> <EXP>
 	fun parse-form = exp ->
-		if (keyword isa? Symbol)
+		if (keyword isa? Atom)
 			cond keyword {
 			  (== @IF)		-> parse-if		args
 			| (== @LAMBDA)	-> parse-lambda	args

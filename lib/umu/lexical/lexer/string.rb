@@ -146,7 +146,7 @@ end
 
 
 
-class Symbolized < Abstract
+class Atomized < Abstract
 	def __make_token__(pos, val)
 		ASSERT.kind_of pos, L::Position
 		ASSERT.kind_of val, ::String
@@ -155,19 +155,19 @@ class Symbolized < Abstract
 		if esc_char
 			raise X::LexicalError.new(
 					pos,
-					"Escape character in symbolized string: '%s'",
+					"Escape character in atomized string: '%s'",
 						L::Escape.unescape(esc_char)
 				)
 		end
 
-		LT.make_user_symbol pos, val
+		LT.make_atom pos, val
 	end
 
 
 	def __make_state__(buf)
 		ASSERT.kind_of buf, ::String
 
-		__make_symbolized_string__ buf
+		__make_atomized_string__ buf
 	end
 end
 

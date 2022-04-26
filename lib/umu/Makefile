@@ -48,7 +48,7 @@ SRCS	= commander.rb \
 			concrete-syntax/core/expression/unary/base/abstract.rb \
 			concrete-syntax/core/expression/unary/base/number.rb \
 			concrete-syntax/core/expression/unary/base/string.rb \
-			concrete-syntax/core/expression/unary/base/symbol.rb \
+			concrete-syntax/core/expression/unary/base/atom.rb \
 			concrete-syntax/core/expression/unary/prefix.rb \
 			concrete-syntax/core/expression/unary/identifier.rb \
 			concrete-syntax/core/expression/unary/class.rb \
@@ -98,7 +98,7 @@ SRCS	= commander.rb \
 			abstract-syntax/core/expression/unary/base/bool.rb \
 			abstract-syntax/core/expression/unary/base/number.rb \
 			abstract-syntax/core/expression/unary/base/string.rb \
-			abstract-syntax/core/expression/unary/base/symbol.rb \
+			abstract-syntax/core/expression/unary/base/atom.rb \
 			abstract-syntax/core/expression/unary/identifier.rb \
 			abstract-syntax/core/expression/unary/class.rb \
 			abstract-syntax/core/expression/unary/method.rb \
@@ -129,7 +129,7 @@ SRCS	= commander.rb \
 			value/core/base/number/int.rb \
 			value/core/base/number/real.rb \
 			value/core/base/string.rb \
-			value/core/base/symbol.rb \
+			value/core/base/atom.rb \
 			value/core/io.rb \
 			value/core/product.rb \
 			value/core/product/abstract.rb \

@@ -40,14 +40,14 @@ end
 
 
 
-class UserSymbol < Abstraction::Symbol
+class Atom < Abstraction::Symbol
 	def to_s
-		format "SYMBOL(%s)", self.sym
+		format "ATOM(%s)", self.sym
 	end
 
 
 	def to_racc_token
-		:SYMBOL
+		:ATOM
 	end
 end
 
@@ -144,11 +144,11 @@ module_function
 	end
 
 
-	def make_user_symbol(pos, val)
+	def make_atom(pos, val)
 		ASSERT.kind_of pos, L::Position
 		ASSERT.kind_of val, ::String
 
-		UserSymbol.new(pos, val.freeze).freeze
+		Atom.new(pos, val.freeze).freeze
 	end
 
 

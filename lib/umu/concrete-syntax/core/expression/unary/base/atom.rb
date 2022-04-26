@@ -15,7 +15,7 @@ module Unary
 
 module Base
 
-class Symbol < Base::Abstract
+class Atom < Base::Abstract
 	def initialize(pos, obj)
 		ASSERT.kind_of obj, ::Symbol
 
@@ -31,7 +31,7 @@ class Symbol < Base::Abstract
 private
 
 	def __desugar__(_env, _event)
-		SACE.make_symbol self.pos, self.obj
+		SACE.make_atom self.pos, self.obj
 	end
 end
 
@@ -43,11 +43,11 @@ end	# Umu::ConcreteSyntax::Core::Expression::Unary
 
 module_function
 
-	def make_symbol(pos, obj)
+	def make_atom(pos, obj)
 		ASSERT.kind_of pos,	L::Position
 		ASSERT.kind_of obj, ::Symbol
 
-		Unary::Base::Symbol.new(pos, obj).freeze
+		Unary::Base::Atom.new(pos, obj).freeze
 	end
 
 end	# Umu::ConcreteSyntax::Core::Expression

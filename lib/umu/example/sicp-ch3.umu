@@ -26,7 +26,7 @@ module DATUM = UMU::DATUM
 ;; print "\n\nSECTION 3.3.3"
 ;;
 
-###		assoc : Symbol -> [(Symbol, 'a)] -> <OPTION> (Symbol, 'a)
+###		assoc : Atom -> [(Atom, 'a)] -> <OPTION> (Atom, 'a)
 fun rec assoc = key records -> cond records {
 	empty?	-> NONE
 	else	-> if (key == fst x)
@@ -36,7 +36,7 @@ fun rec assoc = key records -> cond records {
 				where val [x|xs] = records
 }
 
-### lookup1 = Symbol -> <TABLE> [(Symbol, 'a)] -> <OPTION> 'a
+### lookup1 = Atom -> <TABLE> [(Atom, 'a)] -> <OPTION> 'a
 fun lookup1 = key table -> let {
 	val opt-record = assoc key (val-of table)
 in
@@ -69,9 +69,9 @@ fun make-table = records -> DATUM::make @Table records
 
 #### two-dimensional ####
 
-(### lookup2 = Symbol ->
-				Symbol ->
-				<TABLE> [(Symbol, [(Symbol, 'a)])] ->
+(### lookup2 = Atom ->
+				Atom ->
+				<TABLE> [(Atom, [(Atom, 'a)])] ->
 				<OPTION> 'a
 ###)
 fun lookup2 = key1 key2 table -> let {

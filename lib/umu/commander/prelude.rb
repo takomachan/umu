@@ -32,13 +32,13 @@ module UMU = struct {
 	module DATUM = struct {
 		#### Constructor ####
 
-		# make : Symbol -> 'a -> Datum 'a
+		# make : Atom -> 'a -> Datum 'a
 		val make = @(Datum.make)
 
 
 		#### Selector ####
 
-		# tag : Datum 'a -> Symbol
+		# tag : Datum 'a -> Atom
 		val tag = @(Datum$tag)
 
 		# content : Datum 'a -> 'a

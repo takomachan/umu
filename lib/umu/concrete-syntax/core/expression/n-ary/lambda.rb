@@ -85,7 +85,7 @@ class Named < Abstract
 		ASSERT.kind_of pats,	::Array
 		ASSERT.kind_of expr,	SCCE::Abstract
 		ASSERT.kind_of decls,	::Array
-		ASSERT.kind_of sym,	::Symbol
+		ASSERT.kind_of sym,		::Symbol
 
 		super(pos, pats, expr, decls)
 

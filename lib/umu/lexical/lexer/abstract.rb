@@ -149,7 +149,7 @@ private
 	end
 
 
-	def __make_symbolized_string__(
+	def __make_atomized_string__(
 		buf,
 		pos				= self.pos,
 		braket_stack	= self.braket_stack
@@ -157,7 +157,7 @@ private
 		ASSERT.kind_of buf, ::String
 		ASSERT.kind_of pos, L::Position
 
-		String::Symbolized.new(
+		String::Atomized.new(
 			pos, braket_stack.freeze, buf.freeze
 		).freeze
 	end
