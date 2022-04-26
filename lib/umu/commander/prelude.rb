@@ -30,8 +30,13 @@ module UMU = struct {
 	# See SICP(Wizard Book), 2.4.2 Tagged data
 
 	module DATUM = struct {
+		#### Constructor ####
+
 		# make : Symbol -> 'a -> Datum 'a
 		val make = @(Datum.make)
+
+
+		#### Selector ####
 
 		# tag : Datum 'a -> Symbol
 		val tag = @(Datum$tag)
@@ -63,7 +68,7 @@ module UMU = struct {
 		val NONE? = @(Option$none?)
 
 
-		#### Accessor ####
+		#### Selector ####
 
 		# content : Option 'a -> 'a
 		val content = @(Option$content)
@@ -159,40 +164,33 @@ module UMU = struct {
 
 	module IO = struct {
 		# gets : () -> Option String 
-		fun gets = () -> @(IO$fgets) _STDIN
+		fun gets = () -> _STDIN.fgets
 
 		# puts : String -> ()
-		fun puts = x -> @(IO$fputs) _STDOUT x
+		fun puts = x -> _STDOUT.(fputs x)
 
 		# display : 'a -> ()
-		fun display = x -> @(IO$fputs) _STDOUT (@(Top$to-s) x)
+		fun display = x -> _STDOUT.(fputs x.to-s)
 
 		# tab : Int -> ()
 		fun rec tab = n ->
-			if (@(Int$<) 0 n) (
-				@(IO$fputs) _STDOUT " "
-			;	tab (@(Int$-) n 1)
+			if (0.(< n)) (
+				_STDOUT.(fputs " ")
+			;	tab (n.(- 1))
 			) else
 				()
 
 		# nl : () -> ()
-		fun nl = () -> @(IO$fputs) _STDOUT "\n"
+		fun nl = () -> _STDOUT.(fputs "\n")
 
 		# print : 'a -> ()
-		fun print = x -> @(IO$fputs)
-								_STDOUT
-								(@(String$^) (@(Top$to-s) x) "\n")
+		fun print = x -> _STDOUT.(fputs x.to-s.(^ "\n"))
 
 		# p : 'a -> ()
-		fun p = x -> @(IO$fputs)
-								_STDOUT
-								(@(String$^) (@(Top$inspect) x) "\n")
+		fun p = x -> _STDOUT.(fputs x.inspect.(^ "\n"))
 
 		# msgout : 'a -> ()
-		fun msgout = x -> @(IO$fputs)
-								_STDERR
-								(@(String$^) (@(Top$to-s) x) "\n")
-						
+		fun msgout = x -> _STDERR.(fputs x.to-s.(^ "\n"))
 
 		# random : 'a -> 'a	where { 'a <- Number }
 		val random = @(Number$random)
@@ -285,7 +283,7 @@ module UMU = struct {
 
 
 		# length : ['a] -> Int
-		val length = fold 0 { _ len -> @(Number$+) len 1 }
+		val length = fold 0 { _ len -> len.(+ 1) }
 
 
 		# reverse : ['a] -> ['a]
@@ -293,11 +291,11 @@ module UMU = struct {
 
 
 		# max : ['a] -> 'a
-		val max = fold1 { x y -> if (@(Top$<) y x) x else y }
+		val max = fold1 { x y -> if (y.(< x)) x else y }
 
 
 		# min : ['a] -> 'a
-		val min = fold1 { x y -> if (@(Top$<) x y) x else y }
+		val min = fold1 { x y -> if (x.(< y)) x else y }
 
 
 		# map : ('a -> 'b) -> ['a] -> ['b]
@@ -370,11 +368,11 @@ module UMU = struct {
 			LIST::Nil?	=> ""
 			else		=> cond xs' {
 				LIST::Nil?	=> x
-				else		=> @(String$^) x xs''
+				else		=> x.(^ xs'')
 					where val [x|xs'] = xs
 						  val xs'' = LIST::fold
-								""
-								{ x' s -> @(String$^) (@(String$^) s j) x' }
+											""
+											{ x' s -> s.(^ j).(^ x') }
 			}
 		}
 
@@ -400,19 +398,19 @@ module UMU = struct {
 		val (==) = @(Top$==)
 
 		# (\=)		: 'a -> 'b -> Bool
-		fun (\=) = x y -> @(Bool$not) (@(Top$==) x y)
+		fun (\=) = x y -> x.(== y).not
 
 		# (<)		: 'a -> 'a -> Bool
 		val (<) = @(Top$<)
 
 		# (>)		: 'a -> 'a -> Bool
-		fun (>) = x y -> @(Top$<) y x
+		fun (>) = x y -> y.(< x)
 
 		# (<=)		: 'a -> 'a -> Bool
-		fun (<=) = x y -> @(Bool$not) (@(Top$<) y x)
+		fun (<=) = x y -> y.(< x).not
 
 		# (>=)		: 'a -> 'a -> Bool
-		fun (>=) = x y -> @(Bool$not) (@(Top$<) x y)
+		fun (>=) = x y -> x.(< y).not
 
 
 		#### Bool ####
