@@ -62,7 +62,7 @@ modu_expr:
   STRUCT '{' opt_modu_decls '}' opt_modu_where_decls {
 	result = SCME.make_struct val[0].pos, val[2], val[4]
 }
-| modu_long_ident
+| modu_ident
 
 
 # WHERE declaration (Module Language)
@@ -72,22 +72,22 @@ opt_modu_where_decls:
 | WHERE '{' opt_modu_decls '}'	{ result = val[2] }
 
 
-# Long identifier (Module Language)
+# Identifier (Module Language)
 
-modu_long_ident: ID opt_modu_idents {
-	result = SCME.make_long_identifier(
-					val[0].pos,
-					SCME.make_identifier(val[0].pos, val[0].sym),
-					val[1]
-				)
+modu_ident: modu_short_ident opt_modu_idents {
+	result = if val[1].empty?
+				val[0]
+			else
+				SCME.make_long_identifier val[0].pos, val[0], val[1]
+			end
 }
 
 opt_modu_idents:
-  /* empty */ {
-	result = []
-}
-| '::' ID opt_modu_idents {
-	result = [SCME.make_identifier(val[1].pos, val[1].sym)] + val[2]
+  /* empty */							{ result = [] }
+| '::' modu_short_ident opt_modu_idents	{ result = [val[1]] + val[2] }
+
+modu_short_ident: ID {
+	result = SCME.make_identifier(val[0].pos, val[0].sym)
 }
 
 
@@ -373,7 +373,7 @@ opt_atom_exprs:
 
 atom_expr:
 # Identifier
-  long_ident
+  ident
 
 # Constant
 | INT		{ result = SCCE.make_int	val[0].pos, val[0].val }
@@ -437,15 +437,19 @@ atom_expr:
 }
 
 
-# Long identifier
+# Identifier
 
-long_ident: short_ident opt_short_idents {
-	result = SCCE.make_long_identifier val[0].pos, val[0], val[1]
+ident: short_ident opt_idents {
+	result = if val[1].empty?
+				val[0]
+			else
+				SCCE.make_long_identifier val[0].pos, val[0], val[1]
+			end
 }
 
-opt_short_idents:
-  /* empty */						{ result = [] }
-| '::' short_ident opt_short_idents	{ result = [val[1]] + val[2] }
+opt_idents:
+  /* empty */					{ result = [] }
+| '::' short_ident opt_idents	{ result = [val[1]] + val[2] }
 
 short_ident:
   ID						{
