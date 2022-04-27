@@ -253,19 +253,6 @@ module UMU = struct {
 		val equal? = equal-with? @(Top$==)
 
 
-		# fold : 'b -> ('a -> 'b -> 'b) -> ['a] -> 'b
-		fun rec fold = a f xs -> cond xs {
-			Nil?	-> a
-			else	-> fold (f x a) f xs'
-						where val [x|xs'] = xs
-		}
-
-
-		# fold1 : ('a -> 'a -> 'a) -> ['a] -> 'a
-		fun fold1 = f xs -> fold x f xs'
-							where { val [x|xs'] = xs }
-
-
 		# foldr : 'b -> ('a -> 'b -> 'b) -> ['a] -> 'b
 		fun rec foldr = a f xs -> cond xs {
 			Nil?	-> a
@@ -274,28 +261,38 @@ module UMU = struct {
 		}
 
 
-		# foldl : 'b -> ('b -> 'a -> 'b) -> ['a] -> 'b
+		# foldr1 : ('a -> 'a -> 'a) -> ['a] -> 'a
+		fun foldr1 = f xs -> foldr x f xs'
+							where { val [x|xs'] = xs }
+
+
+		# foldl : 'b -> ('a -> 'b -> 'b) -> ['a] -> 'b
 		fun rec foldl = a f xs -> cond xs {
 			Nil?	-> a
-			else	-> foldl (f a x) f xs'
+			else	-> foldl (f x a) f xs'
 						where val [x|xs'] = xs
 		}
 
 
+		# foldl1 : ('a -> 'a -> 'a) -> ['a] -> 'a
+		fun foldl1 = f xs -> foldl x f xs'
+							where { val [x|xs'] = xs }
+
+
 		# length : ['a] -> Integer
-		val length = fold 0 { _ len -> len.(+ 1) }
+		val length = foldl 0 { _ len -> len.(+ 1) }
 
 
 		# reverse : ['a] -> ['a]
-		val reverse = fold [] Cons
+		val reverse = foldl [] Cons
 
 
 		# max : ['a] -> 'a
-		val max = fold1 { x y -> if (y.(< x)) x else y }
+		val max = foldl1 { x y -> if (y.(< x)) x else y }
 
 
 		# min : ['a] -> 'a
-		val min = fold1 { x y -> if (x.(< y)) x else y }
+		val min = foldl1 { x y -> if (x.(< y)) x else y }
 
 
 		# map : ('a -> 'b) -> ['a] -> ['b]
@@ -311,7 +308,7 @@ module UMU = struct {
 
 
 		# concat : [['a]] -> ['a]
-		val concat = fold [] { xs xss -> append xss xs }
+		val concat = foldl [] { xs xss -> append xss xs }
 
 
 		# zip-with : ('a -> 'b -> 'c) -> ['a] -> ['b] -> ['c]
@@ -370,7 +367,7 @@ module UMU = struct {
 				LIST::Nil?	-> x
 				else		-> x.(^ xs'')
 					where val [x|xs'] = xs
-						  val xs'' = LIST::fold
+						  val xs'' = LIST::foldl
 											""
 											{ x' s -> s.(^ j).(^ x') }
 			}
@@ -580,17 +577,17 @@ module UMU = struct {
 		# equal?	: 'a -> 'b -> Bool
 		val equal? = LIST::equal?
 
-		# fold		: 'b -> ('a -> 'b -> 'b) -> ['a] -> 'b
-		val fold = LIST::fold
-
-		# fold1		: ('a -> 'a -> 'a) -> ['a] -> 'a
-		val fold1 = LIST::fold1
-
 		# foldr		: 'b -> ('a -> 'b -> 'b) -> ['a] -> 'b
 		val foldr = LIST::foldr
 
-		# foldl		: 'b -> ('b -> 'a -> 'b) -> ['a] -> 'b
+		# foldr1	: ('a -> 'a -> 'a) -> ['a] -> 'a
+		val foldr1 = LIST::foldr1
+
+		# foldl		: 'b -> ('a -> 'b -> 'b) -> ['a] -> 'b
 		val foldl = LIST::foldl
+
+		# foldl1	: ('a -> 'a -> 'a) -> ['a] -> 'a
+		val foldl1 = LIST::foldl1
 
 		# length	: ['a] -> Integer
 		val length = LIST::length
@@ -727,7 +724,7 @@ module struct {
 		(|), (++),
 		empty?,
 		des, hd, tl,
-		fold, fold1, foldr, foldl,
+		foldr, foldr1, foldl, foldl1,
 		length, reverse,
 		max, min,
 		map, filter, concat,

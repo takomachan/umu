@@ -214,7 +214,7 @@ fun rec parse = exp -> cond exp {
 		#### <Lambda> ####
 		# parse-lambda : ['a] -> <LAMBDA>
 		fun parse-lambda = args ->
-			fps' |> fold init-body-exp { fp body-exp ->
+			fps' |> foldl init-body-exp { fp body-exp ->
 					EXP::mk-lambda (parse fp, body-exp)
 			where val _ = unless (var? fp)
 							ERROR::syntax (
@@ -254,7 +254,7 @@ fun rec parse = exp -> cond exp {
 		#### <Apply> ####
 		# parse-apply : ['a] -> <APPL>
 		fun parse-apply = form ->
-			opnds |> fold init-opr-exp { opnd opr-exp ->
+			opnds |> foldl init-opr-exp { opnd opr-exp ->
 				EXP::mk-appl (opr-exp, parse opnd)
 			}
 		where {
