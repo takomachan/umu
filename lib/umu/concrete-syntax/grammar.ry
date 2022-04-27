@@ -9,7 +9,7 @@ prechigh
 	left	POW
 	left	'*' '/' MOD
 	left	'+' '-' '^'
-	left	'==' '\\=' '<' '>' '<=' '>='
+	left	'==' '<>' '<' '>' '<=' '>='
 	left	'++'
 	left	'>>'
 	right	'<<'
@@ -293,7 +293,7 @@ infix_expr_:
 			]
 }
 | infix_expr '=='		infix_expr	{ result = val }
-| infix_expr '\\='		infix_expr	{ result = val }
+| infix_expr '<>'		infix_expr	{ result = val }
 | infix_expr '<'		infix_expr	{ result = val }
 | infix_expr '>'		infix_expr	{ result = val }
 | infix_expr '<='		infix_expr	{ result = val }
@@ -559,7 +559,7 @@ infix_opr:
   '+' | '-' | '*' | '/'
 | MOD	 { result = LT.make_reserved_symbol(val[0].pos, 'mod') }
 | POW	 { result = LT.make_reserved_symbol(val[0].pos, 'pow') }
-| '==' | '\\=' | '<'  | '>'  | '<=' | '>='
+| '==' | '<>' | '<'  | '>'  | '<=' | '>='
 | '<|' | '|>' | '<<' | '>>'
 | '^'  |'++'
 

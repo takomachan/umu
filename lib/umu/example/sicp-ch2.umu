@@ -819,7 +819,7 @@ fun rec permutations = s -> cond s {
 					)
 				} s
 } where {
-	fun remove = item sequence -> filter { x -> x \= item } sequence
+	fun remove = item sequence -> filter { x -> x <> item } sequence
 }
 
 ;; permutations []

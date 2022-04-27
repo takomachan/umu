@@ -394,8 +394,8 @@ module UMU = struct {
 		# (==)		: 'a -> 'b -> Bool
 		val (==) = @(Top$==)
 
-		# (\=)		: 'a -> 'b -> Bool
-		fun (\=) = x y -> x.(== y).not
+		# (<>)		: 'a -> 'b -> Bool
+		fun (<>) = x y -> x.(== y).not
 
 		# (<)		: 'a -> 'a -> Bool
 		val (<) = @(Top$<)
@@ -679,7 +679,7 @@ module struct {
 	#### Top ####
 	val (
 		inspect, to-s,
-		(==), (\=), (<), (>), (<=), (>=)
+		(==), (<>), (<), (>), (<=), (>=)
 	)
 
 	#### Bool ####
