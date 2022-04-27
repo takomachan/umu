@@ -24,26 +24,26 @@ class Datum < Abstract
 	attr_reader :tag_sym
 
 
-	def initialize(pos, tag_sym, content)
-		ASSERT.kind_of tag_sym,	::Symbol
-		ASSERT.kind_of content,	VC::Top
+	def initialize(pos, tag_sym, contents)
+		ASSERT.kind_of tag_sym,		::Symbol
+		ASSERT.kind_of contents,	VC::Top
 
-		super(pos, content)
+		super(pos, contents)
 
 		@tag_sym = tag_sym
 	end
 
 
-	def self.meth_make(env, _event, tag, content)
-		ASSERT.kind_of tag,		VCB::Atom
-		ASSERT.kind_of content,	VC::Top
+	def self.meth_make(env, _event, tag, contents)
+		ASSERT.kind_of tag,			VCB::Atom
+		ASSERT.kind_of contents,	VC::Top
 
-		VC.make_datum tag.pos, tag.val, content
+		VC.make_datum tag.pos, tag.val, contents
 	end
 
 
 	def to_s
-		format "%s %s", self.tag_sym.to_s, self.content.to_s
+		format "%s %s", self.tag_sym.to_s, self.contents.to_s
 	end
 
 
@@ -53,7 +53,7 @@ class Datum < Abstract
 
 			format("%s %s",
 					self.tag_sym.to_s,
-					self.content.meth_to_string(env, event).val
+					self.contents.meth_to_string(env, event).val
 			)
 		)
 	end
@@ -67,7 +67,7 @@ class Datum < Abstract
 			(
 				other.kind_of?(self.class) &&
 				self.tag_sym == other.tag_sym &&
-				self.content.meth_equal(env, event, other.content).true?
+				self.contents.meth_equal(env, event, other.contents).true?
 			)
 		)
 	end
@@ -83,12 +83,12 @@ end	# Umu::Core::Union
 
 module_function
 
-	def make_datum(pos, tag_sym, content)
-		ASSERT.kind_of pos,		L::Position
-		ASSERT.kind_of tag_sym,	::Symbol
-		ASSERT.kind_of content,	VC::Top
+	def make_datum(pos, tag_sym, contents)
+		ASSERT.kind_of pos,			L::Position
+		ASSERT.kind_of tag_sym,		::Symbol
+		ASSERT.kind_of contents,	VC::Top
 
-		Union::Datum.new(pos, tag_sym, content).freeze
+		Union::Datum.new(pos, tag_sym, contents).freeze
 	end
 
 end	# Umu::Core

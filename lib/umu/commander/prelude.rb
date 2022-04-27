@@ -41,8 +41,8 @@ module UMU = struct {
 		# tag : Datum 'a -> Atom
 		val tag = @(Datum$tag)
 
-		# content : Datum 'a -> 'a
-		val content = @(Datum$content)
+		# contents : Datum 'a -> 'a
+		val contents = @(Datum$contents)
 	}
 
 
@@ -70,8 +70,8 @@ module UMU = struct {
 
 		#### Selector ####
 
-		# content : Option 'a -> 'a
-		val content = @(Option$content)
+		# contents : Option 'a -> 'a
+		val contents = @(Option$contents)
 	}
 
 
@@ -539,7 +539,7 @@ module UMU = struct {
 		#### Union ####
 
 		# val-of : Union 'a -> 'a
-		val val-of = @(Union$content)
+		val val-of = @(Union$contents)
 
 
 		#### Option ####

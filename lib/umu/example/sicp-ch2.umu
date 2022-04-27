@@ -1457,7 +1457,7 @@ fun attach-tag = type-tag contents -> DATUM::make type-tag contents
 
 fun type-tag = datum' -> DATUM::tag datum'
 
-fun contents = datum' -> DATUM::content datum'
+fun contents = datum' -> DATUM::contents datum'
 
 
 fun rectanglar? = z -> type-tag z == @Rectanglar

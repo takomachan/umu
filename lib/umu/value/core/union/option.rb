@@ -27,10 +27,10 @@ class Abstract < Union::Abstract
 	]
 
 
-	def self.meth_make_some(env, _event, content)
-		ASSERT.kind_of content, VC::Top
+	def self.meth_make_some(env, _event, contents)
+		ASSERT.kind_of contents, VC::Top
 
-		VC.make_some content.pos, content
+		VC.make_some contents.pos, contents
 	end
 
 
@@ -53,14 +53,14 @@ end
 
 class Some < Abstract
 	def to_s
-		format "Some %s", self.content.to_s
+		format "Some %s", self.contents.to_s
 	end
 
 
 	def meth_to_string(env, event)
 		VC.make_string(
 			self.pos,
-			format("Some %s", self.content.meth_to_string(env, event).val)
+			format("Some %s", self.contents.meth_to_string(env, event).val)
 		)
 	end
 
@@ -110,11 +110,11 @@ end	# Umu::Core::Union
 
 module_function
 
-	def make_some(pos, content)
-		ASSERT.kind_of pos,		L::Position
-		ASSERT.kind_of content,	VC::Top
+	def make_some(pos, contents)
+		ASSERT.kind_of pos,			L::Position
+		ASSERT.kind_of contents,	VC::Top
 
-		Union::Option::Some.new(pos, content).freeze
+		Union::Option::Some.new(pos, contents).freeze
 	end
 
 

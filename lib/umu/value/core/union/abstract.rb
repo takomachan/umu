@@ -11,25 +11,25 @@ module Union
 
 class Abstract < Top
 	INSTANCE_METHOD_INFOS = [
-		[:meth_content,	VC::Top,
-			:content]
+		[:meth_contents,	VC::Top,
+			:contents]
 	]
 
 
-	attr_reader :content
+	attr_reader :contents
 
 
-	def initialize(pos, content)
-		ASSERT.kind_of content, VC::Top
+	def initialize(pos, contents)
+		ASSERT.kind_of contents, VC::Top
 
 		super(pos)
 
-		@content = content
+		@contents = contents
 	end
 
 
-	def meth_content(_env, _event)
-		self.content
+	def meth_contents(_env, _event)
+		self.contents
 	end
 end
 
