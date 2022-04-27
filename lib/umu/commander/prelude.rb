@@ -164,33 +164,33 @@ module UMU = struct {
 
 	module IO = struct {
 		# gets : () -> Option String 
-		fun gets = () -> _STDIN.fgets
+		fun gets = () -> _STDIN.gets
 
 		# puts : String -> ()
-		fun puts = x -> _STDOUT.(fputs x)
+		fun puts = x -> _STDOUT.(puts x)
 
 		# display : 'a -> ()
-		fun display = x -> _STDOUT.(fputs x.to-s)
+		fun display = x -> _STDOUT.(puts x.to-s)
 
 		# tab : Integer -> ()
 		fun rec tab = n ->
 			if (0.(< n)) (
-				_STDOUT.(fputs " ")
+				_STDOUT.(puts " ")
 			;	tab (n.(- 1))
 			) else
 				()
 
 		# nl : () -> ()
-		fun nl = () -> _STDOUT.(fputs "\n")
+		fun nl = () -> _STDOUT.(puts "\n")
 
 		# print : 'a -> ()
-		fun print = x -> _STDOUT.(fputs x.to-s.(^ "\n"))
+		fun print = x -> _STDOUT.(puts x.to-s.(^ "\n"))
 
 		# p : 'a -> ()
-		fun p = x -> _STDOUT.(fputs x.inspect.(^ "\n"))
+		fun p = x -> _STDOUT.(puts x.inspect.(^ "\n"))
 
 		# msgout : 'a -> ()
-		fun msgout = x -> _STDERR.(fputs x.to-s.(^ "\n"))
+		fun msgout = x -> _STDERR.(puts x.to-s.(^ "\n"))
 
 		# random : 'a -> 'a	where { 'a <- Number }
 		val random = @(Number$random)
