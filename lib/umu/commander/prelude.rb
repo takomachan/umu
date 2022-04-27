@@ -445,8 +445,8 @@ module UMU = struct {
 		# to-i			: Number -> Integer
 		val to-i = @(Number$to-i)
 
-		# to-r			: Number -> Float
-		val to-r = @(Number$to-r)
+		# to-f			: Number -> Float
+		val to-f = @(Number$to-f)
 
 		# (+)			: 'a -> 'a -> 'a		where { 'a <- Number }
 		val (+) = @(Number$+)
@@ -691,7 +691,7 @@ module struct {
 	#### Number ####
 	val (
 		positive?, negative?, odd?, even?,
-		~, abs, to-i, to-r,
+		~, abs, to-i, to-f,
 		(+), (-), (*), (/), (mod), (pow)
 	)
 

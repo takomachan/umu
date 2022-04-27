@@ -273,6 +273,11 @@ class Float < Abstract
 			]
 		)
 	end
+
+
+	def meth_to_float(env, _event)
+		self
+	end
 end
 
 end # Umu::Value::Core::Base::Number

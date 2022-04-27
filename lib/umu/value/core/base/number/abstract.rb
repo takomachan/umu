@@ -25,7 +25,7 @@ class Abstract < Base::Abstract
 		[:meth_to_int,		VCBN::Integer,
 			:'to-i'],
 		[:meth_to_float,	VCBN::Float,
-			:'to-r'],
+			:'to-f'],
 		[:meth_add,			self,
 			:'+',			self],
 		[:meth_sub,			self,
