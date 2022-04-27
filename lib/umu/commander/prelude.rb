@@ -18,10 +18,10 @@ module UMU = struct {
 
 	module BOOL = struct {
 		# TRUE : Bool
-		val TRUE = @(Bool.make-true) ()
+		val TRUE = @(Bool).make-true
 
 		# FALSE : Bool
-		val FALSE = @(Bool.make-false) ()
+		val FALSE = @(Bool).make-false
 	}
 
 
@@ -56,7 +56,7 @@ module UMU = struct {
 		val Some = @(Option.make-some)
 
 		# NONE : Option 'a
-		val NONE = @(Option.make-none) ()
+		val NONE = @(Option).make-none
 
 
 		#### Classifier ####
@@ -80,16 +80,16 @@ module UMU = struct {
 
 	module MATH = struct {
 		# NAN 			: Float
-		val NAN = @(Float.make-nan) ()
+		val NAN = @(Float).make-nan
 
 		# INFINITY	 	: Float
-		val INFINITY = @(Float.make-infinity) ()
+		val INFINITY = @(Float).make-infinity
 
 		# PI 			: Float
-		val PI = @(Float.make-pi) ()
+		val PI = @(Float).make-pi
 
 		# E 			: Float
-		val E = @(Float.make-e) ()
+		val E = @(Float).make-e
 
 		# nan?			: Float -> Bool
 		val nan? = @(Float$nan?)
@@ -195,9 +195,9 @@ module UMU = struct {
 		# random : 'a -> 'a	where { 'a <- Number }
 		val random = @(Number$random)
 	} where {
-		val _STDIN	= @(IO.make-stdin) ()
-		val _STDOUT	= @(IO.make-stdout) ()
-		val _STDERR	= @(IO.make-stderr) ()
+		val _STDIN	= @(IO).make-stdin
+		val _STDOUT	= @(IO).make-stdout
+		val _STDERR	= @(IO).make-stderr
 	}
 
 
