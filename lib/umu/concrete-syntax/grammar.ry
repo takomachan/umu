@@ -407,19 +407,19 @@ atom_expr:
 | '(' expr ';' semi_exprs ')' {
 	result = SCCE.make_sequence val[0].pos, [val[1]] + val[3]
 }
-| '@(' ID ')' {
+| '&(' ID ')' {
 	result = SCCE.make_class val[1].pos, val[1].sym
 }
-| '@(' ID '.' ID ')' {
+| '&' ID '.' ID {
 	result = SCCE.make_class_method val[1].pos, val[1].sym, val[3].sym
 }
-| '@(' ID '.' infix_opr ')' {
+| '&' ID '.' infix_opr {
 	result = SCCE.make_class_method val[1].pos, val[1].sym, val[3].sym
 }
-| '@(' ID '$' ID ')' {
+| '&' ID '$' ID {
 	result = SCCE.make_instance_method val[1].pos, val[1].sym, val[3].sym
 }
-| '@(' ID '$' infix_opr ')' {
+| '&' ID '$' infix_opr {
 	result = SCCE.make_instance_method val[1].pos, val[1].sym, val[3].sym
 }
 
