@@ -29,7 +29,7 @@ class Struct < Expression::Abstract
 
 
 	def to_s
-		format("struct {%s}%s",
+		format("%%STRUCT {%s}%s",
 			if self.body_decls.empty?
 				' '
 			else
@@ -39,7 +39,9 @@ class Struct < Expression::Abstract
 			if self.local_decls.empty?
 				''
 			else
-				format " where {%s}", self.local_decls.map(&:to_s).join(' ')
+				format(" %%WHERE {%s}",
+						self.local_decls.map(&:to_s).join(' ')
+				)
 			end
 		)
 	end

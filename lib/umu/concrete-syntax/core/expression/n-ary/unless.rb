@@ -28,7 +28,7 @@ class Unless < Expression::Abstract
 
 
 	def to_s
-		format "unless %s", self.rule.to_s
+		format "%%UNLESS %s", self.rule.to_s
 	end
 
 

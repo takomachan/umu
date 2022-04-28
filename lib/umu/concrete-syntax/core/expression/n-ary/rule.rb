@@ -61,7 +61,7 @@ class Cond < Abstract
 				if self.decls.empty?
 					''
 				else
-					format " where %s", self.decls.map(&:to_s).join(' ')
+					format " %%WHERE %s", self.decls.map(&:to_s).join(' ')
 				end
 		)
 	end

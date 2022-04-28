@@ -26,7 +26,7 @@ class MutualRecursive < Abstract
 
 	def to_s
 		format(
-			"val rec %s",
+			"%%VAL %%REC %s",
 			self.bindings.map { |sym, binding|
 				format "%s = %s", sym.to_s, binding.lam_expr.to_s
 			}.join(' and ')

@@ -28,7 +28,7 @@ class Let < Expression::Abstract
 
 
 	def to_s
-		format("let { %s in %s }",
+		format("%%LET { %s %%IN %s }",
 			self.decls.map(&:to_s).join(' '),
 			self.expr.to_s
 		)

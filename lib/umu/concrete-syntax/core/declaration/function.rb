@@ -26,7 +26,7 @@ class Abstract < Declaration::Abstract
 
 
 	def to_s
-		format "fun %s", self.lam_expr.to_s
+		format "%%FUN %s", self.lam_expr.to_s
 	end
 
 
@@ -50,7 +50,7 @@ end
 
 class Simple < Abstract
 	def to_s
-		format "fun %s", self.lam_expr.to_s
+		format "%%FUN %s", self.lam_expr.to_s
 	end
 end
 

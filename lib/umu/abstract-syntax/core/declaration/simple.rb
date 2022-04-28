@@ -42,7 +42,7 @@ class Value < Abstract
 
 
 	def to_s
-		format "val %s = %s", self.sym.to_s, self.expr.to_s
+		format "%%VAL %s = %s", self.sym.to_s, self.expr.to_s
 	end
 
 
@@ -74,7 +74,7 @@ class Recursive < Abstract
 
 
 	def to_s
-		format "val rec %s = %s", self.sym.to_s, self.lam_expr.to_s
+		format "%%VAL %%REC %s = %s", self.sym.to_s, self.lam_expr.to_s
 	end
 
 

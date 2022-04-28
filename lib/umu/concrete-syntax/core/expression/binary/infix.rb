@@ -30,11 +30,14 @@ class Infix < Abstract
 
 
 	def to_s
-		format("(%s %s %s)",
-			self.lhs_opnd.to_s,
-			self.opr_sym.to_s,
-			self.rhs_opnd.to_s
-		)
+		_opr = self.opr_sym.to_s
+		opr = if /^[a-zA-Z]+\??$/ =~ _opr
+					'%' + _opr.upcase
+				else
+					_opr
+				end
+
+		format "(%s %s %s)", self.lhs_opnd.to_s, opr, self.rhs_opnd.to_s
 	end
 
 

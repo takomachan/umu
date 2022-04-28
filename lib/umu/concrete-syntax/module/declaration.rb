@@ -37,7 +37,7 @@ class Module < Abstract
 
 
 	def to_s
-		format "module %s = %s", self.pat.to_s, self.expr.to_s
+		format "%%MODULE %s = %s", self.pat.to_s, self.expr.to_s
 	end
 
 

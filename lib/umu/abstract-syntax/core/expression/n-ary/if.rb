@@ -55,14 +55,14 @@ class Entry < Expression::Abstract
 	def to_s
 		head_rule, *tail_rules = self.rules
 
-		format("if %s%s else %s",
+		format("%%IF %s%s %%ELSE %s",
 			head_rule.to_s,
 
 			if tail_rules.empty?
 				''
 			else
 				' ' + tail_rules.map { |rule|
-					format "elsif %s", rule.to_s
+					format "%%ELSIF %s", rule.to_s
 				}.join(' ')
 			end,
 

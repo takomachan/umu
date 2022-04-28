@@ -35,7 +35,7 @@ class Cond < Expression::Abstract
 
 
 	def to_s
-		format("cond %s {%s%s}",
+		format("%%COND %s {%s%s}",
 			self.expr.to_s,
 
 			rules.map(&:to_s).join(' | '),
@@ -44,7 +44,7 @@ class Cond < Expression::Abstract
 				self.else_expr.to_s,
 
 				unless self.else_decls.empty?
-					format(" where %s",
+					format(" %%WHERE %s",
 						self.else_decls.map(&:to_s).join(' ')
 					)
 				else

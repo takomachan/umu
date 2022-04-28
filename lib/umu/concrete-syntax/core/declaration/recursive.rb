@@ -24,8 +24,8 @@ class Recursive < Declaration::Abstract
 
 
 	def to_s
-		format("fun rec %s",
-			self.functions.map(&:to_s).join(' and ')
+		format("%%FUN rec %s",
+			self.functions.map(&:to_s).join(' %%AND ')
 		)
 	end
 

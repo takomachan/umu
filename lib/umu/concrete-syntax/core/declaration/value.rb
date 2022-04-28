@@ -28,7 +28,7 @@ class Value < Declaration::Abstract
 
 
 	def to_s
-		format("val %s = %s%s",
+		format("%%VAL %s = %s%s",
 				self.pat.to_s,
 
 				self.expr.to_s,
@@ -36,7 +36,9 @@ class Value < Declaration::Abstract
 				if self.decls.empty?
 					''
 				else
-					format(" where {%s}", self.decls.map(&:to_s).join(' '))
+					format(" %%WHERE {%s}",
+							self.decls.map(&:to_s).join(' ')
+					)
 				end
 		)
 	end
