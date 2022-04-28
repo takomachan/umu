@@ -93,14 +93,23 @@ class Entry < Pattern::Abstract
 
 
 	def to_s
-		format "{%s}", self.map(&:to_s).join(', ')
+		flds = case self.fields.size
+				when 0
+					''
+				when 1
+					format " %%VAL %s ", self.fields[0].to_s
+				else
+					format " %%VAL (%s) ", self.map(&:to_s).join(', ')
+				end
+
+		format "%%STRUCT {%s}", flds
 	end
 
 
 	def exported_vars
 		self.map(&:pat).reject(&:wildcard?).inject([]) { |array, vpat|
 			ASSERT.kind_of array,	::Array
-			ASSERT.kind_of vpat,	Variable
+			ASSERT.kind_of vpat,	SCCP::Variable
 
 			array + vpat.exported_vars
 		}.freeze
