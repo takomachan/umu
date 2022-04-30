@@ -36,6 +36,7 @@ SRCS	= commander.rb \
 			concrete-syntax/core.rb \
 			concrete-syntax/core/declaration.rb \
 			concrete-syntax/core/declaration/abstract.rb \
+			concrete-syntax/core/declaration/assert.rb \
 			concrete-syntax/core/declaration/value.rb \
 			concrete-syntax/core/declaration/function.rb \
 			concrete-syntax/core/declaration/recursive.rb \
@@ -66,7 +67,6 @@ SRCS	= commander.rb \
 			concrete-syntax/core/expression/n-ary.rb \
 			concrete-syntax/core/expression/n-ary/rule.rb \
 			concrete-syntax/core/expression/n-ary/if.rb \
-			concrete-syntax/core/expression/n-ary/unless.rb \
 			concrete-syntax/core/expression/n-ary/cond.rb \
 			concrete-syntax/core/expression/n-ary/lambda.rb \
 			concrete-syntax/core/expression/n-ary/let.rb \

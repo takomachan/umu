@@ -22,7 +22,7 @@ WORD_PATTERN	= Regexp.new(
 
 RESERVED_WORDS = [
 	'__FILE__',		'__LINE__',
-	'and',			'andalso',
+	'and',			'andalso',		'assert',
 	'cond',
 	'else',			'elsif',
 	'fun',
@@ -33,7 +33,6 @@ RESERVED_WORDS = [
 	'pow',
 	'rec',
 	'struct',
-	'unless',
 	'val',
 	'where',
 
