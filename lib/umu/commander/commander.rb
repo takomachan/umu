@@ -219,9 +219,15 @@ end
 
 		if pref.trace_mode?
 			STDERR.puts
-			STDERR.printf "________ Tokens: '%s' ________", file_name
 			if pref.lex_trace_mode?
+				STDERR.printf("________ Lexer Trace: '%s' ________",
+								file_name
+				)
 				STDERR.printf "\nINIT-LEXTER: %s\n", init_lexer.to_s
+			else
+				STDERR.printf("________ Tokens: '%s' ________",
+								file_name
+				)
 			end
 		end
 
