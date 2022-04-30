@@ -20,20 +20,20 @@
 ######## Error ########
 
 module ERROR = struct {
-	# failure : (String, 'a) -> ()
-	fun failure		= (msg, x) -> error ("Assertion Failure",	msg, x)
+	# failure		: String -> 'a -> ()
+	fun failure		= msg x -> error ("Assertion Failure",	msg, x)
 
-	# syntax : (String, 'a) -> ()
-	fun syntax		= (msg, x) -> error ("Syntax Error",		msg, x)
+	# syntax		: String -> 'a -> ()
+	fun syntax		= msg x -> error ("Syntax Error",		msg, x)
 
-	# name : (String, 'a) -> ()
-	fun name		= (msg, x) -> error ("Name Error",			msg, x)
+	# name			: String -> 'a -> ()
+	fun name		= msg x -> error ("Name Error",			msg, x)
 
-	# application : (String, 'a) -> ()
-	fun application	= (msg, x) -> error ("Application Error",	msg, x)
+	# application	: String -> 'a -> ()
+	fun application	= msg x -> error ("Application Error",	msg, x)
 
-	# type' : (String, 'a) -> ()
-	fun type'		= (msg, x) -> error ("Type Error",			msg, x)
+	# type'			: String -> 'a -> ()
+	fun type'		= msg x -> error ("Type Error",			msg, x)
 } where {
 	fun error = (category, msg, x) ->
 		abort ("[" ^ category ^ "] " ^ msg ^ inspect x)
@@ -170,7 +170,7 @@ fun rec parse = exp -> cond exp {
   const?	-> EXP::mk-const exp
 | var?		-> EXP::mk-var exp
 | form?		-> parse-form exp
-  else		-> ERROR::syntax ("Unknown Expression: ", exp)
+  else		-> ERROR::syntax "Unknown Expression: " exp
 } where {
 	# const? : 'a -> Bool
 	fun const? = exp -> exp isa? Integer
@@ -203,11 +203,8 @@ fun rec parse = exp -> cond exp {
 		fun parse-if = args ->
 			EXP::mk-cond (parse prem, parse conc, parse altr)
 		where {
-			val _ = unless (length args == 3)
-						ERROR::syntax (
-							"For IF's arity, expected 3, but: ",
-							args
-						)
+			assert (length args == 3)
+				ERROR::syntax "For IF's arity, expected 3, but: " args
 			val [prem, conc, altr] = args
 		}
 
@@ -216,40 +213,30 @@ fun rec parse = exp -> cond exp {
 		fun parse-lambda = args ->
 			fps' |> foldl init-body-exp { fp body-exp ->
 					EXP::mk-lambda (parse fp, body-exp)
-			where val _ = unless (var? fp)
-							ERROR::syntax (
-								"In LAMBDA, expected a VAR, but: ",
-								fp
-							)
+			where
+				assert (var? fp)
+					ERROR::syntax "In LAMBDA, expected a <VAR>, but: " fp
 			}
 		where {
-			val _ = unless (length args == 2)
-						ERROR::syntax (
-							"For LAMBDA's arity, expected 2, but: ",
-							args
-						)
+			assert (length args == 2)
+				ERROR::syntax 
+					"For LAMBDA's arity, expected 2, but: " args
 			val [fps, body] = args
-			val _ = unless (fps isa? List)
-						ERROR::syntax (
-							"In LAMBDA, expected a List of VAR, but: ",
-							fps
-						)
-			val _ = unless (length fps >= 1)
-						ERROR::syntax (
-							"In LAMBDA, " ^
-								"expected length of VARs is " ^
-								"1 or more, but: ",
-							fps
-						)
+
+			assert (fps isa? List)
+				ERROR::syntax
+					"In LAMBDA, expected a List of VAR, but: " fps
+			assert (length fps >= 1)
+				ERROR::syntax
+					("In LAMBDA, " ^
+						"expected length of VARs is 1 or more, but: ")
+					fps
 			val [init-fp|fps'] = reverse fps
+
+			assert (var? init-fp)
+				ERROR::syntax "In LAMBDA, expected a VAR, but: " init-fp
 			val init-body-exp = EXP::mk-lambda (parse init-fp, parse body)
-				where { val _ = unless (var? init-fp)
-								ERROR::syntax (
-									"In LAMBDA, expected a VAR, but: ",
-									init-fp
-								)
-				}
-			}
+		}
 
 		#### <Apply> ####
 		# parse-apply : ['a] -> <APPL>
@@ -268,31 +255,24 @@ fun rec parse = exp -> cond exp {
 			binds |> foldr (parse body) { bind body-exp ->
 				mk-let (parse dvar, parse dexp, body-exp)
 			where
-				val _ = unless (bind isa? List andalso length bind == 2)
-							ERROR::syntax (
-								"For LET's binding, " ^
-								"expected pair List, but: ",
-								bind
-							)
+				assert (bind isa? List andalso length bind == 2)
+					ERROR::syntax
+						"For LET's binding, expected pair List, but: " bind
 				val [dvar, dexp] = bind
-				val _ = unless (var? dvar)
-							ERROR::syntax (
-								"In LET, expected VAR, but: ",
-								dvar
-							) 
+
+				assert (var? dvar)
+					ERROR::syntax "In LET, expected VAR, but: " dvar
 			}
 		where {
-			val _ = unless (length args >= 1)
-						ERROR::syntax (
-							"For LET's arity, expected 1 or more, but: ",
-							args
-						)
-			val [body|binds] = args
-
 			fun mk-let = (dvar, dexp, body) -> EXP::mk-appl (
 				EXP::mk-lambda (dvar, body),
 				dexp
 			)
+
+			assert (length args >= 1)
+				ERROR::syntax
+					"For LET's arity, expected 1 or more, but: " args
+			val [body|binds] = args
 		}
 
 		#### <Letrec> ####
@@ -301,36 +281,27 @@ fun rec parse = exp -> cond exp {
 			binds |> foldr (parse body) { bind body-exp ->
 				EXP::mk-letrec (parse dvar, parse-lambda lam, body-exp)
 			where
-				val _ = unless (bind isa? List andalso length bind >= 2)
-							ERROR::syntax (
-								"For LETREC's binding, " ^
-								"expected 2 or more List, but: ",
-								bind
-							)
+				assert (bind isa? List andalso length bind >= 2)
+					ERROR::syntax
+						("For LETREC's binding, " ^
+							"expected 2 or more List, but: ")
+						bind
 				val [dvar|dexp] = bind
-				val _ = unless (var? dvar)
-							ERROR::syntax (
-								"In LETREC, expected VAR, but: ",
-								dvar
-							) 
-				val _ = unless (form? dexp)
-							ERROR::syntax (
-								"In LETREC, expected <Form>, but: ",
-								dexp
-							) 
+
+				assert (var? dvar)
+					ERROR::syntax "In LETREC, expected <VAR>, but: " dvar
+				assert (form? dexp)
+					ERROR::syntax "In LETREC, expected <Form>, but: " dexp
 				val [keyword|lam] = dexp
-				val _ = unless (keyword == @LAMBDA)
-							ERROR::syntax (
-								"In LETREC, expected LAMBDA, but: ",
-								keyword
-							) 
+
+				assert (keyword == @LAMBDA)
+					ERROR::syntax
+						"In LETREC, expected LAMBDA, but: " keyword
 			}
 		where {
-			val _ = unless (length args >= 1)
-						ERROR::syntax (
-							"For LETREC's arity, expected 1 or more, but: ",
-							args
-						)
+			assert (length args >= 1)
+				ERROR::syntax
+					"For LETREC's arity, expected 1 or more, but: " args
 			val [body|binds] = args
 		}
 	}
@@ -364,11 +335,10 @@ where {
 			val (opr, opnd) = val-of r
 
 			val va-opr  = eval (opr, e)
-			val _ = unless (VAL::funval? va-opr)
-						ERROR::application (
-							"In APPL, Expected a FUNVAL, but: ",
-							va-opr
-						)
+			assert (VAL::funval? va-opr)
+				ERROR::application
+					"In APPL, Expected a <FUNVAL>, but: " va-opr
+
 			val va-opnd = eval (opnd, e)
 
 	#### LAMBDA ####
@@ -383,22 +353,16 @@ where {
 			val (prem, conc, altr) = val-of r
 
 			val va-prem = eval (prem, e)
-			val _ = unless (VAL::boolean? va-prem)
-						ERROR::type' (
-							"In COND, expected a BOOLEAN, but: ",
-							va-prem
-						)
+			assert (VAL::boolean? va-prem)
+				ERROR::type' "In COND, expected a <BOOLEAN>, but: " va-prem
 
 	#### LETREC ####
 	| EXP::letrec? -> eval (body, e')
 		where
 			val (dvar, dexp, body)	= val-of r
 
-			val _ = unless (EXP::lambda? dexp)
-						ERROR::failure (
-							"In LETREC, expected a LAMBDA, but: ",
-							r
-						)
+			assert (EXP::lambda? dexp)
+				ERROR::failure "In LETREC, expected a LAMBDA, but: " r
 
 			# e' : <ENV>
 			fun rec e' = x -> if (x == dvar)
@@ -450,14 +414,14 @@ where {
 	| (== @EQ)		-> mk-binop (==) VAL::mk-boolean
 	| (== @LT)		-> mk-binop (<)  VAL::mk-boolean
 
-	  else			-> ERROR::name ("Unknown VAR: ", x)
+	  else			-> ERROR::name "Unknown VAR: " x
 	} where {
 		# int : <VAL> -> Integer
 		fun int = x ->
 			if (VAL::integer? x)
 				val-of x
 			else
-				ERROR::type' ("Expected a Integer, but: ", x)
+				ERROR::type' "Expected a Integer, but: " x
 
 		# mk-unop : (Integer -> 'a) -> ('a -> <VAL>) -> <FUNVAL>
 		fun mk-unop = unop mk ->

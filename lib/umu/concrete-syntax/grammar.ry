@@ -165,7 +165,10 @@ opt_core_decls:
 | core_decl opt_core_decls	{ result = [val[0]] + val[1] }
 
 core_decl:
-  VAL pat '=' expr opt_outer_where_decls {
+  ASSERT atom_expr expr {
+	result = SCCD.make_assert val[0].pos, val[1], val[2]
+}
+| VAL pat '=' expr opt_outer_where_decls {
 	result = SCCD.make_value(
 					val[0].pos, val[1], val[3], val[4]
 				)
@@ -234,9 +237,6 @@ expr:
   infix_expr
 | IF if_rules ELSE expr {
 	result = SCCE.make_if val[0].pos, val[1], val[3]
-}
-| UNLESS if_rule {
-	result = SCCE.make_unless val[0].pos, val[1]
 }
 | COND atom_expr '{' cond_rules ELSE '->' expr opt_inner_where_decls '}' {
 	result = SCCE.make_cond val[0].pos, val[1], val[3], val[6], val[7]
