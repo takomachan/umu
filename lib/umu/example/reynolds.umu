@@ -476,162 +476,266 @@ val GE = [LAMBDA, [@x, @y], [NOT, [LT, @x, @y]]]
 
 ######## Example Runner ########
 
+module ASSERT = struct {
+	fun integer = actual expect -> let {
+		assert (actual isa? Datum)				"Datum"
+		assert (tag-of actual == @Integer)		"@Integer"
+		assert (val-of actual isa? Integer)		"Integer"
+		assert (val-of actual == expect)		(inspect expect)
+	in
+		()
+	}
+
+	fun true  = actual -> boolean actual TRUE
+	fun false = actual -> boolean actual FALSE
+
+	fun funval = actual -> let {
+		assert (actual isa? Datum)				"Datum"
+		assert (tag-of actual == @Funval)		"@Funval"
+		assert (val-of actual isa? Function)	"Function"
+	in
+		()
+	}
+} where {
+	val tag-of = UMU::DATUM::tag
+
+	fun boolean = actual expect -> let {
+		assert (actual isa? Datum)				"Datum"
+		assert (tag-of actual == @Boolean)		"@Boolean"
+		assert (val-of actual isa? Bool)		"Bool"
+		assert (val-of actual == expect)		(inspect expect)
+	in
+		()
+	}
+}
+
+
 fun example-run = interpret -> (
-	  print "[CONSTANT]" ;
+	print "[CONSTANT]" ;
 
 		#[INPUT] 100
-		run 100 ;
+		let {
+			val result = run 100
+		in
+			ASSERT::integer result 100
+		} ;
 		#[OUTPUT] -> 100
 
-		nl ()
+		nl () ;
 
-	; print "[VARIABLE]" ;
+	print "[VARIABLE]" ;
 
 		#[INPUT] TRUE
-		run T ;
+		let {
+			val result = run T
+		in
+			ASSERT::true result
+		} ;
 		#[OUTPUT] -> TRUE
 
 		#[INPUT] succ
-		run SUCC ;
-		#[OUTPUT] -> #<fn x -> ...>
+		let {
+			val result = run SUCC
+		in
+			ASSERT::funval result
+		} ;
+		#[OUTPUT] -> #<{x -> ... }>
 
-		nl ()
+		nl () ;
 
-	; print "[CONDITIONAL]" ;
+	print "[CONDITIONAL]" ;
 
 		#[INPUT] if TRUE then 1 else 2
-		run [IF, T, 1, 2] ;
+		let {
+			val result = run [IF, T, 1, 2]
+		in
+			ASSERT::integer result 1
+		} ;
 		#[OUTPUT] -> 1
 
 		#[INPUT] if FALSE then 1 else 2
-		run [IF, F, 1, 2] ;
+		let {
+			val result = run [IF, F, 1, 2]
+		in
+			ASSERT::integer result 2
+		} ;
 		#[OUTPUT] -> 2
 
-		nl ()
+		nl () ;
 
-	; print "[APPLY PRIMITIVE]" ;
+	print "[APPLY PRIMITIVE]" ;
 
 		#[INPUT] succ 2
-		run [SUCC, 2] ;
+		let {
+			val result = run [SUCC, 2]
+		in
+			ASSERT::integer result 3
+		} ;
 		#[OUTPUT] --> 3
 
 		#[INPUT] succ succ succ 2
-		run [SUCC, [SUCC, [SUCC, 2]]] ;
+		let {
+			val result = run [SUCC, [SUCC, [SUCC, 2]]]
+		in
+			ASSERT::integer result 5
+		} ;
 		#[OUTPUT] --> 5
 
 		#[INPUT] 1 + 2
-		run [ADD, 1, 2] ;
+		let {
+			val result = run [ADD, 1, 2]
+		in
+			ASSERT::integer result 3
+		} ;
 		#[OUTPUT] --> 3
 
 		#[INPUT] 1 = 1
-		run [EQ, 1, 1] ;
+		let {
+			val result = run [EQ, 1, 1]
+		in
+			ASSERT::true result
+		} ;
 		#[OUTPUT] --> TRUE
 
-		nl ()
+		nl () ;
 
-	; print "[APPLY LAMBDA]" ;
+	print "[APPLY LAMBDA]" ;
 
 		#[INPUT] (fn x => succ x) 2
-		run [
-			[LAMBDA, [@x], [SUCC, @x]],
-			2
-		] ;
+		let {
+			val result = run [
+				[LAMBDA, [@x], [SUCC, @x]],
+				2
+			]
+		in
+			ASSERT::integer result 3
+		} ;
 		#[OUTPUT] --> 3
 
 		#[INPUT] (fn x y z => x - y - z) 10 1 2
-		run [
-			[LAMBDA, [@x, @y, @z], [SUB, [SUB, @x, @y], @z]],
-			10, 1, 2
-		] ;
+		let {
+			val result = run [
+				[LAMBDA, [@x, @y, @z], [SUB, [SUB, @x, @y], @z]],
+				10, 1, 2
+			]
+		in
+			ASSERT::integer result 7
+		} ;
 		#[OUTPUT] --> 7
 
-		nl ()
+		nl () ;
 
-	; print "[LET]" ;
+	print "[LET]" ;
 
-		#[INPUT] { succ 1 where }
-		run [LET, [SUCC, 1]] ;
-		#[OUTPUT] --> 2
-
-		#[INPUT] { succ x where x = 2 }
-		run [LET, [SUCC, @x],
-			[@x, 2]
-		] ;
+		#[INPUT] let x = 2 in succ x
+		let {
+			val result = run [LET, [SUCC, @x], [@x, 2]]
+		in
+			ASSERT::integer result 3
+		} ;
 		#[OUTPUT] --> 3
 
-		#[INPUT] { x * x + y * y where x = 2, y = 3 }
-		run [LET, [ADD, [MUL, @x, @x], [MUL, @y, @y]],
-			[@x, 2],
-			[@y, 3]
-		] ;
+		#[INPUT]
+		#	let x = 2 in
+		#	let y = 3 in
+		#	x * x + y * y
+		let {
+			val result = run [
+				LET, [ADD, [MUL, @x, @x], [MUL, @y, @y]],
+				[@x, 2],
+				[@y, 3]
+			]
+		in
+			ASSERT::integer result 13
+		} ;
 		#[OUTPUT] --> 13
 
-		#[INPUT] {{ x + y where y = x, x = 2 } where x = 1 }
-		run [LET,
-			[LET, [ADD, @x, @y],
+		#[INPUT]
+		#	let x = 1 in
+		#	let y = x in
+		#	let x = 2 in
+		#	x + y
+		let {
+			val result = run [
+				LET, [ADD, @x, @y],
+				[@x, 1],
 				[@y, @x],
 				[@x, 2]
-			],
-			[@x, 1]
-		] ;
+			]
+		in
+			ASSERT::integer result 3
+		} ;
 		#[OUTPUT] --> 3
 
-		nl ()
+		nl () ;
 
-	; print "[LETREC]" ;
+	print "[LETREC]" ;
 
-		#[INPUT] { succ 1 whererec }
-		run [LETREC, [SUCC, 1]] ;
-		#[OUTPUT] --> 2
-
-		#[INPUT] { f 2 whererec f = fn x => succ x }
-		run [LETREC, [@f, 2], [@f, LAMBDA, [@x], [SUCC, @x]]] ;
+		#[INPUT] let f = fn x => succ x in f 2
+		let {
+			val result = run [
+				LETREC, [@f, 2],
+				[@f, LAMBDA, [@x], [SUCC, @x]]
+			]
+		in
+			ASSERT::integer result 3
+		} ;
 		#[OUTPUT] --> 3
 
-		#[INPUT] { add (mul 2 3) (mul 4 5)
-		#			whererec
-		#				add = fn x y => x + y,
-		#				mul = fn x y => x * y
-		#		 }
-		run [LETREC, [@add, [@mul, 2, 3], [@mul, 4, 5]],
-			[@add, LAMBDA, [@x, @y], [ADD, @x, @y]],
-			[@mul, LAMBDA, [@x, @y], [MUL, @x, @y]]
-		] ;
+		#[INPUT]
+		#	letrec add = fn x y => x + y in
+		#	letrec mul = fn x y => x * y in
+		#	add (mul 2 3) (mul 4 5)
+		let {
+			val result = run [
+				LETREC, [@add, [@mul, 2, 3], [@mul, 4, 5]],
+				[@add, LAMBDA, [@x, @y], [ADD, @x, @y]],
+				[@mul, LAMBDA, [@x, @y], [MUL, @x, @y]]
+			]
+		in
+			ASSERT::integer result 26
+		} ;
 		#[OUTPUT] --> 26
 
-		#[INPUT] { fact 4 
-		#			whererec
-		#				fact = x -> if x <= 1 then 1 else x * fact (x - 1)
-		#		 }
-		run [LETREC, [@fact, 4],
-			[@fact, LAMBDA, [@x],
-				[IF, [LE, @x, 1],
-					1,
-					[MUL, @x, [@fact, [SUB, @x, 1]]]
+		#[INPUT]
+		#	letrec fact = x -> if x <= 1 then 1 else x * fact (x - 1) in
+		#	fact 4 
+		let {
+			val result = run [
+				LETREC, [@fact, 4],
+				[@fact, LAMBDA, [@x],
+					[IF, [LE, @x, 1],
+						1,
+						[MUL, @x, [@fact, [SUB, @x, 1]]]
+					]
 				]
 			]
-		] ;
+		in
+			ASSERT::integer result 24
+		} ;
 		#[OUTPUT] --> 24
 
-		#[INPUT] { gcd 16 28
-		#			whererec
-		#				gcd = a b -> if b = 0 then a else gcd b (a mod b)
-		#		 }
-		run [LETREC, [@gcd, 16, 28],
-			[@gcd, LAMBDA, [@a, @b],
-				[IF, [EQ, @b, 0],
-					@a,
-					[@gcd, @b, [MOD, @a, @b]]
+		#[INPUT] 
+		#	letrec gcd = a b -> if b = 0 then a else gcd b (a mod b) in
+		#	gcd 16 28
+		let {
+			val result = run [
+				LETREC, [@gcd, 16, 28],
+				[@gcd, LAMBDA, [@a, @b],
+					[IF, [EQ, @b, 0],
+						@a,
+						[@gcd, @b, [MOD, @a, @b]]
+					]
 				]
 			]
-		] ;
+		in
+			ASSERT::integer result 4
+		} ;
 		#[OUTPUT] --> 4
 
 		nl ()
-
-
 ) where {
-	val run = parse >> interpret >> p
+	val run = parse >> interpret >> { x -> (p x ; x) }
 }
 
 ;;
