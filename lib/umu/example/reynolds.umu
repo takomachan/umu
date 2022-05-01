@@ -79,22 +79,22 @@ module EXP = struct {
 	#### Classifier ####
 
 	# const? : <EXP> -> Bool
-	fun const? = exp -> DATUM::tag exp == @Const
+	fun const? = exp -> tag-of exp == @Const
 
 	# var? : <EXP> -> Bool
-	fun var? = exp -> DATUM::tag exp == @Var
+	fun var? = exp -> tag-of exp == @Var
 
 	# appl? : <EXP> -> Bool
-	fun appl? = exp -> DATUM::tag exp == @Appl
+	fun appl? = exp -> tag-of exp == @Appl
 
 	# lambda? : <EXP> -> Bool
-	fun lambda? = exp -> DATUM::tag exp == @Lambda
+	fun lambda? = exp -> tag-of exp == @Lambda
 
 	# cond? : <EXP> -> Bool
-	fun cond? = exp -> DATUM::tag exp == @Cond
+	fun cond? = exp -> tag-of exp == @Cond
 
 	# letrec? : <EXP> -> Bool
-	fun letrec? = exp -> DATUM::tag exp == @Letrec
+	fun letrec? = exp -> tag-of exp == @Letrec
 } where {
 	module DATUM = UMU::DATUM
 }
@@ -123,13 +123,13 @@ module VAL = struct {
 	#### Classifier ####
 
 	# <VAL> -> Bool
-	fun integer? = exp -> DATUM::tag exp == @Integer
+	fun integer? = exp -> tag-of exp == @Integer
 
 	# <VAL> -> Bool
-	fun boolean? = exp -> DATUM::tag exp == @Boolean
+	fun boolean? = exp -> tag-of exp == @Boolean
 
 	# <VAL> -> Bool
-	fun funval?	 = exp -> DATUM::tag exp == @Funval
+	fun funval?	 = exp -> tag-of exp == @Funval
 } where {
 	module DATUM = UMU::DATUM
 }
@@ -497,8 +497,6 @@ module ASSERT = struct {
 		()
 	}
 } where {
-	val tag-of = UMU::DATUM::tag
-
 	fun boolean = actual expect -> let {
 		assert (actual isa? Datum)				"Datum"
 		assert (tag-of actual == @Boolean)		"@Boolean"
@@ -735,7 +733,7 @@ fun example-run = interpret -> (
 
 		nl ()
 ) where {
-	val run = parse >> interpret >> { x -> (p x ; x) }
+	val run = parse >> interpret >> tee p
 }
 
 ;;

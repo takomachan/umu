@@ -38,8 +38,8 @@ module UMU = struct {
 
 		#### Selector ####
 
-		# tag : Datum 'a -> Atom
-		val tag = &Datum$tag
+		# tag-of : Datum 'a -> Atom
+		val tag-of = &Datum$tag
 
 		# contents : Datum 'a -> 'a
 		val contents = &Datum$contents
@@ -539,6 +539,12 @@ module UMU = struct {
 		val val-of = &Union$contents
 
 
+		#### Datum ####
+
+		# tag-of : Datum 'a -> Atom
+		val tag-of = DATUM::tag-of
+
+
 		#### Option ####
 
 		# Some	: 'a -> Option 'a
@@ -649,6 +655,9 @@ module UMU = struct {
 		## const	: 'a -> 'b -> 'a
 		fun const = x _ -> x
 
+		## tee      : ('a -> 'b) -> 'a -> 'a
+		fun tee = f x -> (f x ; x)
+
 		## curry	: (('a, 'b) -> 'c) -> ('a -> 'b -> 'c)
 		fun curry = f x y -> f (x, y)
 
@@ -710,8 +719,11 @@ module struct {
 	## Tuple
 	val ((,), fst, snd)
 
-	#### Datum ####
+	#### Union ####
 	val val-of
+
+	#### Datum ####
+	val tag-of
 
 	#### Option ####
 	val (
@@ -740,7 +752,7 @@ module struct {
 
 	#### High order Function ####
 	val (
-		id, const,
+		id, const, tee,
 		curry, uncurry,
 		swap, flip,
 		pair, cross
