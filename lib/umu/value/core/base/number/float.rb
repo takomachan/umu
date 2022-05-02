@@ -80,10 +80,12 @@ class Float < Abstract
 			:log10],
 		[:meth_sqrt,			self,
 			:sqrt],
+		[:meth_truncate,		self,
+			:truncate,			VCBN::Integer],
 		[:meth_ceil,			self,
-			:ceil],
+			:ceil,				VCBN::Integer],
 		[:meth_floor,			self,
-			:floor],
+			:floor,				VCBN::Integer],
 		[:meth_ldexp,			self,
 			:ldexp,				VCBN::Integer],
 		[:meth_frexp,			VCP::Tuple,
@@ -230,13 +232,51 @@ class Float < Abstract
 	end
 
 
-	def meth_ceil(env, _event)
-		VC.make_float self.pos, self.val.ceil.to_f
+	def meth_truncate(env, _event, ndigits)
+		ASSERT.kind_of ndigits, VCBN::Integer
+
+		unless ndigits.val >= 0
+			raise X::ArgumentError.new(
+				self.pos,
+				env,
+				"truncate: expected zero or positive for digits number: %d",
+				ndigits.val.to_i
+			)
+		end
+
+		VC.make_float self.pos, self.val.truncate(ndigits.val).to_f
 	end
 
 
-	def meth_floor(env, _event)
-		VC.make_float self.pos, self.val.floor.to_f
+	def meth_ceil(env, _event, ndigits)
+		ASSERT.kind_of ndigits, VCBN::Integer
+
+		unless ndigits.val >= 0
+			raise X::ArgumentError.new(
+				self.pos,
+				env,
+				"ceil: expected zero or positive for digits number: %d",
+				ndigits.val.to_i
+			)
+		end
+
+		VC.make_float self.pos, self.val.ceil(ndigits.val).to_f
+	end
+
+
+	def meth_floor(env, _event, ndigits)
+		ASSERT.kind_of ndigits, VCBN::Integer
+
+		unless ndigits.val >= 0
+			raise X::ArgumentError.new(
+				self.pos,
+				env,
+				"floor: expected zero or positive for digits number: %d",
+				ndigits.val.to_i
+			)
+		end
+
+		VC.make_float self.pos, self.val.floor(ndigits.val).to_f
 	end
 
 

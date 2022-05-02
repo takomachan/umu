@@ -97,6 +97,9 @@ module UMU = struct {
 		# infinite?		: Float -> Bool
 		val infinite? = &(Float$infinite?)
 
+		# equal?		: Float -> Float -> Integer -> Bool
+		fun equal? = x y n -> x.(truncate n).(== y.(truncate n))
+
 		# finite?		: Float -> Bool
 		val finite? = &(Float$finite?)
 
@@ -142,10 +145,13 @@ module UMU = struct {
 		# sqrt			: Float -> Float
 		val sqrt = &(Float$sqrt)
 
-		# ceil			: Float -> Float
+		# truncate		: Float -> Integer -> Float
+		val truncate = &(Float$truncate)
+
+		# ceil			: Float -> Integer -> Float
 		val ceil = &(Float$ceil)
 
-		# floor			: Float -> Float
+		# floor			: Float -> Integer -> Float
 		val floor = &(Float$floor)
 
 		# ldexp			: Float -> Integer -> Float
