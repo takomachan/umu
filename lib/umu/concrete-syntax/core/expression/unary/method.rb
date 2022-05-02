@@ -34,7 +34,7 @@ end
 
 class Class < Abstract
 	def to_s
-		format "@(%s.%s)", self.class_sym, self.method_sym
+		format "&(%s.%s)", self.class_sym, self.method_sym
 	end
 
 
@@ -49,7 +49,7 @@ end
 
 class Instance < Abstract
 	def to_s
-		format "@(%s$%s)", self.class_sym, self.method_sym
+		format "&(%s$%s)", self.class_sym, self.method_sym
 	end
 
 

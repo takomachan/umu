@@ -32,7 +32,7 @@ class Abstract < Core::Function::Abstract
 private
 
 	def __to_s__(opr)
-		format("@(%s%s%s)",
+		format("&(%s%s%s)",
 				self.formal_receiver_spec.symbol,
 				opr,
 				self.method_sym

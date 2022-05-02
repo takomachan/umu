@@ -23,7 +23,7 @@ class Class < Abstract
 
 
 	def to_s
-		format "@(%s)", self.class_sym
+		format "&%s", self.class_sym
 	end
 
 

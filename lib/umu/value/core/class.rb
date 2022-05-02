@@ -21,7 +21,7 @@ class Class < Top
 
 
 	def to_s
-		format "@(%s)", self.class_spec.to_sym
+		format "&%s", self.class_spec.to_sym
 	end
 
 

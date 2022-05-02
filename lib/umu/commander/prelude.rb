@@ -18,10 +18,10 @@ module UMU = struct {
 
 	module BOOL = struct {
 		# TRUE : Bool
-		val TRUE = &(Bool).make-true
+		val TRUE = &Bool.make-true
 
 		# FALSE : Bool
-		val FALSE = &(Bool).make-false
+		val FALSE = &Bool.make-false
 	}
 
 
@@ -33,16 +33,16 @@ module UMU = struct {
 		#### Constructor ####
 
 		# make : Atom -> 'a -> Datum 'a
-		val make = &Datum.make
+		val make = &(Datum.make)
 
 
 		#### Selector ####
 
 		# tag-of : Datum 'a -> Atom
-		val tag-of = &Datum$tag
+		val tag-of = &(Datum$tag)
 
 		# contents : Datum 'a -> 'a
-		val contents = &Datum$contents
+		val contents = &(Datum$contents)
 	}
 
 
@@ -53,25 +53,25 @@ module UMU = struct {
 		#### Constructor ####
 
 		# Some : 'a -> Option 'a
-		val Some = &Option.make-some
+		val Some = &(Option.make-some)
 
 		# NONE : Option 'a
-		val NONE = &(Option).make-none
+		val NONE = &Option.make-none
 
 
 		#### Classifier ####
 
 		# Some? : Option 'a -> Bool
-		val Some? = &Option$some?
+		val Some? = &(Option$some?)
 
 		# NONE? : Option 'a -> Bool
-		val NONE? = &Option$none?
+		val NONE? = &(Option$none?)
 
 
 		#### Selector ####
 
 		# contents : Option 'a -> 'a
-		val contents = &Option$contents
+		val contents = &(Option$contents)
 	}
 
 
@@ -80,82 +80,82 @@ module UMU = struct {
 
 	module MATH = struct {
 		# NAN 			: Float
-		val NAN = &(Float).make-nan
+		val NAN = &Float.make-nan
 
 		# INFINITY	 	: Float
-		val INFINITY = &(Float).make-infinity
+		val INFINITY = &Float.make-infinity
 
 		# PI 			: Float
-		val PI = &(Float).make-pi
+		val PI = &Float.make-pi
 
 		# E 			: Float
-		val E = &(Float).make-e
+		val E = &Float.make-e
 
 		# nan?			: Float -> Bool
-		val nan? = &Float$nan?
+		val nan? = &(Float$nan?)
 
 		# infinite?		: Float -> Bool
-		val infinite? = &Float$infinite?
+		val infinite? = &(Float$infinite?)
 
 		# finite?		: Float -> Bool
-		val finite? = &Float$finite?
+		val finite? = &(Float$finite?)
 
 		# sin			: Float -> Float
-		val sin = &Float$sin
+		val sin = &(Float$sin)
 
 		# cos			: Float -> Float
-		val cos = &Float$cos
+		val cos = &(Float$cos)
 
 		# tan			: Float -> Float
-		val tan = &Float$tan
+		val tan = &(Float$tan)
 
 		# asin			: Float -> Float
-		val asin = &Float$asin
+		val asin = &(Float$asin)
 
 		# acos			: Float -> Float
-		val acos = &Float$acos
+		val acos = &(Float$acos)
 
 		# atan			: Float -> Float
-		val atan = &Float$atan
+		val atan = &(Float$atan)
 
 		# atan2			: Float -> Float -> Float
-		val atan2 = &Float$atan2
+		val atan2 = &(Float$atan2)
 
 		# sinh			: Float -> Float
-		val sinh = &Float$sinh
+		val sinh = &(Float$sinh)
 
 		# cosh			: Float -> Float
-		val cosh = &Float$cosh
+		val cosh = &(Float$cosh)
 
 		# tanh			: Float -> Float
-		val tanh = &Float$tanh
+		val tanh = &(Float$tanh)
 
 		# exp			: Float -> Float
-		val exp = &Float$exp
+		val exp = &(Float$exp)
 
 		# log			: Float -> Float
-		val log = &Float$log
+		val log = &(Float$log)
 
 		# log10			: Float -> Float
-		val log10 = &Float$log10
+		val log10 = &(Float$log10)
 
 		# sqrt			: Float -> Float
-		val sqrt = &Float$sqrt
+		val sqrt = &(Float$sqrt)
 
 		# ceil			: Float -> Float
-		val ceil = &Float$ceil
+		val ceil = &(Float$ceil)
 
 		# floor			: Float -> Float
-		val floor = &Float$floor
+		val floor = &(Float$floor)
 
 		# ldexp			: Float -> Integer -> Float
-		val ldexp = &Float$ldexp
+		val ldexp = &(Float$ldexp)
 
 		# frexp			: Float -> (Float, Float)
-		val frexp = &Float$frexp
+		val frexp = &(Float$frexp)
 
 		# divmod		: Float -> Float -> (Float, Float)
-		val divmod = &Float$divmod
+		val divmod = &(Float$divmod)
 	}
 
 
@@ -193,11 +193,11 @@ module UMU = struct {
 		fun msgout = x -> _STDERR.(puts x.to-s.(^ "\n"))
 
 		# random : 'a -> 'a	where { 'a <- Number }
-		val random = &Number$random
+		val random = &(Number$random)
 	} where {
-		val _STDIN	= &(IO).make-stdin
-		val _STDOUT	= &(IO).make-stdout
-		val _STDERR	= &(IO).make-stderr
+		val _STDIN	= &IO.make-stdin
+		val _STDOUT	= &IO.make-stdout
+		val _STDERR	= &IO.make-stderr
 	}
 
 
@@ -206,23 +206,23 @@ module UMU = struct {
 
 	module LIST = struct {
 		# Nil : () -> ['a]
-		val Nil = &List.make-nil
+		val Nil = &(List.make-nil)
 
 
 		# Cons : 'a -> ['a] -> ['a]
-		val Cons = &List.make-cons
+		val Cons = &(List.make-cons)
 
 
 		# Nil? : ['a] -> Bool
-		val Nil? = &List$nil?
+		val Nil? = &(List$nil?)
 
 
 		# Cons? : ['a] -> Bool
-		val Cons? = &List$cons?
+		val Cons? = &(List$cons?)
 
 
 		# des : ['a] -> ('a, ['a])
-		val des = &List$des
+		val des = &(List$des)
 
 
 		# hd : ['a] -> 'a
@@ -250,7 +250,7 @@ module UMU = struct {
 
 
 		# equal? : ['a] -> ['b] -> Bool
-		val equal? = equal-with? &Top$==
+		val equal? = equal-with? &(Top$==)
 
 
 		# foldr : 'b -> ('a -> 'b -> 'b) -> ['a] -> 'b
@@ -357,7 +357,7 @@ module UMU = struct {
 
 	module STRING = struct {
 		# abort : String -> ()
-		val abort = &String$abort
+		val abort = &(String$abort)
 
 
 		# join : String -> [String] -> String
@@ -386,19 +386,19 @@ module UMU = struct {
 		#### Top ####
 
 		# inspect	: 'a -> String
-		val inspect = &Top$inspect
+		val inspect = &(Top$inspect)
 
 		# to-s		: 'a -> String
-		val to-s = &Top$to-s
+		val to-s = &(Top$to-s)
 
 		# (==)		: 'a -> 'b -> Bool
-		val (==) = &Top$==
+		val (==) = &(Top$==)
 
 		# (<>)		: 'a -> 'b -> Bool
 		fun (<>) = x y -> x.(== y).not
 
 		# (<)		: 'a -> 'a -> Bool
-		val (<) = &Top$<
+		val (<) = &(Top$<)
 
 		# (>)		: 'a -> 'a -> Bool
 		fun (>) = x y -> y.(< x)
@@ -419,52 +419,52 @@ module UMU = struct {
 		val FALSE = BOOL::FALSE
 
 		# not		: Bool -> Bool
-		val not = &Bool$not
+		val not = &(Bool$not)
 
 
 		#### Number ####
 
 		# 	positive?	: Number -> Bool
-		val positive? = &Number$positive?
+		val positive? = &(Number$positive?)
 
 		# 	negative?	: Number -> Bool
-		val negative? = &Number$negative?
+		val negative? = &(Number$negative?)
 
 		# 	odd?		: Integer -> Bool
-		val odd? = &Integer$odd?
+		val odd? = &(Integer$odd?)
 
 		# 	even?		: Integer -> Bool
-		val even? = &Integer$even?
+		val even? = &(Integer$even?)
 
 		# ~				: 'a -> 'a	where { 'a <- Number }
-		val ~ = &Number$~
+		val ~ = &(Number$~)
 
 		# abs			: 'a -> 'a	where { 'a <- Number }
-		val abs = &Number$abs
+		val abs = &(Number$abs)
 
 		# to-i			: Number -> Integer
-		val to-i = &Number$to-i
+		val to-i = &(Number$to-i)
 
 		# to-f			: Number -> Float
-		val to-f = &Number$to-f
+		val to-f = &(Number$to-f)
 
 		# (+)			: 'a -> 'a -> 'a		where { 'a <- Number }
-		val (+) = &Number$+
+		val (+) = &(Number$+)
 
 		# (-)			: 'a -> 'a -> 'a		where { 'a <- Number }
-		val (-) = &Number$-
+		val (-) = &(Number$-)
 
 		# (*)			: 'a -> 'a -> 'a		where { 'a <- Number }
-		val (*) = &Number$*
+		val (*) = &(Number$*)
 
 		# (/)			: 'a -> 'a -> 'a		where { 'a <- Number }
-		val (/) = &Number$/
+		val (/) = &(Number$/)
 
 		# (mod)			: 'a -> 'a -> 'a		where { 'a <- Number }
-		val (mod) = &Number$mod
+		val (mod) = &(Number$mod)
 
 		# (pow)			: 'a -> 'a -> 'a		where { 'a <- Number }
-		val (pow) = &Number$pow
+		val (pow) = &(Number$pow)
 
 
 		#### Math ####
@@ -491,7 +491,7 @@ module UMU = struct {
 		val abort = STRING::abort
 
 		# (^)		: String -> String -> String
-		val (^) = &String$^
+		val (^) = &(String$^)
 
 		# join	 	: String -> [String] -> String
 		val join = STRING::join
@@ -536,7 +536,7 @@ module UMU = struct {
 		#### Union ####
 
 		# val-of : Union 'a -> 'a
-		val val-of = &Union$contents
+		val val-of = &(Union$contents)
 
 
 		#### Datum ####
