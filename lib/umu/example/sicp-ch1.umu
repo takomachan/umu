@@ -1,10 +1,8 @@
-module struct {
-	val (sin, cos, exp, log)
-} = UMU::MATH
+module UAS = UMU::ASSERT
+module UMA = UMU::MATH
+module UIO = UMU::IO
 
-module struct {
-	val random
-} = UMU::IO
+val NDIGITS = 3		# for UMU::ASSERT::float
 
 ;;
 
@@ -118,27 +116,47 @@ print "\n\nSECTION 1.1.4" ;;
 ### squqre : 'a -> 'a    where { 'a <- Number }
 fun square = x -> x * x ;;
 
-square 21 ;;
-# -> 41
+let {
+	val _result = square 21
+in
+	UAS::integer _result 441
+} ;;
+# -> 441
 
-square (2 + 5) ;;
+let {
+	val _result = square (2 + 5)
+in
+	UAS::integer _result 49
+} ;;
 # -> 49
 
-square (square 3) ;;
+let {
+	val _result = square (square 3)
+in
+	UAS::integer _result 81
+} ;;
 # -> 81
 
 
 ### sum-of-squqres : 'a -> 'a -> 'a    where { 'a <- Number }
 fun sum-of-squares = x y -> square x + square y ;;
 
-sum-of-squares 3 4 ;;
+let {
+	val _result = sum-of-squares 3 4
+in
+	UAS::integer _result 25
+} ;;
 # -> 25
 
 
 ### f : Integer -> Integer
 fun f = a -> sum-of-squares (a + 1) (a * 2) ;;
 
-f 5 ;;
+let {
+	val _result = f 5
+in
+	UAS::integer _result 136
+} ;;
 # -> 136
 
 
@@ -184,7 +202,7 @@ fun abs = x -> cond x {
   (>  0.0) -> x
 | (== 0.0) -> 0.0
 | (<  0.0) -> ~ x
-  else	   -> abort "ABORT"
+  else	   -> abort "abs"
 } ;;
 
 ### abs' : Float -> Float
@@ -237,16 +255,32 @@ fun rec sqrt-iter = guess x -> (
 ### sqrt : Float -> Float
 fun sqrt = x -> sqrt-iter 1.0 x ;;
 
-sqrt 9.0 ;;
+let {
+	val _result = sqrt 9.0
+in
+	UAS::float _result 3.0 NDIGITS
+} ;;
 # -> 3.00009155413138
 
-sqrt (100.0 + 37.0) ;;
+let {
+	val _result = sqrt <| 100.0 + 37.0
+in
+	UAS::float _result (UMA::sqrt <| 100.0 + 37.0) NDIGITS
+} ;;
 # -> 11.704699917758145
 
-sqrt (sqrt 2.0 + sqrt 3.0) ;;
+let {
+	val _result = sqrt <| sqrt 2.0 + sqrt 3.0
+in
+	UAS::float _result (UMA::sqrt <| UMA::sqrt 2.0 + UMA::sqrt 3.0) NDIGITS
+} ;;
 # -> 1.7739279023207892
 
-square (sqrt 1000.0) ;;
+let {
+	val _result = square <| sqrt 1000.0
+in
+	UAS::float _result (square <| UMA::sqrt 1000.0) NDIGITS
+} ;;
 # -> 1000.000369924366
 
 
@@ -264,7 +298,7 @@ fun square = x -> x * x
 fun double = x -> x + x
 
 ### squqre' : Float -> Float
-fun square' = x -> exp (double (log x))
+fun square' = x -> UMA::exp (double (UMA::log x))
 
 ;;
 
@@ -296,9 +330,14 @@ fun sqrt' = x -> sqrt-iter 1.0 x where {
 	fun rec sqrt-iter = guess x ->
 		if (good-enough? guess x)	guess
 		else						sqrt-iter (improve guess x) x
-}
+} ;;
 
-;;
+let {
+	val _result = sqrt' 9.0
+in
+	UAS::float _result 3.0 NDIGITS
+} ;;
+# -> 3.00009155413138
 
 
 #### Taking advantage of lexical scoping ####
@@ -312,9 +351,14 @@ fun sqrt'' = x -> sqrt-iter 1.0 where {
 	fun rec sqrt-iter = guess ->
 		if (good-enough? guess)	guess
 		else					sqrt-iter (improve guess)
-}
+} ;;
 
-;;
+let {
+	val _result = sqrt'' 9.0
+in
+	UAS::float _result 3.0 NDIGITS
+} ;;
+# -> 3.00009155413138
 
 
 
@@ -336,9 +380,14 @@ print "\n\nSECTION 1.2.1" ;;
 fun rec factorial = n -> (
 	if (n == 0)	1
 	else		n * factorial (n - 1)
-)
+) ;;
 
-;;
+let {
+	val _result = factorial 6
+in
+	UAS::integer _result 720
+} ;;
+# -> 720
 
 
 #### Iterative ####
@@ -354,9 +403,14 @@ fun rec fact-iter = product counter max-count -> (
 )
 
 ### factorial' : Integer -> Integer
-fun factorial' = n -> fact-iter 1 1 n
+fun factorial' = n -> fact-iter 1 1 n ;;
 
-;;
+let {
+	val _result = factorial' 6
+in
+	UAS::integer _result 720
+} ;;
+# -> 720
 
 
 #### Iterative, block-structured (from footnote) ####
@@ -369,9 +423,14 @@ fun factorial'' = n -> iter 1 1 where {
 		else
 			iter (counter * product)
 				 (counter + 1)
-}
+} ;;
 
-;;
+let {
+	val _result = factorial'' 6
+in
+	UAS::integer _result 720
+} ;;
+# -> 720
 
 
 
@@ -388,9 +447,15 @@ fun rec fib = n -> cond n {
   (== 0)	-> 0
 | (== 1)	-> 1
   else		-> fib (n - 1) + fib (n - 2)
-}
+} ;;
 
-;;
+let {
+	val _xs			= [0, 1, 2, 3, 4, 5, 6, 7,  8]
+	val _expects	= [0, 1, 1, 2, 3, 5, 8, 13, 21]
+in
+	UAS::integers _xs fib _expects
+} ;;
+# -> [0, 1, 1, 2, 3, 5, 8, 13, 21]
 
 
 #### Iterative ####
@@ -402,9 +467,15 @@ fun rec fib-iter = a b count -> (
 )
 
 ###	fib' : Integer -> Integer
-fun fib' = n -> fib-iter 1 0 n
+fun fib' = n -> fib-iter 1 0 n ;;
 
-;;
+let {
+	val _xs			= [0, 1, 2, 3, 4, 5, 6, 7,  8]
+	val _expects	= [0, 1, 1, 2, 3, 5, 8, 13, 21]
+in
+	UAS::integers _xs fib' _expects
+} ;;
+# -> [0, 1, 1, 2, 3, 5, 8, 13, 21]
 
 
 #### Counting change ####
@@ -416,7 +487,7 @@ fun first-denomination = kinds-of-coins -> cond kinds-of-coins {
 | (== 3) -> 10
 | (== 4) -> 25
 | (== 5) -> 50
-  else	 -> abort "Abort"
+  else	 -> abort "first-denomination"
 }
 
 ###		cc : Integer -> Integer -> Integer
@@ -441,7 +512,11 @@ fun count-change = amount -> cc amount 5
 ;;
 
 
-count-change 10 ;;
+let {
+	val _result = count-change 100
+in
+	UAS::integer _result 292
+} ;;
 # -> 292
 
 
@@ -490,11 +565,11 @@ fun expt' = b n -> expt-iter b n 1
 ### even? : Integer -> Bool
 fun even? = n -> n mod 2 == 0
 
-fun rec fast-expt = b n -> (
-	if    (n == 0)	1
-	elsif (even? n)	square (fast-expt b (n - 1))
-	else			b * fast-expt b (n - 1)
-)
+fun rec fast-expt = b n -> cond n {
+	  (== 0)	-> 1
+	| even?		-> square <| fast-expt b (n - 1)
+	  else		-> b * fast-expt b (n - 1)
+}
 
 ;;
 
@@ -512,10 +587,18 @@ fun rec gcd = a b -> (
 	else		gcd b (a mod b)
 ) ;;
 
-gcd 16 28 ;;
+let {
+	val _result = gcd 16 28
+in
+	UAS::integer _result 4
+} ;;
 # -> 4
 
-gcd 206 40 ;;
+let {
+	val _result = gcd 206 40
+in
+	UAS::integer _result 2
+} ;;
 # -> 2
 
 
@@ -544,8 +627,14 @@ fun smallest-divisor = n -> find-divisor n 2
 ### prime? : Integer -> Bool
 fun prime? = n -> n == smallest-divisor n ;;
 
-[2, 3, 4, 5, 6, 7] |> map { x -> (x, prime? x) } ;;
-# -> [(2, TRUE), (3, TRUE), (4, FALSE), (5, TRUE), (6, FALSE), (7, TRUE)]
+let {
+	val _xs			= [2,    3,    4,     5,    6,     7,    8]
+	val _expects	= [TRUE, TRUE, FALSE, TRUE, FALSE, TRUE, FALSE]
+
+in
+	UAS::bools _xs prime? _expects
+} ;;
+# -> [TRUE, TRUE, FALSE, TRUE, FALSE, TRUE, FALSE]
 
 
 #### fast-prime? ####
@@ -559,7 +648,7 @@ fun rec expmod = base exp m -> cond exp {
 
 ### fermat-test : Integer -> Bool
 fun fermat-test = n -> (
-	try-it (1 + random (n - 1))
+	try-it (1 + UIO::random (n - 1))
 ) where {
 	fun try-it = a -> expmod a n n == a
 }
@@ -571,8 +660,14 @@ fun rec fast-prime? = n times -> (
 	else					FALSE
 ) ;;
 
-[2, 3, 4, 5, 6, 7] |> map { x -> (x, fast-prime? x 10) } ;;
-# -> [(2, TRUE), (3, TRUE), (4, FALSE), (5, TRUE), (6, FALSE), (7, TRUE)]
+let {
+	val _xs			= [2,    3,    4,     5,    6,     7,    8]
+	val _expects	= [TRUE, TRUE, FALSE, TRUE, FALSE, TRUE, FALSE]
+
+in
+	UAS::bools _xs { n -> fast-prime? n 10} _expects
+} ;;
+# -> [TRUE, TRUE, FALSE, TRUE, FALSE, TRUE, FALSE]
 
 
 
@@ -597,28 +692,40 @@ print "\n\nSECTION 1.3.1" ;;
 fun rec sum-integers = a b -> (
 	if (a > b)	0
 	else		a + sum-integers (a + 1) b
-)
+) ;;
+
+let {
+	val _result = sum-integers 1 10
+in
+	UAS::integer _result 55
+} ;;
+# -> 55
 
 ###		sum-cubes : Integer -> Integer -> Integer
 fun rec sum-cubes = a b -> (
 	if (a > b)	0
 	else		cube a + sum-cubes (a + 1) b
-)
+) ;;
+
+let {
+	val _result = sum-cubes 1 10
+in
+	UAS::integer _result 3025
+} ;;
+# -> 3025
 
 ###		pi-sum : Float -> Float -> Float
 fun rec pi-sum = a b -> (
 	if (a > b)	0.0
 	else		1.0 / (a * (a + 2.0)) + pi-sum (a + 4.0) b
-)
+) ;;
 
 ###		sum : ('a -> 'a) -> 'a -> ('a -> 'a) -> 'a -> 'a -> 'a
 ###													where { 'a <- Number }
 fun rec sum = term a next b init -> (
 	if (a > b)	init
 	else		term a + sum term (next a) next b init
-)
-
-;;
+) ;;
 
 
 #### Using sum
@@ -629,7 +736,11 @@ fun inc = n -> n + 1
 ### sum-cubes' : Integer -> Integer -> Integer
 fun sum-cubes' = a b -> sum cube a inc b 0 ;;
 
-sum-cubes' 1 10 ;;
+let {
+	val _result = sum-cubes' 1 10
+in
+	UAS::integer _result 3025
+} ;;
 # -> 3025
 
 
@@ -639,7 +750,11 @@ fun identity = x -> x
 ### sum-integers' : Integer -> Integer -> Integer
 fun sum-integers' = a b -> sum identity a inc b 0 ;;
 
-sum-integers' 1 10 ;;
+let {
+	val _result = sum-integers' 1 10
+in
+	UAS::integer _result 55
+} ;;
 # -> 55
 
 
@@ -649,7 +764,11 @@ fun pi-sum' = a b -> sum pi-term a pi-next b 0.0 where {
 	fun pi-next = x -> x + 4.0
 } ;;
 
-8.0 * pi-sum' 1.0 1000.0 ;;
+let {
+	val _result = 8.0 * pi-sum' 1.0 1000.0
+in
+	UAS::float _result 3.1395 NDIGITS
+} ;;
 # -> 3.139592655589783 
 
 
@@ -660,7 +779,12 @@ fun integral = f a b dx -> (
 	fun add-dx = x -> x + dx
 } ;;
 
-integral cube 0.0 1.0 0.01 ;;
+
+let {
+	val _result = integral cube 0.0 1.0 0.01
+in
+	UAS::float _result 0.2499 NDIGITS
+} ;;
 # -> 0.24998750000000042
 
 # integral cube 0.0 1.0 0.001 ;;
@@ -700,7 +824,11 @@ val plus4' = { x -> x + 4 }
 
 ;;
 
-{ x y z -> x + y + square z } 1 2 3 ;;
+let {
+	val _result = { x y z -> x + y + square z } 1 2 3
+in
+	UAS::integer _result 12
+} ;;
 # -> 12
 
 
@@ -813,13 +941,26 @@ in
 	elsif (negative? b-value andalso positive? a-value)
 		search f b a
 	else
-		abort ("Values are not of opposite sign: " ^ to-s a ^ " " ^ to-s b)
+		abort <| "Values are not of opposite sign: " ^
+					to-s a ^ " " ^ to-s b
 } ;;
 
-half-interval-method sin 2.0 4.0 ;;
+let {
+	val _result = half-interval-method UMA::sin 2.0 4.0
+in
+	UAS::float _result 3.141 NDIGITS
+} ;;
 # -> 3.14111328125
 
-half-interval-method { x -> x * x * x - 2.0 * x - 3.0 } 1.0 2.0 ;;
+
+let {
+	val _result = half-interval-method
+						{ x -> x * x * x - 2.0 * x - 3.0 }
+						1.0
+						2.0
+in
+	UAS::float _result 1.893 NDIGITS
+} ;;
 # -> 1.89306640625
 
 
@@ -841,19 +982,43 @@ fun fixed-point = f first-guess -> try first-guess where {
 	}
 } ;;
 
-
-fixed-point cos 1.0 ;;
+let {
+	val _result = fixed-point UMA::cos 1.0
+in
+	UAS::float _result 0.7390 NDIGITS
+} ;;
 # -> 0.7390822985224023
 
-fixed-point { y -> sin y + cos y } 1.0 ;;
+let {
+	val _result = fixed-point { y -> UMA::sin y + UMA::cos y } 1.0
+in
+	UAS::float _result 1.2587 NDIGITS
+} ;;
 # -> 1.2587315962971173
 
 
 ### sqrt : Float -> Float
-fun sqrt = x -> fixed-point { y -> x / y } 1.0
+fun sqrt = x -> fixed-point { y -> x / y } 1.0 ;;
+
+(#
+let {
+	val _result = sqrt 9.0
+in
+	UAS::float _result 3.0 NDIGITS
+} ;;
+# (-> 3.00009155413138)
+# -> stack level too deep (SystemStackError)
+#)
 
 ### sqrt : Float -> Float
-fun sqrt = x -> fixed-point { y -> average y (x / y) } 1.0
+fun sqrt = x -> fixed-point { y -> average y (x / y) } 1.0 ;;
+
+let {
+	val _result = sqrt 9.0
+in
+	UAS::float _result 3.0 NDIGITS
+} ;;
+# -> 3.0
 
 ;;
 
@@ -870,13 +1035,26 @@ fun average-damp = f -> {
 	x -> average x (f x)
 } ;;
 
-average-damp square 10.0 ;;
+let {
+	val _result = average-damp square 10.0
+in
+	UAS::float _result 55.0 NDIGITS
+} ;;
 # -> 55.0
+
 
 ### sqrt : Float -> Float
 fun sqrt = x -> (
 	fixed-point (average-damp { y -> x / y }) 1.0
 ) ;;
+
+let {
+	val _result = sqrt 9.0
+in
+	UAS::float _result 3.0 NDIGITS
+} ;;
+# -> 3.0
+
 
 ### cube-root : Float -> Float
 fun cube-root = x -> (
@@ -896,8 +1074,13 @@ fun deriv = g -> {
 ### cube : 'a -> 'a    where { 'a <- Number }
 fun cube = x -> x * x * x ;;
 
-deriv cube 5.0 ;;
+let {
+	val _result = deriv cube 5.0
+in
+	UAS::float _result 75.0 NDIGITS
+} ;;
 # -> 75.00014999664018
+
 
 
 ### newton-transform : ('a -> 'a) -> ('a -> 'a)    where { 'a <- Number }
@@ -911,9 +1094,15 @@ fun newtons-method = g guess -> (
 )
 
 ### sqrt : Float -> Float
-fun sqrt = x -> newtons-method { y -> square y - x } 1.0
+fun sqrt = x -> newtons-method { y -> square y - x } 1.0 ;;
 
-;;
+let {
+	val _result = sqrt 9.0
+in
+	UAS::float _result 3.0 NDIGITS
+} ;;
+# -> 3.0
+
 
 
 #### Fixed point of transformed function ####
@@ -927,11 +1116,26 @@ fun fixed-point-of-transform = g transform guess -> (
 ### sqrt : Float -> Float
 fun sqrt = x -> (
 	fixed-point-of-transform { y -> x / y } average-damp 1.0
-)
+) ;;
+
+let {
+	val _result = sqrt 9.0
+in
+	UAS::float _result 3.0 NDIGITS
+} ;;
+# -> 3.0
+
 
 ### sqrt' : Float -> Float
 fun sqrt' = x -> (
 	fixed-point-of-transform { y -> square y - x } newton-transform 1.0
-)
+) ;;
+
+let {
+	val _result = sqrt 9.0
+in
+	UAS::float _result 3.0 NDIGITS
+} ;;
+# -> 3.0
 
 ;;

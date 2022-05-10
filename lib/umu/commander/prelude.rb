@@ -682,6 +682,102 @@ module UMU = struct {
 		## cross	: ('a -> 'b, 'c -> 'd) -> (('a, 'c) -> ('b, 'd))
 		fun cross = (f, g) -> pair (fst >> f, snd >> g)
 	}
+
+
+
+	######## Assertion ########
+
+	module ASSERT = struct {
+		# unit : 'a -> ()
+		fun unit = actual -> let {
+			assert (actual isa? Unit)	(msg () actual)
+		in
+			()
+		}
+
+
+		# bool : 'a -> Bool -> Bool
+		fun bool = actual expect -> let {
+			assert (actual isa? Bool)	"Bool"
+			assert (actual == expect)	(msg expect actual)
+		in
+			actual
+		}
+
+
+		# bools : ['a] -> ('a -> 'b) -> [Bool] -> [Bool]
+		fun bools = sources f expects -> let {
+			val results = sources |> map { source -> f source }
+		in
+			results |> zip expects |> map { (result, expect) ->
+				bool result expect
+			}
+		}
+
+
+		# true : 'a -> Bool
+		fun true = actual -> bool actual TRUE
+
+
+		# false : 'a -> Bool
+		fun false = actual -> bool actual FALSE
+
+
+		# integer : 'a -> Integer -> Integer
+		fun integer = actual expect -> let {
+			assert (actual isa? Integer)	"Integer"
+			assert (actual == expect)		(msg expect actual)
+		in
+			actual
+		}
+
+
+		# integers : ['a] -> ('a -> 'b) -> [Integer] -> [Integer]
+		fun integers = sources f expects -> let {
+			val results = sources |> map { source -> f source }
+		in
+			results |> zip expects |> map { (result, expect) ->
+				integer result expect
+			}
+		}
+
+
+		# float : 'a -> Float -> Integer -> Float
+		fun float = actual expect n -> let {
+			assert (actual isa? Float)				"Float"
+			assert (MATH::equal? actual expect n)	(msg expect actual)
+		in
+			actual
+		}
+
+
+		# atom : 'a -> Atom -> Atom
+		fun atom = actual expect -> let {
+			assert (actual isa? Atom)	"Atom"
+			assert (actual == expect)	(msg expect actual)
+		in
+			actual
+		}
+
+
+		# string : 'a -> String -> String
+		fun string = actual expect -> let {
+			assert (actual isa? String)	"String"
+			assert (actual == expect)	(msg expect actual)
+		in
+			actual
+		}
+	} where {
+		val (==) = PRELUDE::(==)
+		val (^)  = PRELUDE::(^)
+		val (|>) = PRELUDE::(|>)
+
+		val map	= LIST::map
+		val zip	= LIST::zip
+
+		fun msg = expect actual ->
+			"Expected: " ^ expect.inspect ^ ", but: " ^ actual.inspect
+	}
 }
 
 
