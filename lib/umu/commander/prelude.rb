@@ -232,11 +232,11 @@ module UMU = struct {
 
 
 		# hd : ['a] -> 'a
-		fun hd = xs -> (des xs).1
+		fun hd = xs -> xs.des.1
 
 
 		# tl : ['a] -> ['a]
-		fun tl = xs -> (des xs).2
+		fun tl = xs -> xs.des.2
 
 
 		# equal-with? : ('a -> 'b -> Bool) -> ['a] -> ['b] -> Bool
