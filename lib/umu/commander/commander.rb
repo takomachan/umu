@@ -273,6 +273,16 @@ end
 		end
 
 		if next_lexer.between_braket?
+			if pref.lex_trace_mode?
+				STDERR.printf("________ Tokens: '%s' ________\n",
+								file_name
+				)
+				STDERR.printf("%04d: %s\n",
+								line_num,
+								next_tokens.map(&:to_s).join(' ')
+				)
+			end
+
 			[
 				[],
 				next_lexer,
