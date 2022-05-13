@@ -45,7 +45,9 @@ class String < Abstract
 
 
 	def meth_abort(env, event)
-		raise X::Abort.new(self.pos, env, self.val)
+		msg = self.val.gsub /%/, '%%'
+
+		raise X::Abort.new(self.pos, env, msg)
 	end
 
 
