@@ -1455,7 +1455,7 @@ fun make-from-mag-ang = r a -> (r, a)
 
 fun attach-tag = type-tag contents -> DATUM::make type-tag contents
 
-fun type-tag = datum' -> DATUM::tag datum'
+fun type-tag = datum' -> DATUM::tag-of datum'
 
 fun contents = datum' -> DATUM::contents datum'
 
