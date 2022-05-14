@@ -15,11 +15,11 @@ class Abstract < Top
 			:contents]
 	]
 
-	NONE = VC.make_unit(L.make_position(__FILE__, __LINE__))
+	UNIT = VC.make_unit(L.make_position(__FILE__, __LINE__))
 
 
 	def meth_contents(_env, _event)
-		NONE
+		UNIT
 	end
 end
 
