@@ -146,6 +146,15 @@ CLASS_SPECS = CLASSES.map { |klass|
 CLASS_SPECS.freeze
 
 
+=begin
+CLASS_SPECS.each do |spec|
+	printf "==== %s : %s ====\n", spec.symbol, spec.klass
+	p spec
+	puts
+end
+exit
+=end
+
 SPEC_OF_CLASS, SPEC_OF_SYMBOL = CLASS_SPECS.inject(
 	 [{},				{}]
 	) {
