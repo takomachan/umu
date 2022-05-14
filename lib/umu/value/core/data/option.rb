@@ -7,11 +7,11 @@ module Value
 
 module Core
 
-module Union
+module Data
 
 module Option
 
-class Abstract < Union::Abstract
+class Abstract < Data::Abstract
 	CLASS_METHOD_INFOS = [
 		[:meth_make_some,	self,
 			:'make-some',	VC::Top],
@@ -103,9 +103,9 @@ class None < Abstract
 	end
 end
 
-end	# Umu::Core::Union::Option
+end	# Umu::Core::Data::Option
 
-end	# Umu::Core::Union
+end	# Umu::Core::Data
 
 
 module_function
@@ -114,14 +114,14 @@ module_function
 		ASSERT.kind_of pos,			L::Position
 		ASSERT.kind_of contents,	VC::Top
 
-		Union::Option::Some.new(pos, contents).freeze
+		Data::Option::Some.new(pos, contents).freeze
 	end
 
 
 	def make_none(pos)
 		ASSERT.kind_of pos,	L::Position
 
-		Union::Option::None.new(pos).freeze
+		Data::Option::None.new(pos).freeze
 	end
 
 end	# Umu::Core

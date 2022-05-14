@@ -46,10 +46,10 @@ module Umu
 				class Abstract < Top; end
 				class Tuple < Abstract; end
 			end
-			module Union
+			module Data
 				class Abstract < Top; end
 				module Option
-					class Abstract < Union::Abstract; end
+					class Abstract < Data::Abstract; end
 				end
 			end
 			module Function; end
@@ -92,7 +92,7 @@ module Umu
 	VCB		= Value::Core::Base
 	VCBN	= Value::Core::Base::Number
 	VCP		= Value::Core::Product
-	VCU		= Value::Core::Union
+	VCD		= Value::Core::Data
 	VCF		= Value::Core::Function
 	E		= Environment
 	EC		= Environment::Context

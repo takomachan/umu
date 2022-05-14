@@ -539,10 +539,10 @@ module UMU = struct {
 		fun snd = (_, s) -> s
 
 
-		#### Union ####
+		#### Data ####
 
-		# val-of : Union 'a -> 'a
-		val val-of = &(Union$contents)
+		# val-of : Data 'a -> Top
+		val val-of = &(Data$contents)
 
 
 		#### Datum ####
@@ -821,7 +821,7 @@ module struct {
 	## Tuple
 	val ((,), fst, snd)
 
-	#### Union ####
+	#### Data ####
 	val val-of
 
 	#### Datum ####

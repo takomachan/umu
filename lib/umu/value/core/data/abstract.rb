@@ -7,7 +7,7 @@ module Value
 
 module Core
 
-module Union
+module Data
 
 class Abstract < Top
 	INSTANCE_METHOD_INFOS = [
@@ -33,7 +33,7 @@ class Abstract < Top
 	end
 end
 
-end	# Umu::Core::Union
+end	# Umu::Core::Data
 
 end	# Umu::Core
 
