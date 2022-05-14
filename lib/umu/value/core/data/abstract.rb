@@ -15,21 +15,11 @@ class Abstract < Top
 			:contents]
 	]
 
-
-	attr_reader :contents
-
-
-	def initialize(pos, contents)
-		ASSERT.kind_of contents, VC::Top
-
-		super(pos)
-
-		@contents = contents
-	end
+	NONE = VC.make_unit(L.make_position(__FILE__, __LINE__))
 
 
 	def meth_contents(_env, _event)
-		self.contents
+		NONE
 	end
 end
 

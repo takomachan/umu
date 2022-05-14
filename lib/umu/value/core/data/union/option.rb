@@ -54,6 +54,18 @@ end
 
 
 class Some < Abstract
+	attr_reader :contents
+
+
+	def initialize(pos, contents)
+		ASSERT.kind_of contents, VC::Top
+
+		super(pos)
+
+		@contents = contents
+	end
+
+
 	def to_s
 		format "Some %s", self.contents.to_s
 	end
@@ -75,14 +87,20 @@ class Some < Abstract
 	def meth_none?(env, event)
 		VC.make_false self.pos
 	end
+
+
+	def meth_contents(_env, _event)
+		self.contents
+	end
 end
 
 
 
 class None < Abstract
-	def initialize(pos)
-		super(pos, VC.make_unit(L.make_position(__FILE__, __LINE__)))
-	end
+	INSTANCE_METHOD_INFOS = [
+		[:meth_contents,	VC::Unit,
+			:contents]
+	]
 
 
 	def to_s

@@ -21,16 +21,17 @@ class Datum < Abstract
 	]
 
 
-	attr_reader :tag_sym
+	attr_reader :tag_sym, :contents
 
 
 	def initialize(pos, tag_sym, contents)
 		ASSERT.kind_of tag_sym,		::Symbol
 		ASSERT.kind_of contents,	VC::Top
 
-		super(pos, contents)
+		super(pos)
 
-		@tag_sym = tag_sym
+		@tag_sym	= tag_sym
+		@contents	= contents
 	end
 
 
@@ -75,6 +76,11 @@ class Datum < Abstract
 
 	def meth_tag(_env,_event)
 		VC.make_atom self.pos, self.tag_sym
+	end
+
+
+	def meth_contents(_env, _event)
+		self.contents
 	end
 end
 
