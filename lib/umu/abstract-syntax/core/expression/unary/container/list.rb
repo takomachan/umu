@@ -54,7 +54,7 @@ private
 
 		xs = if opt_last_expr
 					tail_value = opt_last_expr.evaluate(new_env).value
-					unless tail_value.kind_of? VC::List::Abstract
+					unless tail_value.kind_of? VCDU::List::Abstract
 						raise X::TypeError.new(
 							tail_value.pos,
 							env,
@@ -75,7 +75,7 @@ private
 
 		end
 
-		ASSERT.kind_of xs, VC::List::Abstract
+		ASSERT.kind_of xs, VCDU::List::Abstract
 	end
 end
 

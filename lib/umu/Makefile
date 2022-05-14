@@ -141,7 +141,7 @@ SRCS	= commander.rb \
 			value/core/data/union.rb \
 			value/core/data/union/abstract.rb \
 			value/core/data/union/option.rb \
-			value/core/list.rb \
+			value/core/data/union/list.rb \
 			value/core/function.rb \
 			value/core/function/abstract.rb \
 			value/core/function/closure.rb \

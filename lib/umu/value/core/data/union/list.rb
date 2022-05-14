@@ -8,9 +8,13 @@ module Value
 
 module Core
 
+module Data
+
+module Union
+
 module List
 
-class Abstract < Top
+class Abstract < Union::Abstract
 	CLASS_METHOD_INFOS = [
 		[:meth_make_nil,	self,
 			:'make-nil'],
@@ -113,6 +117,12 @@ end
 
 
 class Nil < Abstract
+	INSTANCE_METHOD_INFOS = [
+		[:meth_contents,	VC::Unit,
+			:contents]
+	]
+
+
 	def nil?
 		true
 	end
@@ -140,6 +150,12 @@ end
 
 
 class Cons < Abstract
+	INSTANCE_METHOD_INFOS = [
+		[:meth_contents,	VCP::Tuple,
+			:contents]
+	]
+
+
 	attr_reader :head, :tail
 
 
@@ -172,9 +188,16 @@ class Cons < Abstract
 	def meth_des(_env, _event)
 		VC.make_tuple(self.pos, [self.head, self.tail])
 	end
+
+
+	alias meth_contents meth_des
 end
 
-end	# Umu::Value::Core::List
+end	# Umu::Value::Core::Data::Union::List
+
+end	# Umu::Value::Core::Data::Union
+
+end	# Umu::Value::Core::Data
 
 
 module_function
@@ -182,16 +205,16 @@ module_function
 	def make_nil(pos)
 		ASSERT.kind_of pos, L::Position
 
-		List::Nil.new(pos).freeze
+		Data::Union::List::Nil.new(pos).freeze
 	end
 
 
 	def make_cons(pos, head, tail)
 		ASSERT.kind_of pos,		L::Position
 		ASSERT.kind_of head,	VC::Top
-		ASSERT.kind_of tail,	List::Abstract
+		ASSERT.kind_of tail,	Data::Union::List::Abstract
 
-		List::Cons.new(pos, head, tail).freeze
+		Data::Union::List::Cons.new(pos, head, tail).freeze
 	end
 
 end	# Umu::Value::Core

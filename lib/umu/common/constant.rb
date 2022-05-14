@@ -53,6 +53,9 @@ module Umu
 					module Option
 						class Abstract < Union::Abstract; end
 					end
+					module List
+						class Abstract < Union::Abstract; end
+					end
 				end
 			end
 			module Function; end
