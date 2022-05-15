@@ -318,6 +318,9 @@ class Float < Abstract
 	end
 end
 
+NAN			= Base::Number::Float.new(::Float::NAN).freeze
+INFINITY	= Base::Number::Float.new(::Float::INFINITY).freeze
+
 end # Umu::Value::Core::Base::Number
 
 end # Umu::Value::Core::Base
@@ -333,12 +336,12 @@ module_function
 
 
 	def make_nan
-		make_float ::Float::NAN
+		Base::Number::NAN
 	end
 
 
 	def make_infinity
-		make_float ::Float::INFINITY
+		Base::Number::INFINITY
 	end
 
 end	# Umu::Value::Core

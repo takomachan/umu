@@ -140,6 +140,8 @@ class Nil < Abstract
 	end
 end
 
+NIL = Nil.new.freeze
+
 
 
 class Cons < Abstract
@@ -191,7 +193,7 @@ end	# Umu::Value::Core::Data
 module_function
 
 	def make_nil
-		Data::Union::List::Nil.new.freeze
+		Data::Union::List::NIL
 	end
 
 

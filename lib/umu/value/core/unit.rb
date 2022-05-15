@@ -20,11 +20,13 @@ class Unit < Top
 	end
 end
 
+UNIT = Unit.new.freeze
+
 
 module_function
 
 	def make_unit
-		Unit.new.freeze
+		UNIT
 	end
 
 end	# Umu::Core

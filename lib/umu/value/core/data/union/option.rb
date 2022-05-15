@@ -75,6 +75,8 @@ class None < Abstract
 	end
 end
 
+NONE = None.new.freeze
+
 
 
 class Some < Abstract
@@ -124,7 +126,7 @@ end	# Umu::Core::Data
 module_function
 
 	def make_none
-		Data::Union::Option::None.new.freeze
+		Data::Union::Option::NONE
 	end
 
 

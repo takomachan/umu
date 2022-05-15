@@ -40,17 +40,17 @@ class IO < Top
 
 
 	def self.meth_make_stdin(_pos, _env, _event)
-		VC.make_io ::STDIN
+		VC.make_stdin
 	end
 
 
 	def self.meth_make_stdout(_pos, _env, _event)
-		VC.make_io ::STDOUT
+		VC.make_stdout
 	end
 
 
 	def self.meth_make_stderr(_pos, _env, _event)
-		VC.make_io ::STDERR
+		VC.make_stderr
 	end
 
 
@@ -79,13 +79,25 @@ class IO < Top
 	end
 end
 
+STDIN	= IO.new(::STDIN).freeze
+STDOUT	= IO.new(::STDOUT).freeze
+STDERR	= IO.new(::STDERR).freeze
+
 
 module_function
 
-	def make_io(io)
-		ASSERT.kind_of io, ::IO
+	def make_stdin
+		STDIN
+	end
 
-		IO.new(io).freeze
+
+	def make_stdout
+		STDOUT
+	end
+
+
+	def make_stderr
+		STDERR
 	end
 
 end	# Umu::Value::Core

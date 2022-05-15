@@ -72,6 +72,9 @@ class Bool < Abstract
 	end
 end
 
+TRUE	= Bool.new(true).freeze
+FALSE	= Bool.new(false).freeze
+
 end # Umu::Value::Core::Base
 
 
@@ -79,12 +82,12 @@ end # Umu::Value::Core::Base
 module_function
 
 	def make_true
-		Base::Bool.new(true).freeze
+		Base::TRUE
 	end
 
 
 	def make_false
-		Base::Bool.new(false).freeze
+		Base::FALSE
 	end
 
 
