@@ -45,7 +45,7 @@ class Abstract < Base::Abstract
 	]
 
 
-	def initialize(pos, val)
+	def initialize(val)
 		ASSERT.kind_of val, ::Numeric
 
 		super
@@ -63,32 +63,32 @@ class Abstract < Base::Abstract
 	end
 
 
-	def meth_positive?(env, _event)
-		VC.make_bool self.pos, self.val.positive?
+	def meth_positive?(_pos, _env, _event)
+		VC.make_bool self.val.positive?
 	end
 
 
-	def meth_negative?(env, _event)
-		VC.make_bool self.pos, self.val.negative?
+	def meth_negative?(_pos, _env, _event)
+		VC.make_bool self.val.negative?
 	end
 
 
-	def meth_negate(env, _event)
-		VC.make_number self.pos, self.class, - self.val
+	def meth_negate(_pos, _env, _event)
+		VC.make_number self.class, - self.val
 	end
 
 
-	def meth_absolute(env, _event)
-		VC.make_number self.pos, self.class, self.val.abs
+	def meth_absolute(_pos, _env, _event)
+		VC.make_number self.class, self.val.abs
 	end
 
 
-	def meth_to_int(env, _event)
+	def meth_to_int(pos, env, _event)
 		begin
-			VC.make_integer self.pos, self.val.to_i
+			VC.make_integer self.val.to_i
 		rescue ::FloatDomainError
 			raise X::ArgumentError.new(
-				self.pos,
+				pos,
 				env,
 				"Domain error on float number %s : %s",
 						self.to_s,
@@ -98,40 +98,40 @@ class Abstract < Base::Abstract
 	end
 
 
-	def meth_to_float(env, _event)
-		VC.make_float self.pos, self.val.to_f
+	def meth_to_float(_pos, _env, _event)
+		VC.make_float self.val.to_f
 	end
 
 
-	def meth_add(env, _event, other)
+	def meth_add(_pos, _env, _event, other)
 		ASSERT.kind_of other, Number::Abstract
 
-		VC.make_number self.pos, self.class, self.val + other.val
+		VC.make_number self.class, self.val + other.val
 	end
 
 
-	def meth_sub(env, _event, other)
+	def meth_sub(_pos, _env, _event, other)
 		ASSERT.kind_of other, Number::Abstract
 
-		VC.make_number self.pos, self.class, self.val - other.val
+		VC.make_number self.class, self.val - other.val
 	end
 
 
-	def meth_multiply(env, _event, other)
+	def meth_multiply(_pos, _env, _event, other)
 		ASSERT.kind_of other, Number::Abstract
 
-		VC.make_number self.pos, self.class, self.val * other.val
+		VC.make_number self.class, self.val * other.val
 	end
 
 
-	def meth_divide(env, _event, other)
+	def meth_divide(pos, env, _event, other)
 		ASSERT.kind_of other, Number::Abstract
 
 		begin
-			VC.make_number self.pos, self.class, self.val / other.val
+			VC.make_number self.class, self.val / other.val
 		rescue ::ZeroDivisionError
 			raise X::ZeroDivisionError.new(
-				self.pos,
+				pos,
 				env,
 				"Zero devision error"
 			)
@@ -139,14 +139,14 @@ class Abstract < Base::Abstract
 	end
 
 
-	def meth_modulo(env, _event, other)
+	def meth_modulo(pos, env, _event, other)
 		ASSERT.kind_of other, Number::Abstract
 
 		begin
-			VC.make_number self.pos, self.class, self.val % other.val
+			VC.make_number self.class, self.val % other.val
 		rescue ::ZeroDivisionError
 			raise X::ZeroDivisionError.new(
-				self.pos,
+				pos,
 				env,
 				"Zero devision error"
 			)
@@ -154,14 +154,14 @@ class Abstract < Base::Abstract
 	end
 
 
-	def meth_power(env, _event, other)
+	def meth_power(pos, env, _event, other)
 		ASSERT.kind_of other, Number::Abstract
 
 		begin
-			VC.make_number self.pos, self.class, self.val ** other.val
+			VC.make_number self.class, self.val ** other.val
 		rescue ::ZeroDivisionError
 			raise X::ZeroDivisionError.new(
-				self.pos,
+				pos,
 				env,
 				"Zero devision error"
 			)
@@ -169,15 +169,13 @@ class Abstract < Base::Abstract
 	end
 
 
-	def meth_random(env, _event)
+	def meth_random(pos, env, _event)
 		value = if self.val.positive?
 				begin
-					VC.make_number(
-							self.pos, self.class, ::Random.rand(self.val)
-						)
+					VC.make_number self.class, ::Random.rand(self.val)
 				rescue Errno::EDOM
 					raise X::ArgumentError.new(
-						self.pos,
+						pos,
 						env,
 						"Domain error on float number %s : %s",
 								self.to_s,
@@ -186,7 +184,7 @@ class Abstract < Base::Abstract
 				end
 			elsif self.val.negative?
 				raise X::ArgumentError.new(
-					self.pos,
+					pos,
 					env,
 					"Invalid argument %s : %s",
 							self.to_s,
@@ -207,12 +205,11 @@ end # Umu::Value::Core::Base
 
 module_function
 
-	def make_number(pos, klass, val)
-		ASSERT.kind_of		pos,	L::Position
+	def make_number(klass, val)
 		ASSERT.subclass_of	klass,	VCBN::Abstract
 		ASSERT.kind_of		val,	::Numeric
 
-		klass.new(pos, val).freeze
+		klass.new(val).freeze
 	end
 
 end # Umu::Value::Core

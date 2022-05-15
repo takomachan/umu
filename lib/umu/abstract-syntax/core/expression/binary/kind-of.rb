@@ -41,7 +41,7 @@ class KindOf < Binary::Abstract
 		lhs_value = self.expr.evaluate(env.enter event).value
 		ASSERT.kind_of lhs_value, VC::Top
 
-		VC.make_bool self.pos, env.ty_kind_of?(lhs_value, rhs_spec)
+		VC.make_bool env.ty_kind_of?(lhs_value, rhs_spec)
 	end
 end
 

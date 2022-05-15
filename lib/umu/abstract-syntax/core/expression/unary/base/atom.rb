@@ -27,7 +27,7 @@ class Atom < Abstract
 
 
 	def __evaluate__(_env, _event)
-		VC.make_atom self.pos, self.obj
+		VC.make_atom self.obj
 	end
 end
 

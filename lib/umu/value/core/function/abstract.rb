@@ -11,8 +11,9 @@ module Core
 module Function
 
 class Abstract < Core::Top
-	def apply(app_values, env)
+	def apply(app_values, pos, env)
 		ASSERT.kind_of app_values,	::Array
+		ASSERT.kind_of pos,			L::Position
 		ASSERT.kind_of env,			E::Entry
 
 		value = E::Tracer.trace(
@@ -20,13 +21,13 @@ class Abstract < Core::Top
 							env.trace_stack.count,
 							'Apply',
 							self.class,
-							self.pos,
+							pos,
 							format("(%s %s)",
 								self.to_s,
 								app_values.map(&:to_s).join(' ')
 							)
 						) { |event|
-							__apply__ app_values, env, event
+							__apply__ app_values, pos, env, event
 						}
 		ASSERT.kind_of value, VC::Top
 	end
@@ -34,7 +35,7 @@ class Abstract < Core::Top
 
 private
 
-	def __apply__(app_value, env, event)
+	def __apply__(_app_value, _pos, _env, _event)
 		raise X::SubclassResponsibility
 	end
 end

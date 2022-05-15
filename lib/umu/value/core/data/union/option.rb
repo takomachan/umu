@@ -29,25 +29,25 @@ class Abstract < Union::Abstract
 	]
 
 
-	def self.meth_make_none(env, _event)
-		VC.make_none L.make_position(__FILE__, __LINE__)
+	def self.meth_make_none(_pos, _env, _event)
+		VC.make_none
 	end
 
 
-	def self.meth_make_some(env, _event, contents)
+	def self.meth_make_some(_pos, _env, _event, contents)
 		ASSERT.kind_of contents, VC::Top
 
-		VC.make_some contents.pos, contents
+		VC.make_some contents
 	end
 
 
-	def meth_none?(env, event)
-		VC.make_false self.pos
+	def meth_none?(_pos, _env, event)
+		VC.make_false
 	end
 
 
-	def meth_some?(env, event)
-		VC.make_false self.pos
+	def meth_some?(_pos, _env, event)
+		VC.make_false
 	end
 end
 
@@ -65,13 +65,13 @@ class None < Abstract
 	end
 
 
-	def meth_to_string(env, event)
-		VC.make_string self.pos, self.to_s
+	def meth_to_string(_pos, _env, _event)
+		VC.make_string self.to_s
 	end
 
 
-	def meth_none?(env, event)
-		VC.make_true self.pos
+	def meth_none?(_pos, _env, _event)
+		VC.make_true
 	end
 end
 
@@ -81,10 +81,10 @@ class Some < Abstract
 	attr_reader :contents
 
 
-	def initialize(pos, contents)
+	def initialize(contents)
 		ASSERT.kind_of contents, VC::Top
 
-		super(pos)
+		super()
 
 		@contents = contents
 	end
@@ -95,20 +95,21 @@ class Some < Abstract
 	end
 
 
-	def meth_to_string(env, event)
+	def meth_to_string(pos, env, event)
 		VC.make_string(
-			self.pos,
-			format("Some %s", self.contents.meth_to_string(env, event).val)
+			format("Some %s",
+					self.contents.meth_to_string(pos, env, event).val
+			)
 		)
 	end
 
 
-	def meth_some?(env, event)
-		VC.make_true self.pos
+	def meth_some?(_pos, _env, event)
+		VC.make_true
 	end
 
 
-	def meth_contents(_env, _event)
+	def meth_contents(_pos, _env, _event)
 		self.contents
 	end
 end
@@ -122,18 +123,15 @@ end	# Umu::Core::Data
 
 module_function
 
-	def make_none(pos)
-		ASSERT.kind_of pos,	L::Position
-
-		Data::Union::Option::None.new(pos).freeze
+	def make_none
+		Data::Union::Option::None.new.freeze
 	end
 
 
-	def make_some(pos, contents)
-		ASSERT.kind_of pos,			L::Position
-		ASSERT.kind_of contents,	VC::Top
+	def make_some(contents)
+		ASSERT.kind_of contents, VC::Top
 
-		Data::Union::Option::Some.new(pos, contents).freeze
+		Data::Union::Option::Some.new(contents).freeze
 	end
 
 end	# Umu::Core

@@ -193,6 +193,7 @@ class Method < Abstraction::Abstract
 
 		next_receiver = receiver.invoke(
 							method_spec,
+							self.pos,
 							env,
 							event,
 							*arg_values

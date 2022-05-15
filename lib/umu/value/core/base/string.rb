@@ -22,7 +22,7 @@ class String < Abstract
 	]
 
 
-	def initialize(pos, val)
+	def initialize(val)
 		ASSERT.kind_of val, ::String
 
 		super
@@ -34,27 +34,27 @@ class String < Abstract
 	end
 
 
-	def meth_inspect(_env, _event)
-		VC.make_string self.pos, self.to_s
+	def meth_inspect(_pos, _env, _event)
+		VC.make_string self.to_s
 	end
 
 
-	def meth_to_string(env, _event)
+	def meth_to_string(_pos, _env, _event)
 		self
 	end
 
 
-	def meth_abort(env, event)
+	def meth_abort(pos, env, _event)
 		msg = self.val.gsub /%/, '%%'
 
-		raise X::Abort.new(self.pos, env, msg)
+		raise X::Abort.new(pos, env, msg)
 	end
 
 
-	def meth_append(env, _event, other)
+	def meth_append(_pos, _env, _event, other)
 		ASSERT.kind_of other, String
 
-		VC.make_string self.pos, self.val + other.val
+		VC.make_string self.val + other.val
 	end
 end
 
@@ -64,11 +64,10 @@ end # Umu::Value::Core::Base
 
 module_function
 
-	def make_string(pos, val)
-		ASSERT.kind_of pos,	L::Position
-		ASSERT.kind_of val,	::String
+	def make_string(val)
+		ASSERT.kind_of val, ::String
 
-		Base::String.new(pos, val.freeze).freeze
+		Base::String.new(val.freeze).freeze
 	end
 
 end	# Umu::Value::Core

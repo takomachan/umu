@@ -16,7 +16,7 @@ class Atom < Abstract
 	]
 
 
-	def initialize(pos, val)
+	def initialize(val)
 		ASSERT.kind_of val, ::Symbol
 
 		super
@@ -28,8 +28,8 @@ class Atom < Abstract
 	end
 
 
-	def meth_to_string(env, _event)
-		VC.make_string self.pos, self.val.to_s
+	def meth_to_string(_pos, _env, _event)
+		VC.make_string self.val.to_s
 	end
 end
 
@@ -38,11 +38,10 @@ end # Umu::Value::Core::Base
 
 module_function
 
-	def make_atom(pos, val)
-		ASSERT.kind_of pos,	L::Position
-		ASSERT.kind_of val,	::Symbol
+	def make_atom(val)
+		ASSERT.kind_of val, ::Symbol
 
-		Base::Atom.new(pos, val).freeze
+		Base::Atom.new(val).freeze
 	end
 
 end	# Umu::Value::Core

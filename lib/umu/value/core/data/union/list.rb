@@ -38,16 +38,16 @@ class Abstract < Union::Abstract
 	include Enumerable
 
 
-	def self.meth_make_nil(env, event)
-		VC.make_nil L.make_position(__FILE__, __LINE__)
+	def self.meth_make_nil(_pos, _env, _event)
+		VC.make_nil
 	end
 
 
-	def self.meth_make_cons(env, event, x, xs)
+	def self.meth_make_cons(_pos, _env, _event, x, xs)
 		ASSERT.kind_of x,	VC::Top
 		ASSERT.kind_of xs,	List::Abstract
 
-		VC.make_cons x.pos, x, xs
+		VC.make_cons x, xs
 	end
 
 
@@ -79,37 +79,35 @@ class Abstract < Union::Abstract
 	end
 
 
-	def meth_to_string(env, event)
+	def meth_to_string(pos, env, event)
 		VC.make_string(
-			self.pos,
-
 			format("[%s]",
 				self.map { |elem|
-					elem.meth_to_string(env, event).val
+					elem.meth_to_string(pos, env, event).val
 				}.join(', ')
 			)
 		)
 	end
 
 
-	def meth_nil?(_env, _event)
-		raise X::SubclassResponsibility
+	def meth_nil?(_pos, _env, _event)
+		VC.make_false
 	end
 
 
-	def meth_cons?(_env, _event)
-		raise X::SubclassResponsibility
+	def meth_cons?(_pos, _env, _event)
+		VC.make_false
 	end
 
 
-	def meth_cons(_env, _event, value)
+	def meth_cons(_pos, _env, _event, value)
 		ASSERT.kind_of value, VC::Top
 
-		VC.make_cons self.pos, value, self
+		VC.make_cons value, self
 	end
 
 
-	def meth_des(_env, _event)
+	def meth_des(_pos, _env, _event)
 		raise X::SubclassResponsibility
 	end
 end
@@ -128,19 +126,14 @@ class Nil < Abstract
 	end
 
 
-	def meth_nil?(_env, _event)
-		VC.make_true self.pos
+	def meth_nil?(_pos, _env, _event)
+		VC.make_true
 	end
 
 
-	def meth_cons?(_env, _event)
-		VC.make_false self.pos
-	end
-
-
-	def meth_des(env, _event)
+	def meth_des(pos, env, _event)
 		raise X::EmptyError.new(
-				self.pos,
+				pos,
 				env,
 				"Empty error on des(truct) operation"
 			)
@@ -159,11 +152,11 @@ class Cons < Abstract
 	attr_reader :head, :tail
 
 
-	def initialize(pos, head, tail)
+	def initialize(head, tail)
 		ASSERT.kind_of head,	VC::Top
 		ASSERT.kind_of tail,	List::Abstract
 
-		super(pos)
+		super()
 
 		@head	= head
 		@tail	= tail
@@ -175,18 +168,13 @@ class Cons < Abstract
 	end
 
 
-	def meth_nil?(_env, _event)
-		VC.make_false self.pos
+	def meth_cons?(_pos, _env, _event)
+		VC.make_true
 	end
 
 
-	def meth_cons?(_env, _event)
-		VC.make_true self.pos
-	end
-
-
-	def meth_des(_env, _event)
-		VC.make_tuple(self.pos, [self.head, self.tail])
+	def meth_des(_pos, _env, _event)
+		VC.make_tuple [self.head, self.tail]
 	end
 
 
@@ -202,19 +190,16 @@ end	# Umu::Value::Core::Data
 
 module_function
 
-	def make_nil(pos)
-		ASSERT.kind_of pos, L::Position
-
-		Data::Union::List::Nil.new(pos).freeze
+	def make_nil
+		Data::Union::List::Nil.new.freeze
 	end
 
 
-	def make_cons(pos, head, tail)
-		ASSERT.kind_of pos,		L::Position
+	def make_cons(head, tail)
 		ASSERT.kind_of head,	VC::Top
 		ASSERT.kind_of tail,	Data::Union::List::Abstract
 
-		Data::Union::List::Cons.new(pos, head, tail).freeze
+		Data::Union::List::Cons.new(head, tail).freeze
 	end
 
 end	# Umu::Value::Core

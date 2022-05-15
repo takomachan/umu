@@ -31,7 +31,7 @@ class Class < Abstract
 		class_spec = env.ty_lookup self.class_sym, self.pos
 		ASSERT.kind_of class_spec, ECTSC::Base
 
-		VC.make_class self.pos, class_spec
+		VC.make_class class_spec
 	end
 end
 

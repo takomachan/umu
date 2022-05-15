@@ -38,7 +38,7 @@ class Integer < Abstract
 
 
 	def __evaluate__(_env, _event)
-		VC.make_integer self.pos, self.obj
+		VC.make_integer self.obj
 	end
 end
 
@@ -52,7 +52,7 @@ class Float < Abstract
 
 
 	def __evaluate__(_env, _event)
-		VC.make_float self.pos, self.obj
+		VC.make_float self.obj
 	end
 end
 

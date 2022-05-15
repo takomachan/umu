@@ -64,7 +64,7 @@ class Recursive < Abstract
 	def get_value(context)
 		ASSERT.kind_of context, ECV::Abstract
 
-		VC.make_closure self.lam_expr.pos, self.lam_expr, context
+		VC.make_closure self.lam_expr, context
 	end
 end
 

@@ -13,20 +13,18 @@ class Unit < Top
 	end
 
 
-	def meth_equal(env, _event, other)
+	def meth_equal(_pos, _env, _event, other)
 		ASSERT.kind_of other, VC::Top
 
-		VC.make_bool self.pos, other.kind_of?(self.class)
+		VC.make_bool other.kind_of?(self.class)
 	end
 end
 
 
 module_function
 
-	def make_unit(pos)
-		ASSERT.kind_of pos, L::Position
-
-		Unit.new(pos).freeze
+	def make_unit
+		Unit.new.freeze
 	end
 
 end	# Umu::Core

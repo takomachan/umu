@@ -19,29 +19,28 @@ class Abstract < Top
 	attr_reader	:val
 
 
-	def initialize(pos, val)
+	def initialize(val)
 		ASSERT.kind_of val, ::Object	# Polymophic
 
-		super(pos)
+		super()
 
 		@val = val
 	end
 
 
-	def meth_equal(env, _event, other)
+	def meth_equal(_pos, _env, _event, other)
 		ASSERT.kind_of other, VC::Top
 
 		VC.make_bool(
-			self.pos,
 			other.kind_of?(self.class) && self.val == other.val
 		)
 	end
 
 
-	def meth_less_than(env, _event, other)
+	def meth_less_than(_pos, _env, _event, other)
 		ASSERT.kind_of other, Base::Abstract
 
-		VC.make_bool self.pos, self.val < other.val
+		VC.make_bool self.val < other.val
 	end
 end
 

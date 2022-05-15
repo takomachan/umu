@@ -43,24 +43,24 @@ class Integer < Abstract
 	]
 
 
-	def initialize(pos, val)
+	def initialize(val)
 		ASSERT.kind_of val, ::Integer
 
 		super
 	end
 
 
-	def meth_odd?(env, _event)
-		VC.make_bool self.pos, self.val.odd?
+	def meth_odd?(_pos, _env, _event)
+		VC.make_bool self.val.odd?
 	end
 
 
-	def meth_even?(env, _event)
-		VC.make_bool self.pos, self.val.even?
+	def meth_even?(_pos, _env, _event)
+		VC.make_bool self.val.even?
 	end
 
 
-	def meth_to_int(env, _event)
+	def meth_to_int(_pos, _env, _event)
 		self
 	end
 end
@@ -72,11 +72,10 @@ end # Umu::Value::Core::Base
 
 module_function
 
-	def make_integer(pos, val)
-		ASSERT.kind_of pos,	L::Position
-		ASSERT.kind_of val,	::Integer
+	def make_integer(val)
+		ASSERT.kind_of val, ::Integer
 
-		Base::Number::Integer.new(pos, val).freeze
+		Base::Number::Integer.new(val).freeze
 	end
 
 end # Umu::Value::Core

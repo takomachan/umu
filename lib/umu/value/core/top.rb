@@ -8,7 +8,7 @@ module Value
 
 module Core
 
-class Top < Abstraction::Model
+class Top
 	INSTANCE_METHOD_INFOS = [
 		# String
 		[:meth_inspect,		VCB::String,
@@ -63,8 +63,9 @@ class Top < Abstraction::Model
 	end
 
 
-	def invoke(method_spec, env, _event, *arg_values)
+	def invoke(method_spec, pos, env, _event, *arg_values)
 		ASSERT.kind_of method_spec,	ECTS::Method
+		ASSERT.kind_of pos,			L::Position
 		ASSERT.kind_of env,			E::Entry
 		ASSERT.kind_of arg_values,	::Array
 		ASSERT.assert arg_values.all? { |v| v.kind_of? VC::Top }
@@ -94,11 +95,12 @@ class Top < Abstraction::Model
 							env.trace_stack.count,
 							'Invoke',
 							self.class,
-							self.pos,
+							pos,
 							msg,
 						) { |event|
 							__invoke__(
 								method_spec.meth_sym,
+								pos,
 								env,
 								event,
 								arg_values
@@ -108,9 +110,12 @@ class Top < Abstraction::Model
 	end
 
 
-	def apply(val, env)
+	def apply(_values, pos, env)
+		ASSERT.kind_of pos,	L::Position
+		ASSERT.kind_of env,	E::Entry
+
 		raise X::ApplicationError.new(
-			self.pos,
+			pos,
 			env,
 			"Application error for %s : %s",
 				self.to_s,
@@ -119,17 +124,17 @@ class Top < Abstraction::Model
 	end
 
 
-	def meth_inspect(env, _event)
-		VC.make_string self.pos, self.to_s
+	def meth_inspect(_pos, _env, _event)
+		VC.make_string self.to_s
 	end
 
 
 	alias meth_to_string meth_inspect
 
 
-	def meth_equal(env, _event, _other)
+	def meth_equal(pos, env, _event, _other)
 		raise X::EqualityError.new(
-			self.pos,
+			pos,
 			env,
 			"Equality error for %s : %s",
 				self.to_s,
@@ -138,9 +143,9 @@ class Top < Abstraction::Model
 	end
 
 
-	def meth_less_than(env, _event, _other)
+	def meth_less_than(pos, env, _event, _other)
 		raise X::OrderError.new(
-			self.pos,
+			pos,
 			env,
 			"Order error for %s : %s",
 				self.to_s,
@@ -151,13 +156,14 @@ class Top < Abstraction::Model
 
 private
 
-	def __invoke__(meth_sym, env, event, arg_values)
+	def __invoke__(meth_sym, pos, env, event, arg_values)
 		ASSERT.kind_of meth_sym,	::Symbol
+		ASSERT.kind_of pos,			L::Position
 		ASSERT.kind_of env,			E::Entry
 		ASSERT.kind_of event,		E::Tracer::Event
 		ASSERT.kind_of arg_values,	::Array
 
-		self.send meth_sym, env, event, *arg_values
+		self.send meth_sym, pos, env, event, *arg_values
 	end
 end
 

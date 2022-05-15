@@ -12,18 +12,23 @@ module Product
 
 module Struct
 
-class Field < Umu::Abstraction::LabelValuePair
-	def initialize(pos, label, value)
-		ASSERT.kind_of value, VC::Top
+class Field
+	attr_reader :label, :value
+
+
+	def initialize(label, value)
+		ASSERT.kind_of label,	::Symbol
+		ASSERT.kind_of value,	VC::Top
 
 		super
+
+		@label	= label
+		@value	= value
 	end
 
 
-private
-
-	def __infix_string__
-		' = '
+	def to_s
+		format "%s = %s", self.label, self.value
 	end
 end
 
@@ -35,7 +40,7 @@ class Entry < Product::Abstract
 	alias value_by_label objs
 
 
-	def initialize(pos, value_by_label)
+	def initialize(value_by_label)
 		ASSERT.kind_of value_by_label, ::Hash
 
 		super
@@ -96,12 +101,10 @@ class Entry < Product::Abstract
 	end
 
 
-	def meth_equal(env, event, other)
+	def meth_equal(pos, env, event, other)
 		ASSERT.kind_of other, VC::Top
 
 		VC.make_bool(
-			self.pos,
-
 			other.kind_of?(self.class) &&
 			self.arity == other.arity &&
 			self.value_by_label.keys.sort ==
@@ -111,7 +114,7 @@ class Entry < Product::Abstract
 				ASSERT.kind_of value,	VC::Top
 
 				value.meth_equal(
-						env, event, other.value_by_label[label]
+						pos, env, event, other.value_by_label[label]
 				).true?
 			}
 		)
@@ -134,20 +137,18 @@ end	# Umu::Value::Core::Product
 
 module_function
 
-	def make_struct_field(pos, label, value)
-		ASSERT.kind_of pos,		L::Position
+	def make_struct_field(label, value)
 		ASSERT.kind_of label,	::Symbol
 		ASSERT.kind_of value,	VC::Top
 
-		Product::Struct::Field.new(pos, label, value).freeze
+		Product::Struct::Field.new(label, value).freeze
 	end
 
 
-	def make_struct(pos, value_by_label)
-		ASSERT.kind_of pos,				L::Position
-		ASSERT.kind_of value_by_label,	::Hash
+	def make_struct(value_by_label)
+		ASSERT.kind_of value_by_label, ::Hash
 
-		Product::Struct::Entry.new(pos, value_by_label.freeze).freeze
+		Product::Struct::Entry.new(value_by_label.freeze).freeze
 	end
 
 end	# Umu::Value::Core

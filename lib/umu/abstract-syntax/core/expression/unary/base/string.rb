@@ -28,7 +28,7 @@ class String < Abstract
 
 
 	def __evaluate__(_env, _event)
-		VC.make_string self.pos, self.obj
+		VC.make_string self.obj
 	end
 end
 

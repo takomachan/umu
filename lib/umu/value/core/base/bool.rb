@@ -27,13 +27,13 @@ class Bool < Abstract
 	]
 
 
-	def self.meth_make_true(env, _event)
-		VC.make_true L.make_position(__FILE__, __LINE__)
+	def self.meth_make_true(_pos, _env, _event)
+		VC.make_true
 	end
 
 
-	def self.meth_make_false(env, _event)
-		VC.make_false L.make_position(__FILE__, __LINE__)
+	def self.meth_make_false(_pos, _env, _event)
+		VC.make_false
 	end
 
 
@@ -54,12 +54,10 @@ class Bool < Abstract
 	end
 
 
-	def meth_less_than(env, _event, other)
+	def meth_less_than(_pos, _env, _event, other)
 		ASSERT.kind_of other, Bool
 
 		VC.make_bool(
-			self.pos,
-
 			if self.val
 				! other.val
 			else
@@ -69,8 +67,8 @@ class Bool < Abstract
 	end
 
 
-	def meth_not(env, _event)
-		VC.make_bool self.pos, ! self.val
+	def meth_not(_pos, _env, _event)
+		VC.make_bool(! self.val)
 	end
 end
 
@@ -80,28 +78,23 @@ end # Umu::Value::Core::Base
 
 module_function
 
-	def make_true(pos)
-		ASSERT.kind_of pos,	L::Position
-
-		Base::Bool.new(pos, true).freeze
+	def make_true
+		Base::Bool.new(true).freeze
 	end
 
 
-	def make_false(pos)
-		ASSERT.kind_of pos,	L::Position
-
-		Base::Bool.new(pos, false).freeze
+	def make_false
+		Base::Bool.new(false).freeze
 	end
 
 
-	def make_bool(pos, val)
-		ASSERT.kind_of	pos, L::Position
-		ASSERT.bool		val
+	def make_bool(val)
+		ASSERT.bool val
 
 		if val
-			VC.make_true(pos)
+			VC.make_true
 		else
-			VC.make_false(pos)
+			VC.make_false
 		end
 	end
 

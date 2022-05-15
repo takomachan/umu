@@ -15,11 +15,9 @@ class Abstract < Top
 			:contents]
 	]
 
-	UNIT = VC.make_unit(L.make_position(__FILE__, __LINE__))
 
-
-	def meth_contents(_env, _event)
-		UNIT
+	def meth_contents(_pos, _env, _event)
+		VC.make_unit
 	end
 end
 

@@ -99,7 +99,7 @@ class Float < Abstract
 	]
 
 
-	def initialize(pos, val)
+	def initialize(val)
 		ASSERT.kind_of val, ::Float
 
 		super
@@ -125,197 +125,195 @@ class Float < Abstract
 	end
 
 
-	def self.meth_make_nan(env, _event)
-		VC.make_nan L.make_position(__FILE__, __LINE__)
+	def self.meth_make_nan(_pos, _env, _event)
+		VC.make_nan
 	end
 
 
-	def self.meth_make_infinity(env, _event)
-		VC.make_infinity L.make_position(__FILE__, __LINE__)
+	def self.meth_make_infinity(_pos, _env, _event)
+		VC.make_infinity
 	end
 
 
-	def self.meth_make_pi(env, _event)
-		VC.make_float L.make_position(__FILE__, __LINE__), Math::PI
+	def self.meth_make_pi(_pos, _env, _event)
+		VC.make_float Math::PI
 	end
 
 
-	def self.meth_make_e(env, _event)
-		VC.make_float L.make_position(__FILE__, __LINE__), Math::E
+	def self.meth_make_e(_pos, _env, _event)
+		VC.make_float Math::E
 	end
 
 
-	def meth_nan?(env, _event)
-		VC.make_bool self.pos, self.val.nan?
+	def meth_nan?(_pos, _env, _event)
+		VC.make_bool self.val.nan?
 	end
 
 
-	def meth_infinite?(env, _event)
-		VC.make_bool self.pos, self.val.infinite?.kind_of?(::Integer)
+	def meth_infinite?(_pos, _env, _event)
+		VC.make_bool self.val.infinite?.kind_of?(::Integer)
 	end
 
 
-	def meth_finite?(env, _event)
-		VC.make_bool self.pos, self.val.finite?
+	def meth_finite?(_pos, _env, _event)
+		VC.make_bool self.val.finite?
 	end
 
 
-	def meth_sin(env, _event)
-		VC.make_float self.pos, Math.sin(self.val)
+	def meth_sin(_pos, _env, _event)
+		VC.make_float Math.sin(self.val)
 	end
 
 
-	def meth_cos(env, _event)
-		VC.make_float self.pos, Math.cos(self.val)
+	def meth_cos(_pos, _env, _event)
+		VC.make_float Math.cos(self.val)
 	end
 
 
-	def meth_tan(env, _event)
-		VC.make_float self.pos, Math.tan(self.val)
+	def meth_tan(_pos, _env, _event)
+		VC.make_float Math.tan(self.val)
 	end
 
 
-	def meth_asin(env, _event)
-		VC.make_float self.pos, Math.asin(self.val)
+	def meth_asin(_pos, _env, _event)
+		VC.make_float Math.asin(self.val)
 	end
 
 
-	def meth_acos(env, _event)
-		VC.make_float self.pos, Math.acos(self.val)
+	def meth_acos(_pos, _env, _event)
+		VC.make_float Math.acos(self.val)
 	end
 
 
-	def meth_atan(env, _event)
-		VC.make_float self.pos, Math.atan(self.val)
+	def meth_atan(_pos, _env, _event)
+		VC.make_float Math.atan(self.val)
 	end
 
 
-	def meth_atan2(env, _event, other)
+	def meth_atan2(_pos, _env, _event, other)
 		ASSERT.kind_of other, Float
 
-		VC.make_float self.pos, Math.atan2(other.val, self.val)
+		VC.make_float Math.atan2(other.val, self.val)
 	end
 
 
-	def meth_sinh(env, _event)
-		VC.make_float self.pos, Math.sinh(self.val)
+	def meth_sinh(_pos, _env, _event)
+		VC.make_float Math.sinh(self.val)
 	end
 
 
-	def meth_cosh(env, _event)
-		VC.make_float self.pos, Math.cosh(self.val)
+	def meth_cosh(_pos, _env, _event)
+		VC.make_float Math.cosh(self.val)
 	end
 
 
-	def meth_tanh(env, _event)
-		VC.make_float self.pos, Math.tanh(self.val)
+	def meth_tanh(_pos, _env, _event)
+		VC.make_float Math.tanh(self.val)
 	end
 
 
-	def meth_exp(env, _event)
-		VC.make_float self.pos, Math.exp(self.val)
+	def meth_exp(_pos, _env, _event)
+		VC.make_float Math.exp(self.val)
 	end
 
 
-	def meth_log(env, _event)
-		VC.make_float self.pos, Math.log(self.val)
+	def meth_log(_pos, _env, _event)
+		VC.make_float Math.log(self.val)
 	end
 
 
-	def meth_log10(env, _event)
-		VC.make_float self.pos, Math.log10(self.val)
+	def meth_log10(_pos, _env, _event)
+		VC.make_float Math.log10(self.val)
 	end
 
 
-	def meth_sqrt(env, _event)
-		VC.make_float self.pos, Math.sqrt(self.val)
+	def meth_sqrt(_pos, _env, _event)
+		VC.make_float Math.sqrt(self.val)
 	end
 
 
-	def meth_truncate(env, _event, ndigits)
+	def meth_truncate(pos, env, _event, ndigits)
 		ASSERT.kind_of ndigits, VCBN::Integer
 
 		unless ndigits.val >= 0
 			raise X::ArgumentError.new(
-				self.pos,
+				pos,
 				env,
 				"truncate: expected zero or positive for digits number: %d",
 				ndigits.val.to_i
 			)
 		end
 
-		VC.make_float self.pos, self.val.truncate(ndigits.val).to_f
+		VC.make_float self.val.truncate(ndigits.val).to_f
 	end
 
 
-	def meth_ceil(env, _event, ndigits)
+	def meth_ceil(pos, env, _event, ndigits)
 		ASSERT.kind_of ndigits, VCBN::Integer
 
 		unless ndigits.val >= 0
 			raise X::ArgumentError.new(
-				self.pos,
+				pos,
 				env,
 				"ceil: expected zero or positive for digits number: %d",
 				ndigits.val.to_i
 			)
 		end
 
-		VC.make_float self.pos, self.val.ceil(ndigits.val).to_f
+		VC.make_float self.val.ceil(ndigits.val).to_f
 	end
 
 
-	def meth_floor(env, _event, ndigits)
+	def meth_floor(pos, env, _event, ndigits)
 		ASSERT.kind_of ndigits, VCBN::Integer
 
 		unless ndigits.val >= 0
 			raise X::ArgumentError.new(
-				self.pos,
+				pos,
 				env,
 				"floor: expected zero or positive for digits number: %d",
 				ndigits.val.to_i
 			)
 		end
 
-		VC.make_float self.pos, self.val.floor(ndigits.val).to_f
+		VC.make_float self.val.floor(ndigits.val).to_f
 	end
 
 
-	def meth_ldexp(env, _event, other)
+	def meth_ldexp(_pos, _env, _event, other)
 		ASSERT.kind_of other, VCBN::Integer
 
-		VC.make_float self.pos, Math.ldexp(self.val, other.val)
+		VC.make_float Math.ldexp(self.val, other.val)
 	end
 
 
-	def meth_frexp(env, _event)
+	def meth_frexp(_pos, _env, _event)
 		fract, expon = Math.frexp self.val
 
 		VC.make_tuple(
-			self.pos,
 			[
-				VC.make_float(self.pos, fract.to_f),
-				VC.make_integer( self.pos, expon.to_i)
+				VC.make_float(fract.to_f),
+				VC.make_integer(expon.to_i)
 			]
 		)
 	end
 
 
-	def meth_divmod(env, _event, other)
+	def meth_divmod(_pos, _env, _event, other)
 		ASSERT.kind_of other, VCBN::Float
 
 		fract, integ = self.val.divmod other.val
 
 		VC.make_tuple(
-			self.pos,
 			[
-				VC.make_float(self.pos, fract.to_f),
-				VC.make_float(self.pos, integ.to_f)
+				VC.make_float(fract.to_f),
+				VC.make_float(integ.to_f)
 			]
 		)
 	end
 
 
-	def meth_to_float(env, _event)
+	def meth_to_float(_pos, _env, _event)
 		self
 	end
 end
@@ -327,25 +325,20 @@ end # Umu::Value::Core::Base
 
 module_function
 
-	def make_float(pos, val)
-		ASSERT.kind_of pos,	L::Position
-		ASSERT.kind_of val,	::Float
+	def make_float(val)
+		ASSERT.kind_of val, ::Float
 
-		Base::Number::Float.new(pos, val).freeze
+		Base::Number::Float.new(val).freeze
 	end
 
 
-	def make_nan(pos)
-		ASSERT.kind_of pos,	L::Position
-
-		make_float pos, ::Float::NAN
+	def make_nan
+		make_float ::Float::NAN
 	end
 
 
-	def make_infinity(pos)
-		ASSERT.kind_of pos,	L::Position
-
-		make_float pos, ::Float::INFINITY
+	def make_infinity
+		make_float ::Float::INFINITY
 	end
 
 end	# Umu::Value::Core

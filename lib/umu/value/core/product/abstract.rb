@@ -16,10 +16,10 @@ class Abstract < Top
 	attr_reader	:objs
 
 
-	def initialize(pos, objs)
+	def initialize(objs)
 		ASSERT.kind_of objs, ::Object
 
-		super(pos)
+		super()
 
 		@objs = objs
 	end

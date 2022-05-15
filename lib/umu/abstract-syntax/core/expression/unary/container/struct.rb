@@ -62,8 +62,6 @@ private
 		new_env = env.enter event
 
 		VC.make_struct(
-			self.pos,
-
 			self.expr_by_label.inject({}) { |hash, (label, expr)|
 				ASSERT.kind_of label,	::Symbol
 				ASSERT.kind_of expr,	SACE::Abstract

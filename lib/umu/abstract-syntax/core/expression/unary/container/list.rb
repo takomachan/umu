@@ -65,13 +65,13 @@ private
 
 					tail_value
 				else
-					VC.make_nil pos
+					VC.make_nil
 				end
 
 		self.exprs.reverse_each do |x|
 			ASSERT.kind_of x, SACE::Abstract
 
-			xs = VC.make_cons pos, x.evaluate(new_env).value, xs
+			xs = VC.make_cons x.evaluate(new_env).value, xs
 
 		end
 

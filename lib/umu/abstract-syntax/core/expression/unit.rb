@@ -25,7 +25,7 @@ class Unit < Expression::Abstract
 					self.pos,
 					self.to_s
 				) { |_event|
-					VC.make_unit self.pos
+					VC.make_unit
 				}
 
 		SAR.make_value value

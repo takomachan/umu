@@ -15,11 +15,11 @@ class Closure < Abstract
 	attr_reader	:lam, :va_context
 
 
-	def initialize(pos, lam, va_context)
+	def initialize(lam, va_context)
 		ASSERT.kind_of lam,			SACE::Nary::Lambda
 		ASSERT.kind_of va_context,	ECV::Abstract
 
-		super(pos)
+		super()
 
 		@lam		= lam
 		@va_context	= va_context
@@ -43,8 +43,9 @@ class Closure < Abstract
 
 private
 
-	def __apply__(init_values, env, event)
+	def __apply__(init_values, pos, env, event)
 		ASSERT.kind_of init_values,	::Array
+		ASSERT.kind_of pos,			L::Position
 		ASSERT.kind_of env,			E::Entry
 		ASSERT.kind_of event,		E::Tracer::Event
 
@@ -81,7 +82,7 @@ private
 				result	= self.lam.expr.evaluate new_env
 				ASSERT.kind_of result, SAR::Value
 
-				result.value.apply final_values, new_env
+				result.value.apply final_values, pos, new_env
 			elsif init_idents_num > init_values_num
 				final_idents, final_values, final_env = __bind__(
 					init_values_num, init_idents, init_values, init_env
@@ -90,12 +91,9 @@ private
 				ASSERT.assert final_values.empty?
 
 				VC.make_closure(
-					self.pos,
-
 					SACE.make_lambda(
-						lam.pos, final_idents, lam.expr, lam.opt_name
+						pos, final_idents, lam.expr, lam.opt_name
 					),
-
 					final_env.va_context
 				)
 			else
@@ -147,12 +145,11 @@ end	# Umu::Value::Core::Function
 
 module_function
 
-	def make_closure(pos, lam, va_context)
-		ASSERT.kind_of pos,			L::Position
+	def make_closure(lam, va_context)
 		ASSERT.kind_of lam,			SACE::Nary::Lambda
 		ASSERT.kind_of va_context,	ECV::Abstract
 
-		Function::Closure.new(pos, lam, va_context).freeze
+		Function::Closure.new(lam, va_context).freeze
 	end
 
 end	# Umu::Value::Core

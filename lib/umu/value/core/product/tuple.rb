@@ -20,7 +20,7 @@ class Tuple < Abstract
 	alias values objs
 
 
-	def initialize(pos, values)
+	def initialize(values)
 		ASSERT.kind_of values, ::Array
 		ASSERT.assert values.size >= 2	# Pair or More
 
@@ -51,45 +51,39 @@ class Tuple < Abstract
 	end
 
 
-	def meth_to_string(env, event)
+	def meth_to_string(pos, env, event)
 		VC.make_string(
-			self.pos,
-
 			format("(%s)",
 				self.map { |elem|
-					elem.meth_to_string(env, event).val
+					elem.meth_to_string(pos, env, event).val
 				}.join(', ')
 			)
 		)
 	end
 
 
-	def meth_equal(env, event, other)
+	def meth_equal(pos, env, event, other)
 		ASSERT.kind_of other, VC::Top
 
 		unless other.kind_of?(self.class) && self.arity == other.arity
-			return VC.make_false self.pos
+			return VC.make_false
 		end
 
 		VC.make_bool(
-			self.pos,
-
 			self.values.zip(other.values).all? {
 				|self_value, other_value|
 
 				other_value.kind_of?(self_value.class) &&
-				self_value.meth_equal(env, event, other_value).true?
+				self_value.meth_equal(pos, env, event, other_value).true?
 			}
 		)
 	end
 
 
-	def meth_less_than(env, event, other)
+	def meth_less_than(pos, env, event, other)
 		ASSERT.kind_of other, VCP::Tuple
 
 		VC.make_bool(
-			self.pos,
-
 			self.values.zip(other.values).each_with_index.any? {
 				|(self_value, other_value), index|
 
@@ -106,7 +100,9 @@ class Tuple < Abstract
 					)
 				end
 
-				self_value.meth_less_than(env, event, other_value).true?
+				self_value.meth_less_than(
+					pos, env, event, other_value
+				).true?
 			}
 		)
 	end
@@ -117,11 +113,10 @@ end	# Umu::Value::Core::Product
 
 module_function
 
-	def make_tuple(pos, values)
-		ASSERT.kind_of pos,		L::Position
-		ASSERT.kind_of values,	::Array
+	def make_tuple(values)
+		ASSERT.kind_of values, ::Array
 
-		Product::Tuple.new(pos, values.freeze).freeze
+		Product::Tuple.new(values.freeze).freeze
 	end
 
 end	# Umu::Value::Core

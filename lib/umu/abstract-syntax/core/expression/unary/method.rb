@@ -47,17 +47,11 @@ class Class < Abstract
 
 		case method_spec.param_class_specs.size
 		when 0
-			VC.make_unary_class_method(
-					self.pos, class_spec, self.method_sym
-				)
+			VC.make_unary_class_method	class_spec, self.method_sym
 		when 1
-			VC.make_binary_class_method(
-					self.pos, class_spec, self.method_sym
-				)
+			VC.make_binary_class_method	class_spec, self.method_sym
 		else
-			VC.make_nary_class_method(
-					self.pos, class_spec, self.method_sym
-				)
+			VC.make_nary_class_method	class_spec, self.method_sym
 		end
 	end
 end
@@ -80,13 +74,9 @@ class Instance < Abstract
 		ASSERT.kind_of method_spec, ECTS::Method
 
 		if method_spec.param_class_specs.empty?
-			VC.make_unary_instance_method(
-					self.pos, class_spec, self.method_sym
-				)
+			VC.make_unary_instance_method	class_spec, self.method_sym
 		else
-			VC.make_nary_instance_method(
-					self.pos, class_spec, self.method_sym
-				)
+			VC.make_nary_instance_method	class_spec, self.method_sym
 		end
 	end
 end

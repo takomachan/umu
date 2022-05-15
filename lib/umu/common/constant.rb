@@ -31,7 +31,7 @@ module Umu
 	end
 	module Value
 		module Core
-			class Top < Abstraction::Model; end
+			class Top; end
 			module Base
 				class Abstract < Top; end
 				class Bool < Abstract; end

@@ -52,7 +52,7 @@ class Apply < Binary::Abstract
 			result.value
 		}
 
-		value = opr_result.value.apply opnd_values, new_env
+		value = opr_result.value.apply opnd_values, self.pos, new_env
 
 		ASSERT.kind_of value, VC::Top
 	end
