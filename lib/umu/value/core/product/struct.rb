@@ -20,7 +20,7 @@ class Field
 		ASSERT.kind_of label,	::Symbol
 		ASSERT.kind_of value,	VC::Top
 
-		super
+		super()
 
 		@label	= label
 		@value	= value
@@ -52,7 +52,7 @@ class Entry < Product::Abstract
 			ASSERT.kind_of label,	::Symbol
 			ASSERT.kind_of value,	VC::Top
 
-			yield VC.make_struct_field self.pos, label, value
+			yield VC.make_struct_field label, value
 		end
 	end
 
