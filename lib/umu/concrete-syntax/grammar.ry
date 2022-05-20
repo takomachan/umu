@@ -30,8 +30,8 @@ progs:
 | prog ';;' progs	{ result = val[0] + val[2] }
 
 prog:
-  opt_modu_decls	{ result = val[0] }
-| expr				{ result = [val[0]] }
+  modu_decls	{ result = val[0] }
+| expr			{ result = [val[0]] }
 
 
 
@@ -39,9 +39,9 @@ prog:
 ####  Declaration (Module Language)  ####
 #########################################
 
-opt_modu_decls:
-  /* empty */				{ result = [] }
-| modu_decl opt_modu_decls	{ result = [val[0]] + val[1] }
+modu_decls:
+  /* empty */			{ result = [] }
+| modu_decl modu_decls	{ result = [val[0]] + val[1] }
 
 
 modu_decl:
@@ -59,7 +59,7 @@ modu_decl:
 ########################################
 
 modu_expr:
-  STRUCT '{' opt_modu_decls '}' opt_modu_where_decls {
+  STRUCT '{' modu_decls '}' modu_where_decls {
 	result = SCME.make_struct val[0].pos, val[2], val[4]
 }
 | modu_ident
@@ -67,14 +67,14 @@ modu_expr:
 
 # WHERE declaration (Module Language)
 
-opt_modu_where_decls:
-  /* empty */					{ result = [] }
-| WHERE '{' opt_modu_decls '}'	{ result = val[2] }
+modu_where_decls:
+  /* empty */				{ result = [] }
+| WHERE '{' modu_decls '}'	{ result = val[2] }
 
 
 # Identifier (Module Language)
 
-modu_ident: modu_short_ident opt_modu_idents {
+modu_ident: modu_short_ident modu_short_idents {
 	result = if val[1].empty?
 				val[0]
 			else
@@ -82,9 +82,9 @@ modu_ident: modu_short_ident opt_modu_idents {
 			end
 }
 
-opt_modu_idents:
-  /* empty */							{ result = [] }
-| '::' modu_short_ident opt_modu_idents	{ result = [val[1]] + val[2] }
+modu_short_idents:
+  /* empty */								{ result = [] }
+| '::' modu_short_ident modu_short_idents	{ result = [val[1]] + val[2] }
 
 modu_short_ident: ID {
 	result = SCME.make_identifier(val[0].pos, val[0].sym)
@@ -101,36 +101,40 @@ modu_pat:
   modu_var_pat
 
 # Structure
-| STRUCT '{' opt_stru_flds_pats '}' {
+| STRUCT '{' stru_flds_pats '}' {
 	result = SCMP.make_struct val[0].pos, val[2]
 }
 
 
 # Seq of structure fields pattern
 
-opt_stru_flds_pats:
-  /* empty */			 			{ result = [] }
-| stru_flds_pat opt_stru_flds_pats	{ result = val[0] + val[1] }
+stru_flds_pats:
+  /* empty */		 			{ result = [] }
+| stru_flds_pat stru_flds_pats	{ result = val[0] + val[1] }
 
 
 # Structure fields pattern
 
-stru_flds_pat: VAL stru_flds_pat_	{ result = val[1] }
+stru_flds_pat: VAL _stru_flds_pat	{ result = val[1] }
 
-stru_flds_pat_:
+_stru_flds_pat:
 	atom_stru_fld_pat {
 	result = [val[0]]
 }
-|	'(' atom_stru_fld_pat ',' comma_stru_fld_pats ')' {
-	result = [val[1]] + val[3]
+|	'(' atom_stru_fld_pat com_stru_fld_pats ')' {
+	result = [val[1]] + val[2]
 }
 
 
 # Comma separated seq of structure field pattern
 
-comma_stru_fld_pats:
-  atom_stru_fld_pat							{ result = [val[0]] }
-| atom_stru_fld_pat ',' comma_stru_fld_pats	{ result = [val[0]] + val[2] }
+com_stru_fld_pats:
+  /* empty */			{ result = [] }
+| _com_stru_fld_pats	{ result = val[0] }
+
+_com_stru_fld_pats:
+  ',' atom_stru_fld_pat						{ result = [val[1]] }
+| ',' atom_stru_fld_pat _com_stru_fld_pats	{ result = [val[1]] + val[2] }
 
 
 # Atomic structure field pattern
@@ -160,50 +164,54 @@ modu_var_pat:
 ####  Declaration (Core Language)  ####
 #######################################
 
-opt_core_decls:
-  /* empty */				{ result = [] }
-| core_decl opt_core_decls	{ result = [val[0]] + val[1] }
+core_decls:
+  /* empty */			{ result = [] }
+| core_decl core_decls	{ result = [val[0]] + val[1] }
 
 core_decl:
-  ASSERT atom_expr expr {
-	result = SCCD.make_assert val[0].pos, val[1], val[2]
-}
-| VAL pat '=' expr opt_outer_where_decls {
+  VAL pat '=' expr outer_where_decls {
 	result = SCCD.make_value(
 					val[0].pos, val[1], val[3], val[4]
 				)
 }
 | FUN var_pat '=' fun_body {
-	pats, expr, decls = val[3]
+	hd_pat, tl_pats, expr, decls = val[3]
 
 	result = SCCD.make_function(
 		val[1].pos,
 		SCCE.make_named_lambda(
 			val[1].pos,
-			pats, expr, decls,
+			[hd_pat] + tl_pats, expr, decls,
 			val[1].var_sym
 		)
 	)
 }
-| FUN REC recu_binds {
-	result = SCCD.make_recursive val[0].pos, val[2]
+| FUN REC recu_bind recu_binds {
+	result = SCCD.make_recursive val[0].pos, [val[2]] + val[3]
+}
+| ASSERT atom_expr expr {
+	result = SCCD.make_assert val[0].pos, val[1], val[2]
 }
 
 
 # Recursive binding
 
 recu_binds:
-  recu_bind					{ result = [val[0]] }
-| recu_bind AND recu_binds	{ result = [val[0]] + val[2] }
+  /* empty */	{ result = [] }
+| _recu_binds	{ result = val[0] }
+
+_recu_binds:
+  AND recu_bind				{ result = [val[1]] }
+| AND recu_bind _recu_binds	{ result = [val[1]] + val[2] }
 
 recu_bind: ID '=' fun_body {
-	pats, expr, decls = val[2]
+	hd_pat, tl_pats, expr, decls = val[2]
 
 	result = SCCD.make_recursive_function(
 		val[1].pos,
 		SCCE.make_named_lambda(
 			val[0].pos,
-			pats, expr, decls,
+			[hd_pat] + tl_pats, expr, decls,
 			val[0].sym
 		)
 	)
@@ -212,21 +220,21 @@ recu_bind: ID '=' fun_body {
 
 # Function body
 
-fun_body: pats '->' expr opt_outer_where_decls {
-	result = [val[0], val[2], val[3]]
+fun_body: pat pats '->' expr outer_where_decls {
+	result = [val[0], val[1], val[3], val[4]]
 }
 
 
 # WHERE declaration (Core Language)
 
-opt_outer_where_decls:
-  /* empty */					{ result = [] }
-| WHERE '{' opt_core_decls '}'	{ result = val[2] }
+outer_where_decls:
+  /* empty */				{ result = [] }
+| WHERE '{' core_decls '}'	{ result = val[2] }
 
 
-opt_inner_where_decls:
-  /* empty */					{ result = [] }
-| WHERE opt_core_decls			{ result = val[1] }
+inner_where_decls:
+  /* empty */				{ result = [] }
+| WHERE core_decls			{ result = val[1] }
 
 
 ######################################
@@ -235,29 +243,41 @@ opt_inner_where_decls:
 
 expr:
   infix_expr
-| IF if_rules ELSE expr {
-	result = SCCE.make_if val[0].pos, val[1], val[3]
+| IF if_rule if_rules ELSE expr {
+	result = SCCE.make_if val[0].pos, [val[1]] + val[2], val[4]
 }
-| COND atom_expr '{' cond_rules ELSE '->' expr opt_inner_where_decls '}' {
-	result = SCCE.make_cond val[0].pos, val[1], val[3], val[6], val[7]
+| COND atom_expr '{'
+		cond_rule cond_rules ELSE '->' expr inner_where_decls
+	'}' {
+	result = SCCE.make_cond(
+		val[0].pos, val[1], [val[3]] + val[4], val[7], val[8]
+	)
 }
-| LET '{' opt_core_decls IN expr '}' {
+| LET '{' core_decls IN expr '}' {
 	result = SCCE.make_let val[0].pos, val[2], val[4]
 }
 
 if_rules:
-  if_rule					{ result = [val[0]] }
-| if_rule ELSIF if_rules	{ result = [val[0]] + val[2] }
+  /* empty */	{ result = [] }
+| _if_rules		{ result = val[0] }
+
+_if_rules:
+  ELSIF if_rule				{ result = [val[1]] }
+| ELSIF if_rule _if_rules	{ result = [val[1]] + val[2] }
 
 if_rule: atom_expr expr {
 	result = SCCE.make_if_rule val[0].pos, val[0], val[1]
 }
 
 cond_rules:
-  cond_rule					{ result = [val[0]] }
-| cond_rule '|' cond_rules 	{ result = [val[0]] + val[2] }
+  /* empty */	{ result = [] }
+| _cond_rules	{ result = val[0] }
 
-cond_rule: expr '->' expr opt_inner_where_decls {
+_cond_rules:
+  '|' cond_rule				{ result = [val[1]] }
+| '|' cond_rule _cond_rules	{ result = [val[1]] + val[2] }
+
+cond_rule: expr '->' expr inner_where_decls {
 	result = SCCE.make_cond_rule val[0].pos, val[0], val[2], val[3]
 }
 
@@ -266,13 +286,13 @@ cond_rule: expr '->' expr opt_inner_where_decls {
 
 infix_expr:
   send_expr
-| infix_expr_ {
+| _infix_expr {
 	v = val[0]
 
 	result = SCCE.make_infix v[1].pos, v[0], v[1].sym, v[2]
 }
 
-infix_expr_:
+_infix_expr:
   infix_expr '+'  		infix_expr	{ result = val }
 | infix_expr '-'  		infix_expr	{ result = val }
 | infix_expr '^'  		infix_expr	{ result = val }
@@ -310,7 +330,7 @@ infix_expr_:
 
 # Send expression
 
-send_expr: apply_expr opt_messages {
+send_expr: apply_expr messages {
 	result = if val[1].empty?
 					val[0]
 				else
@@ -318,13 +338,13 @@ send_expr: apply_expr opt_messages {
 				end
 }
 
-opt_messages:
-  /* empty */			{ result = [] }
-| messages 				{ result = val[0] }
-
 messages:
-  '.' message 			{ result = [val[1]] }
-| '.' message messages	{ result = [val[1]] + val[2] }
+  /* empty */			{ result = [] }
+| _messages				{ result = val[0] }
+
+_messages:
+  '.' message			{ result = [val[1]] }
+| '.' message _messages	{ result = [val[1]] + val[2] }
 
 message:
   INTEGER {
@@ -337,26 +357,21 @@ message:
 						val[0].pos, val[0].sym, []
 					)
 }
-| '(' ID expr ')' {
-	result = SCCE.make_method(
-						val[1].pos, val[1].sym, [val[2]]
-					)
-}
 | '(' infix_opr expr ')' {
 	result = SCCE.make_method(
 						val[1].pos, val[1].sym, [val[2]]
 					)
 }
-| '(' ID expr ',' comma_exprs ')' {
+| '(' ID expr com_exprs ')' {
 	result = SCCE.make_method(
-						val[1].pos, val[1].sym, [val[2]] + val[4]
+						val[1].pos, val[1].sym, [val[2]] + val[3]
 					)
 }
 
 
 # Apply expression
 
-apply_expr: atom_expr opt_atom_exprs {
+apply_expr: atom_expr atom_exprs {
 	result = if val[1].empty?
 					val[0]
 				else
@@ -367,9 +382,9 @@ apply_expr: atom_expr opt_atom_exprs {
 
 # Atomic expression
 
-opt_atom_exprs:
-  /* empty */				{ result = [] }
-| atom_expr opt_atom_exprs	{ result = [val[0]] + val[1] }
+atom_exprs:
+  /* empty */			{ result = [] }
+| atom_expr atom_exprs	{ result = [val[0]] + val[1] }
 
 atom_expr:
 # Identifier
@@ -401,11 +416,11 @@ atom_expr:
 | '(' infix_opr expr ')' {
 	result = SCCE.make_prefix val[1].pos, val[1].sym, val[2]
 }
-| '(' expr ',' comma_exprs ')' {
-	result = SCCE.make_tuple val[0].pos, [val[1]] + val[3]
+| '(' expr ',' expr com_exprs ')' {
+	result = SCCE.make_tuple val[0].pos, [val[1], val[3]] + val[4]
 }
-| '(' expr ';' semi_exprs ')' {
-	result = SCCE.make_sequence val[0].pos, [val[1]] + val[3]
+| '(' expr ';' expr sem_exprs ')' {
+	result = SCCE.make_sequence val[0].pos, [val[1], val[3]] + val[4]
 }
 | '&' ID {
 	result = SCCE.make_class val[1].pos, val[1].sym
@@ -425,21 +440,21 @@ atom_expr:
 
 # Braket: [ ... ]
 | '[' ']' {
-	result = SCCE.make_list val[0].pos, [],     nil
+	result = SCCE.make_list val[0].pos, [],                nil
 }
-| '[' comma_exprs opt_last_expr ']' {
-	result = SCCE.make_list val[0].pos, val[1], val[2]
+| '[' expr com_exprs opt_last_expr ']' {
+	result = SCCE.make_list val[0].pos, [val[1]] + val[2], val[3]
 }
 
 # Braket: { ... }
-| '{' pats '->' expr opt_inner_where_decls '}' {
-	result = SCCE.make_lambda val[0].pos, val[1], val[3], val[4]
+| '{' pat pats '->' expr inner_where_decls '}' {
+	result = SCCE.make_lambda val[0].pos, [val[1]] + val[2], val[4], val[5]
 }
 
 
 # Identifier
 
-ident: short_ident opt_idents {
+ident: short_ident short_idents {
 	result = if val[1].empty?
 				val[0]
 			else
@@ -447,9 +462,9 @@ ident: short_ident opt_idents {
 			end
 }
 
-opt_idents:
+short_idents:
   /* empty */					{ result = [] }
-| '::' short_ident opt_idents	{ result = [val[1]] + val[2] }
+| '::' short_ident short_idents	{ result = [val[1]] + val[2] }
 
 short_ident:
   ID						{
@@ -462,16 +477,24 @@ short_ident:
 
 # Semi-colon separated seq of expresseion
 
-semi_exprs:
-  expr					{ result = [val[0]] }
-| expr ';' semi_exprs	{ result = [val[0]] + val[2] }
+sem_exprs:
+  /* empty */	{ result = [] }
+| _sem_exprs	{ result = val[0] }
+
+_sem_exprs:
+  ';' expr				{ result = [val[1]] }
+| ';' expr _sem_exprs	{ result = [val[1]] + val[2] }
 
 
 # Comma separated seq of expresseion
 
-comma_exprs:
-  expr					{ result = [val[0]] }
-| expr ',' comma_exprs	{ result = [val[0]] + val[2] }
+com_exprs:
+  /* empty */	{ result = [] }
+| _com_exprs	{ result = val[0] }
+
+_com_exprs:
+  ',' expr				{ result = [val[1]] }
+| ',' expr _com_exprs	{ result = [val[1]] + val[2] }
 
 
 # Last of collection expression
@@ -487,8 +510,8 @@ opt_last_expr:
 ###################################
 
 pats:
-  pat		{ result = [val[0]] }
-| pat pats	{ result = [val[0]] + val[1] }
+  /* empty */	{ result = [] }
+| pat pats		{ result = [val[0]] + val[1] }
 
 pat:
 # Variable
@@ -501,24 +524,28 @@ pat:
 | '(' var_pat ')' {
 	result = val[1]
 }
-| '(' var_pat ',' comma_pats ')' {
-	result = SCCP.make_tuple val[0].pos, [val[1]] + val[3]
+| '(' var_pat ',' var_pat com_pats ')' {
+	result = SCCP.make_tuple val[0].pos, [val[1], val[3]] + val[4]
 }
 
 # Braket: [ ... ]
 | '[' ']' {
 	result = SCCP.make_list val[0].pos, [],     nil
 }
-| '[' comma_pats opt_last_pat ']' {
-	result = SCCP.make_list val[0].pos, val[1], val[2]
+| '[' pat com_pats opt_last_pat ']' {
+	result = SCCP.make_list val[0].pos, [val[1]] + val[2], val[3]
 }
 
 
 # Comma separated seq of pattern
 
-comma_pats:
-  var_pat					{ result = [val[0]] }
-| var_pat ',' comma_pats	{ result = [val[0]] + val[2] }
+com_pats:
+  /* empty */	{ result = [] }
+| _com_pats		{ result = val[0] }
+
+_com_pats:
+  ',' var_pat			{ result = [val[1]] }
+| ',' var_pat _com_pats	{ result = [val[1]] + val[2] }
 
 
 # Last of collection pattern
