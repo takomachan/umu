@@ -98,7 +98,7 @@ modu_short_ident: ID {
 
 modu_pat:
 # Variable
-  modu_var_pat
+  ID { result = SCMP.make_variable val[0].pos, val[0].sym }
 
 # Structure
 | STRUCT '{' stru_flds_pats '}' {
@@ -146,11 +146,6 @@ atom_stru_fld_pat: var_pat opt_stru_var_pat {
 opt_stru_var_pat:
   /* empty */	{ result = nil }
 | '->' var_pat	{ result = val[1].var_sym }
-
-
-# Variable pattern
-
-modu_var_pat: ID { result = SCMP.make_variable val[0].pos, val[0].sym }
 
 
 
