@@ -346,7 +346,16 @@ message:
 						val[0].pos, val[0].sym, []
 					)
 }
+<<<<<<< HEAD
 | '(' mess_ident expr com_exprs ')' {
+=======
+| '(' infix_opr expr ')' {
+	result = SCCE.make_method(
+						val[1].pos, val[1].sym, [val[2]]
+					)
+}
+| '(' ID expr com_exprs ')' {
+>>>>>>> 52f914b9c8653782acd4cd39f99d3d0fffb0fc61
 	result = SCCE.make_method(
 						val[1].pos, val[1].sym, [val[2]] + val[3]
 					)
