@@ -341,18 +341,18 @@ message:
 						val[0].pos, val[0].val
 					)
 }
-| message_id {
+| mess_ident {
 	result = SCCE.make_method(
 						val[0].pos, val[0].sym, []
 					)
 }
-| '(' message_id expr com_exprs ')' {
+| '(' mess_ident expr com_exprs ')' {
 	result = SCCE.make_method(
 						val[1].pos, val[1].sym, [val[2]] + val[3]
 					)
 }
 
-message_id: ID | norm_infix_opr
+mess_ident: ID | norm_infix_opr
 
 
 # Apply expression
@@ -411,16 +411,10 @@ atom_expr:
 | '&' ID {
 	result = SCCE.make_class val[1].pos, val[1].sym
 }
-| '&(' ID '.' ID ')' {
+| '&(' ID '.' mess_ident ')' {
 	result = SCCE.make_class_method val[1].pos, val[1].sym, val[3].sym
 }
-| '&(' ID '.' norm_infix_opr ')' {
-	result = SCCE.make_class_method val[1].pos, val[1].sym, val[3].sym
-}
-| '&(' ID '$' ID ')' {
-	result = SCCE.make_instance_method val[1].pos, val[1].sym, val[3].sym
-}
-| '&(' ID '$' norm_infix_opr ')' {
+| '&(' ID '$' mess_ident ')' {
 	result = SCCE.make_instance_method val[1].pos, val[1].sym, val[3].sym
 }
 
