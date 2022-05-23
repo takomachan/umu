@@ -150,13 +150,7 @@ opt_stru_var_pat:
 
 # Variable pattern
 
-modu_var_pat:
-  ID						{
-  	result = SCMP.make_variable val[0].pos, val[0].sym
-}
-| '(' spec_infix_opr ')'	{
-	result = SCMP.make_variable val[1].pos, val[1].sym
-}
+modu_var_pat: ID { result = SCMP.make_variable val[0].pos, val[0].sym }
 
 
 
@@ -352,21 +346,18 @@ message:
 						val[0].pos, val[0].val
 					)
 }
-| ID {
+| message_id {
 	result = SCCE.make_method(
 						val[0].pos, val[0].sym, []
 					)
 }
-| '(' infix_opr expr ')' {
-	result = SCCE.make_method(
-						val[1].pos, val[1].sym, [val[2]]
-					)
-}
-| '(' ID expr com_exprs ')' {
+| '(' message_id expr com_exprs ')' {
 	result = SCCE.make_method(
 						val[1].pos, val[1].sym, [val[2]] + val[3]
 					)
 }
+
+message_id: ID | norm_infix_opr
 
 
 # Apply expression
@@ -428,13 +419,13 @@ atom_expr:
 | '&(' ID '.' ID ')' {
 	result = SCCE.make_class_method val[1].pos, val[1].sym, val[3].sym
 }
-| '&(' ID '.' infix_opr ')' {
+| '&(' ID '.' norm_infix_opr ')' {
 	result = SCCE.make_class_method val[1].pos, val[1].sym, val[3].sym
 }
 | '&(' ID '$' ID ')' {
 	result = SCCE.make_instance_method val[1].pos, val[1].sym, val[3].sym
 }
-| '&(' ID '$' infix_opr ')' {
+| '&(' ID '$' norm_infix_opr ')' {
 	result = SCCE.make_instance_method val[1].pos, val[1].sym, val[3].sym
 }
 
@@ -470,7 +461,7 @@ short_ident:
   ID						{
   	result = SCCE.make_identifier val[0].pos, val[0].sym
 }
-| '(' spec_infix_opr ')'	{
+| '(' infix_opr ')'	{
 	result = SCCE.make_identifier val[1].pos, val[1].sym
 }
 
@@ -561,7 +552,7 @@ var_pat:
   ID						{
   	result = SCCP.make_variable val[0].pos, val[0].sym
 }
-| '(' spec_infix_opr ')'	{
+| '(' infix_opr ')'	{
 	result = SCCP.make_variable val[1].pos, val[1].sym
 }
 | '_'						{
@@ -574,20 +565,24 @@ var_pat:
 ####  Common Rule  ####
 #######################
 
+# General infix operator
 
-# Special infix operator
-
-spec_infix_opr: infix_opr | ',' | '|'
+infix_opr: norm_infix_opr | spec_infix_opr
 
 
 # Normal infix operator
 
-infix_opr:
+norm_infix_opr:
   '+' | '-' | '*' | '/'
 | MOD	 { result = LT.make_reserved_symbol(val[0].pos, 'mod') }
 | POW	 { result = LT.make_reserved_symbol(val[0].pos, 'pow') }
 | '==' | '<>' | '<'  | '>'  | '<=' | '>='
 | '<|' | '|>' | '<<' | '>>'
 | '^'  |'++'
+
+
+# Special infix operator
+
+spec_infix_opr: ',' | '|'
 
 end
