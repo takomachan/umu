@@ -22,7 +22,7 @@ class Short < Abstract
 	alias sym obj
 
 
-	def initialize(pos, sym)
+	def initialize(loc, sym)
 		ASSERT.kind_of sym, ::Symbol
 
 		super
@@ -39,7 +39,7 @@ private
 	def __evaluate__(env, _event)
 		ASSERT.kind_of env, E::Entry
 
-		value = env.va_lookup self.sym, self.pos
+		value = env.va_lookup self.sym, self.loc
 		ASSERT.kind_of value, VC::Top
 	end
 end
@@ -51,11 +51,11 @@ class Long < Abstract
 	attr_reader	:tail_ids
 
 
-	def initialize(pos, head_id, tail_ids)
+	def initialize(loc, head_id, tail_ids)
 		ASSERT.kind_of head_id,		Short
 		ASSERT.kind_of tail_ids,	::Array
 
-		super(pos, head_id)
+		super(loc, head_id)
 
 		@tail_ids = tail_ids
 	end
@@ -78,14 +78,14 @@ private
 	def __evaluate__(env, _event)
 		ASSERT.kind_of env, E::Entry
 
-		init_value = env.va_lookup self.head_id.sym, self.head_id.pos
+		init_value = env.va_lookup self.head_id.sym, self.head_id.loc
 		ASSERT.kind_of init_value, VCP::Struct::Entry
 
 		final_value = self.tail_ids.inject(init_value) { |value, id|
 			ASSERT.kind_of value,	VCP::Struct::Entry
 			ASSERT.kind_of id,		Short
 
-			value.select id.sym, id.pos, env
+			value.select id.sym, id.loc, env
 		}
 		ASSERT.kind_of final_value, VC::Top
 	end
@@ -103,19 +103,19 @@ end	# Umu::AbstractSyntax::Core::Expression::Unary
 
 module_function
 
-	def make_identifier(pos, sym)
-		ASSERT.kind_of pos,	L::Position
+	def make_identifier(loc, sym)
+		ASSERT.kind_of loc,	L::Location
 		ASSERT.kind_of sym,	::Symbol
 
-		Unary::Identifier::Short.new(pos, sym).freeze
+		Unary::Identifier::Short.new(loc, sym).freeze
 	end
 
 
-	def make_long_identifier(pos, head_id, tail_ids)
+	def make_long_identifier(loc, head_id, tail_ids)
 		ASSERT.kind_of head_id,		Unary::Identifier::Short
 		ASSERT.kind_of tail_ids,	::Array
 
-		Unary::Identifier::Long.new(pos, head_id, tail_ids.freeze).freeze
+		Unary::Identifier::Long.new(loc, head_id, tail_ids.freeze).freeze
 	end
 
 end	# Umu::AbstractSyntax::Core::Expression

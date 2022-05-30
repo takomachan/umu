@@ -28,7 +28,7 @@ class Abstract < Top
 	end
 
 
-	def meth_equal(_pos, _env, _event, other)
+	def meth_equal(_loc, _env, _event, other)
 		ASSERT.kind_of other, VC::Top
 
 		VC.make_bool(
@@ -37,7 +37,7 @@ class Abstract < Top
 	end
 
 
-	def meth_less_than(_pos, _env, _event, other)
+	def meth_less_than(_loc, _env, _event, other)
 		ASSERT.kind_of other, Base::Abstract
 
 		VC.make_bool self.val < other.val

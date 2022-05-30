@@ -1,5 +1,5 @@
 require 'umu/common'
-require 'umu/lexical/position'
+require 'umu/lexical/location'
 
 
 module Umu

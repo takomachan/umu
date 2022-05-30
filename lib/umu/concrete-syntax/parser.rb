@@ -53,11 +53,11 @@ class Parser
 		raise (
 			if token
 				X::SyntaxError.new(
-					token.pos,
+					token.loc,
 					"Syntax error near: %s", token.to_s
 				)
 			else
-				X::SyntaxErrorWithoutPosition.new "Syntax error"
+				X::SyntaxErrorWithoutLocation.new "Syntax error"
 			end
 		)
 	end

@@ -1,5 +1,5 @@
 require 'umu/common'
-require 'umu/lexical/position'
+require 'umu/lexical/location'
 
 
 module Umu
@@ -39,17 +39,17 @@ class IO < Top
 	end
 
 
-	def self.meth_make_stdin(_pos, _env, _event)
+	def self.meth_make_stdin(_loc, _env, _event)
 		VC.make_stdin
 	end
 
 
-	def self.meth_make_stdout(_pos, _env, _event)
+	def self.meth_make_stdout(_loc, _env, _event)
 		VC.make_stdout
 	end
 
 
-	def self.meth_make_stderr(_pos, _env, _event)
+	def self.meth_make_stderr(_loc, _env, _event)
 		VC.make_stderr
 	end
 
@@ -59,7 +59,7 @@ class IO < Top
 	end
 
 
-	def meth_get_string(_pos, _env, _event)
+	def meth_get_string(_loc, _env, _event)
 		s = self.io.gets
 
 		if s
@@ -70,7 +70,7 @@ class IO < Top
 	end
 
 
-	def meth_put_string(_pos, _env, event, value)
+	def meth_put_string(_loc, _env, event, value)
 		ASSERT.kind_of value, VCB::String
 
 		self.io.print value.val

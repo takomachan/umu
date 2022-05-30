@@ -35,7 +35,7 @@ class Datum < Abstract
 	end
 
 
-	def self.meth_make(_pos, _env, _event, tag, contents)
+	def self.meth_make(_loc, _env, _event, tag, contents)
 		ASSERT.kind_of tag,			VCB::Atom
 		ASSERT.kind_of contents,	VC::Top
 
@@ -48,17 +48,17 @@ class Datum < Abstract
 	end
 
 
-	def meth_to_string(pos, env, event)
+	def meth_to_string(loc, env, event)
 		VC.make_string(
 			format("%s %s",
 					self.tag_sym.to_s,
-					self.contents.meth_to_string(pos, env, event).val
+					self.contents.meth_to_string(loc, env, event).val
 			)
 		)
 	end
 
 
-	def meth_equal(pos, env, event, other)
+	def meth_equal(loc, env, event, other)
 		ASSERT.kind_of other, VC::Top
 
 		VC.make_bool(
@@ -66,19 +66,19 @@ class Datum < Abstract
 				other.kind_of?(self.class) &&
 				self.tag_sym == other.tag_sym &&
 				self.contents.meth_equal(
-					pos, env, event, other.contents
+					loc, env, event, other.contents
 				).true?
 			)
 		)
 	end
 
 
-	def meth_tag(_pos, _env, _event)
+	def meth_tag(_loc, _env, _event)
 		VC.make_atom self.tag_sym
 	end
 
 
-	def meth_contents(_pos, _env, _event)
+	def meth_contents(_loc, _env, _event)
 		self.contents
 	end
 end

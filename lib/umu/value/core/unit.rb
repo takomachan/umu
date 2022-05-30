@@ -13,7 +13,7 @@ class Unit < Top
 	end
 
 
-	def meth_equal(_pos, _env, _event, other)
+	def meth_equal(_loc, _env, _event, other)
 		ASSERT.kind_of other, VC::Top
 
 		VC.make_bool other.kind_of?(self.class)

@@ -1,5 +1,5 @@
 require 'umu/common'
-require 'umu/lexical/position'
+require 'umu/lexical/location'
 require 'umu/abstract-syntax/core/expression'
 
 
@@ -43,9 +43,9 @@ class Closure < Abstract
 
 private
 
-	def __apply__(init_values, pos, env, event)
+	def __apply__(init_values, loc, env, event)
 		ASSERT.kind_of init_values,	::Array
-		ASSERT.kind_of pos,			L::Position
+		ASSERT.kind_of loc,			L::Location
 		ASSERT.kind_of env,			E::Entry
 		ASSERT.kind_of event,		E::Tracer::Event
 
@@ -82,7 +82,7 @@ private
 				result	= self.lam.expr.evaluate new_env
 				ASSERT.kind_of result, SAR::Value
 
-				result.value.apply final_values, pos, new_env
+				result.value.apply final_values, loc, new_env
 			elsif init_idents_num > init_values_num
 				final_idents, final_values, final_env = __bind__(
 					init_values_num, init_idents, init_values, init_env
@@ -92,7 +92,7 @@ private
 
 				VC.make_closure(
 					SACE.make_lambda(
-						pos, final_idents, lam.expr, lam.opt_name
+						loc, final_idents, lam.expr, lam.opt_name
 					),
 					final_env.va_context
 				)

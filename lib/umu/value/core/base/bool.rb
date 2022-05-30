@@ -27,12 +27,12 @@ class Bool < Abstract
 	]
 
 
-	def self.meth_make_true(_pos, _env, _event)
+	def self.meth_make_true(_loc, _env, _event)
 		VC.make_true
 	end
 
 
-	def self.meth_make_false(_pos, _env, _event)
+	def self.meth_make_false(_loc, _env, _event)
 		VC.make_false
 	end
 
@@ -54,7 +54,7 @@ class Bool < Abstract
 	end
 
 
-	def meth_less_than(_pos, _env, _event, other)
+	def meth_less_than(_loc, _env, _event, other)
 		ASSERT.kind_of other, Bool
 
 		VC.make_bool(
@@ -67,7 +67,7 @@ class Bool < Abstract
 	end
 
 
-	def meth_not(_pos, _env, _event)
+	def meth_not(_loc, _env, _event)
 		VC.make_bool(! self.val)
 	end
 end

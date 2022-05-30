@@ -63,9 +63,9 @@ class Top
 	end
 
 
-	def invoke(method_spec, pos, env, _event, *arg_values)
+	def invoke(method_spec, loc, env, _event, *arg_values)
 		ASSERT.kind_of method_spec,	ECTS::Method
-		ASSERT.kind_of pos,			L::Position
+		ASSERT.kind_of loc,			L::Location
 		ASSERT.kind_of env,			E::Entry
 		ASSERT.kind_of arg_values,	::Array
 		ASSERT.assert arg_values.all? { |v| v.kind_of? VC::Top }
@@ -95,12 +95,12 @@ class Top
 							env.trace_stack.count,
 							'Invoke',
 							self.class,
-							pos,
+							loc,
 							msg,
 						) { |event|
 							__invoke__(
 								method_spec.meth_sym,
-								pos,
+								loc,
 								env,
 								event,
 								arg_values
@@ -110,12 +110,12 @@ class Top
 	end
 
 
-	def apply(_values, pos, env)
-		ASSERT.kind_of pos,	L::Position
+	def apply(_values, loc, env)
+		ASSERT.kind_of loc,	L::Location
 		ASSERT.kind_of env,	E::Entry
 
 		raise X::ApplicationError.new(
-			pos,
+			loc,
 			env,
 			"Application error for %s : %s",
 				self.to_s,
@@ -124,7 +124,7 @@ class Top
 	end
 
 
-	def meth_inspect(_pos, _env, _event)
+	def meth_inspect(_loc, _env, _event)
 		VC.make_string self.to_s
 	end
 
@@ -132,9 +132,9 @@ class Top
 	alias meth_to_string meth_inspect
 
 
-	def meth_equal(pos, env, _event, _other)
+	def meth_equal(loc, env, _event, _other)
 		raise X::EqualityError.new(
-			pos,
+			loc,
 			env,
 			"Equality error for %s : %s",
 				self.to_s,
@@ -143,9 +143,9 @@ class Top
 	end
 
 
-	def meth_less_than(pos, env, _event, _other)
+	def meth_less_than(loc, env, _event, _other)
 		raise X::OrderError.new(
-			pos,
+			loc,
 			env,
 			"Order error for %s : %s",
 				self.to_s,
@@ -156,14 +156,14 @@ class Top
 
 private
 
-	def __invoke__(meth_sym, pos, env, event, arg_values)
+	def __invoke__(meth_sym, loc, env, event, arg_values)
 		ASSERT.kind_of meth_sym,	::Symbol
-		ASSERT.kind_of pos,			L::Position
+		ASSERT.kind_of loc,			L::Location
 		ASSERT.kind_of env,			E::Entry
 		ASSERT.kind_of event,		E::Tracer::Event
 		ASSERT.kind_of arg_values,	::Array
 
-		self.send meth_sym, pos, env, event, *arg_values
+		self.send meth_sym, loc, env, event, *arg_values
 	end
 end
 

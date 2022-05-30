@@ -1,7 +1,7 @@
 require 'strscan'
 
 require 'umu/common'
-require 'umu/lexical/position'
+require 'umu/lexical/location'
 require 'umu/lexical/token'
 
 
@@ -182,9 +182,9 @@ SYMBOL_PATTERNS = [
 				scanner.matched,
 
 				if scanner[1]
-					LT.make_float pos, scanner.matched.to_f
+					LT.make_float self.loc, scanner.matched.to_f
 				else
-					LT.make_integer pos, scanner.matched.to_i
+					LT.make_integer self.loc, scanner.matched.to_i
 				end,
 
 				__make_separator__
@@ -218,12 +218,12 @@ SYMBOL_PATTERNS = [
 				scanner.matched,
 
 				if head_matched
-					LT.make_atom pos, body_matched
+					LT.make_atom self.loc, body_matched
 				else
 					if RESERVED_WORDS[body_matched]
-						LT.make_reserved_word pos, body_matched
+						LT.make_reserved_word self.loc, body_matched
 					else
-						LT.make_identifier pos, body_matched
+						LT.make_identifier self.loc, body_matched
 					end
 				end,
 
@@ -241,7 +241,7 @@ SYMBOL_PATTERNS = [
 
 					scanner.matched,
 
-					LT.make_reserved_symbol(pos, matched),
+					LT.make_reserved_symbol(self.loc, matched),
 
 					__make_separator__
 				]
@@ -251,7 +251,7 @@ SYMBOL_PATTERNS = [
 
 					scanner.matched,
 
-					LT.make_identifier(pos, matched),
+					LT.make_identifier(self.loc, matched),
 
 					__make_separator__
 				]
@@ -261,15 +261,17 @@ SYMBOL_PATTERNS = [
 
 					scanner.matched,
 
-					LT.make_reserved_symbol(pos, matched),
+					LT.make_reserved_symbol(self.loc, matched),
 
-					__make_separator__(pos, [matched] + self.braket_stack)
+					__make_separator__(
+						self.loc, [matched] + self.braket_stack
+					)
 				]
 			elsif END_BRAKET_SYMBOLS[matched]
 				bb, *stack = self.braket_stack
 				unless bb	# Is stack empty?
 					raise X::LexicalError.new(
-						pos,
+						self.loc,
 						"Unexpected end-braket: '%s'", matched
 					)
 				end
@@ -285,13 +287,13 @@ SYMBOL_PATTERNS = [
 
 						scanner.matched,
 						
-						LT.make_reserved_symbol(pos, matched),
+						LT.make_reserved_symbol(self.loc, matched),
 
-						__make_separator__(pos, stack)
+						__make_separator__(self.loc, stack)
 					]
 				else
 					raise X::LexicalError.new(
-						pos,
+						self.loc,
 						"Mismatch of brakets: '%s' .... '%s'",
 											  bb,		matched
 					)
@@ -303,7 +305,7 @@ SYMBOL_PATTERNS = [
 		# Unmatched
 		else
 			raise X::LexicalError.new(
-				pos,
+				self.loc,
 				"Can't recognized as token: '%s'", scanner.inspect
 			)
 		end

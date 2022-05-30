@@ -306,16 +306,16 @@ class Entry
 	end
 
 
-	def lookup(sym, pos, env)
+	def lookup(sym, loc, env)
 		ASSERT.kind_of sym,	::Symbol
-		ASSERT.kind_of pos,	L::Position
+		ASSERT.kind_of loc,	L::Location
 		ASSERT.kind_of env,	E::Entry
 
 		spec = SPEC_OF_SYMBOL[sym]
 
 		unless spec
 			raise X::NameError.new(
-				pos,
+				loc,
 				env,
 				"Unbound type identifier: '%s'", sym.to_s
 			)

@@ -18,7 +18,7 @@ class Abstract < AbstractSyntax::Abstract
 					env.trace_stack.count,
 					'Eval(Decl)',
 					self.class,
-					self.pos,
+					self.loc,
 					self.to_s
 		) { |event|
 			before_env = env.enter(event)

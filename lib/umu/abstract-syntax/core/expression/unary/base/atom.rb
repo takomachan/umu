@@ -14,7 +14,7 @@ module Unary
 module Base
 
 class Atom < Abstract
-	def initialize(pos, obj)
+	def initialize(loc, obj)
 		ASSERT.kind_of obj, ::Symbol
 
 		super
@@ -38,11 +38,11 @@ end # Umu::AbstractSyntax::Core::Expression::Unary
 
 module_function
 
-	def make_atom(pos, obj)
-		ASSERT.kind_of pos,	L::Position
+	def make_atom(loc, obj)
+		ASSERT.kind_of loc,	L::Location
 		ASSERT.kind_of obj,	::Symbol
 
-		Unary::Base::Atom.new(pos, obj).freeze
+		Unary::Base::Atom.new(loc, obj).freeze
 	end
 
 end	# Umu::AbstractSyntax::Core::Expression

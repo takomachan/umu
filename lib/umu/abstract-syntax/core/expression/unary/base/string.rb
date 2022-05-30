@@ -15,7 +15,7 @@ module Unary
 module Base
 
 class String < Abstract
-	def initialize(pos, obj)
+	def initialize(loc, obj)
 		ASSERT.kind_of obj, ::String
 
 		super
@@ -39,11 +39,11 @@ end # Umu::AbstractSyntax::Core::Expression::Unary
 
 module_function
 
-	def make_string(pos, obj)
-		ASSERT.kind_of pos,	L::Position
+	def make_string(loc, obj)
+		ASSERT.kind_of loc,	L::Location
 		ASSERT.kind_of obj,	::String
 
-		Unary::Base::String.new(pos, obj.freeze).freeze
+		Unary::Base::String.new(loc, obj.freeze).freeze
 	end
 
 end	# Umu::AbstractSyntax::Core::Expression

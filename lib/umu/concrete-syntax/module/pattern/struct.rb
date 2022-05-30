@@ -15,7 +15,7 @@ class Field < Abstraction::LabelValuePair
 	alias opt_var_sym value
 
 
-	def initialize(pos, label, opt_var_sym)
+	def initialize(loc, label, opt_var_sym)
 		ASSERT.opt_kind_of opt_var_sym, ::Symbol
 
 		super
@@ -29,7 +29,7 @@ class Field < Abstraction::LabelValuePair
 						self.label
 					end
 
-		SCCP.make_variable self.pos, var_sym
+		SCCP.make_variable self.loc, var_sym
 	end
 
 private
@@ -47,7 +47,7 @@ class Entry < Pattern::Abstract
 	attr_reader :fields
 
 
-	def initialize(pos, fields)
+	def initialize(loc, fields)
 		ASSERT.kind_of	fields,	::Array
 
 		@fields = fields
@@ -67,21 +67,21 @@ class Entry < Pattern::Abstract
 			[
 				lab_hash.merge(field.label => true) { |key, _, _|
 					raise X::SyntaxError.new(
-						pos,
+						loc,
 						"Duplicated pattern label: '%s'", key.to_s
 					)
 				},
 
 				vpat_hash.merge(vpat.var_sym => true) { |key, _, _|
 					raise X::SyntaxError.new(
-						pos,
+						loc,
 						"Duplicated pattern variable: '%s'", key.to_s
 					)
 				}
 			]
 		end
 
-		super(pos)
+		super(loc)
 	end
 
 
@@ -123,9 +123,9 @@ private
 		ASSERT.kind_of expr, SACE::Abstract
 
 		SACD.make_declarations(
-			self.pos,
+			self.loc,
 			[
-				SACD.make_value(self.pos, :'%r', expr)
+				SACD.make_value(self.loc, :'%r', expr)
 			] + (
 				__desugar__(env)
 			)
@@ -143,14 +143,14 @@ private
 			vpat = field.pat
 			ASSERT.kind_of vpat, SCCP::Variable
 
-			pos = field.pos
+			loc = field.loc
 			expr = SACE.make_send(
-						pos,
-						SACE.make_identifier(pos, :'%r'),
-						[SACE.make_label_selector(pos, field.label)]
+						loc,
+						SACE.make_identifier(loc, :'%r'),
+						[SACE.make_label_selector(loc, field.label)]
 					)
 
-			SACD.make_value vpat.pos, vpat.var_sym, expr
+			SACD.make_value vpat.loc, vpat.var_sym, expr
 		}
 	end
 end
@@ -160,20 +160,20 @@ end	# Umu::ConcreteSyntax::Module::Pattern::Struct
 
 module_function
 
-	def make_struct_field(pos, label, opt_var_sym)
-		ASSERT.kind_of		pos,			L::Position
+	def make_struct_field(loc, label, opt_var_sym)
+		ASSERT.kind_of		loc,			L::Location
 		ASSERT.kind_of		label,			::Symbol
 		ASSERT.opt_kind_of	opt_var_sym,	::Symbol
 
-		Struct::Field.new(pos, label, opt_var_sym).freeze
+		Struct::Field.new(loc, label, opt_var_sym).freeze
 	end
 
 
-	def make_struct(pos, fields)
-		ASSERT.kind_of	pos,	L::Position
+	def make_struct(loc, fields)
+		ASSERT.kind_of	loc,	L::Location
 		ASSERT.kind_of	fields,	::Array
 
-		Struct::Entry.new(pos, fields.freeze).freeze
+		Struct::Entry.new(loc, fields.freeze).freeze
 	end
 
 end	# Umu::ConcreteSyntax::Module::Pattern

@@ -1,5 +1,5 @@
 require 'umu/common'
-require 'umu/lexical/position'
+require 'umu/lexical/location'
 
 
 module Umu
@@ -18,11 +18,11 @@ class Abstract < Abstraction::Model
 	attr_reader :test_expr, :then_expr
 
 
-	def initialize(pos, test_expr, then_expr)
+	def initialize(loc, test_expr, then_expr)
 		ASSERT.kind_of test_expr,	SCCE::Abstract
 		ASSERT.kind_of then_expr,	SCCE::Abstract
 
-		super(pos)
+		super(loc)
 
 		@test_expr	= test_expr
 		@then_expr	= then_expr
@@ -41,12 +41,12 @@ class Cond < Abstract
 	attr_reader :decls
 
 
-	def initialize(pos, test_expr, then_expr, decls)
+	def initialize(loc, test_expr, then_expr, decls)
 		ASSERT.kind_of test_expr,	SCCE::Abstract
 		ASSERT.kind_of then_expr,	SCCE::Abstract
 		ASSERT.kind_of decls,		::Array
 
-		super(pos, test_expr, then_expr)
+		super(loc, test_expr, then_expr)
 
 		@decls = decls
 	end
@@ -74,22 +74,22 @@ end	# Umu::ConcreteSyntax::Core::Expression::Nary
 
 module_function
 
-	def make_if_rule(pos, test_expr, then_expr)
-		ASSERT.kind_of pos,			L::Position
+	def make_if_rule(loc, test_expr, then_expr)
+		ASSERT.kind_of loc,			L::Location
 		ASSERT.kind_of test_expr,	SCCE::Abstract
 		ASSERT.kind_of then_expr,	SCCE::Abstract
 
-		Nary::Rule::If.new(pos, test_expr, then_expr).freeze
+		Nary::Rule::If.new(loc, test_expr, then_expr).freeze
 	end
 
 
-	def make_cond_rule(pos, test_expr, then_expr, decls)
-		ASSERT.kind_of pos,			L::Position
+	def make_cond_rule(loc, test_expr, then_expr, decls)
+		ASSERT.kind_of loc,			L::Location
 		ASSERT.kind_of test_expr,	SCCE::Abstract
 		ASSERT.kind_of then_expr,	SCCE::Abstract
 		ASSERT.kind_of decls,		::Array
 
-		Nary::Rule::Cond.new(pos, test_expr, then_expr, decls.freeze).freeze
+		Nary::Rule::Cond.new(loc, test_expr, then_expr, decls.freeze).freeze
 	end
 
 end	# Umu::ConcreteSyntax::Core::Expression

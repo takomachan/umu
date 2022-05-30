@@ -18,11 +18,11 @@ class Rule < Abstraction::Model
 	attr_reader :test_expr, :then_expr
 
 
-	def initialize(pos, test_expr, then_expr)
+	def initialize(loc, test_expr, then_expr)
 		ASSERT.kind_of test_expr,	SACE::Abstract
 		ASSERT.kind_of then_expr,	SACE::Abstract
 
-		super(pos)
+		super(loc)
 
 		@test_expr	= test_expr
 		@then_expr	= then_expr
@@ -40,11 +40,11 @@ class Entry < Expression::Abstract
 	attr_reader :rules, :else_expr
 
 
-	def initialize(pos, rules, else_expr)
+	def initialize(loc, rules, else_expr)
 		ASSERT.kind_of rules,		::Array
 		ASSERT.kind_of else_expr,	SACE::Abstract
 
-		super(pos)
+		super(loc)
 
 		@rules		= rules
 		@else_expr	= else_expr
@@ -92,7 +92,7 @@ class Entry < Expression::Abstract
 			test_value = test_result.value
 			unless test_value.kind_of? VCB::Bool
 				raise X::TypeError.new(
-					rule.pos,
+					rule.loc,
 					env,
 					"Type error in if-expression, " +
 							"expected a Bool, but %s : %s",
@@ -120,21 +120,21 @@ end	# Umu::AbstractSyntax::Core::Expression::Nary
 
 module_function
 
-	def make_rule(pos, test_expr, then_expr)
-		ASSERT.kind_of pos,			L::Position
+	def make_rule(loc, test_expr, then_expr)
+		ASSERT.kind_of loc,			L::Location
 		ASSERT.kind_of test_expr,	SACE::Abstract
 		ASSERT.kind_of then_expr,	SACE::Abstract
 
-		Nary::If::Rule.new(pos, test_expr, then_expr).freeze
+		Nary::If::Rule.new(loc, test_expr, then_expr).freeze
 	end
 
 
-	def make_if(pos, rules, else_expr)
-		ASSERT.kind_of pos,			L::Position
+	def make_if(loc, rules, else_expr)
+		ASSERT.kind_of loc,			L::Location
 		ASSERT.kind_of rules,		::Array
 		ASSERT.kind_of else_expr,	SACE::Abstract
 
-		Nary::If::Entry.new(pos, rules, else_expr).freeze
+		Nary::If::Entry.new(loc, rules, else_expr).freeze
 	end
 
 end	# Umu::AbstractSyntax::Core::Expression

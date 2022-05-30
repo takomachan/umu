@@ -1,7 +1,7 @@
 require 'strscan'
 
 require 'umu/common'
-require 'umu/lexical/position'
+require 'umu/lexical/location'
 require 'umu/lexical/token'
 
 
@@ -13,23 +13,23 @@ module Lexical
 module Lexer
 
 class Abstract < Abstraction::Record
-	attr_reader	:pos
+	attr_reader	:loc
 	attr_reader	:braket_stack
 
 
 	def self.deconstruct_keys
 		{
-			:pos			=> L::Position,
+			:loc			=> L::Location,
 			:braket_stack	=> ::Array
 		}
 	end
 
 
-	def initialize(pos, braket_stack)
-		ASSERT.kind_of pos,				L::Position
+	def initialize(loc, braket_stack)
+		ASSERT.kind_of loc,				L::Location
 		ASSERT.kind_of braket_stack,	::Array
 
-		@pos			= pos
+		@loc			= loc
 		@braket_stack	= braket_stack
 	end
 
@@ -38,7 +38,7 @@ class Abstract < Abstraction::Record
 		format("%s {braket_stack=%s} -- %s",
 			E::Tracer.class_to_string(self.class),
 			self.braket_stack.inspect,
-			self.pos.to_s
+			self.loc.to_s
 		)
 	end
 
@@ -77,12 +77,12 @@ class Abstract < Abstraction::Record
 	def next_line_num(n = 1)
 		ASSERT.kind_of n, ::Integer
 
-		self.update(pos: self.pos.next_line_num(n))
+		self.update(loc: self.loc.next_line_num(n))
 	end
 
 
 	def recover
-		__make_separator__ self.pos.next_line_num, []
+		__make_separator__ self.loc.next_line_num, []
 	end
 
 
@@ -94,71 +94,71 @@ class Abstract < Abstraction::Record
 private
 
 	def __make_separator__(
-		pos				= self.pos,
+		loc				= self.loc,
 		braket_stack	= self.braket_stack
 	)
-		ASSERT.kind_of pos, L::Position
+		ASSERT.kind_of loc, L::Location
 
 		Separator.new(
-			pos, braket_stack.freeze
+			loc, braket_stack.freeze
 		).freeze
 	end
 
 
 	def __make_comment__(
-		saved_pos,
+		saved_loc,
 		comment_depth,
 		buf,
-		pos				= self.pos,
+		loc				= self.loc,
 		braket_stack	= self.braket_stack
 	)
-		ASSERT.kind_of saved_pos,		L::Position
+		ASSERT.kind_of saved_loc,		L::Location
 		ASSERT.kind_of comment_depth,	::Integer
 		ASSERT.kind_of buf,				::String
-		ASSERT.kind_of pos,				L::Position
+		ASSERT.kind_of loc,				L::Location
 
 		Comment.new(
-			pos, braket_stack.freeze, buf.freeze, saved_pos, comment_depth
+			loc, braket_stack.freeze, buf.freeze, saved_loc, comment_depth
 		).freeze
 	end
 
 
 	def __make_token__(
-		pos				= self.pos,
+		loc				= self.loc,
 		braket_stack	= self.braket_stack
 	)
-		ASSERT.kind_of pos, L::Position
+		ASSERT.kind_of loc, L::Location
 
 		Token.new(
-			pos, braket_stack.freeze
+			loc, braket_stack.freeze
 		).freeze
 	end
 
 
 	def __make_string__(
 		buf,
-		pos				= self.pos,
+		loc				= self.loc,
 		braket_stack	= self.braket_stack
 	)
 		ASSERT.kind_of buf, ::String
-		ASSERT.kind_of pos, L::Position
+		ASSERT.kind_of loc, L::Location
 
 		String::Basic.new(
-			pos, braket_stack.freeze, buf.freeze
+			loc, braket_stack.freeze, buf.freeze
 		).freeze
 	end
 
 
 	def __make_atomized_string__(
 		buf,
-		pos				= self.pos,
+		loc				= self.loc,
 		braket_stack	= self.braket_stack
 	)
 		ASSERT.kind_of buf, ::String
-		ASSERT.kind_of pos, L::Position
+		ASSERT.kind_of loc, L::Location
 
 		String::Atomized.new(
-			pos, braket_stack.freeze, buf.freeze
+			loc, braket_stack.freeze, buf.freeze
 		).freeze
 	end
 end

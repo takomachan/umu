@@ -1,5 +1,5 @@
 require 'umu/common'
-require 'umu/lexical/position'
+require 'umu/lexical/location'
 
 
 module Umu
@@ -7,13 +7,13 @@ module Umu
 module Abstraction
 
 class Model
-	attr_reader :pos
+	attr_reader :loc
 
 
-	def initialize(pos)
-		ASSERT.kind_of pos, L::Position
+	def initialize(loc)
+		ASSERT.kind_of loc, L::Location
 
-		@pos = pos
+		@loc = loc
 	end
 
 
@@ -28,11 +28,11 @@ class LabelValuePair < Model
 	attr_reader :label, :value
 
 
-	def initialize(pos, label, value)
+	def initialize(loc, label, value)
 		ASSERT.kind_of label,	::Symbol
 		ASSERT.kind_of value,	::Object	# Polymophic
 
-		super(pos)
+		super(loc)
 
 		@label	= label
 		@value	= value

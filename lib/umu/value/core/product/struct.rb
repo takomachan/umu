@@ -1,5 +1,5 @@
 require 'umu/common'
-require 'umu/lexical/position'
+require 'umu/lexical/location'
 
 
 module Umu
@@ -62,14 +62,14 @@ class Entry < Product::Abstract
 	end
 
 
-	def select(sel_lab, pos, env)
+	def select(sel_lab, loc, env)
 		ASSERT.kind_of sel_lab,		::Symbol
-		ASSERT.kind_of pos,			L::Position
+		ASSERT.kind_of loc,			L::Location
 
 		value = self.value_by_label[sel_lab]
 		unless value
 			raise X::SelectionError.new(
-				pos,
+				loc,
 				env,
 				"Unknown selector label: '%s'", sel_lab
 			)
@@ -79,14 +79,14 @@ class Entry < Product::Abstract
 	end
 
 
-	def modify(other, pos, env)
+	def modify(other, loc, env)
 		ASSERT.kind_of other,	Struct::Entry
-		ASSERT.kind_of pos,		L::Position
+		ASSERT.kind_of loc,		L::Location
 
 		other.value_by_label.each_key do |label|
 			unless self.value_by_label.key? label
 				raise X::SelectionError.new(
-					pos,
+					loc,
 					env,
 					"Unknown modifier label: '%s'", label.to_s
 				)
@@ -94,14 +94,14 @@ class Entry < Product::Abstract
 		end
 
 		VC.make_struct(
-			self.pos,
+			self.loc,
 
 			self.value_by_label.merge(other.value_by_label)
 		)
 	end
 
 
-	def meth_equal(pos, env, event, other)
+	def meth_equal(loc, env, event, other)
 		ASSERT.kind_of other, VC::Top
 
 		VC.make_bool(
@@ -114,7 +114,7 @@ class Entry < Product::Abstract
 				ASSERT.kind_of value,	VC::Top
 
 				value.meth_equal(
-						pos, env, event, other.value_by_label[label]
+						loc, env, event, other.value_by_label[label]
 				).true?
 			}
 		)

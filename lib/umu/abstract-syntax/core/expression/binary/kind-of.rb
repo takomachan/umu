@@ -17,8 +17,8 @@ class KindOf < Binary::Abstract
 	alias type_sym	rhs
 
 
-	def initialize(pos, expr, type_sym)
-		ASSERT.kind_of pos,			L::Position
+	def initialize(loc, expr, type_sym)
+		ASSERT.kind_of loc,			L::Location
 		ASSERT.kind_of expr,		SACE::Abstract
 		ASSERT.kind_of type_sym,	::Symbol
 
@@ -35,7 +35,7 @@ class KindOf < Binary::Abstract
 		ASSERT.kind_of env,		E::Entry
 		ASSERT.kind_of event,	E::Tracer::Event
 
-		rhs_spec = env.ty_lookup self.type_sym, self.pos
+		rhs_spec = env.ty_lookup self.type_sym, self.loc
 		ASSERT.kind_of rhs_spec, ECTSC::Base
 
 		lhs_value = self.expr.evaluate(env.enter event).value
@@ -50,12 +50,12 @@ end	# Umu::AbstractSyntax::Core::Expression::Binary
 
 module_function
 
-	def make_kind_of(pos, expr, type)
-		ASSERT.kind_of pos,		L::Position
+	def make_kind_of(loc, expr, type)
+		ASSERT.kind_of loc,		L::Location
 		ASSERT.kind_of expr,	SACE::Abstract
 		ASSERT.kind_of type,	::Symbol
 
-		Binary::KindOf.new(pos, expr, type).freeze
+		Binary::KindOf.new(loc, expr, type).freeze
 	end
 
 end	# Umu::AbstractSyntax::Core::Expression

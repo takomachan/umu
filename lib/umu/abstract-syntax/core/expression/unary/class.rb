@@ -15,7 +15,7 @@ class Class < Abstract
 	alias class_sym obj
 
 
-	def initialize(pos, class_sym)
+	def initialize(loc, class_sym)
 		ASSERT.kind_of class_sym, ::Symbol
 
 		super
@@ -28,7 +28,7 @@ class Class < Abstract
 
 
 	def __evaluate__(env, _event)
-		class_spec = env.ty_lookup self.class_sym, self.pos
+		class_spec = env.ty_lookup self.class_sym, self.loc
 		ASSERT.kind_of class_spec, ECTSC::Base
 
 		VC.make_class class_spec
@@ -40,11 +40,11 @@ end # Umu::AbstractSyntax::Core::Expression::Unary
 
 module_function
 
-	def make_class(pos, class_sym)
-		ASSERT.kind_of pos,			L::Position
+	def make_class(loc, class_sym)
+		ASSERT.kind_of loc,			L::Location
 		ASSERT.kind_of class_sym,	::Symbol
 
-		Unary::Class.new(pos, class_sym).freeze
+		Unary::Class.new(loc, class_sym).freeze
 	end
 
 end	# Umu::AbstractSyntax::Core::Expression

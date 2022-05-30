@@ -29,24 +29,24 @@ class Abstract < Union::Abstract
 	]
 
 
-	def self.meth_make_none(_pos, _env, _event)
+	def self.meth_make_none(_loc, _env, _event)
 		VC.make_none
 	end
 
 
-	def self.meth_make_some(_pos, _env, _event, contents)
+	def self.meth_make_some(_loc, _env, _event, contents)
 		ASSERT.kind_of contents, VC::Top
 
 		VC.make_some contents
 	end
 
 
-	def meth_none?(_pos, _env, event)
+	def meth_none?(_loc, _env, event)
 		VC.make_false
 	end
 
 
-	def meth_some?(_pos, _env, event)
+	def meth_some?(_loc, _env, event)
 		VC.make_false
 	end
 end
@@ -65,12 +65,12 @@ class None < Abstract
 	end
 
 
-	def meth_to_string(_pos, _env, _event)
+	def meth_to_string(_loc, _env, _event)
 		VC.make_string self.to_s
 	end
 
 
-	def meth_none?(_pos, _env, _event)
+	def meth_none?(_loc, _env, _event)
 		VC.make_true
 	end
 end
@@ -97,21 +97,21 @@ class Some < Abstract
 	end
 
 
-	def meth_to_string(pos, env, event)
+	def meth_to_string(loc, env, event)
 		VC.make_string(
 			format("Some %s",
-					self.contents.meth_to_string(pos, env, event).val
+					self.contents.meth_to_string(loc, env, event).val
 			)
 		)
 	end
 
 
-	def meth_some?(_pos, _env, event)
+	def meth_some?(_loc, _env, event)
 		VC.make_true
 	end
 
 
-	def meth_contents(_pos, _env, _event)
+	def meth_contents(_loc, _env, _event)
 		self.contents
 	end
 end

@@ -25,13 +25,13 @@ private
 	def __desugar_value__(expr, _env, _event)
 		ASSERT.kind_of expr, SACE::Abstract
 
-		SACD.make_value self.pos, WILDCARD, expr
+		SACD.make_value self.loc, WILDCARD, expr
 	end
 
 
 	def __desugar_lambda__(_seq_num, _env, _event)
 		SCCP.make_result(
-			SACE.make_identifier(self.pos, WILDCARD),
+			SACE.make_identifier(self.loc, WILDCARD),
 			[]
 		)
 	end
@@ -40,10 +40,10 @@ end
 
 module_function
 
-	def make_unit(pos)
-		ASSERT.kind_of pos,	L::Position
+	def make_unit(loc)
+		ASSERT.kind_of loc,	L::Location
 
-		Unit.new(pos).freeze
+		Unit.new(loc).freeze
 	end
 
 end	# Umu::ConcreteSyntax::Core::Pattern

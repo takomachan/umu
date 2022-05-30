@@ -50,17 +50,17 @@ class Integer < Abstract
 	end
 
 
-	def meth_odd?(_pos, _env, _event)
+	def meth_odd?(_loc, _env, _event)
 		VC.make_bool self.val.odd?
 	end
 
 
-	def meth_even?(_pos, _env, _event)
+	def meth_even?(_loc, _env, _event)
 		VC.make_bool self.val.even?
 	end
 
 
-	def meth_to_int(_pos, _env, _event)
+	def meth_to_int(_loc, _env, _event)
 		self
 	end
 end

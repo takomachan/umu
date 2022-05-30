@@ -1,7 +1,7 @@
 require 'strscan'
 
 require 'umu/common'
-require 'umu/lexical/position'
+require 'umu/lexical/location'
 require 'umu/lexical/token'
 require 'umu/lexical/escape'
 
@@ -26,12 +26,12 @@ class Abstract < Lexer::Abstract
 	end
 
 
-	def initialize(pos, braket_stack, buf)
-		ASSERT.kind_of pos,				L::Position
+	def initialize(loc, braket_stack, buf)
+		ASSERT.kind_of loc,				L::Location
 		ASSERT.kind_of braket_stack,	::Array
 		ASSERT.kind_of buf,				::String
 
-		super(pos, braket_stack)
+		super(loc, braket_stack)
 
 		@buf = buf
 	end
@@ -42,7 +42,7 @@ class Abstract < Lexer::Abstract
 			E::Tracer.class_to_string(self.class),
 			self.braket_stack.inspect,
 			self.buf.inspect,
-			self.pos.to_s
+			self.loc.to_s
 		)
 	end
 
@@ -58,7 +58,7 @@ class Abstract < Lexer::Abstract
 
 				scanner.matched,
 
-				__make_token__(pos, self.buf),
+				__make_token__(loc, self.buf),
 
 				__make_separator__
 			]
@@ -66,7 +66,7 @@ class Abstract < Lexer::Abstract
 		# New-line
 		when scanner.skip(/\n/)
 			raise X::LexicalError.new(
-				pos,
+				loc,
 				"Unexpected end-string: '\"%s'", self.buf
 			)
 
@@ -75,7 +75,7 @@ class Abstract < Lexer::Abstract
 			opt_esc = L::Escape.opt_escape scanner.matched
 			unless opt_esc
 				raise X::LexicalError.new(
-					pos,
+					loc,
 					"Unknown escape-character: '%s' after '\"%s'",
 												scanner.matched, self.buf
 				)
@@ -111,8 +111,8 @@ class Abstract < Lexer::Abstract
 
 private
 
-	def __make_token__(pos, val)
-		ASSERT.kind_of pos, L::Position
+	def __make_token__(loc, val)
+		ASSERT.kind_of loc, L::Location
 		ASSERT.kind_of val, ::String
 
 		raise X::SubclassResponsibility
@@ -129,11 +129,11 @@ end
 
 
 class Basic < Abstract
-	def __make_token__(pos, val)
-		ASSERT.kind_of pos, L::Position
+	def __make_token__(loc, val)
+		ASSERT.kind_of loc, L::Location
 		ASSERT.kind_of val, ::String
 
-		LT.make_string pos, val
+		LT.make_string loc, val
 	end
 
 
@@ -147,20 +147,20 @@ end
 
 
 class Atomized < Abstract
-	def __make_token__(pos, val)
-		ASSERT.kind_of pos, L::Position
+	def __make_token__(loc, val)
+		ASSERT.kind_of loc, L::Location
 		ASSERT.kind_of val, ::String
 
 		esc_char = L::Escape.find_escape val
 		if esc_char
 			raise X::LexicalError.new(
-					pos,
+					loc,
 					"Escape character in atomized string: '%s'",
 						L::Escape.unescape(esc_char)
 				)
 		end
 
-		LT.make_atom pos, val
+		LT.make_atom loc, val
 	end
 
 

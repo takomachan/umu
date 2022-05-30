@@ -1,5 +1,5 @@
 require 'umu/common'
-require 'umu/lexical/position'
+require 'umu/lexical/location'
 
 
 module Umu
@@ -33,13 +33,13 @@ class Tuple < Abstract
 	end
 
 
-	def select(sel_num, pos, env)
+	def select(sel_num, loc, env)
 		ASSERT.kind_of sel_num,		::Integer
-		ASSERT.kind_of pos,			L::Position
+		ASSERT.kind_of loc,			L::Location
 
 		unless 1 <= sel_num && sel_num <= self.arity
 			raise X::SelectionError.new(
-				pos,
+				loc,
 				env,
 				"Selector expected 1..%d, but %d",
 					self.arity, sel_num
@@ -51,18 +51,18 @@ class Tuple < Abstract
 	end
 
 
-	def meth_to_string(pos, env, event)
+	def meth_to_string(loc, env, event)
 		VC.make_string(
 			format("(%s)",
 				self.map { |elem|
-					elem.meth_to_string(pos, env, event).val
+					elem.meth_to_string(loc, env, event).val
 				}.join(', ')
 			)
 		)
 	end
 
 
-	def meth_equal(pos, env, event, other)
+	def meth_equal(loc, env, event, other)
 		ASSERT.kind_of other, VC::Top
 
 		unless other.kind_of?(self.class) && self.arity == other.arity
@@ -74,13 +74,13 @@ class Tuple < Abstract
 				|self_value, other_value|
 
 				other_value.kind_of?(self_value.class) &&
-				self_value.meth_equal(pos, env, event, other_value).true?
+				self_value.meth_equal(loc, env, event, other_value).true?
 			}
 		)
 	end
 
 
-	def meth_less_than(pos, env, event, other)
+	def meth_less_than(loc, env, event, other)
 		ASSERT.kind_of other, VCP::Tuple
 
 		VC.make_bool(
@@ -89,7 +89,7 @@ class Tuple < Abstract
 
 				unless other_value.kind_of?(self_value.class)
 					raise X::TypeError.new(
-						pos,
+						loc,
 						env,
 						"In %d's element of tuple, " +
 								"expected a %s, but %s : %s",
@@ -101,7 +101,7 @@ class Tuple < Abstract
 				end
 
 				self_value.meth_less_than(
-					pos, env, event, other_value
+					loc, env, event, other_value
 				).true?
 			}
 		)

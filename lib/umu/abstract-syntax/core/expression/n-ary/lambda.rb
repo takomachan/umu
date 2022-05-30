@@ -16,12 +16,12 @@ class Lambda < Expression::Abstract
 	attr_reader	:idents, :expr, :opt_name
 
 
-	def initialize(pos, idents, expr, opt_name)
+	def initialize(loc, idents, expr, opt_name)
 		ASSERT.kind_of		idents,		::Array
 		ASSERT.kind_of		expr,		SACE::Abstract
 		ASSERT.opt_kind_of	opt_name,	::Symbol
 
-		super(pos)
+		super(loc)
 
 		@idents		= idents
 		@expr		= expr
@@ -50,13 +50,13 @@ end	# Umu::AbstractSyntax::Core::Expression::Nary
 
 module_function
 
-	def make_lambda(pos, idents, expr, opt_name = nil)
-		ASSERT.kind_of		pos,			L::Position
+	def make_lambda(loc, idents, expr, opt_name = nil)
+		ASSERT.kind_of		loc,			L::Location
 		ASSERT.kind_of		idents,			::Array
 		ASSERT.kind_of		expr,			SACE::Abstract
 		ASSERT.opt_kind_of	opt_name,		::Symbol
 
-		Nary::Lambda.new(pos, idents, expr, opt_name).freeze
+		Nary::Lambda.new(loc, idents, expr, opt_name).freeze
 	end
 
 end	# Umu::AbstractSyntax::Core::Expression

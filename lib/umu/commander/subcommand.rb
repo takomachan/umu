@@ -31,7 +31,7 @@ module_function
 				when 1
 					class_spec = env.ty_lookup(
 						args[0].to_sym,
-						L.make_position(STDIN_FILE_NAME, line_num)
+						L.make_location(STDIN_FILE_NAME, line_num)
 					)
 
 					Subcommand.print_class class_spec, env

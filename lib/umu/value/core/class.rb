@@ -27,14 +27,14 @@ class Class < Top
 
 private
 
-	def __invoke__(meth_sym, pos, env, event, arg_values)
+	def __invoke__(meth_sym, loc, env, event, arg_values)
 		ASSERT.kind_of meth_sym,	::Symbol
-		ASSERT.kind_of pos,			L::Position
+		ASSERT.kind_of loc,			L::Location
 		ASSERT.kind_of env,			E::Entry
 		ASSERT.kind_of event,		E::Tracer::Event
 		ASSERT.kind_of arg_values,	::Array
 
-		self.class_spec.klass.send meth_sym, pos, env, event, *arg_values
+		self.class_spec.klass.send meth_sym, loc, env, event, *arg_values
 	end
 end
 

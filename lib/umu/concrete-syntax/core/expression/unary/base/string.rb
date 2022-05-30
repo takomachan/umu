@@ -1,6 +1,6 @@
 require 'umu/common'
 require 'umu/lexical/escape'
-require 'umu/lexical/position'
+require 'umu/lexical/location'
 
 
 module Umu
@@ -16,7 +16,7 @@ module Unary
 module Base
 
 class String < Base::Abstract
-	def initialize(pos, obj)
+	def initialize(loc, obj)
 		ASSERT.kind_of obj, ::String
 
 		super
@@ -31,7 +31,7 @@ class String < Base::Abstract
 private
 
 	def __desugar__(_env, _event)
-		SACE.make_string self.pos, self.obj
+		SACE.make_string self.loc, self.obj
 	end
 end
 
@@ -43,11 +43,11 @@ end	# Umu::ConcreteSyntax::Core::Expression::Unary
 
 module_function
 
-	def make_string(pos, obj)
-		ASSERT.kind_of pos,	L::Position
+	def make_string(loc, obj)
+		ASSERT.kind_of loc,	L::Location
 		ASSERT.kind_of obj, ::String
 
-		Unary::Base::String.new(pos, obj.freeze).freeze
+		Unary::Base::String.new(loc, obj.freeze).freeze
 	end
 
 end	# Umu::ConcreteSyntax::Core::Expression

@@ -19,7 +19,7 @@ class LabelValuePair < Umu::Abstraction::LabelValuePair
 	alias expr value
 
 
-	def initialize(pos, label, expr)
+	def initialize(loc, label, expr)
 		ASSERT.kind_of expr, SACE::Abstract
 
 		super
@@ -47,7 +47,7 @@ class ArrayBased < Abstract
 	alias array obj
 
 
-	def initialize(pos, array)
+	def initialize(loc, array)
 		ASSERT.kind_of array, ::Array
 
 		super
@@ -60,7 +60,7 @@ class HashBased < Abstract
 	alias hash obj
 
 
-	def initialize(pos, hash)
+	def initialize(loc, hash)
 		ASSERT.kind_of hash, ::Hash
 
 		super

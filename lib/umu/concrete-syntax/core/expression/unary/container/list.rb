@@ -1,5 +1,5 @@
 require 'umu/common'
-require 'umu/lexical/position'
+require 'umu/lexical/location'
 
 
 module Umu
@@ -19,14 +19,14 @@ class List < Abstraction::Abstract
 	attr_reader	:opt_last_expr
 
 
-	def initialize(pos, exprs, opt_last_expr)
+	def initialize(loc, exprs, opt_last_expr)
 		ASSERT.kind_of		exprs,			::Array
 		ASSERT.opt_kind_of	opt_last_expr,	SCCE::Abstract
 		ASSERT.assert (
 			if exprs.empty? then opt_last_expr.nil? else true end
 		)
 
-		super(pos, exprs)
+		super(loc, exprs)
 
 		@opt_last_expr = opt_last_expr
 	end
@@ -51,7 +51,7 @@ private
 		new_env = env.enter event
 
 		SACE.make_list(
-			self.pos,
+			self.loc,
 
 			self.map { |elem| elem.desugar(new_env) },
 
@@ -71,12 +71,12 @@ end	# Umu::ConcreteSyntax::Core::Expression::Unary
 
 module_function
 
-	def make_list(pos, exprs, opt_last_expr)
-		ASSERT.kind_of		pos,			L::Position
+	def make_list(loc, exprs, opt_last_expr)
+		ASSERT.kind_of		loc,			L::Location
 		ASSERT.kind_of		exprs,			::Array
 		ASSERT.opt_kind_of	opt_last_expr,	SCCE::Abstract
 
-		Unary::Container::List.new(pos, exprs.freeze, opt_last_expr).freeze
+		Unary::Container::List.new(loc, exprs.freeze, opt_last_expr).freeze
 	end
 
 end	# Umu::ConcreteSyntax::Core::Expression

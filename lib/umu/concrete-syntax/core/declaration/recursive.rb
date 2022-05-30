@@ -1,5 +1,5 @@
 require 'umu/common'
-require 'umu/lexical/position'
+require 'umu/lexical/location'
 
 
 module Umu
@@ -14,10 +14,10 @@ class Recursive < Declaration::Abstract
 	attr_reader :functions
 
 
-	def initialize(pos, functions)
+	def initialize(loc, functions)
 		ASSERT.kind_of functions, ::Array
 
-		super(pos)
+		super(loc)
 
 		@functions = functions
 	end
@@ -53,7 +53,7 @@ private
 			ASSERT.kind_of function, Function::Abstract
 
 			SACD.make_recursive(
-				function.pos,
+				function.loc,
 				function.lam_expr.sym,
 				function.lam_expr.desugar(new_env)
 			)
@@ -69,14 +69,14 @@ private
 					)
 				) {
 					raise X::SyntaxError.new(
-						function.pos,
+						function.loc,
 						"In mutual recursion, duplicated variable: '%s'",
 												function.lam_expr.sym.to_s
 					)
 				}
 			}
 
-			SACD.make_mutual_recursive self.pos, functions
+			SACD.make_mutual_recursive self.loc, functions
 		end
 	end
 end
@@ -85,11 +85,11 @@ end
 
 module_function
 
-	def make_recursive(pos, functions)
-		ASSERT.kind_of pos,			L::Position
+	def make_recursive(loc, functions)
+		ASSERT.kind_of loc,			L::Location
 		ASSERT.kind_of functions,	::Array
 
-		Recursive.new(pos, functions.freeze).freeze
+		Recursive.new(loc, functions.freeze).freeze
 	end
 
 end	# Umu::ConcreteSyntax::Core::Declaration

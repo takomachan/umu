@@ -1,7 +1,7 @@
 require 'strscan'
 
 require 'umu/common'
-require 'umu/lexical/position'
+require 'umu/lexical/location'
 require 'umu/lexical/token'
 
 
@@ -27,7 +27,7 @@ class Separator < Abstract
 				nil,
 
 				__make_comment__(
-					self.pos,	# Save current position
+					self.loc,	# Save current location
 					1,
 					''
 				)
@@ -40,9 +40,9 @@ class Separator < Abstract
 
 				scanner.matched,
 
-				LT.make_newline(pos, scanner.matched),
+				LT.make_newline(loc, scanner.matched),
 
-				__make_separator__(self.pos.next_line_num)
+				__make_separator__(self.loc.next_line_num)
 			]
 
 		# Other white-chars -- space, tab, or carriage-return
@@ -52,7 +52,7 @@ class Separator < Abstract
 
 				scanner.matched,
 
-				LT.make_white(pos, scanner.matched),
+				LT.make_white(loc, scanner.matched),
 
 				self
 			]

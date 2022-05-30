@@ -14,7 +14,7 @@ module Unary
 module Base
 
 class Bool < Abstract
-	def initialize(pos, obj)
+	def initialize(loc, obj)
 		ASSERT.bool obj
 
 		super
@@ -42,11 +42,11 @@ end # Umu::AbstractSyntax::Core::Expression::Unary
 
 module_function
 
-	def make_bool(pos, obj)
-		ASSERT.kind_of	pos, L::Position
+	def make_bool(loc, obj)
+		ASSERT.kind_of	loc, L::Location
 		ASSERT.bool		obj
 
-		Unary::Base::Bool.new(pos, obj).freeze
+		Unary::Base::Bool.new(loc, obj).freeze
 	end
 
 end	# Umu::AbstractSyntax::Core::Expression

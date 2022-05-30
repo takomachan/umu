@@ -1,7 +1,7 @@
 require 'strscan'
 
 require 'umu/common'
-require 'umu/lexical/position'
+require 'umu/lexical/location'
 require 'umu/lexical/token'
 
 
@@ -14,41 +14,41 @@ module Lexer
 
 class Comment < Abstract
 	attr_reader :buf
-	attr_reader :saved_pos
+	attr_reader :saved_loc
 	attr_reader :comment_depth
 
 
 	def self.deconstruct_keys
 		{
 			:buf			=> ::String,
-			:saved_pos		=> L::Position,
+			:saved_loc		=> L::Location,
 			:comment_depth	=> ::Integer
 		}
 	end
 
 
-	def initialize(pos, braket_stack, buf, saved_pos, comment_depth)
-		ASSERT.kind_of pos,				L::Position
+	def initialize(loc, braket_stack, buf, saved_loc, comment_depth)
+		ASSERT.kind_of loc,				L::Location
 		ASSERT.kind_of braket_stack,	::Array
 		ASSERT.kind_of buf,				::String
-		ASSERT.kind_of saved_pos,		L::Position
+		ASSERT.kind_of saved_loc,		L::Location
 		ASSERT.kind_of comment_depth,	::Integer
 
-		super(pos, braket_stack)
+		super(loc, braket_stack)
 
 		@buf			= buf
-		@saved_pos		= saved_pos
+		@saved_loc		= saved_loc
 		@comment_depth	= comment_depth
 	end
 
 
 	def to_s
-		format("%s {braket_stack=%s, buf=%s, saved_pos=%s} -- %s",
+		format("%s {braket_stack=%s, buf=%s, saved_loc=%s} -- %s",
 			E::Tracer.class_to_string(self.class),
 			self.braket_stack.inspect,
 			self.buf.inspect,
-			self.saved_pos.to_s,
-			self.pos.to_s
+			self.saved_loc.to_s,
+			self.loc.to_s
 		)
 	end
 
@@ -72,7 +72,7 @@ class Comment < Abstract
 				nil,
 
 				__make_comment__(
-					self.saved_pos,
+					self.saved_loc,
 					self.comment_depth + 1,
 					self.buf + scanner.matched
 				)
@@ -86,7 +86,7 @@ class Comment < Abstract
 				scanner.matched,
 
 				LT.make_comment(
-					self.saved_pos,	# Load Begin-Comment's position 
+					self.saved_loc,	# Load Begin-Comment's location 
 					self.buf
 				),
 
@@ -94,7 +94,7 @@ class Comment < Abstract
 					__make_separator__
 				else
 					__make_comment__(
-						self.saved_pos,
+						self.saved_loc,
 						self.comment_depth - 1,
 						self.buf + scanner.matched
 					)
@@ -111,10 +111,10 @@ class Comment < Abstract
 				nil,
 
 				__make_comment__(
-					self.saved_pos,
+					self.saved_loc,
 					self.comment_depth,
 					self.buf + scanner.matched,
-					self.pos.next_line_num
+					self.loc.next_line_num
 				)
 			]
 
@@ -128,7 +128,7 @@ class Comment < Abstract
 				nil,
 
 				__make_comment__(
-					self.saved_pos,
+					self.saved_loc,
 					self.comment_depth,
 					self.buf + scanner.matched
 				)

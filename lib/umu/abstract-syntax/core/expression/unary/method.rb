@@ -18,11 +18,11 @@ class Abstract < Unary::Abstract
 	attr_reader	:method_sym
 
 
-	def initialize(pos, class_sym, method_sym)
+	def initialize(loc, class_sym, method_sym)
 		ASSERT.kind_of class_sym,	::Symbol
 		ASSERT.kind_of method_sym,	::Symbol
 
-		super(pos, class_sym)
+		super(loc, class_sym)
 
 		@method_sym = method_sym
 	end
@@ -37,11 +37,11 @@ class Class < Abstract
 
 
 	def __evaluate__(env, _event)
-		class_spec = env.ty_lookup self.class_sym, self.pos
+		class_spec = env.ty_lookup self.class_sym, self.loc
 		ASSERT.kind_of class_spec, ECTSC::Base
 
 		method_spec = class_spec.lookup_class_method(
-										self.method_sym, self.pos, env
+										self.method_sym, self.loc, env
 									)
 		ASSERT.kind_of method_spec, ECTS::Method
 
@@ -65,11 +65,11 @@ class Instance < Abstract
 
 
 	def __evaluate__(env, _event)
-		class_spec = env.ty_lookup self.class_sym, self.pos
+		class_spec = env.ty_lookup self.class_sym, self.loc
 		ASSERT.kind_of class_spec, ECTSC::Base
 
 		method_spec = class_spec.lookup_instance_method(
-										self.method_sym, self.pos, env
+										self.method_sym, self.loc, env
 									)
 		ASSERT.kind_of method_spec, ECTS::Method
 
@@ -88,21 +88,21 @@ end # Umu::AbstractSyntax::Core::Expression::Unary
 
 module_function
 
-	def make_class_method(pos, class_sym, method_sym)
-		ASSERT.kind_of pos,	L::Position
+	def make_class_method(loc, class_sym, method_sym)
+		ASSERT.kind_of loc,	L::Location
 		ASSERT.kind_of class_sym,	::Symbol
 		ASSERT.kind_of method_sym,	::Symbol
 
-		Unary::Method::Class.new(pos, class_sym, method_sym).freeze
+		Unary::Method::Class.new(loc, class_sym, method_sym).freeze
 	end
 
 
-	def make_instance_method(pos, class_sym, method_sym)
-		ASSERT.kind_of pos,	L::Position
+	def make_instance_method(loc, class_sym, method_sym)
+		ASSERT.kind_of loc,	L::Location
 		ASSERT.kind_of class_sym,	::Symbol
 		ASSERT.kind_of method_sym,	::Symbol
 
-		Unary::Method::Instance.new(pos, class_sym, method_sym).freeze
+		Unary::Method::Instance.new(loc, class_sym, method_sym).freeze
 	end
 
 end	# Umu::AbstractSyntax::Core::Expression

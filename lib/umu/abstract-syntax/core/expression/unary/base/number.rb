@@ -16,7 +16,7 @@ module Base
 module Number
 
 class Abstract < Base::Abstract
-	def initialize(pos, obj)
+	def initialize(loc, obj)
 		ASSERT.kind_of obj, ::Numeric
 
 		super
@@ -30,7 +30,7 @@ end
 
 
 class Integer < Abstract
-	def initialize(pos, obj)
+	def initialize(loc, obj)
 		ASSERT.kind_of obj, ::Integer
 
 		super
@@ -44,7 +44,7 @@ end
 
 
 class Float < Abstract
-	def initialize(pos, obj)
+	def initialize(loc, obj)
 		ASSERT.kind_of obj, ::Float
 
 		super
@@ -65,19 +65,19 @@ end # Umu::AbstractSyntax::Core::Expression::Unary
 
 module_function
 
-	def make_integer(pos, obj)
-		ASSERT.kind_of pos,	L::Position
+	def make_integer(loc, obj)
+		ASSERT.kind_of loc,	L::Location
 		ASSERT.kind_of obj,	::Integer
 
-		Unary::Base::Number::Integer.new(pos, obj).freeze
+		Unary::Base::Number::Integer.new(loc, obj).freeze
 	end
 
 
-	def make_float(pos, obj)
-		ASSERT.kind_of pos,	L::Position
+	def make_float(loc, obj)
+		ASSERT.kind_of loc,	L::Location
 		ASSERT.kind_of obj,	::Float
 
-		Unary::Base::Number::Float.new(pos, obj).freeze
+		Unary::Base::Number::Float.new(loc, obj).freeze
 	end
 
 end	# Umu::AbstractSyntax::Core::Expression

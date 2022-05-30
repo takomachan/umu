@@ -18,14 +18,14 @@ class List < Abstraction::ArrayBased
 	attr_reader	:opt_last_expr
 
 
-	def initialize(pos, exprs, opt_last_expr)
+	def initialize(loc, exprs, opt_last_expr)
 		ASSERT.kind_of		exprs,			::Array
 		ASSERT.opt_kind_of	opt_last_expr,	SACE::Abstract
 		ASSERT.assert (
 			if exprs.empty? then opt_last_expr.nil? else true end
 		)
 
-		super(pos, exprs)
+		super(loc, exprs)
 
 		@opt_last_expr = opt_last_expr
 	end
@@ -56,7 +56,7 @@ private
 					tail_value = opt_last_expr.evaluate(new_env).value
 					unless tail_value.kind_of? VCDU::List::Abstract
 						raise X::TypeError.new(
-							tail_value.pos,
+							tail_value.loc,
 							env,
 							"expected a List, but %s : %s",
 											tail_value, tail_value.type_sym
@@ -87,12 +87,12 @@ end	# Umu::AbstractSyntax::Core::Expression::Unary
 
 module_function
 
-	def make_list(pos, exprs, opt_last_expr)
-		ASSERT.kind_of		pos,			L::Position
+	def make_list(loc, exprs, opt_last_expr)
+		ASSERT.kind_of		loc,			L::Location
 		ASSERT.kind_of		exprs,			::Array
 		ASSERT.opt_kind_of	opt_last_expr,	SACE::Abstract
 
-		Unary::Container::List.new(pos, exprs.freeze, opt_last_expr).freeze
+		Unary::Container::List.new(loc, exprs.freeze, opt_last_expr).freeze
 	end
 
 end	# Umu::AbstractSyntax::Core::Expression

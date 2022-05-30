@@ -46,10 +46,10 @@ modu_decls:
 
 modu_decl:
   STRUCTURE modu_pat '=' modu_expr {
-	result = SCMD.make_structure val[0].pos, val[1], val[3]
+	result = SCMD.make_structure val[0].loc, val[1], val[3]
 }
 | core_decl {
-	result = SCMD.make_core val[0].pos, val[0]
+	result = SCMD.make_core val[0].loc, val[0]
 }
 
 
@@ -60,7 +60,7 @@ modu_decl:
 
 modu_expr:
   STRUCT '{' modu_decls '}' modu_where_decls {
-	result = SCME.make_struct val[0].pos, val[2], val[4]
+	result = SCME.make_struct val[0].loc, val[2], val[4]
 }
 | modu_ident
 
@@ -78,7 +78,7 @@ modu_ident: modu_short_ident modu_short_idents {
 	result = if val[1].empty?
 				val[0]
 			else
-				SCME.make_long_identifier val[0].pos, val[0], val[1]
+				SCME.make_long_identifier val[0].loc, val[0], val[1]
 			end
 }
 
@@ -87,7 +87,7 @@ modu_short_idents:
 | '::' modu_short_ident modu_short_idents	{ result = [val[1]] + val[2] }
 
 modu_short_ident: ID {
-	result = SCME.make_identifier(val[0].pos, val[0].sym)
+	result = SCME.make_identifier(val[0].loc, val[0].sym)
 }
 
 
@@ -98,11 +98,11 @@ modu_short_ident: ID {
 
 modu_pat:
 # Variable
-  ID { result = SCMP.make_variable val[0].pos, val[0].sym }
+  ID { result = SCMP.make_variable val[0].loc, val[0].sym }
 
 # Structure
 | STRUCT '{' stru_flds_pats '}' {
-	result = SCMP.make_struct val[0].pos, val[2]
+	result = SCMP.make_struct val[0].loc, val[2]
 }
 
 
@@ -140,7 +140,7 @@ _com_stru_fld_pats:
 # Atomic structure field pattern
 
 atom_stru_fld_pat: var_pat opt_stru_var_pat {
-	result = SCMP.make_struct_field val[0].pos, val[0].var_sym, val[1]
+	result = SCMP.make_struct_field val[0].loc, val[0].var_sym, val[1]
 }
 
 opt_stru_var_pat:
@@ -160,26 +160,26 @@ core_decls:
 core_decl:
   VAL pat '=' expr outer_where_decls {
 	result = SCCD.make_value(
-					val[0].pos, val[1], val[3], val[4]
+					val[0].loc, val[1], val[3], val[4]
 				)
 }
 | FUN var_pat '=' fun_body {
 	hd_pat, tl_pats, expr, decls = val[3]
 
 	result = SCCD.make_function(
-		val[1].pos,
+		val[1].loc,
 		SCCE.make_named_lambda(
-			val[1].pos,
+			val[1].loc,
 			[hd_pat] + tl_pats, expr, decls,
 			val[1].var_sym
 		)
 	)
 }
 | FUN REC recu_bind recu_binds {
-	result = SCCD.make_recursive val[0].pos, [val[2]] + val[3]
+	result = SCCD.make_recursive val[0].loc, [val[2]] + val[3]
 }
 | ASSERT atom_expr expr {
-	result = SCCD.make_assert val[0].pos, val[1], val[2]
+	result = SCCD.make_assert val[0].loc, val[1], val[2]
 }
 
 
@@ -197,9 +197,9 @@ recu_bind: ID '=' fun_body {
 	hd_pat, tl_pats, expr, decls = val[2]
 
 	result = SCCD.make_recursive_function(
-		val[1].pos,
+		val[1].loc,
 		SCCE.make_named_lambda(
-			val[0].pos,
+			val[0].loc,
 			[hd_pat] + tl_pats, expr, decls,
 			val[0].sym
 		)
@@ -233,17 +233,17 @@ inner_where_decls:
 expr:
   infix_expr
 | IF if_rule elsif_rules ELSE expr {
-	result = SCCE.make_if val[0].pos, val[1], val[2], val[4]
+	result = SCCE.make_if val[0].loc, val[1], val[2], val[4]
 }
 | COND atom_expr '{'
 		cond_rule cond_rules ELSE '->' expr inner_where_decls
   '}' {
 	result = SCCE.make_cond(
-					val[0].pos, val[1], [val[3]] + val[4], val[7], val[8]
+					val[0].loc, val[1], [val[3]] + val[4], val[7], val[8]
 				)
 }
 | LET '{' core_decls IN expr '}' {
-	result = SCCE.make_let val[0].pos, val[2], val[4]
+	result = SCCE.make_let val[0].loc, val[2], val[4]
 }
 
 elsif_rules:
@@ -255,7 +255,7 @@ _elsif_rules:
 | ELSIF if_rule _elsif_rules	{ result = [val[1]] + val[2] }
 
 if_rule: atom_expr expr {
-	result = SCCE.make_if_rule val[0].pos, val[0], val[1]
+	result = SCCE.make_if_rule val[0].loc, val[0], val[1]
 }
 
 cond_rules:
@@ -267,7 +267,7 @@ _cond_rules:
 | '|' cond_rule _cond_rules	{ result = [val[1]] + val[2] }
 
 cond_rule: expr '->' expr inner_where_decls {
-	result = SCCE.make_cond_rule val[0].pos, val[0], val[2], val[3]
+	result = SCCE.make_cond_rule val[0].loc, val[0], val[2], val[3]
 }
 
 
@@ -278,7 +278,7 @@ infix_expr:
 | _infix_expr {
 	v = val[0]
 
-	result = SCCE.make_infix v[1].pos, v[0], v[1].sym, v[2]
+	result = SCCE.make_infix v[1].loc, v[0], v[1].sym, v[2]
 }
 
 _infix_expr:
@@ -290,14 +290,14 @@ _infix_expr:
 | infix_expr MOD  		infix_expr	{
 	result = [
 				val[0],
-				LT.make_reserved_symbol(val[1].pos, 'mod'),
+				LT.make_reserved_symbol(val[1].loc, 'mod'),
 				val[2]
 			]
 }
 | infix_expr POW  		infix_expr	{
 	result = [
 				val[0],
-				LT.make_reserved_symbol(val[1].pos, 'pow'),
+				LT.make_reserved_symbol(val[1].loc, 'pow'),
 				val[2]
 			]
 }
@@ -323,7 +323,7 @@ send_expr: apply_expr messages {
 	result = if val[1].empty?
 					val[0]
 				else
-					SCCE.make_send val[0].pos, val[0], val[1]
+					SCCE.make_send val[0].loc, val[0], val[1]
 				end
 }
 
@@ -338,17 +338,17 @@ _messages:
 message:
   INTEGER {
 	result = SCCE.make_selector(
-						val[0].pos, val[0].val
+						val[0].loc, val[0].val
 					)
 }
 | mess_ident {
 	result = SCCE.make_method(
-						val[0].pos, val[0].sym, []
+						val[0].loc, val[0].sym, []
 					)
 }
 | '(' mess_ident expr com_exprs ')' {
 	result = SCCE.make_method(
-						val[1].pos, val[1].sym, [val[2]] + val[3]
+						val[1].loc, val[1].sym, [val[2]] + val[3]
 					)
 }
 
@@ -361,7 +361,7 @@ apply_expr: atom_expr atom_exprs {
 	result = if val[1].empty?
 					val[0]
 				else
-					SCCE.make_apply val[0].pos, val[0], val[1]
+					SCCE.make_apply val[0].loc, val[0], val[1]
 				end
 }
 
@@ -377,58 +377,58 @@ atom_expr:
   ident
 
 # Constant
-| INTEGER	{ result = SCCE.make_integer	val[0].pos, val[0].val }
-| FLOAT		{ result = SCCE.make_float		val[0].pos, val[0].val }
-| STRING	{ result = SCCE.make_string		val[0].pos, val[0].val }
-| ATOM		{ result = SCCE.make_atom		val[0].pos, val[0].sym }
+| INTEGER	{ result = SCCE.make_integer	val[0].loc, val[0].val }
+| FLOAT		{ result = SCCE.make_float		val[0].loc, val[0].val }
+| STRING	{ result = SCCE.make_string		val[0].loc, val[0].val }
+| ATOM		{ result = SCCE.make_atom		val[0].loc, val[0].sym }
 | __FILE__ {
-	pos = val[0].pos
+	loc = val[0].loc
 
-	result = SCCE.make_string pos, pos.file_name
+	result = SCCE.make_string loc, loc.file_name
 }
 | __LINE__ {
-	pos = val[0].pos
+	loc = val[0].loc
 
-	result = SCCE.make_integer pos, pos.line_num
+	result = SCCE.make_integer loc, loc.line_num
 }
 
 # Braket: ( ... )
 | '(' ')' {
-	result = SCCE.make_unit val[0].pos
+	result = SCCE.make_unit val[0].loc
 }
 | '(' expr ')' {
 	result = val[1]
 }
 | '(' infix_opr expr ')' {
-	result = SCCE.make_prefix val[1].pos, val[1].sym, val[2]
+	result = SCCE.make_prefix val[1].loc, val[1].sym, val[2]
 }
 | '(' expr ',' expr com_exprs ')' {
-	result = SCCE.make_tuple val[0].pos, [val[1], val[3]] + val[4]
+	result = SCCE.make_tuple val[0].loc, [val[1], val[3]] + val[4]
 }
 | '(' expr ';' expr sem_exprs ')' {
-	result = SCCE.make_sequence val[0].pos, [val[1], val[3]] + val[4]
+	result = SCCE.make_sequence val[0].loc, [val[1], val[3]] + val[4]
 }
 | '&' ID {
-	result = SCCE.make_class val[1].pos, val[1].sym
+	result = SCCE.make_class val[1].loc, val[1].sym
 }
 | '&(' ID '.' mess_ident ')' {
-	result = SCCE.make_class_method val[1].pos, val[1].sym, val[3].sym
+	result = SCCE.make_class_method val[1].loc, val[1].sym, val[3].sym
 }
 | '&(' ID '$' mess_ident ')' {
-	result = SCCE.make_instance_method val[1].pos, val[1].sym, val[3].sym
+	result = SCCE.make_instance_method val[1].loc, val[1].sym, val[3].sym
 }
 
 # Braket: [ ... ]
 | '[' ']' {
-	result = SCCE.make_list val[0].pos, [],                nil
+	result = SCCE.make_list val[0].loc, [],                nil
 }
 | '[' expr com_exprs opt_last_expr ']' {
-	result = SCCE.make_list val[0].pos, [val[1]] + val[2], val[3]
+	result = SCCE.make_list val[0].loc, [val[1]] + val[2], val[3]
 }
 
 # Braket: { ... }
 | '{' pat pats '->' expr inner_where_decls '}' {
-	result = SCCE.make_lambda val[0].pos, [val[1]] + val[2], val[4], val[5]
+	result = SCCE.make_lambda val[0].loc, [val[1]] + val[2], val[4], val[5]
 }
 
 
@@ -438,7 +438,7 @@ ident: short_ident short_idents {
 	result = if val[1].empty?
 				val[0]
 			else
-				SCCE.make_long_identifier val[0].pos, val[0], val[1]
+				SCCE.make_long_identifier val[0].loc, val[0], val[1]
 			end
 }
 
@@ -448,10 +448,10 @@ short_idents:
 
 short_ident:
   ID						{
-  	result = SCCE.make_identifier val[0].pos, val[0].sym
+  	result = SCCE.make_identifier val[0].loc, val[0].sym
 }
 | '(' infix_opr ')'	{
-	result = SCCE.make_identifier val[1].pos, val[1].sym
+	result = SCCE.make_identifier val[1].loc, val[1].sym
 }
 
 
@@ -499,21 +499,21 @@ pat:
 
 # Braket: ( ... )
 | '(' ')' {
-	result = SCCP.make_unit val[0].pos
+	result = SCCP.make_unit val[0].loc
 }
 | '(' var_pat ')' {
 	result = val[1]
 }
 | '(' var_pat ',' var_pat com_pats ')' {
-	result = SCCP.make_tuple val[0].pos, [val[1], val[3]] + val[4]
+	result = SCCP.make_tuple val[0].loc, [val[1], val[3]] + val[4]
 }
 
 # Braket: [ ... ]
 | '[' ']' {
-	result = SCCP.make_list val[0].pos, [],     nil
+	result = SCCP.make_list val[0].loc, [],     nil
 }
 | '[' pat com_pats opt_last_pat ']' {
-	result = SCCP.make_list val[0].pos, [val[1]] + val[2], val[3]
+	result = SCCP.make_list val[0].loc, [val[1]] + val[2], val[3]
 }
 
 
@@ -539,13 +539,13 @@ opt_last_pat:
 
 var_pat:
   ID						{
-  	result = SCCP.make_variable val[0].pos, val[0].sym
+  	result = SCCP.make_variable val[0].loc, val[0].sym
 }
 | '(' infix_opr ')'	{
-	result = SCCP.make_variable val[1].pos, val[1].sym
+	result = SCCP.make_variable val[1].loc, val[1].sym
 }
 | '_'						{
-	result = SCCP.make_variable val[0].pos, WILDCARD
+	result = SCCP.make_variable val[0].loc, WILDCARD
 }
 
 
@@ -563,8 +563,8 @@ infix_opr: norm_infix_opr | spec_infix_opr
 
 norm_infix_opr:
   '+' | '-' | '*' | '/'
-| MOD	 { result = LT.make_reserved_symbol(val[0].pos, 'mod') }
-| POW	 { result = LT.make_reserved_symbol(val[0].pos, 'pow') }
+| MOD	 { result = LT.make_reserved_symbol(val[0].loc, 'mod') }
+| POW	 { result = LT.make_reserved_symbol(val[0].loc, 'pow') }
 | '==' | '<>' | '<'  | '>'  | '<=' | '>='
 | '<|' | '|>' | '<<' | '>>'
 | '^'  |'++'

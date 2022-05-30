@@ -1,5 +1,5 @@
 require 'umu/common'
-require 'umu/lexical/position'
+require 'umu/lexical/location'
 
 
 module Umu
@@ -38,12 +38,12 @@ class Abstract < Union::Abstract
 	include Enumerable
 
 
-	def self.meth_make_nil(_pos, _env, _event)
+	def self.meth_make_nil(_loc, _env, _event)
 		VC.make_nil
 	end
 
 
-	def self.meth_make_cons(_pos, _env, _event, x, xs)
+	def self.meth_make_cons(_loc, _env, _event, x, xs)
 		ASSERT.kind_of x,	VC::Top
 		ASSERT.kind_of xs,	List::Abstract
 
@@ -79,35 +79,35 @@ class Abstract < Union::Abstract
 	end
 
 
-	def meth_to_string(pos, env, event)
+	def meth_to_string(loc, env, event)
 		VC.make_string(
 			format("[%s]",
 				self.map { |elem|
-					elem.meth_to_string(pos, env, event).val
+					elem.meth_to_string(loc, env, event).val
 				}.join(', ')
 			)
 		)
 	end
 
 
-	def meth_nil?(_pos, _env, _event)
+	def meth_nil?(_loc, _env, _event)
 		VC.make_false
 	end
 
 
-	def meth_cons?(_pos, _env, _event)
+	def meth_cons?(_loc, _env, _event)
 		VC.make_false
 	end
 
 
-	def meth_cons(_pos, _env, _event, value)
+	def meth_cons(_loc, _env, _event, value)
 		ASSERT.kind_of value, VC::Top
 
 		VC.make_cons value, self
 	end
 
 
-	def meth_des(_pos, _env, _event)
+	def meth_des(_loc, _env, _event)
 		raise X::SubclassResponsibility
 	end
 end
@@ -126,14 +126,14 @@ class Nil < Abstract
 	end
 
 
-	def meth_nil?(_pos, _env, _event)
+	def meth_nil?(_loc, _env, _event)
 		VC.make_true
 	end
 
 
-	def meth_des(pos, env, _event)
+	def meth_des(loc, env, _event)
 		raise X::EmptyError.new(
-				pos,
+				loc,
 				env,
 				"Empty error on des(truct) operation"
 			)
@@ -170,12 +170,12 @@ class Cons < Abstract
 	end
 
 
-	def meth_cons?(_pos, _env, _event)
+	def meth_cons?(_loc, _env, _event)
 		VC.make_true
 	end
 
 
-	def meth_des(_pos, _env, _event)
+	def meth_des(_loc, _env, _event)
 		VC.make_tuple [self.head, self.tail]
 	end
 

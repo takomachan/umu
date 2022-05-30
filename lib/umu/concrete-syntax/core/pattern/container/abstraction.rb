@@ -17,7 +17,7 @@ class LabelValuePair < Umu::Abstraction::LabelValuePair
 	alias opt_var_sym value
 
 
-	def initialize(pos, label, opt_var_sym)
+	def initialize(loc, label, opt_var_sym)
 		ASSERT.opt_kind_of opt_var_sym, ::Symbol
 
 		super
@@ -31,7 +31,7 @@ class LabelValuePair < Umu::Abstraction::LabelValuePair
 						self.label
 					end
 
-		SCCP.make_variable self.pos, var_sym
+		SCCP.make_variable self.loc, var_sym
 	end
 end
 
@@ -43,10 +43,10 @@ class Abstract < Pattern::Abstract
 	attr_reader :array
 
 
-	def initialize(pos, array)
+	def initialize(loc, array)
 		ASSERT.kind_of array, ::Array
 
-		super(pos)
+		super(loc)
 
 		@array = array
 	end

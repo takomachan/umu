@@ -1,5 +1,5 @@
 require 'umu/common'
-require 'umu/lexical/position'
+require 'umu/lexical/location'
 
 
 module Umu
@@ -16,11 +16,11 @@ class Abstract < Expression::Abstract
 	attr_reader :lhs_expr, :rhs
 
 
-	def initialize(pos, lhs_expr, rhs)
+	def initialize(loc, lhs_expr, rhs)
 		ASSERT.kind_of lhs_expr,	SCCE::Abstract
 		ASSERT.kind_of rhs,			::Object
 
-		super(pos)
+		super(loc)
 
 		@lhs_expr	= lhs_expr
 		@rhs		= rhs

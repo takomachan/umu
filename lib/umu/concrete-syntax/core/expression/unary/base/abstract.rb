@@ -1,6 +1,6 @@
 require 'umu/common'
 require 'umu/lexical/escape'
-require 'umu/lexical/position'
+require 'umu/lexical/location'
 
 
 module Umu
@@ -22,7 +22,7 @@ class Abstract < Unary::Abstract
 					env.trace_stack.count,
 					'Desu',
 					self.class,
-					self.pos,
+					self.loc,
 					self.to_s
 				) { |event|
 					__desugar__ env, event

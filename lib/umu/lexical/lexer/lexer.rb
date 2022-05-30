@@ -1,7 +1,7 @@
 require 'strscan'
 
 require 'umu/common'
-require 'umu/lexical/position'
+require 'umu/lexical/location'
 require 'umu/lexical/token'
 
 
@@ -18,9 +18,9 @@ module_function
 		ASSERT.kind_of file_name,	::String
 		ASSERT.kind_of line_num,	::Integer
 
-		pos = L.make_position file_name, line_num
+		loc = L.make_location file_name, line_num
 
-		Separator.new(pos, [].freeze).freeze
+		Separator.new(loc, [].freeze).freeze
 	end
 
 
@@ -44,7 +44,7 @@ module_function
 			if opt_token
 				token = opt_token
 
-				[tokens + [token], next_lexer, token.pos.line_num]
+				[tokens + [token], next_lexer, token.loc.line_num]
 			else
 				[tokens,           next_lexer, before_line_num]
 			end

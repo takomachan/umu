@@ -1,5 +1,5 @@
 require 'umu/common'
-require 'umu/lexical/position'
+require 'umu/lexical/location'
 
 
 module Umu
@@ -20,7 +20,7 @@ class LabelValuePair < Umu::Abstraction::LabelValuePair
 	alias opt_expr	value
 
 
-	def initialize(pos, label, opt_expr)
+	def initialize(loc, label, opt_expr)
 		ASSERT.opt_kind_of opt_expr, SCCE::Abstract
 
 		super
@@ -33,7 +33,7 @@ class LabelValuePair < Umu::Abstraction::LabelValuePair
 		if opt_expr
 			opt_expr
 		else
-			SCCE.make_identifier self.pos, self.label
+			SCCE.make_identifier self.loc, self.label
 		end
 	end
 end
@@ -46,7 +46,7 @@ class Abstract < Unary::Abstract
 	alias array obj
 
 
-	def initialize(pos, array)
+	def initialize(loc, array)
 		ASSERT.kind_of array, ::Array
 
 		super

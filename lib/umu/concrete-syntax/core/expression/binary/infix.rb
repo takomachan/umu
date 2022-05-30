@@ -1,5 +1,5 @@
 require 'umu/common'
-require 'umu/lexical/position'
+require 'umu/lexical/location'
 
 
 module Umu
@@ -18,12 +18,12 @@ class Infix < Abstract
 	alias		rhs_opnd rhs
 
 
-	def initialize(pos, lhs_opnd, opr_sym, rhs_opnd)
+	def initialize(loc, lhs_opnd, opr_sym, rhs_opnd)
 		ASSERT.kind_of lhs_opnd,	SCCE::Abstract
 		ASSERT.kind_of opr_sym,		::Symbol
 		ASSERT.kind_of rhs_opnd,	SCCE::Abstract
 
-		super(pos, lhs_opnd, rhs_opnd)
+		super(loc, lhs_opnd, rhs_opnd)
 
 		@opr_sym = opr_sym
 	end
@@ -70,12 +70,12 @@ private
 		lhs_opnd	= self.lhs_opnd.desugar(new_env)
 		opr_sym		= self.opr_sym
 		rhs_opnd	= self.rhs_opnd.desugar(new_env)
-		pos			= self.pos
+		loc			= self.loc
 
 		expr = if REDEFINABLE_OPR_SYMS[opr_sym]
 				SACE.make_apply(
-					pos,
-					SACE.make_identifier(pos, opr_sym),
+					loc,
+					SACE.make_identifier(loc, opr_sym),
 					[lhs_opnd, rhs_opnd]
 				)
 			else
@@ -86,36 +86,36 @@ private
 										SACE::Unary::Identifier::Abstract
 									)
 						raise X::SyntaxError.new(
-							rhs_opnd.pos,
+							rhs_opnd.loc,
 							"RHS of 'isa?' operator " +
 								"require a identifier, but: %s",
 							rhs_opnd.to_s
 						)
 					end
 
-					SACE.make_kind_of pos, lhs_opnd, rhs_opnd.sym
+					SACE.make_kind_of loc, lhs_opnd, rhs_opnd.sym
 
 				# Conditional
 				when :ANDALSO
 					SACE.make_if(
-						pos,
+						loc,
 						[
 							SACE.make_rule(
-								pos,
+								loc,
 								lhs_opnd,
 								rhs_opnd
 							)
 						],
-						SACE.make_bool(pos, false)
+						SACE.make_bool(loc, false)
 					)
 				when :ORELSE
 					SACE.make_if(
-						pos,
+						loc,
 						[
 							SACE.make_rule(
-								pos,
+								loc,
 								lhs_opnd,
-								SACE.make_bool(pos, true)
+								SACE.make_bool(loc, true)
 							)
 						],
 						rhs_opnd
@@ -135,13 +135,13 @@ end	# Umu::ConcreteSyntax::Core::Expression::Binary
 
 module_function
 
-	def make_infix(pos, lhs_opnd, opr_sym, rhs_opnd)
-		ASSERT.kind_of pos,			L::Position
+	def make_infix(loc, lhs_opnd, opr_sym, rhs_opnd)
+		ASSERT.kind_of loc,			L::Location
 		ASSERT.kind_of lhs_opnd,	SCCE::Abstract
 		ASSERT.kind_of opr_sym,		::Symbol
 		ASSERT.kind_of rhs_opnd,	SCCE::Abstract
 
-		Binary::Infix.new(pos, lhs_opnd, opr_sym, rhs_opnd).freeze
+		Binary::Infix.new(loc, lhs_opnd, opr_sym, rhs_opnd).freeze
 	end
 
 end	# Umu::ConcreteSyntax::Core::Expression

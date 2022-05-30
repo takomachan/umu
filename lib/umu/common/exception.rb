@@ -38,21 +38,21 @@ end
 
 
 class ExecutionError < Expected
-	attr_reader :pos
+	attr_reader :loc
 
 
-	def initialize(pos, msg, *args)
-		ASSERT.kind_of pos,	L::Position
+	def initialize(loc, msg, *args)
+		ASSERT.kind_of loc,	L::Location
 
 		super(msg, *args)
 
-		@pos = pos
+		@loc = loc
 	end
 
 
 	def to_s
 		super.to_s +
-		format(" -- #%d in %s", self.pos.line_num, self.pos.file_name)
+		format(" -- #%d in %s", self.loc.line_num, self.loc.file_name)
 	end
 end
 
@@ -62,10 +62,10 @@ class RuntimeError < ExecutionError
 	attr_reader :env
 
 
-	def initialize(pos, env, msg, *args)
+	def initialize(loc, env, msg, *args)
 		ASSERT.kind_of env, E::Entry
 
-		super(pos, msg, *args)
+		super(loc, msg, *args)
 
 		@env = env
 	end
@@ -86,7 +86,7 @@ end # Umu::Exception::Abstraction
 
 class CommandError < Abstraction::Expected; end
 
-class SyntaxErrorWithoutPosition < Abstraction::Expected
+class SyntaxErrorWithoutLocation < Abstraction::Expected
 
 private
 

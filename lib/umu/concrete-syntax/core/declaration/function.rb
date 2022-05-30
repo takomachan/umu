@@ -1,5 +1,5 @@
 require 'umu/common'
-require 'umu/lexical/position'
+require 'umu/lexical/location'
 
 
 module Umu
@@ -16,10 +16,10 @@ class Abstract < Declaration::Abstract
 	attr_reader :lam_expr
 
 
-	def initialize(pos, lam_expr)
+	def initialize(loc, lam_expr)
 		ASSERT.kind_of lam_expr, SCCE::Nary::Lambda::Named
 
-		super(pos)
+		super(loc)
 
 		@lam_expr = lam_expr
 	end
@@ -31,7 +31,7 @@ class Abstract < Declaration::Abstract
 
 
 	def exported_vars
-		[SCCP.make_variable(self.pos, self.lam_expr.sym)].freeze
+		[SCCP.make_variable(self.loc, self.lam_expr.sym)].freeze
 	end
 
 
@@ -39,7 +39,7 @@ private
 
 	def __desugar__(env, event)
 		SACD.make_value(
-			self.pos,
+			self.loc,
 			self.lam_expr.sym,
 			self.lam_expr.desugar(env.enter(event))
 		)
@@ -68,17 +68,17 @@ end	# Umu::ConcreteSyntax::Core::Declaration::Function
 
 module_function
 
-	def make_function(pos, lam_expr)
+	def make_function(loc, lam_expr)
 		ASSERT.kind_of lam_expr, SCCE::Nary::Lambda::Named
 
-		Function::Simple.new(pos, lam_expr).freeze
+		Function::Simple.new(loc, lam_expr).freeze
 	end
 
 
-	def make_recursive_function(pos, lam_expr)
+	def make_recursive_function(loc, lam_expr)
 		ASSERT.kind_of lam_expr, SCCE::Nary::Lambda::Named
 
-		Function::Recursive.new(pos, lam_expr).freeze
+		Function::Recursive.new(loc, lam_expr).freeze
 	end
 
 end	# Umu::ConcreteSyntax::Core::Declaration

@@ -1,5 +1,5 @@
 require 'umu/common'
-require 'umu/lexical/position'
+require 'umu/lexical/location'
 
 require 'umu/concrete-syntax/core/expression/n-ary/rule'
 
@@ -18,12 +18,12 @@ class If < Expression::Abstract
 	attr_reader :if_rule, :elsif_rules, :else_expr
 
 
-	def initialize(pos, if_rule, elsif_rules, else_expr)
+	def initialize(loc, if_rule, elsif_rules, else_expr)
 		ASSERT.kind_of if_rule,		Nary::Rule::If
 		ASSERT.kind_of elsif_rules,	::Array
 		ASSERT.kind_of else_expr,	SCCE::Abstract
 
-		super(pos)
+		super(loc)
 
 		@if_rule		= if_rule
 		@elsif_rules	= elsif_rules
@@ -56,13 +56,13 @@ private
 		new_env = env.enter event
 
 		SACE.make_if(
-			self.pos,
+			self.loc,
 
 			([self.if_rule] + self.elsif_rules).map { |rule|
 				ASSERT.kind_of rule, Nary::Rule::If
 
 				SACE.make_rule(
-					rule.pos,
+					rule.loc,
 					rule.test_expr.desugar(new_env),
 					rule.then_expr.desugar(new_env)
 				)
@@ -78,13 +78,13 @@ end	# Umu::ConcreteSyntax::Core::Expression::Nary
 
 module_function
 
-	def make_if(pos, if_rule, elsif_rules, else_expr)
-		ASSERT.kind_of pos,			L::Position
+	def make_if(loc, if_rule, elsif_rules, else_expr)
+		ASSERT.kind_of loc,			L::Location
 		ASSERT.kind_of if_rule,		Nary::Rule::If
 		ASSERT.kind_of elsif_rules,	::Array
 		ASSERT.kind_of else_expr,	SCCE::Abstract
 
-		Nary::If.new(pos, if_rule, elsif_rules, else_expr).freeze
+		Nary::If.new(loc, if_rule, elsif_rules, else_expr).freeze
 	end
 
 end	# Umu::ConcreteSyntax::Core::Expression

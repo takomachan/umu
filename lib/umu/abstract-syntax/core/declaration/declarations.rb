@@ -14,11 +14,11 @@ class Declarations < Abstract
 	attr_reader :decls
 
 
-	def initialize(pos, decls)
-		ASSERT.kind_of pos,		L::Position
+	def initialize(loc, decls)
+		ASSERT.kind_of loc,		L::Location
 		ASSERT.kind_of decls,	::Array
 
-		super(pos)
+		super(loc)
 
 		@decls = decls
 	end
@@ -52,11 +52,11 @@ end
 
 module_function
 
-	def make_declarations(pos, decls)
-		ASSERT.kind_of pos,		L::Position
+	def make_declarations(loc, decls)
+		ASSERT.kind_of loc,		L::Location
 		ASSERT.kind_of decls,	::Array
 
-		Declarations.new(pos, decls.freeze).freeze
+		Declarations.new(loc, decls.freeze).freeze
 	end
 
 end	# Umu::AbstractSyntax::Core::Declaration

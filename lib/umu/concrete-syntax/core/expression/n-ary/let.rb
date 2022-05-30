@@ -1,5 +1,5 @@
 require 'umu/common'
-require 'umu/lexical/position'
+require 'umu/lexical/location'
 
 
 module Umu
@@ -16,11 +16,11 @@ class Let < Expression::Abstract
 	attr_reader :decls, :expr
 
 
-	def initialize(pos, decls, expr)
+	def initialize(loc, decls, expr)
 		ASSERT.kind_of decls,	::Array
 		ASSERT.kind_of expr,	SCCE::Abstract
 
-		super(pos)
+		super(loc)
 
 		@decls	= decls
 		@expr	= expr
@@ -44,7 +44,7 @@ private
 			self.expr.desugar(new_env)
 		else
 			SACE.make_let(
-				self.pos,
+				self.loc,
 				self.decls.map { |decl|
 					ASSERT.kind_of decl, SCCD::Abstract
 
@@ -61,12 +61,12 @@ end	# Umu::ConcreteSyntax::Core::Expression::Nary
 
 module_function
 
-	def make_let(pos, decls, expr)
-		ASSERT.kind_of pos,		L::Position
+	def make_let(loc, decls, expr)
+		ASSERT.kind_of loc,		L::Location
 		ASSERT.kind_of decls,	::Array
 		ASSERT.kind_of expr,	SCCE::Abstract
 
-		Nary::Let.new(pos, decls.freeze, expr).freeze
+		Nary::Let.new(loc, decls.freeze, expr).freeze
 	end
 
 end	# Umu::ConcreteSyntax::Core::Expression

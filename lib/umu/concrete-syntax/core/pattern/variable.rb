@@ -13,10 +13,10 @@ class Variable < Abstract
 	attr_reader :var_sym
 
 
-	def initialize(pos, var_sym)
+	def initialize(loc, var_sym)
 		ASSERT.kind_of var_sym, ::Symbol
 
-		super(pos)
+		super(loc)
 
 		@var_sym = var_sym
 	end
@@ -48,13 +48,13 @@ private
 	def __desugar_value__(expr, _env, _event)
 		ASSERT.kind_of expr, SACE::Abstract
 
-		SACD.make_value self.pos, self.var_sym, expr
+		SACD.make_value self.loc, self.var_sym, expr
 	end
 
 
 	def __desugar_lambda__(_seq_num, _env, _event)
 		SCCP.make_result(
-			SACE.make_identifier(self.pos, self.var_sym),
+			SACE.make_identifier(self.loc, self.var_sym),
 			[]
 		)
 	end
@@ -63,11 +63,11 @@ end
 
 module_function
 
-	def make_variable(pos, var_sym)
-		ASSERT.kind_of pos,		L::Position
+	def make_variable(loc, var_sym)
+		ASSERT.kind_of loc,		L::Location
 		ASSERT.kind_of var_sym,	::Symbol
 
-		Variable.new(pos, var_sym).freeze
+		Variable.new(loc, var_sym).freeze
 	end
 
 end	# Umu::ConcreteSyntax::Core::Pattern

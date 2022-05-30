@@ -17,7 +17,7 @@ class Apply < Binary::Abstract
 	alias opnd_exprs	rhs
 
 
-	def initialize(pos, opr_expr, opnd_exprs)
+	def initialize(loc, opr_expr, opnd_exprs)
 		ASSERT.kind_of opr_expr,	SACE::Abstract
 		ASSERT.kind_of opnd_exprs,	::Array
 		ASSERT.assert opnd_exprs.size >= 1
@@ -52,7 +52,7 @@ class Apply < Binary::Abstract
 			result.value
 		}
 
-		value = opr_result.value.apply opnd_values, self.pos, new_env
+		value = opr_result.value.apply opnd_values, self.loc, new_env
 
 		ASSERT.kind_of value, VC::Top
 	end
@@ -63,12 +63,12 @@ end	# Umu::AbstractSyntax::Core::Expression::Binary
 
 module_function
 
-	def make_apply(pos, opr_expr, opnd_exprs)
-		ASSERT.kind_of pos,			L::Position
+	def make_apply(loc, opr_expr, opnd_exprs)
+		ASSERT.kind_of loc,			L::Location
 		ASSERT.kind_of opr_expr,	SACE::Abstract
 		ASSERT.kind_of opnd_exprs,	::Array
 
-		Binary::Apply.new(pos, opr_expr, opnd_exprs.freeze).freeze
+		Binary::Apply.new(loc, opr_expr, opnd_exprs.freeze).freeze
 	end
 
 end	# Umu::AbstractSyntax::Core::Expression

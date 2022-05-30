@@ -16,10 +16,10 @@ class Abstract < Expression::Abstract
 	attr_reader	:obj
 
 
-	def initialize(pos, obj)
+	def initialize(loc, obj)
 		ASSERT.kind_of obj, ::Object
 
-		super(pos)
+		super(loc)
 
 		@obj = obj
 	end

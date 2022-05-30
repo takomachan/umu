@@ -1,5 +1,5 @@
 require 'umu/common'
-require 'umu/lexical/position'
+require 'umu/lexical/location'
 
 
 module Umu
@@ -17,11 +17,11 @@ class Prefix < Unary::Abstract
 	attr_reader	:rhs_expr
 
 
-	def initialize(pos, sym, rhs_expr)
+	def initialize(loc, sym, rhs_expr)
 		ASSERT.kind_of sym,			::Symbol
 		ASSERT.kind_of rhs_expr,	SCCE::Abstract
 
-		super(pos, sym)
+		super(loc, sym)
 
 		@rhs_expr = rhs_expr
 	end
@@ -36,15 +36,15 @@ private
 
 	def __desugar__(env, event)
 		SACE.make_lambda(
-			self.pos,
+			self.loc,
 
-			[SACE.make_identifier(self.pos, :'%x')],
+			[SACE.make_identifier(self.loc, :'%x')],
 
 			SACE.make_apply(
-				self.pos,
-				SACE.make_identifier(self.pos, self.sym),
+				self.loc,
+				SACE.make_identifier(self.loc, self.sym),
 				[
-					SACE.make_identifier(self.pos, :'%x'),
+					SACE.make_identifier(self.loc, :'%x'),
 					self.rhs_expr.desugar(env.enter(event))
 				]
 			),
@@ -60,12 +60,12 @@ end	# Umu::ConcreteSyntax::Core::Expression::Unary
 
 module_function
 
-	def make_prefix(pos, sym, rhs_expr)
-		ASSERT.kind_of pos,			L::Position
+	def make_prefix(loc, sym, rhs_expr)
+		ASSERT.kind_of loc,			L::Location
 		ASSERT.kind_of sym, 		::Symbol
 		ASSERT.kind_of rhs_expr,	SCCE::Abstract
 
-		Unary::Prefix.new(pos, sym, rhs_expr).freeze
+		Unary::Prefix.new(loc, sym, rhs_expr).freeze
 	end
 
 end	# Umu::ConcreteSyntax::Core::Expression

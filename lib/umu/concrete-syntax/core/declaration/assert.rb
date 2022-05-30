@@ -1,5 +1,5 @@
 require 'umu/common'
-require 'umu/lexical/position'
+require 'umu/lexical/location'
 
 
 module Umu
@@ -14,11 +14,11 @@ class Assert < Declaration::Abstract
 	attr_reader :test_expr, :else_expr
 
 
-	def initialize(pos, test_expr, else_expr)
+	def initialize(loc, test_expr, else_expr)
 		ASSERT.kind_of test_expr,	SCCE::Abstract
 		ASSERT.kind_of else_expr,	SCCE::Abstract
 
-		super(pos)
+		super(loc)
 
 		@test_expr	= test_expr
 		@else_expr	= else_expr
@@ -44,27 +44,27 @@ private
 		new_env = env.enter event
 
 		SACD.make_value(
-			self.pos,
+			self.loc,
 
 			WILDCARD,
 
 			SACE.make_if(
-				self.pos,
+				self.loc,
 
 				[
 					SACE.make_rule(
-						self.test_expr.pos,
+						self.test_expr.loc,
 						self.test_expr.desugar(new_env),
-						SACE.make_unit(self.test_expr.pos)
+						SACE.make_unit(self.test_expr.loc)
 					)
 				],
 
 				SACE.make_send(
-					self.else_expr.pos,
+					self.else_expr.loc,
 					self.else_expr.desugar(new_env),
 					[
 						SACE.make_method(
-							self.else_expr.pos,
+							self.else_expr.loc,
 							:abort,
 							[]
 						)
@@ -80,12 +80,12 @@ end
 
 module_function
 
-	def make_assert(pos, test_expr, else_expr)
-		ASSERT.kind_of pos,			L::Position
+	def make_assert(loc, test_expr, else_expr)
+		ASSERT.kind_of loc,			L::Location
 		ASSERT.kind_of test_expr,	SCCE::Abstract
 		ASSERT.kind_of else_expr,	SCCE::Abstract
 
-		Assert.new(pos, test_expr, else_expr).freeze
+		Assert.new(loc, test_expr, else_expr).freeze
 	end
 
 end	# Umu::ConcreteSyntax::Core::Declaration

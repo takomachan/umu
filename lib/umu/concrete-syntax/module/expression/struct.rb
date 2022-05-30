@@ -1,5 +1,5 @@
 require 'umu/common'
-require 'umu/lexical/position'
+require 'umu/lexical/location'
 
 require 'umu/concrete-syntax/module/expression/abstract'
 
@@ -17,11 +17,11 @@ class Struct < Expression::Abstract
 	attr_reader :body_decls, :local_decls
 
 
-	def initialize(pos, body_decls, local_decls)
+	def initialize(loc, body_decls, local_decls)
 		ASSERT.kind_of body_decls,	::Array
 		ASSERT.kind_of local_decls,	::Array
 
-		super(pos)
+		super(loc)
 
 		@body_decls		= body_decls
 		@local_decls	= local_decls
@@ -62,7 +62,7 @@ private
 				ASSERT.kind_of vpat,	SCCP::Variable
 
 				label = vpat.var_sym
-				expr  = SACE.make_identifier(vpat.pos, vpat.var_sym)
+				expr  = SACE.make_identifier(vpat.loc, vpat.var_sym)
 
 				hash.merge(label => expr) { |_lab, _old_expr, new_expr|
 					new_expr
@@ -70,7 +70,7 @@ private
 			}
 		)
 
-		struct_expr	= SACE.make_struct self.pos, expr_by_label
+		struct_expr	= SACE.make_struct self.loc, expr_by_label
 		decls		= self.local_decls + self.body_decls
 
 		if decls.empty?
@@ -79,7 +79,7 @@ private
 			new_env = env.enter event
 
 			SACE.make_let(
-				self.pos,
+				self.loc,
 				decls.map { |decl| decl.desugar new_env },
 				struct_expr
 			)
@@ -90,13 +90,13 @@ end
 
 module_function
 
-	def make_struct(pos, body_decls, local_decls)
-		ASSERT.kind_of pos,			L::Position
+	def make_struct(loc, body_decls, local_decls)
+		ASSERT.kind_of loc,			L::Location
 		ASSERT.kind_of body_decls,	::Array
 		ASSERT.kind_of local_decls,	::Array
 
 		Struct.new(
-			pos, body_decls.freeze, local_decls.freeze
+			loc, body_decls.freeze, local_decls.freeze
 		).freeze
 	end
 

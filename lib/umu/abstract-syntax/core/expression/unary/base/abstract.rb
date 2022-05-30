@@ -21,7 +21,7 @@ class Abstract < Unary::Abstract
 					env.trace_stack.count,
 					'Eval(Expr)',
 					self.class,
-					self.pos,
+					self.loc,
 					self.to_s
 				) { |event|
 					__evaluate__ env, event

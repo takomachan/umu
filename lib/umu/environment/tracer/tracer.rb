@@ -1,5 +1,5 @@
 require 'umu/common'
-require 'umu/lexical/position'
+require 'umu/lexical/location'
 require 'umu/environment/preference'
 
 
@@ -12,27 +12,27 @@ module Tracer
 class Event
 	attr_reader :label
 	attr_reader :klass
-	attr_reader :pos
+	attr_reader :loc
 	attr_reader :msg
 
 
-	def initialize(label, klass, pos, msg)
+	def initialize(label, klass, loc, msg)
 		ASSERT.kind_of label,	::String
 		ASSERT.kind_of klass,	::Class
-		ASSERT.kind_of pos,		L::Position
+		ASSERT.kind_of loc,		L::Location
 		ASSERT.kind_of msg,		::String
 
 		@label	= label
 		@klass	= klass
-		@pos	= pos
+		@loc	= loc
 		@msg	= msg
 	end
 
 
 	def to_s
 		format("%s:#%d:[%s] %s: %s",
-					self.pos.file_name,
-					self.pos.line_num,
+					self.loc.file_name,
+					self.loc.line_num,
 					label,
 					klass.to_s.split(/::/)[-1],
 					self.msg
@@ -44,22 +44,22 @@ end
 
 module_function
 
-	def make_event(label, klass, pos, msg)
+	def make_event(label, klass, loc, msg)
 		ASSERT.kind_of label,	::String
 		ASSERT.kind_of klass,	::Class
-		ASSERT.kind_of pos,		L::Position
+		ASSERT.kind_of loc,		L::Location
 		ASSERT.kind_of msg,		::String
 
-		Event.new(label.freeze, klass, pos, msg.freeze).freeze
+		Event.new(label.freeze, klass, loc, msg.freeze).freeze
 	end
 
 
-	def trace(pref, eval_depth, label, klass, pos, msg)
+	def trace(pref, eval_depth, label, klass, loc, msg)
 		ASSERT.kind_of pref,		E::Preference
 		ASSERT.kind_of eval_depth,	::Integer
 		ASSERT.kind_of label,		::String
 		ASSERT.kind_of klass,		::Class
-		ASSERT.kind_of pos,			L::Position
+		ASSERT.kind_of loc,			L::Location
 		ASSERT.kind_of msg,			::String
 		ASSERT.assert block_given?
 
@@ -71,7 +71,7 @@ module_function
 							msg
 		end
 
-		object = yield Tracer.make_event(label, klass, pos, msg)
+		object = yield Tracer.make_event(label, klass, loc, msg)
 
 		if pref.trace_mode?
 			STDERR.printf "%s--> %s: %s\n",
@@ -84,12 +84,12 @@ module_function
 	end
 
 
-	def trace_single(pref, eval_depth, label, klass, pos, msg)
+	def trace_single(pref, eval_depth, label, klass, loc, msg)
 		ASSERT.kind_of pref,		E::Preference
 		ASSERT.kind_of eval_depth,	::Integer
 		ASSERT.kind_of label,		::String
 		ASSERT.kind_of klass,		::Class
-		ASSERT.kind_of pos,			L::Position
+		ASSERT.kind_of loc,			L::Location
 		ASSERT.kind_of msg,			::String
 
 		if pref.trace_mode?
@@ -100,7 +100,7 @@ module_function
 							msg
 		end
 
-		object = yield Tracer.make_event(label, klass, pos, msg)
+		object = yield Tracer.make_event(label, klass, loc, msg)
 
 		if pref.trace_mode?
 			STDERR.printf " --> %s: %s\n",

@@ -1,5 +1,5 @@
 require 'umu/common'
-require 'umu/lexical/position'
+require 'umu/lexical/location'
 
 
 module Umu
@@ -24,10 +24,10 @@ class Selector < Abstract
 	attr_reader :sel_num
 
 
-	def initialize(pos, sel_num)
+	def initialize(loc, sel_num)
 		ASSERT.kind_of sel_num, ::Integer
 
-		super(pos)
+		super(loc)
 
 		@sel_num = sel_num
 	end
@@ -41,7 +41,7 @@ class Selector < Abstract
 private
 
 	def __desugar__(_env, _event)
-		SACE.make_number_selector self.pos, self.sel_num
+		SACE.make_number_selector self.loc, self.sel_num
 	end
 end
 
@@ -51,12 +51,12 @@ class Method < Abstract
 	attr_reader :sym, :exprs
 
 
-	def initialize(pos, sym, exprs)
+	def initialize(loc, sym, exprs)
 		ASSERT.kind_of sym,		::Symbol
 		ASSERT.kind_of exprs,	::Array
 		ASSERT.assert exprs.all? { |e| e.kind_of? SCCE::Abstract }
 
-		super(pos)
+		super(loc)
 
 		@exprs	= exprs
 		@sym	= sym
@@ -81,7 +81,7 @@ private
 		new_env = env.enter event
 
 		SACE.make_method(
-			self.pos,
+			self.loc,
 			self.sym,
 			self.exprs.map { |expr| expr.desugar(new_env) }
 		)
@@ -96,11 +96,11 @@ class Entry < Binary::Abstract
 	alias rhs_messages rhs
 
 
-	def initialize(pos, lhs_expr, rhs_messages)
+	def initialize(loc, lhs_expr, rhs_messages)
 		ASSERT.kind_of lhs_expr,	SCCE::Abstract
 		ASSERT.kind_of rhs_messages,	::Array
 
-		super(pos, lhs_expr, rhs_messages)
+		super(loc, lhs_expr, rhs_messages)
 	end
 
 
@@ -118,7 +118,7 @@ private
 		new_env = env.enter event
 
 		SACE.make_send(
-			self.pos,
+			self.loc,
 			self.lhs_expr.desugar(new_env),
 			self.rhs_messages.map { |mess| mess.desugar(new_env) }
 		)
@@ -132,29 +132,29 @@ end	# Umu::ConcreteSyntax::Core::Expression::Binary
 
 module_function
 
-	def make_selector(pos, sel_num)
-		ASSERT.kind_of pos,		L::Position
+	def make_selector(loc, sel_num)
+		ASSERT.kind_of loc,		L::Location
 		ASSERT.kind_of sel_num,	::Integer
 
-		Binary::Send::Message::Selector.new(pos, sel_num).freeze
+		Binary::Send::Message::Selector.new(loc, sel_num).freeze
 	end
 
 
-	def make_method(pos, sym, exprs)
-		ASSERT.kind_of pos,		L::Position
+	def make_method(loc, sym, exprs)
+		ASSERT.kind_of loc,		L::Location
 		ASSERT.kind_of sym,		::Symbol
 		ASSERT.kind_of exprs,	::Array
 
-		Binary::Send::Message::Method.new(pos, sym, exprs.freeze).freeze
+		Binary::Send::Message::Method.new(loc, sym, exprs.freeze).freeze
 	end
 
 
-	def make_send(pos, lhs_expr, rhs_messages)
-		ASSERT.kind_of pos,			L::Position
+	def make_send(loc, lhs_expr, rhs_messages)
+		ASSERT.kind_of loc,			L::Location
 		ASSERT.kind_of lhs_expr,	SCCE::Abstract
 		ASSERT.kind_of rhs_messages,	::Array
 
-		Binary::Send::Entry.new(pos, lhs_expr, rhs_messages.freeze).freeze
+		Binary::Send::Entry.new(loc, lhs_expr, rhs_messages.freeze).freeze
 	end
 
 end	# Umu::ConcreteSyntax::Core::Expression

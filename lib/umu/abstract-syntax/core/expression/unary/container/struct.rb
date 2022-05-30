@@ -30,7 +30,7 @@ class Entry < Abstraction::HashBased
 	alias expr_by_label hash
 
 
-	def initialize(pos, expr_by_label)
+	def initialize(loc, expr_by_label)
 		ASSERT.kind_of expr_by_label, ::Hash
 
 		super
@@ -42,7 +42,7 @@ class Entry < Abstraction::HashBased
 			ASSERT.kind_of label,	::Symbol
 			ASSERT.kind_of expr,	SACE::Abstract
 
-			yield SACE.make_struct_field self.pos, label, expr
+			yield SACE.make_struct_field self.loc, label, expr
 		end
 	end
 
@@ -85,21 +85,21 @@ end	# Umu::AbstractSyntax::Core::Expression::Unary
 
 module_function
 
-	def make_struct_field(pos, label, expr)
-		ASSERT.kind_of pos,		L::Position
+	def make_struct_field(loc, label, expr)
+		ASSERT.kind_of loc,		L::Location
 		ASSERT.kind_of label,	::Symbol
 		ASSERT.kind_of expr,	SACE::Abstract
 
-		Unary::Container::Struct::Field.new(pos, label, expr).freeze
+		Unary::Container::Struct::Field.new(loc, label, expr).freeze
 	end
 
 
-	def make_struct(pos, expr_by_label)
-		ASSERT.kind_of pos,				L::Position
+	def make_struct(loc, expr_by_label)
+		ASSERT.kind_of loc,				L::Location
 		ASSERT.kind_of expr_by_label,	::Hash
 
 		Unary::Container::Struct::Entry.new(
-			pos, expr_by_label.freeze
+			loc, expr_by_label.freeze
 		).freeze
 	end
 

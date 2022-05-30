@@ -1,5 +1,5 @@
 require 'umu/common'
-require 'umu/lexical/position'
+require 'umu/lexical/location'
 require 'umu/environment/preference'
 require 'umu/environment/tracer/stack'
 require 'umu/environment/context'
@@ -63,11 +63,11 @@ class Entry < Abstraction::Record
 	end
 
 
-	def ty_lookup(sym, pos)
+	def ty_lookup(sym, loc)
 		ASSERT.kind_of sym, ::Symbol
-		ASSERT.kind_of pos,	L::Position
+		ASSERT.kind_of loc,	L::Location
 
-		ASSERT.kind_of self.ty_context.lookup(sym, pos, self), ECTSC::Base
+		ASSERT.kind_of self.ty_context.lookup(sym, loc, self), ECTSC::Base
 	end
 
 
@@ -79,11 +79,11 @@ class Entry < Abstraction::Record
 	end
 
 
-	def va_lookup(sym, pos)
+	def va_lookup(sym, loc)
 		ASSERT.kind_of sym, ::Symbol
-		ASSERT.kind_of pos,	L::Position
+		ASSERT.kind_of loc,	L::Location
 
-		self.va_context.lookup sym, pos, self
+		self.va_context.lookup sym, loc, self
 	end
 
 
@@ -198,16 +198,16 @@ class Entry < Abstraction::Record
 
 
 	def print_backtrace
-		self.trace_stack.inject(L.make_initial_position) do
-			|last_pos, event|
+		self.trace_stack.inject(L.make_initial_location) do
+			|last_loc, event|
 
-			current_pos = event.pos
-			if current_pos != last_pos
-				opt_line = __lookup_line_at__ current_pos
+			current_loc = event.loc
+			if current_loc != last_loc
+				opt_line = __lookup_line_at__ current_loc
 				if opt_line
 					STDERR.printf("\n%s:#%d>%s\n",
-									current_pos.file_name,
-									current_pos.line_num,
+									current_loc.file_name,
+									current_loc.line_num,
 									opt_line
 								)
 				end
@@ -215,7 +215,7 @@ class Entry < Abstraction::Record
 
 			STDERR.puts event.to_s
 
-			current_pos
+			current_loc
 		end
 	end
 
@@ -236,12 +236,12 @@ private
 	end
 
 
-	def __lookup_line_at__(pos)
-		ASSERT.kind_of pos,	L::Position
+	def __lookup_line_at__(loc)
+		ASSERT.kind_of loc,	L::Location
 
-		opt_source = self.sources[pos.file_name]
+		opt_source = self.sources[loc.file_name]
 		if opt_source
-			opt_source[pos.line_num]
+			opt_source[loc.line_num]
 		else
 			nil
 		end

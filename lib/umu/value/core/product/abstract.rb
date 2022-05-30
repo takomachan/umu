@@ -1,5 +1,5 @@
 require 'umu/common'
-require 'umu/lexical/position'
+require 'umu/lexical/location'
 
 
 module Umu
@@ -37,7 +37,7 @@ class Abstract < Top
 	end
 
 
-	def select(sel, pos, env)
+	def select(sel, loc, env)
 		raise X::SubclassResponsibility
 	end
 end

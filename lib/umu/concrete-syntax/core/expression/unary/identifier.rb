@@ -1,5 +1,5 @@
 require 'umu/common'
-require 'umu/lexical/position'
+require 'umu/lexical/location'
 
 
 module Umu
@@ -22,7 +22,7 @@ class Short < Abstract
 	alias sym obj
 
 
-	def initialize(pos, sym)
+	def initialize(loc, sym)
 		ASSERT.kind_of sym, ::Symbol
 
 		super
@@ -37,7 +37,7 @@ class Short < Abstract
 private
 
 	def __desugar__(_env, _event)
-		SACE.make_identifier self.pos, self.sym
+		SACE.make_identifier self.loc, self.sym
 	end
 end
 
@@ -48,11 +48,11 @@ class Long < Abstract
 	attr_reader	:tail_ids
 
 
-	def initialize(pos, head_id, tail_ids)
+	def initialize(loc, head_id, tail_ids)
 		ASSERT.kind_of head_id,		Short
 		ASSERT.kind_of tail_ids,	::Array
 
-		super(pos, head_id)
+		super(loc, head_id)
 
 		@tail_ids = tail_ids
 	end
@@ -79,7 +79,7 @@ private
 			self.head_id.desugar(new_env)
 		else
 			SACE.make_long_identifier(
-				pos,
+				loc,
 				self.head_id.desugar(new_env),
 				self.tail_ids.map { |id| id.desugar(new_env) }
 			)
@@ -94,19 +94,19 @@ end	# Umu::ConcreteSyntax::Core::Expression::Unary
 
 module_function
 
-	def make_identifier(pos, sym)
-		ASSERT.kind_of pos,	L::Position
+	def make_identifier(loc, sym)
+		ASSERT.kind_of loc,	L::Location
 		ASSERT.kind_of sym, ::Symbol
 
-		Unary::Identifier::Short.new(pos, sym).freeze
+		Unary::Identifier::Short.new(loc, sym).freeze
 	end
 
 
-	def make_long_identifier(pos, head_id, tail_ids)
+	def make_long_identifier(loc, head_id, tail_ids)
 		ASSERT.kind_of head_id,		Unary::Identifier::Short
 		ASSERT.kind_of tail_ids,	::Array
 
-		Unary::Identifier::Long.new(pos, head_id, tail_ids.freeze).freeze
+		Unary::Identifier::Long.new(loc, head_id, tail_ids.freeze).freeze
 	end
 
 end	# Umu::ConcreteSyntax::Core::Expression

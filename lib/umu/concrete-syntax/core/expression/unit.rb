@@ -1,5 +1,5 @@
 require 'umu/common'
-require 'umu/lexical/position'
+require 'umu/lexical/location'
 
 
 module Umu
@@ -19,17 +19,17 @@ class Unit < Expression::Abstract
 private
 
 	def __desugar__(_env, _event)
-		SACE.make_unit self.pos
+		SACE.make_unit self.loc
 	end
 end
 
 
 module_function
 
-	def make_unit(pos)
-		ASSERT.kind_of pos,	L::Position
+	def make_unit(loc)
+		ASSERT.kind_of loc,	L::Location
 
-		Unit.new(pos).freeze
+		Unit.new(loc).freeze
 	end
 
 end	# Umu::ConcreteSyntax::Core::Expression

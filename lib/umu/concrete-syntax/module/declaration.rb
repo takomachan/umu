@@ -1,5 +1,5 @@
 require 'umu/common'
-require 'umu/lexical/position'
+require 'umu/lexical/location'
 
 require 'umu/concrete-syntax/module/abstract'
 
@@ -25,11 +25,11 @@ class Structure < Abstract
 	attr_reader :pat, :expr
 
 
-	def initialize(pos, pat, expr)
+	def initialize(loc, pat, expr)
 		ASSERT.kind_of pat,		SCMP::Abstract
 		ASSERT.kind_of expr,	SCME::Abstract
 
-		super(pos)
+		super(loc)
 
 		@pat	= pat
 		@expr	= expr
@@ -61,10 +61,10 @@ class Core < Abstract
 	attr_reader :core_decl
 
 
-	def initialize(pos, core_decl)
+	def initialize(loc, core_decl)
 		ASSERT.kind_of core_decl, SCCD::Abstract
 
-		super(pos)
+		super(loc)
 
 		@core_decl = core_decl
 	end
@@ -91,18 +91,18 @@ end
 
 module_function
 
-	def make_structure(pos, pat, expr)
+	def make_structure(loc, pat, expr)
 		ASSERT.kind_of pat,		SCMP::Abstract
 		ASSERT.kind_of expr,	SCME::Abstract
 
-		Structure.new(pos, pat, expr).freeze
+		Structure.new(loc, pat, expr).freeze
 	end
 
 
-	def make_core(pos, core_decl)
+	def make_core(loc, core_decl)
 		ASSERT.kind_of core_decl, SCCD::Abstract
 
-		Core.new(pos, core_decl).freeze
+		Core.new(loc, core_decl).freeze
 	end
 
 end	# Umu::ConcreteSyntax::Module::Declaration

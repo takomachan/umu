@@ -1,5 +1,5 @@
 require 'umu/common'
-require 'umu/lexical/position'
+require 'umu/lexical/location'
 
 
 
@@ -15,7 +15,7 @@ class Newline < Abstraction::Abstract
 	alias opt_val val
 
 
-	def initialize(pos, opt_val)
+	def initialize(loc, opt_val)
 		ASSERT.opt_kind_of opt_val, ::String
 
 		super
@@ -68,27 +68,27 @@ end # Umu::Lexical::Token::Separator
 
 module_function
 
-	def make_newline(pos, opt_val)
-		ASSERT.kind_of		pos,		L::Position
+	def make_newline(loc, opt_val)
+		ASSERT.kind_of		loc,		L::Location
 		ASSERT.opt_kind_of	opt_val,	::String
 
-		Separator::Newline.new(pos, opt_val.freeze).freeze
+		Separator::Newline.new(loc, opt_val.freeze).freeze
 	end
 
 
-	def make_comment(pos, val)
-		ASSERT.kind_of pos,	L::Position
+	def make_comment(loc, val)
+		ASSERT.kind_of loc,	L::Location
 		ASSERT.kind_of val,	::String
 
-		Separator::Comment.new(pos, val.freeze).freeze
+		Separator::Comment.new(loc, val.freeze).freeze
 	end
 
 
-	def make_white(pos, val)
-		ASSERT.kind_of pos,	L::Position
+	def make_white(loc, val)
+		ASSERT.kind_of loc,	L::Location
 		ASSERT.kind_of val,	::String
 
-		Separator::White.new(pos, val.freeze).freeze
+		Separator::White.new(loc, val.freeze).freeze
 	end
 
 end # Umu::Lexical::Token

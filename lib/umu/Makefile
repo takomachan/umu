@@ -18,7 +18,7 @@ SRCS	= commander.rb \
 			lexical/token/separator.rb \
 			lexical/token/token.rb \
 			lexical/escape.rb \
-			lexical/position.rb \
+			lexical/location.rb \
 			concrete-syntax.rb \
 			concrete-syntax/parser.rb \
 			concrete-syntax/abstract.rb \

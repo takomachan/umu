@@ -16,7 +16,7 @@ class List < Abstraction::Abstract
 	attr_reader	:opt_last_pat
 
 
-	def initialize(pos, pats, opt_last_pat)
+	def initialize(loc, pats, opt_last_pat)
 		ASSERT.kind_of		pats,			::Array
 		ASSERT.opt_kind_of	opt_last_pat,	Variable
 		ASSERT.assert (if pats.empty? then opt_last_pat.nil? else true end)
@@ -33,13 +33,13 @@ class List < Abstraction::Abstract
 
 			hash.merge(vpat.var_sym => true) { |key, _, _|
 				raise X::SyntaxError.new(
-					pos,
+					loc,
 					"Duplicated pattern variable: '%s'", key.to_s
 				)
 			}
 		end
 
-		super(pos, pats)
+		super(loc, pats)
 
 		@opt_last_pat = opt_last_pat
 	end
@@ -75,9 +75,9 @@ private
 		ASSERT.kind_of expr, SACE::Abstract
 
 		if self.pats.empty?
-			SACD.make_value self.pos, WILDCARD, expr
+			SACD.make_value self.loc, WILDCARD, expr
 		else
-			SACD.make_declarations self.pos, __desugar__(expr, env)
+			SACD.make_declarations self.loc, __desugar__(expr, env)
 		end
 	end
 
@@ -89,13 +89,13 @@ private
 
 		if self.pats.empty?
 			SCCP.make_result(
-				SACE.make_identifier(self.pos, WILDCARD),
+				SACE.make_identifier(self.loc, WILDCARD),
 				[]
 			)
 		else
 			SCCP.make_result(
-				SACE.make_identifier(self.pos, var_sym),
-				__desugar__(SACE.make_identifier(self.pos, var_sym), env)
+				SACE.make_identifier(self.loc, var_sym),
+				__desugar__(SACE.make_identifier(self.loc, var_sym), env)
 			)
 		end
 	end
@@ -107,7 +107,7 @@ private
 		head_vpat, *tail_pats = self.pats
 		ASSERT.kind_of head_vpat, Variable
 
-		init_pos = head_vpat.pos
+		init_loc = head_vpat.loc
 
 		init_seq_num = 1
 
@@ -115,15 +115,15 @@ private
 
 		init_decls = [
 			SACD.make_value(
-				init_pos,
+				init_loc,
 				init_pair_sym,
-				__make_send_des__(init_pos, expr)
+				__make_send_des__(init_loc, expr)
 			),
 
 			SACD.make_value(
-				init_pos,
+				init_loc,
 				head_vpat.var_sym,
-				__make_select_head__(init_pos, init_pair_sym)
+				__make_select_head__(init_loc, init_pair_sym)
 			)
 		]
 
@@ -136,10 +136,10 @@ private
 			ASSERT.kind_of decls,		::Array
 			ASSERT.kind_of vpat,		Variable
 
-			pos				= vpat.pos
+			loc				= vpat.loc
 			next_seq_num	= seq_num + 1
 			next_pair_sym	= __gen_pair_sym__ next_seq_num
-			tail_list_expr	= __make_select_tail__ pos, pair_sym
+			tail_list_expr	= __make_select_tail__ loc, pair_sym
 
 			next_decls = (
 					decls
@@ -147,27 +147,27 @@ private
 					if vpat.wildcard?
 						[
 							SACD.make_value(
-								pos,
+								loc,
 								next_pair_sym,
 								SACE.make_send(
-									pos,
-									__make_send_des__(pos, tail_list_expr),
-									[SACE.make_number_selector(pos, 2)]
+									loc,
+									__make_send_des__(loc, tail_list_expr),
+									[SACE.make_number_selector(loc, 2)]
 								)
 							)
 						]
 					else
 						[
 							SACD.make_value(
-								pos,
+								loc,
 								next_pair_sym,
-								__make_send_des__(pos, tail_list_expr)
+								__make_send_des__(loc, tail_list_expr)
 							),
 
 							SACD.make_value(
-								pos,
+								loc,
 								vpat.var_sym,
-								__make_select_head__(pos, next_pair_sym)
+								__make_select_head__(loc, next_pair_sym)
 							)
 
 						]
@@ -185,9 +185,9 @@ private
 
 				[
 					SACD.make_value(
-						last_pat.pos,
+						last_pat.loc,
 						last_pat.var_sym,
-						__make_select_tail__(last_pat.pos, final_pair_sym)
+						__make_select_tail__(last_pat.loc, final_pair_sym)
 					)
 				]
 			else
@@ -204,40 +204,40 @@ private
 	end
 
 
-	def __make_send_des__(pos, expr)
-		ASSERT.kind_of pos,		L::Position
+	def __make_send_des__(loc, expr)
+		ASSERT.kind_of loc,		L::Location
 		ASSERT.kind_of expr, SACE::Abstract
 
-		SACE.make_send pos, expr, [SACE.make_method(pos, :des, [])]
+		SACE.make_send loc, expr, [SACE.make_method(loc, :des, [])]
 	end
 
 
-	def __make_select_by_number__(pos, var_sym, sel_num)
-		ASSERT.kind_of pos,		L::Position
+	def __make_select_by_number__(loc, var_sym, sel_num)
+		ASSERT.kind_of loc,		L::Location
 		ASSERT.kind_of var_sym,	::Symbol
 		ASSERT.kind_of sel_num,	::Integer
 
 		SACE.make_send(
-			pos,
-			SACE.make_identifier(pos, var_sym),
-			[SACE.make_number_selector(pos, sel_num)]
+			loc,
+			SACE.make_identifier(loc, var_sym),
+			[SACE.make_number_selector(loc, sel_num)]
 		)
 	end
 
 
-	def __make_select_head__(pos, var_sym)
-		ASSERT.kind_of pos,		L::Position
+	def __make_select_head__(loc, var_sym)
+		ASSERT.kind_of loc,		L::Location
 		ASSERT.kind_of var_sym,	::Symbol
 
-		__make_select_by_number__ pos, var_sym, 1
+		__make_select_by_number__ loc, var_sym, 1
 	end
 
 
-	def __make_select_tail__(pos, var_sym)
-		ASSERT.kind_of pos,		L::Position
+	def __make_select_tail__(loc, var_sym)
+		ASSERT.kind_of loc,		L::Location
 		ASSERT.kind_of var_sym,	::Symbol
 
-		__make_select_by_number__ pos, var_sym, 2
+		__make_select_by_number__ loc, var_sym, 2
 	end
 end
 
@@ -246,12 +246,12 @@ end	# Umu::ConcreteSyntax::Core::Pattern::Container
 
 module_function
 
-	def make_list(pos, pats, opt_last_pat)
-		ASSERT.kind_of		pos,			L::Position
+	def make_list(loc, pats, opt_last_pat)
+		ASSERT.kind_of		loc,			L::Location
 		ASSERT.kind_of		pats,			::Array
 		ASSERT.opt_kind_of	opt_last_pat,	Variable
 
-		Container::List.new(pos, pats.freeze, opt_last_pat).freeze
+		Container::List.new(loc, pats.freeze, opt_last_pat).freeze
 	end
 
 end	# Umu::ConcreteSyntax::Core::Pattern

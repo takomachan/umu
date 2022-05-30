@@ -17,7 +17,7 @@ class Tuple < Abstraction::ArrayBased
 	alias exprs array
 
 
-	def initialize(pos, exprs)
+	def initialize(loc, exprs)
 		ASSERT.kind_of exprs, ::Array
 		ASSERT.assert exprs.size >= 2	# Pair or More
 
@@ -52,11 +52,11 @@ end	# Umu::AbstractSyntax::Core::Expression::Unary
 
 module_function
 
-	def make_tuple(pos, exprs)
-		ASSERT.kind_of pos,		L::Position
+	def make_tuple(loc, exprs)
+		ASSERT.kind_of loc,		L::Location
 		ASSERT.kind_of exprs,	::Array
 
-		Unary::Container::Tuple.new(pos, exprs.freeze).freeze
+		Unary::Container::Tuple.new(loc, exprs.freeze).freeze
 	end
 
 end	# Umu::AbstractSyntax::Core::Expression

@@ -1,5 +1,5 @@
 require 'umu/common'
-require 'umu/lexical/position'
+require 'umu/lexical/location'
 
 
 module Umu
@@ -18,12 +18,12 @@ class Abstract < Expression::Abstract
 	attr_reader :pats, :expr, :decls
 
 
-	def initialize(pos, pats, expr, decls)
+	def initialize(loc, pats, expr, decls)
 		ASSERT.kind_of pats,	::Array
 		ASSERT.kind_of expr,	SCCE::Abstract
 		ASSERT.kind_of decls,	::Array
 
-		super(pos)
+		super(loc)
 
 		@pats	= pats
 		@expr	= expr
@@ -68,10 +68,10 @@ private
 		lamb_expr = if local_decls.empty?
 						body_expr
 					else
-						SACE.make_let self.pos, local_decls, body_expr
+						SACE.make_let self.loc, local_decls, body_expr
 					end
 
-		SACE.make_lambda self.pos, lamb_idents, lamb_expr, __name_sym__
+		SACE.make_lambda self.loc, lamb_idents, lamb_expr, __name_sym__
 	end
 end
 
@@ -81,13 +81,13 @@ class Named < Abstract
 	attr_reader :sym
 
 
-	def initialize(pos, pats, expr, decls, sym)
+	def initialize(loc, pats, expr, decls, sym)
 		ASSERT.kind_of pats,	::Array
 		ASSERT.kind_of expr,	SCCE::Abstract
 		ASSERT.kind_of decls,	::Array
 		ASSERT.kind_of sym,		::Symbol
 
-		super(pos, pats, expr, decls)
+		super(loc, pats, expr, decls)
 
 		@sym = sym
 	end
@@ -145,24 +145,24 @@ end	# Umu::ConcreteSyntax::Core::Expression::Nary
 
 module_function
 
-	def make_lambda(pos, pats, expr, decls)
-		ASSERT.kind_of pos,		L::Position
+	def make_lambda(loc, pats, expr, decls)
+		ASSERT.kind_of loc,		L::Location
 		ASSERT.kind_of pats,	::Array
 		ASSERT.kind_of expr,	SCCE::Abstract
 		ASSERT.kind_of decls,	::Array
 
-		Nary::Lambda::Anonymous.new(pos, pats, expr, decls.freeze).freeze
+		Nary::Lambda::Anonymous.new(loc, pats, expr, decls.freeze).freeze
 	end
 
 
-	def make_named_lambda(pos, pats, expr, decls, sym)
-		ASSERT.kind_of pos,		L::Position
+	def make_named_lambda(loc, pats, expr, decls, sym)
+		ASSERT.kind_of loc,		L::Location
 		ASSERT.kind_of pats,	::Array
 		ASSERT.kind_of expr,	SCCE::Abstract
 		ASSERT.kind_of decls,	::Array
 		ASSERT.kind_of sym,		::Symbol
 
-		Nary::Lambda::Named.new(pos, pats, expr, decls.freeze, sym).freeze
+		Nary::Lambda::Named.new(loc, pats, expr, decls.freeze, sym).freeze
 	end
 
 end	# Umu::ConcreteSyntax::Core::Expression

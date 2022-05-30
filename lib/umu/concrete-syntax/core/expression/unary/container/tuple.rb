@@ -1,5 +1,5 @@
 require 'umu/common'
-require 'umu/lexical/position'
+require 'umu/lexical/location'
 
 
 module Umu
@@ -15,7 +15,7 @@ module Unary
 module Container
 
 class Tuple < Abstraction::Abstract
-	def initialize(pos, exprs)
+	def initialize(loc, exprs)
 		ASSERT.kind_of	exprs, ::Array
 		ASSERT.assert	exprs.size >= 2
 
@@ -33,7 +33,7 @@ private
 	def __desugar__(env, event)
 		new_env = env.enter event
 
-		SACE.make_tuple(self.pos, self.map { |elem| elem.desugar(new_env) })
+		SACE.make_tuple(self.loc, self.map { |elem| elem.desugar(new_env) })
 	end
 end
 
@@ -44,11 +44,11 @@ end	# Umu::ConcreteSyntax::Core::Expression::Unary
 
 module_function
 
-	def make_tuple(pos, exprs)
-		ASSERT.kind_of pos,		L::Position
+	def make_tuple(loc, exprs)
+		ASSERT.kind_of loc,		L::Location
 		ASSERT.kind_of exprs,	::Array
 
-		Unary::Container::Tuple.new(pos, exprs.freeze).freeze
+		Unary::Container::Tuple.new(loc, exprs.freeze).freeze
 	end
 
 end	# Umu::ConcreteSyntax::Core::Expression

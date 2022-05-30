@@ -1,5 +1,5 @@
 require 'umu/common'
-require 'umu/lexical/position'
+require 'umu/lexical/location'
 
 
 module Umu
@@ -18,7 +18,7 @@ class Sequence < Abstraction::Abstract
 	alias exprs array
 
 
-	def initialize(pos, exprs)
+	def initialize(loc, exprs)
 		ASSERT.kind_of	exprs, ::Array
 		ASSERT.assert	exprs.size >= 2
 
@@ -39,12 +39,12 @@ private
 		*not_last_exprs, last_expr = self.exprs
 
 		SACE.make_let(
-			self.pos,
+			self.loc,
 
 			not_last_exprs.map { |expr|
 				ASSERT.kind_of expr, SCCE::Abstract
 
-				SACD.make_value expr.pos, WILDCARD, expr.desugar(new_env)
+				SACD.make_value expr.loc, WILDCARD, expr.desugar(new_env)
 			},
 
 			last_expr.desugar(new_env)
@@ -59,11 +59,11 @@ end	# Umu::ConcreteSyntax::Core::Expression::Unary
 
 module_function
 
-	def make_sequence(pos, exprs)
-		ASSERT.kind_of pos,		L::Position
+	def make_sequence(loc, exprs)
+		ASSERT.kind_of loc,		L::Location
 		ASSERT.kind_of exprs,	::Array
 
-		Unary::Container::Sequence.new(pos, exprs.freeze).freeze
+		Unary::Container::Sequence.new(loc, exprs.freeze).freeze
 	end
 
 

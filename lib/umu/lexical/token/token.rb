@@ -1,5 +1,5 @@
 require 'umu/common'
-require 'umu/lexical/position'
+require 'umu/lexical/location'
 
 
 
@@ -10,10 +10,10 @@ module Lexical
 module Token
 
 class ReservedWord < Abstraction::Symbol
-	def initialize(pos, val)
+	def initialize(loc, val)
 		ASSERT.kind_of val, ::String
 
-		super(pos, val.upcase)
+		super(loc, val.upcase)
 	end
 
 
@@ -67,7 +67,7 @@ end
 
 
 class String < Abstraction::String
-	def initialize(pos, val)
+	def initialize(loc, val)
 		ASSERT.kind_of val, ::String
 
 		super
@@ -87,7 +87,7 @@ end
 
 
 class Integer < Abstraction::Abstract
-	def initialize(pos, val)
+	def initialize(loc, val)
 		ASSERT.kind_of val, ::Integer
 
 		super
@@ -107,7 +107,7 @@ end
 
 
 class Float < Abstraction::Abstract
-	def initialize(pos, val)
+	def initialize(loc, val)
 		ASSERT.kind_of val, ::Float
 
 		super
@@ -128,59 +128,59 @@ end
 
 module_function
 
-	def make_reserved_word(pos, val)
-		ASSERT.kind_of pos, L::Position
+	def make_reserved_word(loc, val)
+		ASSERT.kind_of loc, L::Location
 		ASSERT.kind_of val, ::String
 
-		ReservedWord.new(pos, val.freeze).freeze
+		ReservedWord.new(loc, val.freeze).freeze
 	end
 
 
-	def make_reserved_symbol(pos, val)
-		ASSERT.kind_of pos, L::Position
+	def make_reserved_symbol(loc, val)
+		ASSERT.kind_of loc, L::Location
 		ASSERT.kind_of val, ::String
 
-		ReservedSymbol.new(pos, val.freeze).freeze
+		ReservedSymbol.new(loc, val.freeze).freeze
 	end
 
 
-	def make_atom(pos, val)
-		ASSERT.kind_of pos, L::Position
+	def make_atom(loc, val)
+		ASSERT.kind_of loc, L::Location
 		ASSERT.kind_of val, ::String
 
-		Atom.new(pos, val.freeze).freeze
+		Atom.new(loc, val.freeze).freeze
 	end
 
 
-	def make_identifier(pos, val)
-		ASSERT.kind_of pos, L::Position
+	def make_identifier(loc, val)
+		ASSERT.kind_of loc, L::Location
 		ASSERT.kind_of val, ::String
 
-		Identifier.new(pos, val.freeze).freeze
+		Identifier.new(loc, val.freeze).freeze
 	end
 
 
-	def make_string(pos, val)
-		ASSERT.kind_of pos, L::Position
+	def make_string(loc, val)
+		ASSERT.kind_of loc, L::Location
 		ASSERT.kind_of val, ::String
 
-		String.new(pos, val.freeze).freeze
+		String.new(loc, val.freeze).freeze
 	end
 
 
-	def make_integer(pos, val)
-		ASSERT.kind_of pos, L::Position
+	def make_integer(loc, val)
+		ASSERT.kind_of loc, L::Location
 		ASSERT.kind_of val, ::Integer
 
-		Integer.new(pos, val).freeze
+		Integer.new(loc, val).freeze
 	end
 
 
-	def make_float(pos, val)
-		ASSERT.kind_of pos, L::Position
+	def make_float(loc, val)
+		ASSERT.kind_of loc, L::Location
 		ASSERT.kind_of val, ::Float
 
-		Float.new(pos, val).freeze
+		Float.new(loc, val).freeze
 	end
 
 end # Umu::Lexical::Token

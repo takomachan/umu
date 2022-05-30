@@ -16,7 +16,7 @@ class Abstract < Top
 	]
 
 
-	def meth_contents(_pos, _env, _event)
+	def meth_contents(_loc, _env, _event)
 		VC.make_unit
 	end
 end

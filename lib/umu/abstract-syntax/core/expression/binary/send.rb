@@ -30,10 +30,10 @@ class Selector < Abstract
 	attr_reader :sel
 
 
-	def initialize(pos, sel)
+	def initialize(loc, sel)
 		ASSERT.kind_of sel, ::Object		# Polymopic
 
-		super(pos)
+		super(loc)
 
 		@sel = sel
 	end
@@ -52,7 +52,7 @@ class ByNumber < Abstraction::Selector
 	alias sel_num sel
 
 
-	def initialize(pos, sel_num)
+	def initialize(loc, sel_num)
 		ASSERT.kind_of sel_num,	::Integer
 
 		super
@@ -65,7 +65,7 @@ class ByNumber < Abstraction::Selector
 
 		unless tup_value.kind_of? VCP::Tuple
 			raise X::TypeError.new(
-				self.pos,
+				self.loc,
 				env,
 				"Selection operator '.' require a Tuple, but %s : %s",
 					tup_value.to_s,
@@ -73,7 +73,7 @@ class ByNumber < Abstraction::Selector
 			)
 		end
 
-		value = tup_value.select self.sel_num, self.pos, env
+		value = tup_value.select self.sel_num, self.loc, env
 		ASSERT.kind_of value, VC::Top
 	end
 end
@@ -83,7 +83,7 @@ end
 class ByLabel < Abstraction::Selector
 	alias sel_sym sel
 
-	def initialize(pos, sel_sym)
+	def initialize(loc, sel_sym)
 		ASSERT.kind_of sel_sym,	::Symbol
 
 		super
@@ -96,7 +96,7 @@ class ByLabel < Abstraction::Selector
 
 		unless rec_value.kind_of? VCP::Struct::Entry
 			raise X::TypeError.new(
-				self.pos,
+				self.loc,
 				env,
 				"Selection operator '.' require a Struct, but %s : %s",
 					rec_value.to_s,
@@ -104,7 +104,7 @@ class ByLabel < Abstraction::Selector
 			)
 		end
 
-		value = rec_value.select self.sel_sym, self.pos, env
+		value = rec_value.select self.sel_sym, self.loc, env
 		ASSERT.kind_of value, VC::Top
 	end
 end
@@ -115,11 +115,11 @@ class Method < Abstraction::Abstract
 	attr_reader	:sym, :exprs
 
 
-	def initialize(pos, sym, exprs)
+	def initialize(loc, sym, exprs)
 		ASSERT.kind_of sym,		::Symbol
 		ASSERT.kind_of exprs,	::Array
 
-		super(pos)
+		super(loc)
 
 		@sym	= sym
 		@exprs	= exprs
@@ -155,14 +155,14 @@ class Method < Abstraction::Abstract
 		receiver_spec	= env.ty_class_spec_of receiver
 		ASSERT.kind_of receiver_spec, ECTSC::Abstract
 		method_spec		= receiver_spec.lookup_instance_method(
-										method_sym, self.pos, env
+										method_sym, self.loc, env
 									)
 		ASSERT.kind_of method_spec, ECTS::Method
 		param_num		= method_spec.param_class_specs.size
 
 		unless arg_num == param_num
 			raise X::ArgumentError.new(
-				self.pos,
+				self.loc,
 				env,
 				"Wrong number of arguments, " +
 					"expected: %d, but given: %d",
@@ -179,7 +179,7 @@ class Method < Abstraction::Abstract
 
 			unless env.ty_kind_of?(arg_value, param_class_spec)
 				raise X::TypeError.new(
-					self.pos,
+					self.loc,
 					env,
 					"Type error at #%d argument, " +
 							"expected a %s, but %s : %s",
@@ -193,7 +193,7 @@ class Method < Abstraction::Abstract
 
 		next_receiver = receiver.invoke(
 							method_spec,
-							self.pos,
+							self.loc,
 							env,
 							event,
 							*arg_values
@@ -214,7 +214,7 @@ class Entry < Binary::Abstract
 	alias rhs_messages rhs
 
 
-	def initialize(pos, lhs_expr, rhs_messages)
+	def initialize(loc, lhs_expr, rhs_messages)
 		ASSERT.kind_of lhs_expr,	SACE::Abstract
 		ASSERT.kind_of rhs_messages,	::Array
 		ASSERT.assert rhs_messages.size >= 1
@@ -258,38 +258,38 @@ end	# Umu::AbstractSyntax::Core::Expression::Binary
 
 
 module_function
-	def make_number_selector(pos, sel_num)
-		ASSERT.kind_of pos,		L::Position
+	def make_number_selector(loc, sel_num)
+		ASSERT.kind_of loc,		L::Location
 		ASSERT.kind_of sel_num,	::Integer
 
-		Binary::Send::Message::ByNumber.new(pos, sel_num).freeze
+		Binary::Send::Message::ByNumber.new(loc, sel_num).freeze
 	end
 
 
-	def make_label_selector(pos, sel_sym)
-		ASSERT.kind_of pos,		L::Position
+	def make_label_selector(loc, sel_sym)
+		ASSERT.kind_of loc,		L::Location
 		ASSERT.kind_of sel_sym,	::Symbol
 
-		Binary::Send::Message::ByLabel.new(pos, sel_sym).freeze
+		Binary::Send::Message::ByLabel.new(loc, sel_sym).freeze
 	end
 
 
 
-	def make_method(pos, sym, exprs)
-		ASSERT.kind_of pos,		L::Position
+	def make_method(loc, sym, exprs)
+		ASSERT.kind_of loc,		L::Location
 		ASSERT.kind_of sym,		::Symbol
 		ASSERT.kind_of exprs,	::Array
 
-		Binary::Send::Message::Method.new(pos, sym, exprs.freeze).freeze
+		Binary::Send::Message::Method.new(loc, sym, exprs.freeze).freeze
 	end
 
 
-	def make_send(pos, lhs_expr, rhs_exprs)
-		ASSERT.kind_of pos,			L::Position
+	def make_send(loc, lhs_expr, rhs_exprs)
+		ASSERT.kind_of loc,			L::Location
 		ASSERT.kind_of lhs_expr,	SACE::Abstract
 		ASSERT.kind_of rhs_exprs,	::Array
 
-		Binary::Send::Entry.new(pos, lhs_expr, rhs_exprs.freeze).freeze
+		Binary::Send::Entry.new(loc, lhs_expr, rhs_exprs.freeze).freeze
 	end
 
 end	# Umu::AbstractSyntax::Core::Expression

@@ -16,11 +16,11 @@ class Abstract < Declaration::Abstract
 	attr_reader :sym
 
 
-	def initialize(pos, sym)
-		ASSERT.kind_of pos,	L::Position
+	def initialize(loc, sym)
+		ASSERT.kind_of loc,	L::Location
 		ASSERT.kind_of sym,	::Symbol
 
-		super(pos)
+		super(loc)
 
 		@sym = sym
 	end
@@ -32,10 +32,10 @@ class Value < Abstract
 	attr_reader :expr
 
 
-	def initialize(pos, sym, expr)
+	def initialize(loc, sym, expr)
 		ASSERT.kind_of expr, SACE::Abstract
 
-		super(pos, sym)
+		super(loc, sym)
 
 		@expr = expr
 	end
@@ -64,10 +64,10 @@ class Recursive < Abstract
 	attr_reader :lam_expr
 
 
-	def initialize(pos, sym, lam_expr)
+	def initialize(loc, sym, lam_expr)
 		ASSERT.kind_of lam_expr, SACE::Nary::Lambda
 
-		super(pos, sym)
+		super(loc, sym)
 
 		@lam_expr = lam_expr
 	end
@@ -93,21 +93,21 @@ end	# Umu::AbstractSyntax::Core::Declaration::Simple
 
 module_function
 
-	def make_value(pos, sym, expr)
-		ASSERT.kind_of pos,		L::Position
+	def make_value(loc, sym, expr)
+		ASSERT.kind_of loc,		L::Location
 		ASSERT.kind_of sym,		::Symbol
 		ASSERT.kind_of expr,	SACE::Abstract
 
-		Simple::Value.new(pos, sym, expr).freeze
+		Simple::Value.new(loc, sym, expr).freeze
 	end
 
 
-	def make_recursive(pos, sym, lam_expr)
-		ASSERT.kind_of pos,			L::Position
+	def make_recursive(loc, sym, lam_expr)
+		ASSERT.kind_of loc,			L::Location
 		ASSERT.kind_of sym,			::Symbol
 		ASSERT.kind_of lam_expr,	SACE::Nary::Lambda
 
-		Simple::Recursive.new(pos, sym, lam_expr).freeze
+		Simple::Recursive.new(loc, sym, lam_expr).freeze
 	end
 
 end	# Umu::AbstractSyntax::Core::Declaration

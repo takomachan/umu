@@ -21,7 +21,7 @@ class Abstract < Abstraction::Model
 					env.trace_stack.count,
 					'Desu(Val)',
 					self.class,
-					self.pos,
+					self.loc,
 					self.to_s
 				) { |event|
 					__desugar_value__ expr, env, event
@@ -35,7 +35,7 @@ class Abstract < Abstraction::Model
 					env.trace_stack.count,
 					'Desu(Lam)',
 					self.class,
-					self.pos,
+					self.loc,
 					self.to_s
 				) { |event|
 					__desugar_lambda__ seq_num, env, event

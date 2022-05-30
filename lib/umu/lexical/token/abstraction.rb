@@ -1,5 +1,5 @@
 require 'umu/common'
-require 'umu/lexical/position'
+require 'umu/lexical/location'
 
 
 
@@ -15,11 +15,11 @@ class Abstract < Umu::Abstraction::Model
 	attr_reader :val
 
 
-	def initialize(pos, val)
-		ASSERT.kind_of pos,	L::Position
+	def initialize(loc, val)
+		ASSERT.kind_of loc,	L::Location
 		ASSERT.kind_of val,	::Object
 
-		super(pos)
+		super(loc)
 
 		@val = val
 	end
@@ -41,17 +41,17 @@ class Symbol < Abstract
 	alias sym val
 
 
-	def initialize(pos, val)
+	def initialize(loc, val)
 		ASSERT.kind_of val, ::String
 
-		super(pos, val.to_sym)
+		super(loc, val.to_sym)
 	end
 end
 
 
 
 class String < Abstract
-	def initialize(pos, val)
+	def initialize(loc, val)
 		ASSERT.kind_of val, ::String
 
 		super

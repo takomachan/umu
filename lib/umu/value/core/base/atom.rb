@@ -28,7 +28,7 @@ class Atom < Abstract
 	end
 
 
-	def meth_to_string(_pos, _env, _event)
+	def meth_to_string(_loc, _env, _event)
 		VC.make_string self.val.to_s
 	end
 end

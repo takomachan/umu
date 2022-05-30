@@ -15,7 +15,7 @@ class Tuple < Abstraction::Abstract
 	alias pats array
 
 
-	def initialize(pos, pats)
+	def initialize(loc, pats)
 		ASSERT.kind_of	pats, ::Array
 		ASSERT.assert	pats.size >= 2
 
@@ -25,7 +25,7 @@ class Tuple < Abstraction::Abstract
 
 			hash.merge(vpat.var_sym => true) { |key, _, _|
 				raise X::SyntaxError.new(
-					pos,
+					loc,
 					"Duplicated pattern variable: '%s'", key.to_s
 				)
 			}
@@ -56,9 +56,9 @@ private
 		ASSERT.kind_of expr, SACE::Abstract
 
 		SACD.make_declarations(
-			self.pos,
+			self.loc,
 			[
-				SACD.make_value(self.pos, :'%t', expr)
+				SACD.make_value(self.loc, :'%t', expr)
 			] + (
 				__desugar__(:'%t', env)
 			)
@@ -72,7 +72,7 @@ private
 		var_sym = __gen_sym__ seq_num
 
 		SCCP.make_result(
-			SACE.make_identifier(self.pos, var_sym),
+			SACE.make_identifier(self.loc, var_sym),
 			__desugar__(var_sym, env)
 		)
 	end
@@ -88,12 +88,12 @@ private
 			ASSERT.kind_of index,	::Integer
 
 			expr = SACE.make_send(
-						vpat.pos,
-						SACE.make_identifier(vpat.pos, var_sym),
-						[SACE.make_number_selector(vpat.pos, index + 1)]
+						vpat.loc,
+						SACE.make_identifier(vpat.loc, var_sym),
+						[SACE.make_number_selector(vpat.loc, index + 1)]
 					)
 
-			SACD.make_value vpat.pos, vpat.var_sym, expr
+			SACD.make_value vpat.loc, vpat.var_sym, expr
 		}
 	end
 end
@@ -103,11 +103,11 @@ end	# Umu::ConcreteSyntax::Core::Pattern::Container
 
 module_function
 
-	def make_tuple(pos, pats)
-		ASSERT.kind_of pos,		L::Position
+	def make_tuple(loc, pats)
+		ASSERT.kind_of loc,		L::Location
 		ASSERT.kind_of pats,	::Array
 
-		Container::Tuple.new(pos, pats.freeze).freeze
+		Container::Tuple.new(loc, pats.freeze).freeze
 	end
 
 end	# Umu::ConcreteSyntax::Core::Pattern

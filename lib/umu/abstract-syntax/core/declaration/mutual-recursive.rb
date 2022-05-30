@@ -14,11 +14,11 @@ class MutualRecursive < Abstract
 	attr_reader :bindings
 
 
-	def initialize(pos, bindings)
-		ASSERT.kind_of pos,			L::Position
+	def initialize(loc, bindings)
+		ASSERT.kind_of loc,			L::Location
 		ASSERT.kind_of bindings,	::Hash
 
-		super(pos)
+		super(loc)
 
 		@bindings = bindings
 	end
@@ -47,11 +47,11 @@ end
 
 module_function
 
-	def make_mutual_recursive(pos, bindings)
-		ASSERT.kind_of pos,			L::Position
+	def make_mutual_recursive(loc, bindings)
+		ASSERT.kind_of loc,			L::Location
 		ASSERT.kind_of bindings,	::Hash
 
-		MutualRecursive.new(pos, bindings.freeze).freeze
+		MutualRecursive.new(loc, bindings.freeze).freeze
 	end
 
 end	# Umu::AbstractSyntax::Core::Declaration

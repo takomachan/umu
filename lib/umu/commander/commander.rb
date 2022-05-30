@@ -113,7 +113,7 @@ end
 			ASSERT.kind_of lexer,		LL::Abstract
 			ASSERT.kind_of env,			E::Entry
 
-			line_num = lexer.pos.line_num
+			line_num = lexer.loc.line_num
 
 			prompt = format(
 				"%04d%s%s%s ",
@@ -209,7 +209,7 @@ end
 
 		pref		= env.pref
 		file_name	= STDIN_FILE_NAME
-		line_num	= init_lexer.pos.line_num
+		line_num	= init_lexer.loc.line_num
 
 		if pref.trace_mode?
 			STDERR.puts
@@ -246,14 +246,14 @@ end
 						token = opt_token
 						STDERR.printf("    TOKEN: %s -- %s\n",
 									token.to_s,
-									token.pos.to_s
+									token.loc.to_s
 						)
 					end
 					STDERR.printf "    NEXT-LEXER: %s\n", lexer.to_s
 				else
 					if opt_token
 						token		= opt_token
-						tk_line_num	= token.pos.line_num
+						tk_line_num	= token.loc.line_num
 
 						if tk_line_num != before_line_num
 							STDERR.printf "\n%04d: ", tk_line_num
@@ -349,7 +349,7 @@ end
 
 			if pref.trace_mode? && opt_token
 				token		= opt_token
-				tk_line_num = token.pos.line_num
+				tk_line_num = token.loc.line_num
 
 				if tk_line_num != before_line_num
 					STDERR.printf "\n%04d: ", tk_line_num
@@ -389,8 +389,8 @@ end
 					STDERR.puts
 					STDERR.printf(
 						"________ Concrete Syntax: #%d in '%s' ________\n",
-						csyn.pos.line_num,
-						csyn.pos.file_name
+						csyn.loc.line_num,
+						csyn.loc.file_name
 					)
 					STDERR.puts csyn.to_s
 				end
@@ -406,8 +406,8 @@ end
 					STDERR.puts
 					STDERR.printf(
 						"________ Abstract Syntax: #%d in '%s' ________\n",
-						asyn.pos.line_num,
-						asyn.pos.file_name
+						asyn.loc.line_num,
+						asyn.loc.file_name
 					)
 					STDERR.puts asyn.to_s
 				end

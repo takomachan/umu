@@ -14,7 +14,7 @@ module Specification
 module Class
 
 class Abstract
-	def lookup_instance_method(sym, pos, env)
+	def lookup_instance_method(sym, loc, env)
 		raise X::SubclassResponsibility
 	end
 end
@@ -82,15 +82,15 @@ class Base < Abstract
 	end
 
 
-	def lookup_class_method(sym, pos, env)
+	def lookup_class_method(sym, loc, env)
 		ASSERT.kind_of sym,	::Symbol
-		ASSERT.kind_of pos,	L::Position
+		ASSERT.kind_of loc,	L::Location
 		ASSERT.kind_of env,	E::Entry
 
 		info = self.class_method_info_of_symbol[sym]
 		unless info
 			raise X::NoMethodError.new(
-				pos,
+				loc,
 				env,
 				"For class: %s, unknown class method: '%s'",
 					self.symbol, sym.to_s
@@ -118,15 +118,15 @@ class Base < Abstract
 	end
 
 
-	def lookup_instance_method(sym, pos, env)
+	def lookup_instance_method(sym, loc, env)
 		ASSERT.kind_of sym,	::Symbol
-		ASSERT.kind_of pos,	L::Position
+		ASSERT.kind_of loc,	L::Location
 		ASSERT.kind_of env,	E::Entry
 
 		info = self.instance_method_info_of_symbol[sym]
 		unless info
 			raise X::NoMethodError.new(
-				pos,
+				loc,
 				env,
 				"For class: %s, unknown method: '%s'", self.symbol, sym.to_s
 			)
@@ -214,12 +214,12 @@ class Meta < Abstract
 	end
 
 
-	def lookup_instance_method(sym, pos, env)
+	def lookup_instance_method(sym, loc, env)
 		ASSERT.kind_of sym,	::Symbol
-		ASSERT.kind_of pos,	L::Position
+		ASSERT.kind_of loc,	L::Location
 		ASSERT.kind_of env,	E::Entry
 
-		method = self.base_class_spec.lookup_class_method(sym, pos, env)
+		method = self.base_class_spec.lookup_class_method(sym, loc, env)
 
 		ASSERT.kind_of method, ECTS::Method
 	end

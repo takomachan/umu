@@ -1,5 +1,5 @@
 require 'umu/common'
-require 'umu/lexical/position'
+require 'umu/lexical/location'
 
 
 module Umu
@@ -14,12 +14,12 @@ class Value < Declaration::Abstract
 	attr_reader :pat, :expr, :decls
 
 
-	def initialize(pos, pat, expr, decls)
+	def initialize(loc, pat, expr, decls)
 		ASSERT.kind_of pat,		SCCP::Abstract
 		ASSERT.kind_of expr,	SCCE::Abstract
 		ASSERT.kind_of decls,	::Array
 
-		super(pos)
+		super(loc)
 
 		@pat	= pat
 		@expr	= expr
@@ -59,7 +59,7 @@ private
 				if self.decls.empty?
 					self.expr
 				else
-					SCCE.make_let(self.pos, self.decls, self.expr)
+					SCCE.make_let(self.loc, self.decls, self.expr)
 				end
 			).desugar(new_env),
 
@@ -72,13 +72,13 @@ end
 
 module_function
 
-	def make_value(pos, pat, expr, decls)
-		ASSERT.kind_of pos,		L::Position
+	def make_value(loc, pat, expr, decls)
+		ASSERT.kind_of loc,		L::Location
 		ASSERT.kind_of pat,		SCCP::Abstract
 		ASSERT.kind_of expr,	SCCE::Abstract
 		ASSERT.kind_of decls,	::Array
 
-		Value.new(pos, pat, expr, decls).freeze
+		Value.new(loc, pat, expr, decls).freeze
 	end
 
 end	# Umu::ConcreteSyntax::Core::Declaration

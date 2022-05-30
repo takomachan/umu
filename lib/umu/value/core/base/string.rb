@@ -34,24 +34,24 @@ class String < Abstract
 	end
 
 
-	def meth_inspect(_pos, _env, _event)
+	def meth_inspect(_loc, _env, _event)
 		VC.make_string self.to_s
 	end
 
 
-	def meth_to_string(_pos, _env, _event)
+	def meth_to_string(_loc, _env, _event)
 		self
 	end
 
 
-	def meth_abort(pos, env, _event)
+	def meth_abort(loc, env, _event)
 		msg = self.val.gsub /%/, '%%'
 
-		raise X::Abort.new(pos, env, msg)
+		raise X::Abort.new(loc, env, msg)
 	end
 
 
-	def meth_append(_pos, _env, _event, other)
+	def meth_append(_loc, _env, _event, other)
 		ASSERT.kind_of other, String
 
 		VC.make_string self.val + other.val

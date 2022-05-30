@@ -16,11 +16,11 @@ class Abstract < Expression::Abstract
 	attr_reader	:lhs_expr, :rhs
 
 
-	def initialize(pos, lhs_expr, rhs)
+	def initialize(loc, lhs_expr, rhs)
 		ASSERT.kind_of lhs_expr,	SACE::Abstract
 		ASSERT.kind_of rhs,			::Object
 
-		super(pos)
+		super(loc)
 
 		@lhs_expr	= lhs_expr
 		@rhs		= rhs

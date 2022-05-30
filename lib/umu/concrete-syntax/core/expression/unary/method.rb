@@ -1,6 +1,6 @@
 require 'umu/common'
 require 'umu/lexical/escape'
-require 'umu/lexical/position'
+require 'umu/lexical/location'
 
 
 module Umu
@@ -20,11 +20,11 @@ class Abstract < Unary::Abstract
 	attr_reader	:method_sym
 
 
-	def initialize(pos, class_sym, method_sym)
+	def initialize(loc, class_sym, method_sym)
 		ASSERT.kind_of class_sym,	::Symbol
 		ASSERT.kind_of method_sym,	::Symbol
 
-		super(pos, class_sym)
+		super(loc, class_sym)
 
 		@method_sym = method_sym
 	end
@@ -41,7 +41,7 @@ class Class < Abstract
 private
 
 	def __desugar__(_env, _event)
-		SACE.make_class_method self.pos, self.class_sym, self.method_sym
+		SACE.make_class_method self.loc, self.class_sym, self.method_sym
 	end
 end
 
@@ -56,7 +56,7 @@ class Instance < Abstract
 private
 
 	def __desugar__(_env, _event)
-		SACE.make_instance_method self.pos, self.class_sym, self.method_sym
+		SACE.make_instance_method self.loc, self.class_sym, self.method_sym
 	end
 end
 
@@ -68,21 +68,21 @@ end	# Umu::ConcreteSyntax::Core::Expression::Unary
 
 module_function
 
-	def make_class_method(pos, class_sym, method_sym)
-		ASSERT.kind_of pos,			L::Position
+	def make_class_method(loc, class_sym, method_sym)
+		ASSERT.kind_of loc,			L::Location
 		ASSERT.kind_of class_sym,	::Symbol
 		ASSERT.kind_of method_sym,	::Symbol
 
-		Unary::Method::Class.new(pos, class_sym, method_sym).freeze
+		Unary::Method::Class.new(loc, class_sym, method_sym).freeze
 	end
 
 
-	def make_instance_method(pos, class_sym, method_sym)
-		ASSERT.kind_of pos,			L::Position
+	def make_instance_method(loc, class_sym, method_sym)
+		ASSERT.kind_of loc,			L::Location
 		ASSERT.kind_of class_sym,	::Symbol
 		ASSERT.kind_of method_sym,	::Symbol
 
-		Unary::Method::Instance.new(pos, class_sym, method_sym).freeze
+		Unary::Method::Instance.new(loc, class_sym, method_sym).freeze
 	end
 
 end	# Umu::ConcreteSyntax::Core::Expression
