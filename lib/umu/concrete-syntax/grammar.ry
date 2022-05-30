@@ -45,8 +45,8 @@ modu_decls:
 
 
 modu_decl:
-  MODULE modu_pat '=' modu_expr {
-	result = SCMD.make_module val[0].pos, val[1], val[3]
+  STRUCTURE modu_pat '=' modu_expr {
+	result = SCMD.make_structure val[0].pos, val[1], val[3]
 }
 | core_decl {
 	result = SCMD.make_core val[0].pos, val[0]

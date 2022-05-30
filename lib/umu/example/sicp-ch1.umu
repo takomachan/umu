@@ -1,6 +1,6 @@
-module UAS = UMU::ASSERT
-module UMA = UMU::MATH
-module UIO = UMU::IO
+structure UAS = UMU::ASSERT
+structure UMA = UMU::MATH
+structure UIO = UMU::IO
 
 val NDIGITS = 3		# for UMU::ASSERT::float
 

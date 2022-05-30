@@ -21,7 +21,7 @@ end
 
 
 
-class Module < Abstract
+class Structure < Abstract
 	attr_reader :pat, :expr
 
 
@@ -37,7 +37,7 @@ class Module < Abstract
 
 
 	def to_s
-		format "%%MODULE %s = %s", self.pat.to_s, self.expr.to_s
+		format "%%STRUCTURE %s = %s", self.pat.to_s, self.expr.to_s
 	end
 
 
@@ -91,11 +91,11 @@ end
 
 module_function
 
-	def make_module(pos, pat, expr)
+	def make_structure(pos, pat, expr)
 		ASSERT.kind_of pat,		SCMP::Abstract
 		ASSERT.kind_of expr,	SCME::Abstract
 
-		Module.new(pos, pat, expr).freeze
+		Structure.new(pos, pat, expr).freeze
 	end
 
 

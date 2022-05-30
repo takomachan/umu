@@ -1,4 +1,4 @@
-module LIST = struct {
+structure LIST = struct {
 	# head : ['a] -> 'a
 	fun head = xs -> x where { val [x|_] = xs }
 
@@ -222,7 +222,7 @@ module LIST = struct {
 										partition { x -> lt? x pivot } xs'
 	}
 } where {
-	module struct {
+	structure struct {
 		val (Nil? -> empty?, Cons -> cons)
 	} = UMU::LIST
 }

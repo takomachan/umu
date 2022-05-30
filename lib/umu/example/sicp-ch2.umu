@@ -1,6 +1,6 @@
-module DATUM = UMU::DATUM
+structure DATUM = UMU::DATUM
 
-module struct {
+structure struct {
 	val (PI, sin, cos, atan2 -> atan, sqrt)
 } = UMU::MATH
 

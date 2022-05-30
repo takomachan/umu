@@ -1,4 +1,4 @@
-module DATUM = UMU::DATUM
+structure DATUM = UMU::DATUM
 
 
 #############################

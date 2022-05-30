@@ -19,7 +19,7 @@
 
 ######## Error ########
 
-module ERROR = struct {
+structure ERROR = struct {
 	# failure		: String -> 'a -> ()
 	fun failure		= msg x -> error ("Assertion Failure",	msg, x)
 
@@ -52,7 +52,7 @@ module ERROR = struct {
 
 ############################)
 
-module EXP = struct {
+structure EXP = struct {
 	#### Constructor ####
 
 	# mk-const : Integer -> <CONST>
@@ -96,7 +96,7 @@ module EXP = struct {
 	# letrec? : <EXP> -> Bool
 	fun letrec? = exp -> tag-of exp == @Letrec
 } where {
-	module DATUM = UMU::DATUM
+	structure DATUM = UMU::DATUM
 }
 
 
@@ -107,7 +107,7 @@ module EXP = struct {
 
 ################)
 
-module VAL = struct {
+structure VAL = struct {
 	#### Constructor ####
 
 	# Integer -> <INTEGER>
@@ -131,7 +131,7 @@ module VAL = struct {
 	# <VAL> -> Bool
 	fun funval?	 = exp -> tag-of exp == @Funval
 } where {
-	module DATUM = UMU::DATUM
+	structure DATUM = UMU::DATUM
 }
 
 
@@ -476,7 +476,7 @@ val GE = [LAMBDA, [@x, @y], [NOT, [LT, @x, @y]]]
 
 ######## Example Runner ########
 
-module ASSERT = struct {
+structure ASSERT = struct {
 	fun integer = actual expect -> let {
 		assert (actual isa? Datum)				"Datum"
 		assert (tag-of actual == @Integer)		"@Integer"

@@ -28,11 +28,11 @@ RESERVED_WORDS = [
 	'fun',
 	'if', 			'in',			'isa?',
 	'let',
-	'mod',			'module',
+	'mod',
 	'orelse',
 	'pow',
 	'rec',
-	'struct',
+	'struct',		'structure',
 	'val',
 	'where',
 
@@ -46,13 +46,14 @@ RESERVED_WORDS = [
 	'package', 'pragma', 'useing',
 
 	# For module language
-	'functor', 'including', 'opening', 'signat',
+	'functor', 'including', 'opening', 'signat', 'signature',
 
 	# For data type declaration
 	'data',	'datum', 'newtype', 'type',
 
 	# For object type
-	'abstract', 'alias', 'class', 'def', 'isa', 'new', 'self', 'super',
+	'abstract', 'alias', 'class', 'def', 'extending',
+	'isa', 'new', 'self', 'super',
 
 	# For infix operator declaration
 	'infix', 'infixr', 'nofix',

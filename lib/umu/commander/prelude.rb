@@ -13,10 +13,10 @@ SOURCE_TEXT  = <<'___EOS___'
 ######## Umu Standard Library ########
 ######################################
 
-module UMU = struct {
+structure UMU = struct {
 	######## Bool ########
 
-	module BOOL = struct {
+	structure BOOL = struct {
 		# TRUE : Bool
 		val TRUE = &Bool.make-true
 
@@ -29,7 +29,7 @@ module UMU = struct {
 	######## Datum ########
 	# See SICP(Wizard Book), 2.4.2 Tagged data
 
-	module DATUM = struct {
+	structure DATUM = struct {
 		#### Constructor ####
 
 		# make : Atom -> 'a -> Datum 'a
@@ -49,7 +49,7 @@ module UMU = struct {
 
 	######## Option ########
 
-	module OPTION = struct {
+	structure OPTION = struct {
 		#### Constructor ####
 
 		# Some : 'a -> Option 'a
@@ -78,7 +78,7 @@ module UMU = struct {
 
 	#### Math ####
 
-	module MATH = struct {
+	structure MATH = struct {
 		# NAN 			: Float
 		val NAN = &Float.make-nan
 
@@ -168,7 +168,7 @@ module UMU = struct {
 
 	#### I/O ####
 
-	module IO = struct {
+	structure IO = struct {
 		# gets : () -> Option String 
 		fun gets = () -> _STDIN.gets
 
@@ -210,7 +210,7 @@ module UMU = struct {
 
 	######## List ########
 
-	module LIST = struct {
+	structure LIST = struct {
 		# Nil : () -> ['a]
 		val Nil = &(List.make-nil)
 
@@ -361,7 +361,7 @@ module UMU = struct {
 
 	######## String ########
 
-	module STRING = struct {
+	structure STRING = struct {
 		# abort : String -> ()
 		val abort = &(String$abort)
 
@@ -388,7 +388,7 @@ module UMU = struct {
 
 	######## Prelude ########
 
-	module PRELUDE = struct {
+	structure PRELUDE = struct {
 		#### Top ####
 
 		# inspect	: 'a -> String
@@ -687,7 +687,7 @@ module UMU = struct {
 
 	######## Assertion ########
 
-	module ASSERT = struct {
+	structure ASSERT = struct {
 		# unit : 'a -> ()
 		fun unit = actual -> let {
 			assert (actual isa? Unit)	(msg () actual)
@@ -786,7 +786,7 @@ module UMU = struct {
 ######## Toplevel definiation ########
 ######################################
 
-module struct {
+structure struct {
 	#### Top ####
 	val (
 		inspect, to-s,
