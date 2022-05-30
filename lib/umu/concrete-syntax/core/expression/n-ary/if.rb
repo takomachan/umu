@@ -15,35 +15,36 @@ module Expression
 module Nary
 
 class If < Expression::Abstract
-	attr_reader :rules, :else_expr
+	attr_reader :if_rule, :elsif_rules, :else_expr
 
 
-	def initialize(pos, rules, else_expr)
-		ASSERT.kind_of rules,		::Array
+	def initialize(pos, if_rule, elsif_rules, else_expr)
+		ASSERT.kind_of if_rule,		Nary::Rule::If
+		ASSERT.kind_of elsif_rules,	::Array
 		ASSERT.kind_of else_expr,	SCCE::Abstract
-		ASSERT.assert rules.count >= 1
 
 		super(pos)
 
-		@rules		= rules
-		@else_expr	= else_expr
+		@if_rule		= if_rule
+		@elsif_rules	= elsif_rules
+		@else_expr		= else_expr
 	end
 
 
 	def to_s
-		head_rule, *tail_rules = self.rules
+		rules_string = if self.elsif_rules.empty?
+							' '
+						else
+							format(" %s ",
+								self.elsif_rules.map { |rule|
+									'%ELSIF ' + rule.to_s
+								}.join(' ')
+							)
+						end
 
-		format("%%IF %s%s %%ELSE %s",
-			head_rule.to_s,
-
-			if tail_rules.empty?
-				''
-			else
-				' ' + tail_rules.map { |rule|
-					format "%%ELSIF %s", rule.to_s
-				}.join(' ')
-			end,
-
+		format("%%IF %s%s%%ELSE %s",
+			self.if_rule.to_s, 
+			rules_string,
 			self.else_expr.to_s
 		)
 	end
@@ -57,8 +58,8 @@ private
 		SACE.make_if(
 			self.pos,
 
-			self.rules.map { |rule|
-				ASSERT.kind_of rule, Rule::If
+			([self.if_rule] + self.elsif_rules).map { |rule|
+				ASSERT.kind_of rule, Nary::Rule::If
 
 				SACE.make_rule(
 					rule.pos,
@@ -77,12 +78,13 @@ end	# Umu::ConcreteSyntax::Core::Expression::Nary
 
 module_function
 
-	def make_if(pos, rules, else_expr)
+	def make_if(pos, if_rule, elsif_rules, else_expr)
 		ASSERT.kind_of pos,			L::Position
-		ASSERT.kind_of rules,		::Array
+		ASSERT.kind_of if_rule,		Nary::Rule::If
+		ASSERT.kind_of elsif_rules,	::Array
 		ASSERT.kind_of else_expr,	SCCE::Abstract
 
-		Nary::If.new(pos, rules, else_expr).freeze
+		Nary::If.new(pos, if_rule, elsif_rules, else_expr).freeze
 	end
 
 end	# Umu::ConcreteSyntax::Core::Expression

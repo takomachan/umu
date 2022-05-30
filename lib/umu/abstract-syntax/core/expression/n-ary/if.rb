@@ -43,29 +43,34 @@ class Entry < Expression::Abstract
 	def initialize(pos, rules, else_expr)
 		ASSERT.kind_of rules,		::Array
 		ASSERT.kind_of else_expr,	SACE::Abstract
-		ASSERT.assert rules.count >= 1
 
 		super(pos)
 
 		@rules		= rules
-		@else_expr = else_expr
+		@else_expr	= else_expr
 	end
 
 
 	def to_s
-		head_rule, *tail_rules = self.rules
+		rules_string = case self.rules.size
+						when 0
+							''
+						when 1
+							self.rules[0].to_s + ' '
+						else
+							head_rule, *tail_rules = self.rules
 
-		format("%%IF %s%s %%ELSE %s",
-			head_rule.to_s,
+							format("%s %s ",
+								head_rule.to_s,
 
-			if tail_rules.empty?
-				''
-			else
-				' ' + tail_rules.map { |rule|
-					format "%%ELSIF %s", rule.to_s
-				}.join(' ')
-			end,
+								tail_rules.map { |rule|
+									'%ELSIF ' + rule.to_s
+								}.join(' ')
+							)
+						end
 
+		format("(%%IF %s%%ELSE %s)",
+			rules_string,
 			self.else_expr.to_s
 		)
 	end

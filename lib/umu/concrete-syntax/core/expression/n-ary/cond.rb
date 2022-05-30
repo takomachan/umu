@@ -21,9 +21,9 @@ class Cond < Expression::Abstract
 	def initialize(pos, expr, rules, else_expr, else_decls)
 		ASSERT.kind_of expr,		SCCE::Abstract
 		ASSERT.kind_of rules,		::Array
-		ASSERT.assert rules.count >= 1
 		ASSERT.kind_of else_expr,	SCCE::Abstract
 		ASSERT.kind_of else_decls,	::Array
+		ASSERT.assert rules.size >= 1
 
 		super(pos)
 
@@ -35,22 +35,19 @@ class Cond < Expression::Abstract
 
 
 	def to_s
-		format("%%COND %s {%s%s}",
+		decls_string = if self.else_decls.empty?
+							' '
+						else
+							format(" %%WHERE %s ",
+								self.else_decls.map(&:to_s).join(' ')
+							)
+						end
+
+		format("%%COND %s { %s %%ELSE %s%s}",
 			self.expr.to_s,
-
-			rules.map(&:to_s).join(' | '),
-
-			format(" else %s%s",
-				self.else_expr.to_s,
-
-				unless self.else_decls.empty?
-					format(" %%WHERE %s",
-						self.else_decls.map(&:to_s).join(' ')
-					)
-				else
-					''
-				end
-			)
+			self.rules.map(&:to_s).join(' | '),
+			self.else_expr.to_s,
+			decls_string
 		)
 	end
 
@@ -110,7 +107,7 @@ module_function
 		ASSERT.kind_of expr,		SCCE::Abstract
 		ASSERT.kind_of rules,		::Array
 		ASSERT.kind_of else_expr,	SCCE::Abstract
-		ASSERT.kind_of		else_decls,		::Array
+		ASSERT.kind_of else_decls,	::Array
 
 		Nary::Cond.new(pos, expr, rules, else_expr, else_decls).freeze
 	end
