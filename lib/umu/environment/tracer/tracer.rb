@@ -32,7 +32,7 @@ class Event
 	def to_s
 		format("%s:#%d:[%s] %s: %s",
 					self.loc.file_name,
-					self.loc.line_num,
+					self.loc.line_num + 1,
 					label,
 					klass.to_s.split(/::/)[-1],
 					self.msg

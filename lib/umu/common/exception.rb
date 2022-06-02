@@ -51,8 +51,7 @@ class ExecutionError < Expected
 
 
 	def to_s
-		super.to_s +
-		format(" -- #%d in %s", self.loc.line_num, self.loc.file_name)
+		format "%s -- %s", super.to_s, self.loc.to_s
 	end
 end
 

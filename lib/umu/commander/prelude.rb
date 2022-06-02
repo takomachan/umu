@@ -6,7 +6,7 @@ module Prelude
 
 FILE_NAME = format "<%s>", __FILE__
 
-START_LINE_NUM = __LINE__ + 3
+START_LINE_NUM = __LINE__ + 2
 
 SOURCE_TEXT  = <<'___EOS___'
 ######################################

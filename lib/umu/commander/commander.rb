@@ -105,7 +105,7 @@ end
 		ASSERT.kind_of init_env, E::Entry
 
 		init_tokens	= []
-		init_lexer	= LL.make_initial_lexer STDIN_FILE_NAME, 1
+		init_lexer	= LL.make_initial_lexer STDIN_FILE_NAME, 0
 		final_env = loop.inject(
 			 [init_tokens, init_lexer, init_env]
 		) { |(tokens,      lexer,      env     ), _|
@@ -118,7 +118,7 @@ end
 			prompt = format(
 				"%04d%s%s%s ",
 
-				line_num,
+				line_num + 1,
 
 
 				if lexer.in_braket?
@@ -214,7 +214,7 @@ end
 		if pref.trace_mode?
 			STDERR.puts
 			STDERR.printf "________ Source: '%s' ________\n", file_name
-			STDERR.printf "%04d: %s", line_num, line
+			STDERR.printf "%04d: %s", line_num + 1, line
 		end
 
 		if pref.trace_mode?
@@ -256,7 +256,7 @@ end
 						tk_line_num	= token.loc.line_num
 
 						if tk_line_num != before_line_num
-							STDERR.printf "\n%04d: ", tk_line_num
+							STDERR.printf "\n%04d: ", tk_line_num + 1
 						end
 
 						unless token && token.separator?
@@ -278,7 +278,7 @@ end
 								file_name
 				)
 				STDERR.printf("%04d: %s\n",
-								line_num,
+								line_num + 1,
 								next_tokens.map(&:to_s).join(' ')
 				)
 			end
@@ -319,7 +319,7 @@ end
 	end
 
 
-	def process_file(source, file_name, env, init_line_num = 1)
+	def process_file(source, file_name, env, init_line_num = 0)
 		ASSERT.kind_of source,			::String
 		ASSERT.kind_of file_name,		::String
 		ASSERT.kind_of env,				E::Entry
@@ -352,7 +352,7 @@ end
 				tk_line_num = token.loc.line_num
 
 				if tk_line_num != before_line_num
-					STDERR.printf "\n%04d: ", tk_line_num
+					STDERR.printf "\n%04d: ", tk_line_num + 1
 				end
 
 				unless token && token.separator?
@@ -388,9 +388,8 @@ end
 				if pref.trace_mode?
 					STDERR.puts
 					STDERR.printf(
-						"________ Concrete Syntax: #%d in '%s' ________\n",
-						csyn.loc.line_num,
-						csyn.loc.file_name
+						"________ Concrete Syntax: %s ________\n",
+						csyn.loc.to_s
 					)
 					STDERR.puts csyn.to_s
 				end
@@ -405,9 +404,8 @@ end
 				if pref.trace_mode?
 					STDERR.puts
 					STDERR.printf(
-						"________ Abstract Syntax: #%d in '%s' ________\n",
-						asyn.loc.line_num,
-						asyn.loc.file_name
+						"________ Abstract Syntax: %s ________\n",
+						asyn.loc.to_s
 					)
 					STDERR.puts asyn.to_s
 				end

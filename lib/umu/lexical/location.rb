@@ -22,6 +22,7 @@ class Location < Abstraction::Record
 	def initialize(file_name, line_num)
 		ASSERT.kind_of file_name, ::String
 		ASSERT.kind_of line_num,  ::Integer
+		ASSERT.assert line_num >= 0
 
 		@file_name = file_name
 		@line_num  = line_num
@@ -36,7 +37,7 @@ class Location < Abstraction::Record
 
 
 	def to_s
-		format "#%d in \"%s\"", self.line_num, self.file_name
+		format "#%d in \"%s\"", self.line_num + 1, self.file_name
 	end
 
 

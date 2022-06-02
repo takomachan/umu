@@ -182,7 +182,7 @@ class Entry < Abstraction::Record
 		ASSERT.kind_of file_name,	::String
 		ASSERT.kind_of text,		::String
 
-		source, _ = text.each_line.inject([{}, 1]) {
+		source, _ = text.each_line.inject([{}, 0]) {
 			|(sources, line_num), line|
 
 			[
@@ -207,7 +207,7 @@ class Entry < Abstraction::Record
 				if opt_line
 					STDERR.printf("\n%s:#%d>%s\n",
 									current_loc.file_name,
-									current_loc.line_num,
+									current_loc.line_num + 1,
 									opt_line
 								)
 				end
