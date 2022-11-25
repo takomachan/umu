@@ -1,5 +1,7 @@
 (#
  Implementation of REYNOLDS's Definional Interpretor
+ 1971年に公開されたレイノルズ氏による意味定義用インタプリタをUmuで実装してみた
+
 
  Reynolds, J. C. :
    Definitional Interpretors
@@ -11,13 +13,36 @@
    第9章 算法表現(プログラム)の意味論,
    算法表現論, 岩波講座情報科学12, 岩波書店, 1982
 
-	   上記論文のInterpreter I と II を元にして、
-	   古典的な操作的意味論を解説
+	   上記論文のInterpreter I と II を元にして
+	   プログラミング言語の古典的な意味論を解説している
+	   なお、現在のUmu言語処理系(インタプリタ)は
+	   この Interpreter II を元に設計された
+
+
+ Exanple execution :
+ 実行例 :
+	$ ./umu -i example/reynolds.umu
+	  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+	[CONSTANT]
+	<SRC> : 100
+	<EXP> : Const 100
+	-> <VAL> : Integer 100
+			:
+			:
+			:
+	0001> run-I [ADD, 1, 2]
+	      ^^^^^^^^^^^^^^^^^
+	<SRC> : [@ADD, 1, 2]
+	<EXP> : Appl (Appl (Var @ADD, Const 1), Const 2)
+	-> <VAL> : Integer 3
+	
+	-> Integer 3 : Datum
+	0002>
 #)
 
 
 
-######## Error ########
+######## Error Handler ########
 
 structure ERROR = struct {
 	# failure		: String -> 'a -> ()
@@ -182,9 +207,12 @@ fun rec parse = exp -> cond exp {
 	fun form? = exp -> exp isa? List andalso length exp >= 2
 
 
+
 	#### <Form> ####
 	# parse-form : ['a] -> <EXP>
-	fun parse-form = exp ->
+	fun parse-form = exp -> let {
+		val [keyword|args] = exp
+	in
 		if (keyword isa? Atom)
 			cond keyword {
 			  (== @IF)		-> parse-if		args
@@ -195,114 +223,129 @@ fun rec parse = exp -> cond exp {
 			}
 		else
 			parse-apply	exp
-	where {
-		val [keyword|args] = exp
-
+	} where {
 		#### <If> ####
 		# parse-if : ['a] -> <COND>
-		fun parse-if = args ->
-			EXP::mk-cond (parse prem, parse conc, parse altr)
-		where {
+		fun parse-if = args -> let {
 			assert (length args == 3)
 				ERROR::syntax "For IF's arity, expected 3, but: " args
+
 			val [prem, conc, altr] = args
+		in
+			EXP::mk-cond (parse prem, parse conc, parse altr)
 		}
 
 		#### <Lambda> ####
 		# parse-lambda : ['a] -> <LAMBDA>
-		fun parse-lambda = args ->
-			fps' |> foldl init-body-exp { fp body-exp ->
-					EXP::mk-lambda (parse fp, body-exp)
-			where
-				assert (var? fp)
-					ERROR::syntax "In LAMBDA, expected a <VAR>, but: " fp
-			}
-		where {
+		fun parse-lambda = args -> let {
 			assert (length args == 2)
 				ERROR::syntax 
 					"For LAMBDA's arity, expected 2, but: " args
+
 			val [fps, body] = args
 
 			assert (fps isa? List)
 				ERROR::syntax
-					"In LAMBDA, expected a List of VAR, but: " fps
+					"In LAMBDA, expected a List of <Var>, but: " fps
 			assert (length fps >= 1)
 				ERROR::syntax
 					("In LAMBDA, " ^
-						"expected length of VARs is 1 or more, but: ")
+						"expected length of <Var>s is 1 or more, but: ")
 					fps
+
 			val [init-fp|fps'] = reverse fps
 
 			assert (var? init-fp)
-				ERROR::syntax "In LAMBDA, expected a VAR, but: " init-fp
+				ERROR::syntax "In LAMBDA, expected a <Var>, but: " init-fp
+
 			val init-body-exp = EXP::mk-lambda (parse init-fp, parse body)
+		in
+			fps' |> foldl init-body-exp { fp body-exp ->
+				let {
+					assert (var? fp)
+						ERROR::syntax "In LAMBDA, expected a <Var>, but: "
+						fp
+				in
+					EXP::mk-lambda (parse fp, body-exp)
+				}
+			}
 		}
 
 		#### <Apply> ####
 		# parse-apply : ['a] -> <APPL>
-		fun parse-apply = form ->
+		fun parse-apply = form -> let {
+			val [opr, init-opnd|opnds] = form
+			val init-opr-exp = EXP::mk-appl (parse opr, parse init-opnd)
+		in
 			opnds |> foldl init-opr-exp { opnd opr-exp ->
 				EXP::mk-appl (opr-exp, parse opnd)
 			}
-		where {
-			val [opr, init-opnd|opnds] = form
-			val init-opr-exp = EXP::mk-appl (parse opr, parse init-opnd)
 		}
 
 		#### <Let> ####
 		# parse-let : ['a] -> <APPL>
-		fun parse-let = args ->
-			binds |> foldr (parse body) { bind body-exp ->
-				mk-let (parse dvar, parse dexp, body-exp)
-			where
-				assert (bind isa? List andalso length bind == 2)
-					ERROR::syntax
-						"For LET's binding, expected pair List, but: " bind
-				val [dvar, dexp] = bind
+		fun parse-let = args -> let {
+			assert (length args >= 1)
+				ERROR::syntax
+					"For LET's arity, expected 1 or more, but: " args
 
-				assert (var? dvar)
-					ERROR::syntax "In LET, expected VAR, but: " dvar
+			val [body|binds] = args
+		in
+			binds |> foldr (parse body) { bind body-exp ->
+				let {
+					assert (bind isa? List andalso length bind == 2)
+						ERROR::syntax
+							"For LET's binding, expected pair List, but: "
+							bind
+
+					val [dvar, dexp] = bind
+
+					assert (var? dvar)
+						ERROR::syntax "In LET, expected VAR, but: " dvar
+				in
+					mk-let (parse dvar, parse dexp, body-exp)
+				}
 			}
-		where {
+		} where {
 			fun mk-let = (dvar, dexp, body) -> EXP::mk-appl (
 				EXP::mk-lambda (dvar, body),
 				dexp
 			)
-
-			assert (length args >= 1)
-				ERROR::syntax
-					"For LET's arity, expected 1 or more, but: " args
-			val [body|binds] = args
 		}
 
 		#### <Letrec> ####
 		# parse-letrec : ['a] -> <LETREC>
-		fun parse-letrec = args ->
-			binds |> foldr (parse body) { bind body-exp ->
-				EXP::mk-letrec (parse dvar, parse-lambda lam, body-exp)
-			where
-				assert (bind isa? List andalso length bind >= 2)
-					ERROR::syntax
-						("For LETREC's binding, " ^
-							"expected 2 or more List, but: ")
-						bind
-				val [dvar|dexp] = bind
-
-				assert (var? dvar)
-					ERROR::syntax "In LETREC, expected <VAR>, but: " dvar
-				assert (form? dexp)
-					ERROR::syntax "In LETREC, expected <Form>, but: " dexp
-				val [keyword|lam] = dexp
-
-				assert (keyword == @LAMBDA)
-					ERROR::syntax
-						"In LETREC, expected LAMBDA, but: " keyword
-			}
-		where {
+		fun parse-letrec = args -> let {
 			assert (length args >= 1)
 				ERROR::syntax
 					"For LETREC's arity, expected 1 or more, but: " args
+
 			val [body|binds] = args
+		in
+			binds |> foldr (parse body) { bind body-exp ->
+				let {
+					assert (bind isa? List andalso length bind >= 2)
+						ERROR::syntax
+							("For LETREC's binding, " ^
+								"expected 2 or more List, but: ")
+							bind
+
+					val [dvar|dexp] = bind
+
+					assert (var? dvar)
+						ERROR::syntax "In LETREC, expected <VAR>, but: " dvar
+					assert (form? dexp)
+						ERROR::syntax "In LETREC, expected <Form>, but: " dexp
+
+					val [keyword|lam] = dexp
+
+					assert (keyword == @LAMBDA)
+						ERROR::syntax
+							"In LETREC, expected LAMBDA, but: " keyword
+				in
+					EXP::mk-letrec (parse dvar, parse-lambda lam, body-exp)
+				}
+			}
 		}
 	}
 }
@@ -323,63 +366,71 @@ where {
 	#### CONST ####
 	  EXP::const? -> evcon r
 		where
-			# evcon : CONST -> INTEGER
+			# evcon : <CONST> -> <INTEGER>
 			fun evcon = r -> VAL::mk-integer (val-of r)
 
 	#### VAR ####
 	| EXP::var? -> e r
 
 	#### APPL ####
-	| EXP::appl? -> (val-of va-opr) va-opnd
-		where
-			val (opr, opnd) = val-of r
+	| EXP::appl? -> let {
+		val (opr, opnd) = val-of r
 
-			val va-opr  = eval (opr, e)
-			assert (VAL::funval? va-opr)
-				ERROR::application
-					"In APPL, Expected a <FUNVAL>, but: " va-opr
+		val va-opr  = eval (opr, e)
 
-			val va-opnd = eval (opnd, e)
+		assert (VAL::funval? va-opr)
+			ERROR::application
+				"In APPL, Expected a <FUNVAL>, but: " va-opr
+
+		val va-opnd = eval (opnd, e)
+	in
+		(val-of va-opr) va-opnd
+	}
 
 	#### LAMBDA ####
 	| EXP::lambda? -> evlambda (r, e)
 
 	#### COND ####
-	| EXP::cond? -> if (val-of va-prem)
-						eval (conc, e)
-					else
-						eval (altr, e)
-		where
-			val (prem, conc, altr) = val-of r
+	| EXP::cond? -> let {
+		val (prem, conc, altr) = val-of r
 
-			val va-prem = eval (prem, e)
-			assert (VAL::boolean? va-prem)
-				ERROR::type' "In COND, expected a <BOOLEAN>, but: " va-prem
+		val va-prem = eval (prem, e)
+
+		assert (VAL::boolean? va-prem)
+			ERROR::type' "In COND, expected a <BOOLEAN>, but: " va-prem
+	in
+		if (val-of va-prem)
+			eval (conc, e)
+		else
+			eval (altr, e)
+	}
 
 	#### LETREC ####
-	| EXP::letrec? -> eval (body, e')
-		where
-			val (dvar, dexp, body)	= val-of r
+	| EXP::letrec? -> let {
+		val (dvar, dexp, body)	= val-of r
 
-			assert (EXP::lambda? dexp)
-				ERROR::failure "In LETREC, expected a LAMBDA, but: " r
+		assert (EXP::lambda? dexp)
+			ERROR::failure "In LETREC, expected a LAMBDA, but: " r
 
-			# e' : <ENV>
-			fun rec e' = x -> if (x == dvar)
-									evlambda (dexp, e')
-								else
-									e x
+		# e' : <ENV>
+		fun rec e' = x -> if (x == dvar)
+								evlambda (dexp, e')
+							else
+								e x
+	in
+		eval (body, e')
+	}
 
+	#### Other Expression ####
 	  else -> ERROR::failure ("Unknown EXP: ", r)
 
 	} where {
 		# evlambda : (<LAMBDA>, <ENV>) -> <FUNVAL>
-		fun evlambda = (l, e) -> VAL::mk-funval {
-										a -> eval (body, ext (fp, a, e))
-									}
-		where {
+		fun evlambda = (l, e) -> let {
 			val (fp, body) = val-of l
-
+		in
+			VAL::mk-funval { a -> eval (body, ext (fp, a, e)) }
+		} where {
 			# ext : (<VAR>, <VAL>, <ENV>) -> <ENV>
 			fun ext = (z, a, e) -> {
 				x -> if (x == z)
@@ -474,7 +525,20 @@ val GE = [LAMBDA, [@x, @y], [NOT, [LT, @x, @y]]]
 
 
 
-######## Example Runner ########
+######## Runner - Frontend of Interpreter ########
+
+fun run = interpret ->
+	   tee { src -> (puts "<SRC> : " ; p src) }
+	>> parse
+	>> tee { exp -> (puts "<EXP> : " ; p exp) }
+	>> interpret
+	>> tee { value -> (puts "-> <VAL> : " ; p value) }
+
+val run-I = run interpret-I
+
+
+
+######## Assertion for Test ########
 
 structure ASSERT = struct {
 	fun integer = actual expect -> let {
@@ -508,16 +572,20 @@ structure ASSERT = struct {
 }
 
 
-fun example-run = interpret -> (
+
+######## Test ########
+
+fun test = interpret -> (
 	print "[CONSTANT]" ;
 
 		#[INPUT] 100
 		let {
-			val result = run 100
+			val result = run' 100
 		in
 			ASSERT::integer result 100
 		} ;
 		#[OUTPUT] -> 100
+		nl () ;
 
 		nl () ;
 
@@ -525,19 +593,21 @@ fun example-run = interpret -> (
 
 		#[INPUT] TRUE
 		let {
-			val result = run T
+			val result = run' T
 		in
 			ASSERT::true result
 		} ;
 		#[OUTPUT] -> TRUE
+		nl () ;
 
 		#[INPUT] succ
 		let {
-			val result = run SUCC
+			val result = run' SUCC
 		in
 			ASSERT::funval result
 		} ;
 		#[OUTPUT] -> #<{x -> ... }>
+		nl () ;
 
 		nl () ;
 
@@ -545,19 +615,21 @@ fun example-run = interpret -> (
 
 		#[INPUT] if TRUE then 1 else 2
 		let {
-			val result = run [IF, T, 1, 2]
+			val result = run' [IF, T, 1, 2]
 		in
 			ASSERT::integer result 1
 		} ;
 		#[OUTPUT] -> 1
+		nl () ;
 
 		#[INPUT] if FALSE then 1 else 2
 		let {
-			val result = run [IF, F, 1, 2]
+			val result = run' [IF, F, 1, 2]
 		in
 			ASSERT::integer result 2
 		} ;
 		#[OUTPUT] -> 2
+		nl () ;
 
 		nl () ;
 
@@ -565,35 +637,39 @@ fun example-run = interpret -> (
 
 		#[INPUT] succ 2
 		let {
-			val result = run [SUCC, 2]
+			val result = run' [SUCC, 2]
 		in
 			ASSERT::integer result 3
 		} ;
 		#[OUTPUT] --> 3
+		nl () ;
 
 		#[INPUT] succ succ succ 2
 		let {
-			val result = run [SUCC, [SUCC, [SUCC, 2]]]
+			val result = run' [SUCC, [SUCC, [SUCC, 2]]]
 		in
 			ASSERT::integer result 5
 		} ;
 		#[OUTPUT] --> 5
+		nl () ;
 
 		#[INPUT] 1 + 2
 		let {
-			val result = run [ADD, 1, 2]
+			val result = run' [ADD, 1, 2]
 		in
 			ASSERT::integer result 3
 		} ;
 		#[OUTPUT] --> 3
+		nl () ;
 
 		#[INPUT] 1 = 1
 		let {
-			val result = run [EQ, 1, 1]
+			val result = run' [EQ, 1, 1]
 		in
 			ASSERT::true result
 		} ;
 		#[OUTPUT] --> TRUE
+		nl () ;
 
 		nl () ;
 
@@ -601,7 +677,7 @@ fun example-run = interpret -> (
 
 		#[INPUT] (fn x => succ x) 2
 		let {
-			val result = run [
+			val result = run' [
 				[LAMBDA, [@x], [SUCC, @x]],
 				2
 			]
@@ -609,10 +685,11 @@ fun example-run = interpret -> (
 			ASSERT::integer result 3
 		} ;
 		#[OUTPUT] --> 3
+		nl () ;
 
 		#[INPUT] (fn x y z => x - y - z) 10 1 2
 		let {
-			val result = run [
+			val result = run' [
 				[LAMBDA, [@x, @y, @z], [SUB, [SUB, @x, @y], @z]],
 				10, 1, 2
 			]
@@ -620,6 +697,7 @@ fun example-run = interpret -> (
 			ASSERT::integer result 7
 		} ;
 		#[OUTPUT] --> 7
+		nl () ;
 
 		nl () ;
 
@@ -627,18 +705,19 @@ fun example-run = interpret -> (
 
 		#[INPUT] let x = 2 in succ x
 		let {
-			val result = run [LET, [SUCC, @x], [@x, 2]]
+			val result = run' [LET, [SUCC, @x], [@x, 2]]
 		in
 			ASSERT::integer result 3
 		} ;
 		#[OUTPUT] --> 3
+		nl () ;
 
 		#[INPUT]
 		#	let x = 2 in
 		#	let y = 3 in
 		#	x * x + y * y
 		let {
-			val result = run [
+			val result = run' [
 				LET, [ADD, [MUL, @x, @x], [MUL, @y, @y]],
 				[@x, 2],
 				[@y, 3]
@@ -647,6 +726,7 @@ fun example-run = interpret -> (
 			ASSERT::integer result 13
 		} ;
 		#[OUTPUT] --> 13
+		nl () ;
 
 		#[INPUT]
 		#	let x = 1 in
@@ -654,7 +734,7 @@ fun example-run = interpret -> (
 		#	let x = 2 in
 		#	x + y
 		let {
-			val result = run [
+			val result = run' [
 				LET, [ADD, @x, @y],
 				[@x, 1],
 				[@y, @x],
@@ -664,6 +744,7 @@ fun example-run = interpret -> (
 			ASSERT::integer result 3
 		} ;
 		#[OUTPUT] --> 3
+		nl () ;
 
 		nl () ;
 
@@ -671,7 +752,7 @@ fun example-run = interpret -> (
 
 		#[INPUT] let f = fn x => succ x in f 2
 		let {
-			val result = run [
+			val result = run' [
 				LETREC, [@f, 2],
 				[@f, LAMBDA, [@x], [SUCC, @x]]
 			]
@@ -679,13 +760,14 @@ fun example-run = interpret -> (
 			ASSERT::integer result 3
 		} ;
 		#[OUTPUT] --> 3
+		nl () ;
 
 		#[INPUT]
 		#	letrec add = fn x y => x + y in
 		#	letrec mul = fn x y => x * y in
 		#	add (mul 2 3) (mul 4 5)
 		let {
-			val result = run [
+			val result = run' [
 				LETREC, [@add, [@mul, 2, 3], [@mul, 4, 5]],
 				[@add, LAMBDA, [@x, @y], [ADD, @x, @y]],
 				[@mul, LAMBDA, [@x, @y], [MUL, @x, @y]]
@@ -694,12 +776,15 @@ fun example-run = interpret -> (
 			ASSERT::integer result 26
 		} ;
 		#[OUTPUT] --> 26
+		nl () ;
 
 		#[INPUT]
-		#	letrec fact = x -> if x <= 1 then 1 else x * fact (x - 1) in
-		#	fact 4 
+		#	letrec fact = fn x =>
+		#       if x <= 1 then 1 else x * fact (x - 1)
+		#   in
+		#	    fact 4 
 		let {
-			val result = run [
+			val result = run' [
 				LETREC, [@fact, 4],
 				[@fact, LAMBDA, [@x],
 					[IF, [LE, @x, 1],
@@ -712,12 +797,15 @@ fun example-run = interpret -> (
 			ASSERT::integer result 24
 		} ;
 		#[OUTPUT] --> 24
+		nl () ;
 
 		#[INPUT] 
-		#	letrec gcd = a b -> if b = 0 then a else gcd b (a mod b) in
-		#	gcd 16 28
+		#	letrec gcd = fn a b =>
+		#       if b == 0 then a else gcd b (a mod b)
+		#   in
+		#	   gcd 16 28
 		let {
-			val result = run [
+			val result = run' [
 				LETREC, [@gcd, 16, 28],
 				[@gcd, LAMBDA, [@a, @b],
 					[IF, [EQ, @b, 0],
@@ -730,16 +818,13 @@ fun example-run = interpret -> (
 			ASSERT::integer result 4
 		} ;
 		#[OUTPUT] --> 4
+		nl () ;
 
 		nl ()
 ) where {
-	val run = parse >> interpret >> tee p
+	val run' = run interpret
 }
 
 ;;
 
-
-
-# Example Runs
-
-example-run interpret-I ;;
+test interpret-I ;;
