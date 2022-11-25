@@ -1,6 +1,3 @@
-structure DATUM = UMU::DATUM
-
-
 #############################
 ########  CHAPTER 3  ########
 #############################
@@ -46,7 +43,7 @@ in
 		NONE
 }
 
-fun make-table = records -> DATUM::make @Table records
+fun make-table = records -> Datum @Table records
 
 
 ;; val t1 = make-table [(@a, 1), (@b, 2), (@c, 3)]
@@ -123,7 +120,7 @@ in
 #### local tables ####
 
 fun make-table' = records -> let {
-	val local-table = DATUM::make @Table records
+	val local-table = Datum @Table records
 
 	fun lookup = key1 key2 -> let {
 		val opt-subtable = assoc key1 (val-of local-table)

@@ -25,8 +25,8 @@ structure SET-BASED-ON-LIST = struct {
 	# inter : %('a) -> %('a) -> %('a)
 	fun inter = xs ys -> _inter (val-of xs) (val-of ys) |> wrap
 } where {
-	# val wrap = UMU::DATUM::make @Set
-	fun wrap = x -> UMU::DATUM::make @Set x
+	# val wrap : 'a -> Datum 'a
+	fun wrap = x -> Datum @Set x
 
 	# _member? : 'a -> ['a] -> BOOL
 	fun rec _member? = x ys -> cond ys {

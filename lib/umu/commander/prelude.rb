@@ -24,27 +24,6 @@ structure UMU = struct {
 
 
 
-	######## Datum ########
-	# See SICP(Wizard Book), 2.4.2 Tagged data
-
-	structure DATUM = struct {
-		#### Constructor ####
-
-		# make : Atom -> 'a -> Datum 'a
-		val make = &(Datum.make)
-
-
-		#### Selector ####
-
-		# tag-of : Datum 'a -> Atom
-		val tag-of = &(Datum$tag)
-
-		# contents : Datum 'a -> 'a
-		val contents = &(Datum$contents)
-	}
-
-
-
 	######## Option ########
 
 	structure OPTION = struct {
@@ -64,12 +43,6 @@ structure UMU = struct {
 
 		# NONE? : Option 'a -> Bool
 		val NONE? = &(Option$none?)
-
-
-		#### Selector ####
-
-		# contents : Option 'a -> 'a
-		val contents = &(Option$contents)
 	}
 
 
@@ -544,9 +517,13 @@ structure UMU = struct {
 
 
 		#### Datum ####
+		# See SICP(Wizard Book), 2.4.2 Tagged data
+
+		# Datum : Atom -> 'a -> Datum 'a
+		val Datum = &(Datum.make)
 
 		# tag-of : Datum 'a -> Atom
-		val tag-of = DATUM::tag-of
+		val tag-of = &(Datum$tag)
 
 
 		#### Option ####
@@ -823,7 +800,7 @@ structure struct {
 	val val-of
 
 	#### Datum ####
-	val tag-of
+	val (Datum, tag-of)
 
 	#### Option ####
 	val (

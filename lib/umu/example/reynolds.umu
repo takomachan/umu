@@ -81,24 +81,22 @@ structure EXP = struct {
 	#### Constructor ####
 
 	# mk-const : Integer -> <CONST>
-	fun mk-const = x -> DATUM::make @Const x
+	fun mk-const = x -> Datum @Const x
 
 	# mk-var : Atom -> <VAR>
-	fun mk-var = x -> DATUM::make @Var x
+	fun mk-var = x -> Datum @Var x
 
 	# mk-appl : (<EXP>, <EXP>) -> <APPL>
-	fun mk-appl = (opr, opnd) -> DATUM::make @Appl (opr, opnd)
+	fun mk-appl = (opr, opnd) -> Datum @Appl (opr, opnd)
 
 	# mk-lambda : (<VAR>, <EXP>) -> <LAMBDA>
-	fun mk-lambda = (fp, body) -> DATUM::make @Lambda (fp, body)
+	fun mk-lambda = (fp, body) -> Datum @Lambda (fp, body)
 
 	# mk-cond : (<EXP>, <EXP>, <EXP>) -> <COND>
-	fun mk-cond = (prem, conc, altr) ->
-		DATUM::make @Cond (prem, conc, altr)
+	fun mk-cond = (prem, conc, altr) -> Datum @Cond (prem, conc, altr)
 
 	# mk-letrec : (<VAR>, <LAMBDA>, <EXP>) -> <LETREC>
-	fun mk-letrec = (dvar, dexp, body) ->
-		DATUM::make @Letrec (dvar, dexp, body)
+	fun mk-letrec = (dvar, dexp, body) -> Datum @Letrec (dvar, dexp, body)
 
 
 	#### Classifier ####
@@ -120,8 +118,6 @@ structure EXP = struct {
 
 	# letrec? : <EXP> -> Bool
 	fun letrec? = exp -> tag-of exp == @Letrec
-} where {
-	structure DATUM = UMU::DATUM
 }
 
 
@@ -136,13 +132,13 @@ structure VAL = struct {
 	#### Constructor ####
 
 	# Integer -> <INTEGER>
-	fun mk-integer = x -> DATUM::make @Integer x
+	fun mk-integer = x -> Datum @Integer x
 
 	# Bool -> <BOOLEAN>
-	fun mk-boolean = x -> DATUM::make @Boolean x
+	fun mk-boolean = x -> Datum @Boolean x
 
 	# Function -> <FUNVAL>
-	fun mk-funval = x -> DATUM::make @Funval x
+	fun mk-funval = x -> Datum @Funval x
 
 
 	#### Classifier ####
@@ -155,8 +151,6 @@ structure VAL = struct {
 
 	# <VAL> -> Bool
 	fun funval?	 = exp -> tag-of exp == @Funval
-} where {
-	structure DATUM = UMU::DATUM
 }
 
 

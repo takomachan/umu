@@ -1,5 +1,3 @@
-structure DATUM = UMU::DATUM
-
 structure struct {
 	val (PI, sin, cos, atan2 -> atan, sqrt)
 } = UMU::MATH
@@ -1453,11 +1451,11 @@ fun make-from-mag-ang = r a -> (r, a)
 ;; print "\n\nSECTION 2.4.2"
 ;;
 
-fun attach-tag = type-tag contents -> DATUM::make type-tag contents
+fun attach-tag = type-tag contents -> Datum type-tag contents
 
-fun type-tag = datum' -> DATUM::tag-of datum'
+fun type-tag = datum' -> tag-of datum'
 
-fun contents = datum' -> DATUM::contents datum'
+fun contents = datum' -> val-of datum'
 
 
 fun rectanglar? = z -> type-tag z == @Rectanglar
