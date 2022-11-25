@@ -16,13 +16,11 @@ SOURCE_TEXT  = <<'___EOS___'
 structure UMU = struct {
 	######## Bool ########
 
-	structure BOOL = struct {
-		# TRUE : Bool
-		val TRUE = &Bool.make-true
+	# TRUE : Bool
+	val TRUE = &Bool.make-true
 
-		# FALSE : Bool
-		val FALSE = &Bool.make-false
-	}
+	# FALSE : Bool
+	val FALSE = &Bool.make-false
 
 
 
@@ -245,14 +243,14 @@ structure UMU = struct {
 				cond xs {
 					Nil?	-> Nil? ys
 					else	-> cond ys {
-				  		Nil?	-> BOOL::FALSE
+				  		Nil?	-> FALSE
 						else	-> eq? x y andalso equal-with? eq? xs' ys'
 									where val [x|xs'] = xs
 										  val [y|ys'] = ys
 					}
 				}
 			else
-				BOOL::FALSE
+				FALSE
 
 
 		# equal? : ['a] -> ['b] -> Bool
@@ -419,10 +417,10 @@ structure UMU = struct {
 		#### Bool ####
 
 		# TRUE		: Bool
-		val TRUE = BOOL::TRUE
+		val TRUE = TRUE
 
 		# FALSE		: Bool
-		val FALSE = BOOL::FALSE
+		val FALSE = FALSE
 
 		# not		: Bool -> Bool
 		val not = &(Bool$not)
