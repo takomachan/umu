@@ -380,7 +380,7 @@ atom_expr:
 | INTEGER	{ result = SCCE.make_integer	val[0].loc, val[0].val }
 | FLOAT		{ result = SCCE.make_float		val[0].loc, val[0].val }
 | STRING	{ result = SCCE.make_string		val[0].loc, val[0].val }
-| ATOM		{ result = SCCE.make_atom		val[0].loc, val[0].sym }
+| SYMBOL	{ result = SCCE.make_symbol		val[0].loc, val[0].sym }
 | __FILE__ {
 	loc = val[0].loc
 

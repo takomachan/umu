@@ -519,10 +519,10 @@ structure Umu = struct {
 		#### Datum ####
 		# See SICP(Wizard Book), 2.4.2 Tagged data
 
-		# Datum : Atom -> 'a -> Datum 'a
+		# Datum : Symbol -> 'a -> Datum 'a
 		val Datum = &(Datum.make)
 
-		# tag-of : Datum 'a -> Atom
+		# tag-of : Datum 'a -> Symbol
 		val tag-of = &(Datum$tag)
 
 
@@ -726,9 +726,9 @@ structure Umu = struct {
 		}
 
 
-		# atom : 'a -> Atom -> Atom
-		fun atom = actual expect -> let {
-			assert (actual isa? Atom)	"Atom"
+		# symbol : 'a -> Symbol -> Symbol
+		fun symbol = actual expect -> let {
+			assert (actual isa? Symbol)	"Symbol"
 			assert (actual == expect)	(msg expect actual)
 		in
 			actual

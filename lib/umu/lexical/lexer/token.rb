@@ -200,14 +200,14 @@ SYMBOL_PATTERNS = [
 				nil,
 
 				if scanner[1]
-					__make_atomized_string__('')
+					__make_symbolized_string__('')
 				else
 					__make_string__('')
 				end
 			]
 
 
-		# Atom, Reserved-word or Identifier-word
+		# Symbol, Reserved-word or Identifier-word
 		when scanner.scan(WORD_PATTERN)
 			head_matched = scanner[1]
 			body_matched = scanner[2]
@@ -218,7 +218,7 @@ SYMBOL_PATTERNS = [
 				scanner.matched,
 
 				if head_matched
-					LT.make_atom self.loc, body_matched
+					LT.make_symbol self.loc, body_matched
 				else
 					if RESERVED_WORDS[body_matched]
 						LT.make_reserved_word self.loc, body_matched

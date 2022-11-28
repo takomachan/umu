@@ -83,7 +83,7 @@ structure EXP = struct {
 	# mk-const : Integer -> <CONST>
 	fun mk-const = x -> Datum @Const x
 
-	# mk-var : Atom -> <VAR>
+	# mk-var : Symbol -> <VAR>
 	fun mk-var = x -> Datum @Var x
 
 	# mk-appl : (<EXP>, <EXP>) -> <APPL>
@@ -158,7 +158,7 @@ structure VAL = struct {
 (######## Parser ########
 
  <Exp> ::= <Const>	/* Undefined, Umu's Integer */
-         | <Var>	/* Undefined, Umu's Atom */
+         | <Var>	/* Undefined, Umu's Symbol */
 		 | <Form>
 
 
@@ -195,7 +195,7 @@ fun rec parse = exp -> cond exp {
 	fun const? = exp -> exp isa? Integer
 
 	# var? : 'a -> Bool
-	fun var? = exp -> exp isa? Atom
+	fun var? = exp -> exp isa? Symbol
 
 	# form? : 'a -> Bool
 	fun form? = exp -> exp isa? List andalso length exp >= 2
@@ -207,7 +207,7 @@ fun rec parse = exp -> cond exp {
 	fun parse-form = exp -> let {
 		val [keyword|args] = exp
 	in
-		if (keyword isa? Atom)
+		if (keyword isa? Symbol)
 			cond keyword {
 			  (== @IF)		-> parse-if		args
 			| (== @LAMBDA)	-> parse-lambda	args

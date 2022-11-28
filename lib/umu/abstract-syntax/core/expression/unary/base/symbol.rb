@@ -13,7 +13,7 @@ module Unary
 
 module Base
 
-class Atom < Abstract
+class Symbol < Abstract
 	def initialize(loc, obj)
 		ASSERT.kind_of obj, ::Symbol
 
@@ -27,7 +27,7 @@ class Atom < Abstract
 
 
 	def __evaluate__(_env, _event)
-		VC.make_atom self.obj
+		VC.make_symbol self.obj
 	end
 end
 
@@ -38,11 +38,11 @@ end # Umu::AbstractSyntax::Core::Expression::Unary
 
 module_function
 
-	def make_atom(loc, obj)
+	def make_symbol(loc, obj)
 		ASSERT.kind_of loc,	L::Location
 		ASSERT.kind_of obj,	::Symbol
 
-		Unary::Base::Atom.new(loc, obj).freeze
+		Unary::Base::Symbol.new(loc, obj).freeze
 	end
 
 end	# Umu::AbstractSyntax::Core::Expression

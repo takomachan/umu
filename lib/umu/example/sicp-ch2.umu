@@ -926,7 +926,7 @@ fun rec memq = item sequence -> cond sequence {
 
 fun number? = x -> x isa? Integer
 
-fun variable? = x -> x isa? Atom
+fun variable? = x -> x isa? Symbol
 
 fun same-variable? = v1 v2 -> (
 	variable? v1 andalso

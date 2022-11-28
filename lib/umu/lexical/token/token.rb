@@ -40,14 +40,14 @@ end
 
 
 
-class Atom < Abstraction::Symbol
+class Symbol < Abstraction::Symbol
 	def to_s
-		format "ATOM(%s)", self.sym
+		format "SYM(%s)", self.sym
 	end
 
 
 	def to_racc_token
-		:ATOM
+		:SYMBOL
 	end
 end
 
@@ -144,11 +144,11 @@ module_function
 	end
 
 
-	def make_atom(loc, val)
+	def make_symbol(loc, val)
 		ASSERT.kind_of loc, L::Location
 		ASSERT.kind_of val, ::String
 
-		Atom.new(loc, val.freeze).freeze
+		Symbol.new(loc, val.freeze).freeze
 	end
 
 
