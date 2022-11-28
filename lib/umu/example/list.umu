@@ -1,4 +1,4 @@
-structure LIST = struct {
+structure List = struct {
 	# head : ['a] -> 'a
 	fun head = xs -> x where { val [x|_] = xs }
 
@@ -132,7 +132,7 @@ structure LIST = struct {
 	val concat'' = foldr [] (++)
 
 
-	# join-string : STRING -> [STRING] -> STRING
+	# join-string : String -> [String] -> String
 	fun join-string = j xs -> cond xs {
 		empty?	-> ""
 		else	-> cond xs' {
@@ -224,7 +224,7 @@ structure LIST = struct {
 } where {
 	structure struct {
 		val (Nil? -> empty?, Cons -> cons)
-	} = UMU::LIST
+	} = Umu::List
 }
 
 ;;
@@ -234,10 +234,10 @@ structure LIST = struct {
 # See: PythonでもRubyみたいに配列をメソッドチェーンでつなげたい
 # 		https://edvakf.hatenadiary.org/entry/20090405/1238885788
 
-val sort	= LIST::sort (<)
-val reverse	= LIST::reverse
-val map		= LIST::map
-val join	= LIST::join-string
+val sort	= List::sort (<)
+val reverse	= List::reverse
+val map		= List::map
+val join	= List::join-string
 
 ;;
 

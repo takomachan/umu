@@ -1,8 +1,8 @@
-structure UAS = UMU::ASSERT
-structure UMA = UMU::MATH
-structure UIO = UMU::IO
+structure UAS = Umu::Assert
+structure UMA = Umu::Math
+structure UIO = Umu::IO
 
-val NDIGITS = 3		# for UMU::ASSERT::float
+val NDIGITS = 3		# for Umu::Assert::float
 
 ;;
 

@@ -1,4 +1,4 @@
-structure SET-BASED-ON-LIST = struct {
+structure SetBasedOnList = struct {
 	# empty : () -> %('a)
 	fun empty = () -> wrap []
 
@@ -79,19 +79,19 @@ structure SET-BASED-ON-LIST = struct {
 
 #### Examples ####
 
-structure SET = SET-BASED-ON-LIST ;;
+structure Set = SetBasedOnList ;;
 
-SET::make [1, 1, 3, 2, 3] ;;
+Set::make [1, 1, 3, 2, 3] ;;
 # -> Set [1, 2, 3]
 
-SET::member? 1 (SET::make [1, 2, 3]) ;;
+Set::member? 1 (Set::make [1, 2, 3]) ;;
 # -> TRUE
 
-SET::member? 4 (SET::make [1, 2, 3]) ;;
+Set::member? 4 (Set::make [1, 2, 3]) ;;
 # -> FALSE
 
-SET::union (SET::make [1, 3, 5, 2]) (SET::make [4, 7, 3, 1]) ;;
+Set::union (Set::make [1, 3, 5, 2]) (Set::make [4, 7, 3, 1]) ;;
 # -> Set [5, 2, 4, 7, 3, 1]
 
-SET::inter (SET::make [1, 3, 5, 2]) (SET::make [4, 7, 3, 1]) ;;
+Set::inter (Set::make [1, 3, 5, 2]) (Set::make [4, 7, 3, 1]) ;;
 # -> Set [1, 3]

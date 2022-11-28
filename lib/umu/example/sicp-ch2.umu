@@ -1,6 +1,6 @@
 structure struct {
 	val (PI, sin, cos, atan2 -> atan, sqrt)
-} = UMU::MATH
+} = Umu::Math
 
 
 

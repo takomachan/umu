@@ -13,7 +13,7 @@ SOURCE_TEXT  = <<'___EOS___'
 ######## Umu Standard Library ########
 ######################################
 
-structure UMU = struct {
+structure Umu = struct {
 	######## Bool ########
 
 	# TRUE : Bool
@@ -26,7 +26,7 @@ structure UMU = struct {
 
 	######## Option ########
 
-	structure OPTION = struct {
+	structure Option = struct {
 		#### Constructor ####
 
 		# Some : 'a -> Option 'a
@@ -49,7 +49,7 @@ structure UMU = struct {
 
 	#### Math ####
 
-	structure MATH = struct {
+	structure Math = struct {
 		# NAN 			: Float
 		val NAN = &Float.make-nan
 
@@ -181,7 +181,7 @@ structure UMU = struct {
 
 	######## List ########
 
-	structure LIST = struct {
+	structure List = struct {
 		# Nil : () -> ['a]
 		val Nil = &(List.make-nil)
 
@@ -332,19 +332,19 @@ structure UMU = struct {
 
 	######## String ########
 
-	structure STRING = struct {
+	structure String = struct {
 		# abort : String -> ()
 		val abort = &(String$abort)
 
 
 		# join : String -> [String] -> String
 		fun join = j xs -> cond xs {
-			LIST::Nil?	-> ""
+			List::Nil?	-> ""
 			else		-> cond xs' {
-				LIST::Nil?	-> x
+				List::Nil?	-> x
 				else		-> x.(^ xs'')
 					where val [x|xs'] = xs
-						  val xs'' = LIST::foldl
+						  val xs'' = List::foldl
 											""
 											{ x' s -> s.(^ j).(^ x') }
 			}
@@ -359,7 +359,7 @@ structure UMU = struct {
 
 	######## Prelude ########
 
-	structure PRELUDE = struct {
+	structure Prelude = struct {
 		#### Top ####
 
 		# inspect	: 'a -> String
@@ -447,31 +447,31 @@ structure UMU = struct {
 		#### Math ####
 
 		# NAN		: Float
-		val NAN = MATH::NAN
+		val NAN = Math::NAN
 
 		# INFINITY	: Float
-		val INFINITY = MATH::INFINITY
+		val INFINITY = Math::INFINITY
 
 		# nan?		: Float -> Bool
-		val nan? = MATH::nan?
+		val nan? = Math::nan?
 
 		# infinite?	: Float -> Bool
-		val infinite? = MATH::infinite?
+		val infinite? = Math::infinite?
 
 		# finite?	: Float -> Bool
-		val finite? = MATH::finite?
+		val finite? = Math::finite?
 
 
 		#### String ####
 
 		# abort		: String -> ()
-		val abort = STRING::abort
+		val abort = String::abort
 
 		# (^)		: String -> String -> String
 		val (^) = &(String$^)
 
 		# join	 	: String -> [String] -> String
-		val join = STRING::join
+		val join = String::join
 
 
 		#### I/O ####
@@ -529,85 +529,85 @@ structure UMU = struct {
 		#### Option ####
 
 		# Some	: 'a -> Option 'a
-		val Some = OPTION::Some
+		val Some = Option::Some
 
 		# NONE	: Option 'a
-		val NONE = OPTION::NONE
+		val NONE = Option::NONE
 
 		# Some?	: Option 'a -> Bool
-		val Some? = OPTION::Some?
+		val Some? = Option::Some?
 
 		# NONE?	: Option 'a -> Bool
-		val NONE? = OPTION::NONE?
+		val NONE? = Option::NONE?
 
 
 		#### List ####
 
 		# (|)		: 'a -> ['a] -> ['a]
-		val (|) = LIST::Cons
+		val (|) = List::Cons
 
 		# (++)		: ['a] -> ['a] -> ['a]
-		val (++) = LIST::append
+		val (++) = List::append
 
 		# empty?	: ['a] -> Bool
-		val empty? = LIST::Nil?
+		val empty? = List::Nil?
 
 		# des		: ['a] -> ('a, ['a])
-		val des = LIST::des
+		val des = List::des
 
 		# hd		: ['a] -> 'a
-		val hd = LIST::hd
+		val hd = List::hd
 
 		# tl		: ['a] -> ['a]
-		val tl = LIST::tl
+		val tl = List::tl
 
 		# equal?	: 'a -> 'b -> Bool
-		val equal? = LIST::equal?
+		val equal? = List::equal?
 
 		# foldr		: 'b -> ('a -> 'b -> 'b) -> ['a] -> 'b
-		val foldr = LIST::foldr
+		val foldr = List::foldr
 
 		# foldr1	: ('a -> 'a -> 'a) -> ['a] -> 'a
-		val foldr1 = LIST::foldr1
+		val foldr1 = List::foldr1
 
 		# foldl		: 'b -> ('a -> 'b -> 'b) -> ['a] -> 'b
-		val foldl = LIST::foldl
+		val foldl = List::foldl
 
 		# foldl1	: ('a -> 'a -> 'a) -> ['a] -> 'a
-		val foldl1 = LIST::foldl1
+		val foldl1 = List::foldl1
 
 		# length	: ['a] -> Integer
-		val length = LIST::length
+		val length = List::length
 
 		# reverse	: ['a] -> ['a]
-		val reverse = LIST::reverse
+		val reverse = List::reverse
 
 		# max		: ['a] -> 'a
-		val max = LIST::max
+		val max = List::max
 
 		# min		: ['a] -> 'a
-		val min = LIST::min
+		val min = List::min
 
 		# map		: ('a -> 'b) -> ['a] -> ['b]
-		val map = LIST::map
+		val map = List::map
 
 		# filter	: ('a -> Bool) -> ['a] -> ['a]
-		val filter = LIST::filter
+		val filter = List::filter
 
 		# concat	: [['a]] -> ['a]
-		val concat = LIST::concat
+		val concat = List::concat
 
 		# zip		: ['a] -> ['b] -> (['a, 'b])
-		val zip = LIST::zip
+		val zip = List::zip
 
 		# unzip		: [('a, 'b)] -> (['a], ['b])
-		val unzip = LIST::unzip
+		val unzip = List::unzip
 
 		# partition	: ('a -> Bool) -> ['a] -> (['a], ['a])
-		val partition = LIST::partition
+		val partition = List::partition
 
 		# sort		: ['a] -> ['a]
-		val sort = LIST::sort
+		val sort = List::sort
 
 
 		#### Function application - Aka. "PIPE" ####
@@ -662,7 +662,7 @@ structure UMU = struct {
 
 	######## Assertion ########
 
-	structure ASSERT = struct {
+	structure Assert = struct {
 		# unit : 'a -> ()
 		fun unit = actual -> let {
 			assert (actual isa? Unit)	(msg () actual)
@@ -720,7 +720,7 @@ structure UMU = struct {
 		# float : 'a -> Float -> Integer -> Float
 		fun float = actual expect n -> let {
 			assert (actual isa? Float)				"Float"
-			assert (MATH::equal? actual expect n)	(msg expect actual)
+			assert (Math::equal? actual expect n)	(msg expect actual)
 		in
 			actual
 		}
@@ -743,12 +743,12 @@ structure UMU = struct {
 			actual
 		}
 	} where {
-		val (==) = PRELUDE::(==)
-		val (^)  = PRELUDE::(^)
-		val (|>) = PRELUDE::(|>)
+		val (==) = Prelude::(==)
+		val (^)  = Prelude::(^)
+		val (|>) = Prelude::(|>)
 
-		val map	= LIST::map
-		val zip	= LIST::zip
+		val map	= List::map
+		val zip	= List::zip
 
 		fun msg = expect actual ->
 			"Expected: " ^ expect.inspect ^ ", but: " ^ actual.inspect
@@ -834,7 +834,7 @@ structure struct {
 		swap, flip,
 		pair, cross
 	)
-} = UMU::PRELUDE
+} = Umu::Prelude
 ___EOS___
 
 end # Umu::Commander::Prelude

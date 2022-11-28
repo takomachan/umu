@@ -23,7 +23,7 @@
 ;; print "\n\nSECTION 3.3.3"
 ;;
 
-###		assoc : Atom -> [(Atom, 'a)] -> <OPTION> (Atom, 'a)
+###		assoc : Atom -> [(Atom, 'a)] -> Option (Atom, 'a)
 fun rec assoc = key records -> cond records {
 	empty?	-> NONE
 	else	-> if (key == fst x)
@@ -33,7 +33,7 @@ fun rec assoc = key records -> cond records {
 				where val [x|xs] = records
 }
 
-### lookup1 = Atom -> <TABLE> [(Atom, 'a)] -> <OPTION> 'a
+### lookup1 = Atom -> <TABLE> [(Atom, 'a)] -> Option 'a
 fun lookup1 = key table -> let {
 	val opt-record = assoc key (val-of table)
 in
@@ -69,7 +69,7 @@ fun make-table = records -> Datum @Table records
 (### lookup2 = Atom ->
 				Atom ->
 				<TABLE> [(Atom, [(Atom, 'a)])] ->
-				<OPTION> 'a
+				Option 'a
 ###)
 fun lookup2 = key1 key2 table -> let {
 	val opt-subtable = assoc key1 (val-of table)
