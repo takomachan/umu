@@ -7,15 +7,15 @@ module Value
 
 module Core
 
-module Data
+module Object
 
 module Union
 
-class Abstract < Data::Abstract; end
+class Abstract < Object::Abstract; end
 
-end	# Umu::Core::Data::Union
+end	# Umu::Core::Object::Union
 
-end	# Umu::Core::Data
+end	# Umu::Core::Object
 
 end	# Umu::Core
 

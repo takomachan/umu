@@ -12,7 +12,7 @@ module Product
 
 module Struct
 
-class Field
+class Field < ::Object
 	attr_reader :label, :value
 
 

@@ -7,7 +7,7 @@ module Value
 
 module Core
 
-module Data
+module Object
 
 module Union
 
@@ -116,24 +116,24 @@ class Some < Abstract
 	end
 end
 
-end	# Umu::Core::Data::Union::Option
+end	# Umu::Core::Object::Union::Option
 
-end	# Umu::Core::Data::Union
+end	# Umu::Core::Object::Union
 
-end	# Umu::Core::Data
+end	# Umu::Core::Object
 
 
 module_function
 
 	def make_none
-		Data::Union::Option::NONE
+		Object::Union::Option::NONE
 	end
 
 
 	def make_some(contents)
 		ASSERT.kind_of contents, VC::Top
 
-		Data::Union::Option::Some.new(contents).freeze
+		Object::Union::Option::Some.new(contents).freeze
 	end
 
 end	# Umu::Core

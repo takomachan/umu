@@ -7,7 +7,7 @@ module Value
 
 module Core
 
-module Data
+module Object
 
 class Abstract < Top
 	INSTANCE_METHOD_INFOS = [
@@ -21,7 +21,7 @@ class Abstract < Top
 	end
 end
 
-end	# Umu::Core::Data
+end	# Umu::Core::Object
 
 end	# Umu::Core
 

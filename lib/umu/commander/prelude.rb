@@ -510,10 +510,10 @@ structure Umu = struct {
 		fun snd = (_, s) -> s
 
 
-		#### Data ####
+		#### Object ####
 
-		# val-of : Data 'a -> Top
-		val val-of = &(Data$contents)
+		# val-of : Object 'a -> Top
+		val val-of = &(Object$contents)
 
 
 		#### Datum ####
@@ -796,7 +796,7 @@ structure struct {
 	## Tuple
 	val ((,), fst, snd)
 
-	#### Data ####
+	#### Object ####
 	val val-of
 
 	#### Datum ####

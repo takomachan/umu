@@ -158,8 +158,8 @@ module_function
 		[['Value',			'Core',	'Atom'],					'VCA'],
 		[['Value',			'Core',	'Atom',	'Number'],			'VCAN'],
 		[['Value',			'Core',	'Product'],					'VCP'],
-		[['Value',			'Core',	'Data'],					'VCD'],
-		[['Value',			'Core',	'Data', 'Union'],			'VCDU'],
+		[['Value',			'Core',	'Object'],					'VCO'],
+		[['Value',			'Core',	'Object', 'Union'],			'VCOU'],
 		[['Value',			'Core',	'Function'],				'VCF'],
 		[['Environment'],										'E']
 	].sort { |(xs, _), (ys, _)| ys.size <=> xs.size }	# For longest-match

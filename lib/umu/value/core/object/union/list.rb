@@ -8,7 +8,7 @@ module Value
 
 module Core
 
-module Data
+module Object
 
 module Union
 
@@ -183,25 +183,25 @@ class Cons < Abstract
 	alias meth_contents meth_des
 end
 
-end	# Umu::Value::Core::Data::Union::List
+end	# Umu::Value::Core::Object::Union::List
 
-end	# Umu::Value::Core::Data::Union
+end	# Umu::Value::Core::Object::Union
 
-end	# Umu::Value::Core::Data
+end	# Umu::Value::Core::Object
 
 
 module_function
 
 	def make_nil
-		Data::Union::List::NIL
+		Object::Union::List::NIL
 	end
 
 
 	def make_cons(head, tail)
 		ASSERT.kind_of head,	VC::Top
-		ASSERT.kind_of tail,	Data::Union::List::Abstract
+		ASSERT.kind_of tail,	Object::Union::List::Abstract
 
-		Data::Union::List::Cons.new(head, tail).freeze
+		Object::Union::List::Cons.new(head, tail).freeze
 	end
 
 end	# Umu::Value::Core

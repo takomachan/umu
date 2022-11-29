@@ -8,7 +8,7 @@ module Value
 
 module Core
 
-class Top
+class Top < ::Object
 	INSTANCE_METHOD_INFOS = [
 		# String
 		[:meth_inspect,		VCA::String,
