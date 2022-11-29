@@ -11,15 +11,15 @@ module Core
 class Top
 	INSTANCE_METHOD_INFOS = [
 		# String
-		[:meth_inspect,		VCB::String,
+		[:meth_inspect,		VCA::String,
 			:inspect],
-		[:meth_to_string,	VCB::String,
+		[:meth_to_string,	VCA::String,
 			:'to-s'],
 
 		# Relational
-		[:meth_equal,		VCB::Bool,
+		[:meth_equal,		VCA::Bool,
 			:'==',			self],
-		[:meth_less_than,	VCB::Bool,
+		[:meth_less_than,	VCA::Bool,
 			:'<',			self]
 	]
 

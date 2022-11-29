@@ -7,7 +7,7 @@ module Value
 
 module Core
 
-module Base
+module Atom
 
 class Bool < Abstract
 	CLASS_METHOD_INFOS = [
@@ -75,19 +75,19 @@ end
 TRUE	= Bool.new(true).freeze
 FALSE	= Bool.new(false).freeze
 
-end # Umu::Value::Core::Base
+end # Umu::Value::Core::Atom
 
 
 
 module_function
 
 	def make_true
-		Base::TRUE
+		Atom::TRUE
 	end
 
 
 	def make_false
-		Base::FALSE
+		Atom::FALSE
 	end
 
 

@@ -11,7 +11,7 @@ module Expression
 
 module Unary
 
-module Base
+module Atom
 
 class Symbol < Abstract
 	def initialize(loc, obj)
@@ -31,7 +31,7 @@ class Symbol < Abstract
 	end
 end
 
-end # Umu::AbstractSyntax::Core::Expression::Unary::Base
+end # Umu::AbstractSyntax::Core::Expression::Unary::Atom
 
 end # Umu::AbstractSyntax::Core::Expression::Unary
 
@@ -42,7 +42,7 @@ module_function
 		ASSERT.kind_of loc,	L::Location
 		ASSERT.kind_of obj,	::Symbol
 
-		Unary::Base::Symbol.new(loc, obj).freeze
+		Unary::Atom::Symbol.new(loc, obj).freeze
 	end
 
 end	# Umu::AbstractSyntax::Core::Expression

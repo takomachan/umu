@@ -13,7 +13,7 @@ module Expression
 
 module Unary
 
-module Base
+module Atom
 
 class Abstract < Unary::Abstract
 	def desugar(env)
@@ -30,7 +30,7 @@ class Abstract < Unary::Abstract
 	end
 end
 
-end	# Umu::ConcreteSyntax::Core::Expression::Unary::Base
+end	# Umu::ConcreteSyntax::Core::Expression::Unary::Atom
 
 end	# Umu::ConcreteSyntax::Core::Expression::Unary
 

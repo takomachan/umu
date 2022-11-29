@@ -7,11 +7,11 @@ module Value
 
 module Core
 
-module Base
+module Atom
 
 class Abstract < Top
 	INSTANCE_METHOD_INFOS = [
-		[:meth_less_than,	VCB::Bool,
+		[:meth_less_than,	VCA::Bool,
 			:'<',			self]
 	]
 
@@ -38,13 +38,13 @@ class Abstract < Top
 
 
 	def meth_less_than(_loc, _env, _event, other)
-		ASSERT.kind_of other, Base::Abstract
+		ASSERT.kind_of other, Atom::Abstract
 
 		VC.make_bool self.val < other.val
 	end
 end
 
-end # Umu::Value::Core::Base
+end # Umu::Value::Core::Atom
 
 end # Umu::Value::Core
 

@@ -1,5 +1,5 @@
 require 'umu/concrete-syntax/core/expression/unary/abstract'
-require 'umu/concrete-syntax/core/expression/unary/base'
+require 'umu/concrete-syntax/core/expression/unary/atom'
 require 'umu/concrete-syntax/core/expression/unary/prefix.rb'
 require 'umu/concrete-syntax/core/expression/unary/identifier'
 require 'umu/concrete-syntax/core/expression/unary/class'

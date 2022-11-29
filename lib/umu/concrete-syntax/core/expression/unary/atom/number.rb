@@ -12,11 +12,11 @@ module Expression
 
 module Unary
 
-module Base
+module Atom
 
 module Number
 
-class Abstract < Base::Abstract
+class Abstract < Atom::Abstract
 	def initialize(loc, obj)
 		ASSERT.kind_of obj, ::Numeric
 
@@ -61,7 +61,7 @@ private
 	end
 end
 
-end	# Umu::ConcreteSyntax::Expression::Core::Unary::Number::Base
+end	# Umu::ConcreteSyntax::Expression::Core::Unary::Number::Atom
 
 end	# Umu::ConcreteSyntax::Expression::Core::Unary::Number
 
@@ -75,7 +75,7 @@ module_function
 		ASSERT.kind_of loc,	L::Location
 		ASSERT.kind_of obj, ::Integer
 
-		Unary::Base::Number::Integer.new(loc, obj).freeze
+		Unary::Atom::Number::Integer.new(loc, obj).freeze
 	end
 
 
@@ -83,7 +83,7 @@ module_function
 		ASSERT.kind_of loc,	L::Location
 		ASSERT.kind_of obj, ::Float
 
-		Unary::Base::Number::Float.new(loc, obj).freeze
+		Unary::Atom::Number::Float.new(loc, obj).freeze
 	end
 
 end	# Umu::ConcreteSyntax::Expression::Core

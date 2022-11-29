@@ -32,11 +32,11 @@ module Umu
 	module Value
 		module Core
 			class Top; end
-			module Base
+			module Atom
 				class Abstract < Top; end
 				class Bool < Abstract; end
 				module Number
-					class Abstract < Base::Abstract; end
+					class Abstract < Atom::Abstract; end
 					class Integer < Abstract; end
 					class Float < Abstract; end
 				end
@@ -95,8 +95,8 @@ module Umu
 	SACE	= AbstractSyntax::Core::Expression
 	V		= Value
 	VC		= Value::Core
-	VCB		= Value::Core::Base
-	VCBN	= Value::Core::Base::Number
+	VCA		= Value::Core::Atom
+	VCAN	= Value::Core::Atom::Number
 	VCP		= Value::Core::Product
 	VCD		= Value::Core::Data
 	VCDU	= Value::Core::Data::Union

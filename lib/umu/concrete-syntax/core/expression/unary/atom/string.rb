@@ -13,29 +13,29 @@ module Expression
 
 module Unary
 
-module Base
+module Atom
 
-class Symbol < Base::Abstract
+class String < Atom::Abstract
 	def initialize(loc, obj)
-		ASSERT.kind_of obj, ::Symbol
+		ASSERT.kind_of obj, ::String
 
 		super
 	end
 
 
 	def to_s
-		'@' + self.obj.to_s
+		'"' + L::Escape.unescape(self.obj) + '"'
 	end
 
 
 private
 
 	def __desugar__(_env, _event)
-		SACE.make_symbol self.loc, self.obj
+		SACE.make_string self.loc, self.obj
 	end
 end
 
-end	# Umu::ConcreteSyntax::Core::Expression::Unary::Base
+end	# Umu::ConcreteSyntax::Core::Expression::Unary::Atom
 
 end	# Umu::ConcreteSyntax::Core::Expression::Unary
 
@@ -43,11 +43,11 @@ end	# Umu::ConcreteSyntax::Core::Expression::Unary
 
 module_function
 
-	def make_symbol(loc, obj)
+	def make_string(loc, obj)
 		ASSERT.kind_of loc,	L::Location
-		ASSERT.kind_of obj, ::Symbol
+		ASSERT.kind_of obj, ::String
 
-		Unary::Base::Symbol.new(loc, obj).freeze
+		Unary::Atom::String.new(loc, obj.freeze).freeze
 	end
 
 end	# Umu::ConcreteSyntax::Core::Expression

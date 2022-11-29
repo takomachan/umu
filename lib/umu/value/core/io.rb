@@ -23,7 +23,7 @@ class IO < Top
 		[:meth_get_string,	VCDU::Option::Abstract,
 			:'gets'],
 		[:meth_put_string,	VC::Unit,
-			:'puts',		VCB::String]
+			:'puts',		VCA::String]
 	]
 
 
@@ -71,7 +71,7 @@ class IO < Top
 
 
 	def meth_put_string(_loc, _env, event, value)
-		ASSERT.kind_of value, VCB::String
+		ASSERT.kind_of value, VCA::String
 
 		self.io.print value.val
 

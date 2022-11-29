@@ -90,7 +90,7 @@ class Entry < Expression::Abstract
 			ASSERT.kind_of test_result, SAR::Value
 
 			test_value = test_result.value
-			unless test_value.kind_of? VCB::Bool
+			unless test_value.kind_of? VCA::Bool
 				raise X::TypeError.new(
 					rule.loc,
 					env,

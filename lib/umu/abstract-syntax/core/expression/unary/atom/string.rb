@@ -1,4 +1,5 @@
 require 'umu/common'
+require 'umu/lexical/escape'
 
 
 module Umu
@@ -11,42 +12,38 @@ module Expression
 
 module Unary
 
-module Base
+module Atom
 
-class Bool < Abstract
+class String < Abstract
 	def initialize(loc, obj)
-		ASSERT.bool obj
+		ASSERT.kind_of obj, ::String
 
 		super
 	end
 
 
 	def to_s
-		if self.obj
-			'TRUE'
-		else
-			'FALSE'
-		end
+		'"' + L::Escape.unescape(self.obj) + '"'
 	end
 
 
 	def __evaluate__(_env, _event)
-		VC.make_bool self.obj
+		VC.make_string self.obj
 	end
 end
 
-end # Umu::AbstractSyntax::Core::Expression::Unary::Base
+end # Umu::AbstractSyntax::Core::Expression::Unary::Atom
 
 end # Umu::AbstractSyntax::Core::Expression::Unary
 
 
 module_function
 
-	def make_bool(loc, obj)
-		ASSERT.kind_of	loc, L::Location
-		ASSERT.bool		obj
+	def make_string(loc, obj)
+		ASSERT.kind_of loc,	L::Location
+		ASSERT.kind_of obj,	::String
 
-		Unary::Base::Bool.new(loc, obj).freeze
+		Unary::Atom::String.new(loc, obj.freeze).freeze
 	end
 
 end	# Umu::AbstractSyntax::Core::Expression

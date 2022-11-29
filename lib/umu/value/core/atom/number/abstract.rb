@@ -7,24 +7,24 @@ module Value
 
 module Core
 
-module Base
+module Atom
 
 module Number
 
-class Abstract < Base::Abstract
+class Abstract < Atom::Abstract
 	INSTANCE_METHOD_INFOS = [
 		# Number
-		[:meth_positive?,	VCB::Bool,
+		[:meth_positive?,	VCA::Bool,
 			:positive?],
-		[:meth_negative?,	VCB::Bool,
+		[:meth_negative?,	VCA::Bool,
 			:negative?],
 		[:meth_negate,		self,
 			:'~'],
 		[:meth_absolute,	self,
 			:abs],
-		[:meth_to_int,		VCBN::Integer,
+		[:meth_to_int,		VCAN::Integer,
 			:'to-i'],
-		[:meth_to_float,	VCBN::Float,
+		[:meth_to_float,	VCAN::Float,
 			:'to-f'],
 		[:meth_add,			self,
 			:'+',			self],
@@ -198,15 +198,15 @@ class Abstract < Base::Abstract
 	end
 end
 
-end # Umu::Value::Core::Base::Number
+end # Umu::Value::Core::Atom::Number
 
-end # Umu::Value::Core::Base
+end # Umu::Value::Core::Atom
 
 
 module_function
 
 	def make_number(klass, val)
-		ASSERT.subclass_of	klass,	VCBN::Abstract
+		ASSERT.subclass_of	klass,	VCAN::Abstract
 		ASSERT.kind_of		val,	::Numeric
 
 		klass.new(val).freeze

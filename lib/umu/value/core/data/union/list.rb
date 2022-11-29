@@ -24,9 +24,9 @@ class Abstract < Union::Abstract
 
 
 	INSTANCE_METHOD_INFOS = [
-		[ :meth_nil?,	VCB::Bool,
+		[ :meth_nil?,	VCA::Bool,
 			:nil?],
-		[ :meth_cons?,	VCB::Bool,
+		[ :meth_cons?,	VCA::Bool,
 			:cons?],
 		[ :meth_cons,	self,
 			:cons,		VC::Top],

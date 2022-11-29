@@ -7,7 +7,7 @@ module Value
 
 module Core
 
-module Base
+module Atom
 
 module Number
 
@@ -30,7 +30,7 @@ class Float < Abstract
 			:'~'],
 		[:meth_absolute,		self,
 			:abs],
-		[:meth_less_than,		VCB::Bool,
+		[:meth_less_than,		VCA::Bool,
 			:'<',				self],
 		[:meth_add,				self,
 			:'+',				self],
@@ -46,11 +46,11 @@ class Float < Abstract
 			:pow,				self],
 
 		# Math
-		[:meth_nan?,			VCB::Bool,
+		[:meth_nan?,			VCA::Bool,
 			:nan?],
-		[:meth_infinite?,		VCB::Bool,
+		[:meth_infinite?,		VCA::Bool,
 			:infinite?],
-		[:meth_finite?,			VCB::Bool,
+		[:meth_finite?,			VCA::Bool,
 			:finite?],
 		[:meth_sin,				self,
 			:sin],
@@ -81,13 +81,13 @@ class Float < Abstract
 		[:meth_sqrt,			self,
 			:sqrt],
 		[:meth_truncate,		self,
-			:truncate,			VCBN::Integer],
+			:truncate,			VCAN::Integer],
 		[:meth_ceil,			self,
-			:ceil,				VCBN::Integer],
+			:ceil,				VCAN::Integer],
 		[:meth_floor,			self,
-			:floor,				VCBN::Integer],
+			:floor,				VCAN::Integer],
 		[:meth_ldexp,			self,
-			:ldexp,				VCBN::Integer],
+			:ldexp,				VCAN::Integer],
 		[:meth_frexp,			VCP::Tuple,
 			:frexp],
 		[:meth_divmod,			VCP::Tuple,
@@ -233,7 +233,7 @@ class Float < Abstract
 
 
 	def meth_truncate(loc, env, _event, ndigits)
-		ASSERT.kind_of ndigits, VCBN::Integer
+		ASSERT.kind_of ndigits, VCAN::Integer
 
 		unless ndigits.val >= 0
 			raise X::ArgumentError.new(
@@ -249,7 +249,7 @@ class Float < Abstract
 
 
 	def meth_ceil(loc, env, _event, ndigits)
-		ASSERT.kind_of ndigits, VCBN::Integer
+		ASSERT.kind_of ndigits, VCAN::Integer
 
 		unless ndigits.val >= 0
 			raise X::ArgumentError.new(
@@ -265,7 +265,7 @@ class Float < Abstract
 
 
 	def meth_floor(loc, env, _event, ndigits)
-		ASSERT.kind_of ndigits, VCBN::Integer
+		ASSERT.kind_of ndigits, VCAN::Integer
 
 		unless ndigits.val >= 0
 			raise X::ArgumentError.new(
@@ -281,7 +281,7 @@ class Float < Abstract
 
 
 	def meth_ldexp(_loc, _env, _event, other)
-		ASSERT.kind_of other, VCBN::Integer
+		ASSERT.kind_of other, VCAN::Integer
 
 		VC.make_float Math.ldexp(self.val, other.val)
 	end
@@ -300,7 +300,7 @@ class Float < Abstract
 
 
 	def meth_divmod(_loc, _env, _event, other)
-		ASSERT.kind_of other, VCBN::Float
+		ASSERT.kind_of other, VCAN::Float
 
 		fract, integ = self.val.divmod other.val
 
@@ -318,12 +318,12 @@ class Float < Abstract
 	end
 end
 
-NAN			= Base::Number::Float.new(::Float::NAN).freeze
-INFINITY	= Base::Number::Float.new(::Float::INFINITY).freeze
+NAN			= Atom::Number::Float.new(::Float::NAN).freeze
+INFINITY	= Atom::Number::Float.new(::Float::INFINITY).freeze
 
-end # Umu::Value::Core::Base::Number
+end # Umu::Value::Core::Atom::Number
 
-end # Umu::Value::Core::Base
+end # Umu::Value::Core::Atom
 
 
 module_function
@@ -331,17 +331,17 @@ module_function
 	def make_float(val)
 		ASSERT.kind_of val, ::Float
 
-		Base::Number::Float.new(val).freeze
+		Atom::Number::Float.new(val).freeze
 	end
 
 
 	def make_nan
-		Base::Number::NAN
+		Atom::Number::NAN
 	end
 
 
 	def make_infinity
-		Base::Number::INFINITY
+		Atom::Number::INFINITY
 	end
 
 end	# Umu::Value::Core

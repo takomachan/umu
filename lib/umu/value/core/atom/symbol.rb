@@ -7,11 +7,11 @@ module Value
 
 module Core
 
-module Base
+module Atom
 
 class Symbol < Abstract
 	INSTANCE_METHOD_INFOS = [
-		[:meth_less_than,	VCB::Bool,
+		[:meth_less_than,	VCA::Bool,
 			:'<',			self]
 	]
 
@@ -33,7 +33,7 @@ class Symbol < Abstract
 	end
 end
 
-end # Umu::Value::Core::Base
+end # Umu::Value::Core::Atom
 
 
 module_function
@@ -41,7 +41,7 @@ module_function
 	def make_symbol(val)
 		ASSERT.kind_of val, ::Symbol
 
-		Base::Symbol.new(val).freeze
+		Atom::Symbol.new(val).freeze
 	end
 
 end	# Umu::Value::Core
