@@ -48,14 +48,11 @@ module Umu
 			end
 			module Object
 				class Abstract < Top; end
-				module Union
+				module Option
 					class Abstract < Object::Abstract; end
-					module Option
-						class Abstract < Union::Abstract; end
-					end
-					module List
-						class Abstract < Union::Abstract; end
-					end
+				end
+				module List
+					class Abstract < Object::Abstract; end
 				end
 			end
 			module Function; end
@@ -99,7 +96,6 @@ module Umu
 	VCAN	= Value::Core::Atom::Number
 	VCP		= Value::Core::Product
 	VCO		= Value::Core::Object
-	VCOU	= Value::Core::Object::Union
 	VCF		= Value::Core::Function
 	E		= Environment
 	EC		= Environment::Context

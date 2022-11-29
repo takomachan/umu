@@ -138,10 +138,8 @@ SRCS	= commander.rb \
 			value/core/object.rb \
 			value/core/object/abstract.rb \
 			value/core/object/datum.rb \
-			value/core/object/union.rb \
-			value/core/object/union/abstract.rb \
-			value/core/object/union/option.rb \
-			value/core/object/union/list.rb \
+			value/core/object/option.rb \
+			value/core/object/list.rb \
 			value/core/function.rb \
 			value/core/function/abstract.rb \
 			value/core/function/closure.rb \

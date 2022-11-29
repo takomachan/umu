@@ -10,11 +10,9 @@ module Core
 
 module Object
 
-module Union
-
 module List
 
-class Abstract < Union::Abstract
+class Abstract < Object::Abstract
 	CLASS_METHOD_INFOS = [
 		[:meth_make_nil,	self,
 			:'make-nil'],
@@ -183,9 +181,7 @@ class Cons < Abstract
 	alias meth_contents meth_des
 end
 
-end	# Umu::Value::Core::Object::Union::List
-
-end	# Umu::Value::Core::Object::Union
+end	# Umu::Value::Core::Object::List
 
 end	# Umu::Value::Core::Object
 
@@ -193,15 +189,15 @@ end	# Umu::Value::Core::Object
 module_function
 
 	def make_nil
-		Object::Union::List::NIL
+		Object::List::NIL
 	end
 
 
 	def make_cons(head, tail)
 		ASSERT.kind_of head,	VC::Top
-		ASSERT.kind_of tail,	Object::Union::List::Abstract
+		ASSERT.kind_of tail,	Object::List::Abstract
 
-		Object::Union::List::Cons.new(head, tail).freeze
+		Object::List::Cons.new(head, tail).freeze
 	end
 
 end	# Umu::Value::Core

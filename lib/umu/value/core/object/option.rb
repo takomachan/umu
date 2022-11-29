@@ -9,11 +9,9 @@ module Core
 
 module Object
 
-module Union
-
 module Option
 
-class Abstract < Union::Abstract
+class Abstract < Object::Abstract
 	CLASS_METHOD_INFOS = [
 		[:meth_make_none,	self,
 			:'make-none'],
@@ -116,9 +114,7 @@ class Some < Abstract
 	end
 end
 
-end	# Umu::Core::Object::Union::Option
-
-end	# Umu::Core::Object::Union
+end	# Umu::Core::Object::Option
 
 end	# Umu::Core::Object
 
@@ -126,14 +122,14 @@ end	# Umu::Core::Object
 module_function
 
 	def make_none
-		Object::Union::Option::NONE
+		Object::Option::NONE
 	end
 
 
 	def make_some(contents)
 		ASSERT.kind_of contents, VC::Top
 
-		Object::Union::Option::Some.new(contents).freeze
+		Object::Option::Some.new(contents).freeze
 	end
 
 end	# Umu::Core
