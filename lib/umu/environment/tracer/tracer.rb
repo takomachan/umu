@@ -132,8 +132,11 @@ module_function
 
 
 	ABBREVIATABLE_MODULE_NAMES = [
+		# Lexical
 		[['Lexical'],											'L'],
 		[['Lexical', 'Lexer'],									'LL'],
+
+		# ConcreteSyntax
 		[['ConcreteSyntax'],									'SC'],
 		[['ConcreteSyntax',	'Module'],							'SCM'],
 		[['ConcreteSyntax',	'Module',	'Declaration'],			'SCMD'],
@@ -143,23 +146,32 @@ module_function
 		[['ConcreteSyntax',	'Core',	'Declaration'],				'SCCD'],
 		[['ConcreteSyntax',	'Core',	'Expression'],				'SCCE'],
 		[['ConcreteSyntax',	'Core',	'Expression',	'Unary'],	'SCCEU'],
+		[['ConcreteSyntax',	'Core',	'Expression',	'Unary', 'Atom'],
+																'SCCEUA'],
 		[['ConcreteSyntax',	'Core',	'Expression',	'Binary'],	'SCCEB'],
 		[['ConcreteSyntax',	'Core',	'Expression',	'Nary'],	'SCCEN'],
 		[['ConcreteSyntax',	'Core',	'Pattern'],					'SCCP'],
+
+		# AbstractSyntax
 		[['AbstractSyntax'],									'SA'],
 		[['AbstractSyntax',	'Core'],							'SAC'],
 		[['AbstractSyntax',	'Core',	'Declaration'],				'SACD'],
 		[['AbstractSyntax',	'Core',	'Expression'],				'SACE'],
 		[['AbstractSyntax',	'Core',	'Expression',	'Unary'],	'SACEU'],
+		[['AbstractSyntax',	'Core',	'Expression',	'Unary', 'Atom'],
+																'SACEUA'],
 		[['AbstractSyntax',	'Core',	'Expression',	'Binary'],	'SACEB'],
 		[['AbstractSyntax',	'Core',	'Expression',	'Nary'],	'SACEN'],
+
+		# Value
 		[['Value'],												'V'],
 		[['Value',			'Core'],							'VC'],
 		[['Value',			'Core',	'Atom'],					'VCA'],
-		[['Value',			'Core',	'Atom',	'Number'],			'VCAN'],
 		[['Value',			'Core',	'Product'],					'VCP'],
 		[['Value',			'Core',	'Object'],					'VCO'],
 		[['Value',			'Core',	'Function'],				'VCF'],
+
+		# Environment
 		[['Environment'],										'E']
 	].sort { |(xs, _), (ys, _)| ys.size <=> xs.size }	# For longest-match
 
