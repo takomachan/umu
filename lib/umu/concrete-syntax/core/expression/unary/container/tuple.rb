@@ -14,7 +14,7 @@ module Unary
 
 module Container
 
-class Tuple < Abstraction::Abstract
+class Tuple < Abstract
 	def initialize(loc, exprs)
 		ASSERT.kind_of	exprs, ::Array
 		ASSERT.assert	exprs.size >= 2

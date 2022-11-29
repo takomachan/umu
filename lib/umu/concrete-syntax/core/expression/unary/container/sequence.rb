@@ -14,7 +14,7 @@ module Unary
 
 module Container
 
-class Sequence < Abstraction::Abstract
+class Sequence < Abstract
 	alias exprs array
 
 
