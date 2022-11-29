@@ -436,7 +436,7 @@ fun map = proc items -> cond items {
 				where val [x|xs] = items
 }
 
-;; map abs [~10, 2.5, ~11.6, 17]
+;; map abs [-10, 2.5, -11.6, 17]
 # -> [10, 2.5, 11.6, 17]
 
 ;; map { x -> x * x } [1, 2, 3, 4]
@@ -1582,7 +1582,7 @@ fun div-complex = z1 z2 -> (
 # -> Rectanglar (3.0, 5.0)
 
 ;; sub-complex (make-from-real-imag 1.0 2.0) (make-from-real-imag 2.0 3.0)
-# -> Rectanglar (~1.0, ~1.0)
+# -> Rectanglar (-1.0, -1.0)
 
 ;; mul-complex (make-from-real-imag 1.0 2.0) (make-from-real-imag 2.0 3.0)
 # -> Polar (8.06225774829855, 1.0516502125483735) ??? --> FIXME!!

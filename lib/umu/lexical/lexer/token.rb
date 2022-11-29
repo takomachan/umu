@@ -110,7 +110,7 @@ RESERVED_SYMBOLS = [
 
 
 IDENTIFIER_SYMBOLS = [
-	'~'
+	# Empty
 ].inject({}) { |hash, x|
 	hash.merge(x => true) { |key, _, _|
 		ASSERT.abort format("Duplicated identifier-symbol: '%s'", key)
@@ -176,7 +176,7 @@ SYMBOL_PATTERNS = [
 
 		case
 		# Float or Integer
-		when scanner.scan(/\d+(\.\d+)?/)
+		when scanner.scan(/-?\d+(\.\d+)?/)
 			[
 				:Number,
 

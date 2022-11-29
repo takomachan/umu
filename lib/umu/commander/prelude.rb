@@ -413,9 +413,6 @@ structure Umu = struct {
 		# 	even?		: Integer -> Bool
 		val even? = &(Integer$even?)
 
-		# ~				: 'a -> 'a	where { 'a <- Number }
-		val ~ = &(Number$~)
-
 		# abs			: 'a -> 'a	where { 'a <- Number }
 		val abs = &(Number$abs)
 
@@ -777,7 +774,7 @@ structure struct {
 	#### Number ####
 	val (
 		positive?, negative?, odd?, even?,
-		~, abs, to-i, to-f,
+		abs, to-i, to-f,
 		(+), (-), (*), (/), (mod), (pow)
 	)
 

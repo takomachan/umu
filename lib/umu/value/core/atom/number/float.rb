@@ -26,8 +26,6 @@ class Float < Abstract
 
 	INSTANCE_METHOD_INFOS = [
 		# Number
-		[:meth_negate,			self,
-			:'~'],
 		[:meth_absolute,		self,
 			:abs],
 		[:meth_less_than,		VCA::Bool,
@@ -112,7 +110,7 @@ class Float < Abstract
 		elsif self.val.infinite?
 			format("%sINFINITY",
 					if self.val.negative?
-						'~'
+						'-'
 					else
 						''
 					end

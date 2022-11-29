@@ -18,8 +18,6 @@ class Integer < Abstract
 			:odd?],
 		[:meth_even?,			VCA::Bool,
 			:even?],
-		[:meth_negate,			self,
-			:'~'],
 		[:meth_absolute,		self,
 			:abs],
 		[:meth_less_than,		VCA::Bool,

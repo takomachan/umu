@@ -442,22 +442,22 @@ where {
 	# initenv : <ENV>	where { <ENV> = <VAR> -> <VAL> }
 	fun initenv = x -> cond (val-of x) {
 	#### Constant
-	  (== @TRUE)	-> VAL::mk-boolean TRUE
-	| (== @FALSE)	-> VAL::mk-boolean FALSE
+	  (== @TRUE)	-> VAL::mk-boolean	TRUE
+	| (== @FALSE)	-> VAL::mk-boolean	FALSE
 
 	#### Number
-	| (== @NEG)		-> mk-unop	~     VAL::mk-integer
-	| (== @SUCC)	-> mk-unop	(+ 1) VAL::mk-integer
-	| (== @PRED)	-> mk-unop	(- 1) VAL::mk-integer
-	| (== @ADD)		-> mk-binop	(+)   VAL::mk-integer
-	| (== @SUB)		-> mk-binop	(-)   VAL::mk-integer
-	| (== @MUL)		-> mk-binop	(*)   VAL::mk-integer
-	| (== @DIV)		-> mk-binop	(/)   VAL::mk-integer
-	| (== @MOD)		-> mk-binop	(mod) VAL::mk-integer
+	| (== @NEG)		-> mk-unop	(* -1)	VAL::mk-integer
+	| (== @SUCC)	-> mk-unop	(+ 1)	VAL::mk-integer
+	| (== @PRED)	-> mk-unop	(- 1)	VAL::mk-integer
+	| (== @ADD)		-> mk-binop	(+)		VAL::mk-integer
+	| (== @SUB)		-> mk-binop	(-)		VAL::mk-integer
+	| (== @MUL)		-> mk-binop	(*)		VAL::mk-integer
+	| (== @DIV)		-> mk-binop	(/)		VAL::mk-integer
+	| (== @MOD)		-> mk-binop	(mod)	VAL::mk-integer
 
 	#### Relational
-	| (== @EQ)		-> mk-binop (==) VAL::mk-boolean
-	| (== @LT)		-> mk-binop (<)  VAL::mk-boolean
+	| (== @EQ)		-> mk-binop (==)	VAL::mk-boolean
+	| (== @LT)		-> mk-binop (<)		VAL::mk-boolean
 
 	  else			-> ERROR::name "Unknown VAR: " x
 	} where {
