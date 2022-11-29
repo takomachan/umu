@@ -17,18 +17,18 @@ module Container
 class Abstract < Unary::Abstract
 	include Enumerable
 
-	alias array obj
+	alias exprs obj
 
 
-	def initialize(loc, array)
-		ASSERT.kind_of array, ::Array
+	def initialize(loc, exprs)
+		ASSERT.kind_of exprs, ::Array
 
 		super
 	end
 
 
 	def each
-		self.array.each do |x|
+		self.exprs.each do |x|
 			yield x
 		end
 	end

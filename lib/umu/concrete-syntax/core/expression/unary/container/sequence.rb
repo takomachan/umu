@@ -15,9 +15,6 @@ module Unary
 module Container
 
 class Sequence < Abstract
-	alias exprs array
-
-
 	def initialize(loc, exprs)
 		ASSERT.kind_of	exprs, ::Array
 		ASSERT.assert	exprs.size >= 2

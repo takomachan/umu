@@ -15,7 +15,6 @@ module Unary
 module Container
 
 class List < Abstract
-	alias		exprs array
 	attr_reader	:opt_last_expr
 
 
