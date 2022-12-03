@@ -446,7 +446,7 @@ where {
 	| (== @FALSE)	-> VAL::mk-boolean	FALSE
 
 	#### Number
-	| (== @NEG)		-> mk-unop	(* -1)	VAL::mk-integer
+	| (== @NEG)		-> mk-unop	negate	VAL::mk-integer
 	| (== @SUCC)	-> mk-unop	(+ 1)	VAL::mk-integer
 	| (== @PRED)	-> mk-unop	(- 1)	VAL::mk-integer
 	| (== @ADD)		-> mk-binop	(+)		VAL::mk-integer

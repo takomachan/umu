@@ -416,6 +416,9 @@ structure Umu = struct {
 		# abs			: 'a -> 'a	where { 'a <- Number }
 		val abs = &(Number$abs)
 
+		# negate		: 'a -> 'a	where { 'a <- Number }
+		val negate = &(Number$negate)
+
 		# to-i			: Number -> Integer
 		val to-i = &(Number$to-i)
 
@@ -774,7 +777,7 @@ structure struct {
 	#### Number ####
 	val (
 		positive?, negative?, odd?, even?,
-		abs, to-i, to-f,
+		negate, abs, to-i, to-f,
 		(+), (-), (*), (/), (mod), (pow)
 	)
 

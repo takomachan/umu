@@ -20,6 +20,8 @@ class Integer < Abstract
 			:even?],
 		[:meth_absolute,		self,
 			:abs],
+		[:meth_negate,			self,
+			:negate],
 		[:meth_less_than,		VCA::Bool,
 			:'<',				self],
 		[:meth_add,	self,

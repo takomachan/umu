@@ -176,7 +176,7 @@ SYMBOL_PATTERNS = [
 
 		case
 		# Float or Integer
-		when scanner.scan(/-?\d+(\.\d+)?/)
+		when scanner.scan(/[+-]?\d+(\.\d+)?/)
 			[
 				:Number,
 

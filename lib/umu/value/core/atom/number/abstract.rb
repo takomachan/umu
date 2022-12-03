@@ -18,6 +18,8 @@ class Abstract < Atom::Abstract
 			:positive?],
 		[:meth_negative?,	VCA::Bool,
 			:negative?],
+		[:meth_negate,		self,
+			:negate],
 		[:meth_absolute,	self,
 			:abs],
 		[:meth_to_int,		VCAN::Integer,
@@ -68,6 +70,11 @@ class Abstract < Atom::Abstract
 
 	def meth_negative?(_loc, _env, _event)
 		VC.make_bool self.val.negative?
+	end
+
+
+	def meth_negate(_loc, _env, _event)
+		VC.make_number self.class, - self.val
 	end
 
 
