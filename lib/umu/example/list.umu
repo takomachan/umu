@@ -28,12 +28,12 @@ structure List = struct {
 		then TRUE, else FALSE
 	#)
 	fun rec equal? = eq? xs ys ->
-		if (xs isa? List andalso ys isa? List)
+		if (xs isa? List && ys isa? List)
 			cond xs {
 				empty?	-> empty? ys
 				else	-> cond ys {
 					empty?	-> FALSE
-					else	-> eq? x y andalso equal? eq? xs' ys'
+					else	-> eq? x y && equal? eq? xs' ys'
 								where	val [x|xs'] = xs
 										val [y|ys'] = ys
 				}

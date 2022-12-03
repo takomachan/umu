@@ -212,11 +212,11 @@ fun abs' = x -> cond x {
 } ;;
 
 
-{ x -> x > 5 andalso x < 10 } ;;
+{ x -> x > 5 && x < 10 } ;;
 # -> #<fn x -> ....>
 
 ### (>=) : 'a -> 'a -> Bool
-fun (>=) = x y -> x > y orelse x == y ;;
+fun (>=) = x y -> x > y || x == y ;;
 
 ### (>=) : 'a -> 'a -> Bool
 fun (>=) = x y -> not (x < y) ;;
@@ -494,7 +494,7 @@ fun first-denomination = kinds-of-coins -> cond kinds-of-coins {
 fun rec cc = amount kinds-of-coins -> (
 	if (amount == 0)
 		1
-	elsif (amount < 0 orelse kinds-of-coins == 0)
+	elsif (amount < 0 || kinds-of-coins == 0)
 		0
 	else
 		(
@@ -936,9 +936,9 @@ fun half-interval-method = f a b -> let {
 	val a-value = f a
 	val b-value = f b
 in
-	if    (negative? a-value andalso positive? b-value)
+	if    (negative? a-value && positive? b-value)
 		search f a b
-	elsif (negative? b-value andalso positive? a-value)
+	elsif (negative? b-value && positive? a-value)
 		search f b a
 	else
 		abort <| "Values are not of opposite sign: " ^

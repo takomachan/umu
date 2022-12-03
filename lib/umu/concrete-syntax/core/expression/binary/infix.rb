@@ -96,7 +96,7 @@ private
 					SACE.make_kind_of loc, lhs_opnd, rhs_opnd.sym
 
 				# Conditional
-				when :ANDALSO
+				when :'&&'
 					SACE.make_if(
 						loc,
 						[
@@ -108,7 +108,7 @@ private
 						],
 						SACE.make_bool(loc, false)
 					)
-				when :ORELSE
+				when :'||'
 					SACE.make_if(
 						loc,
 						[

@@ -929,8 +929,8 @@ fun number? = x -> x isa? Integer
 fun variable? = x -> x isa? Symbol
 
 fun same-variable? = v1 v2 -> (
-	variable? v1 andalso
-	variable? v2 andalso
+	variable? v1 &&
+	variable? v2 &&
 	v1 == v2
 )
 
@@ -938,13 +938,13 @@ fun make-sum = a1 a2 -> (@"+", a1, a2)
 
 fun make-product = a1 a2 -> (@"*", a1, a2)
 
-fun sum? = x -> x isa? Tuple andalso x.1 == @"+"
+fun sum? = x -> x isa? Tuple && x.1 == @"+"
 
 fun addend = s -> s.2
 
 fun augend = s -> s.3
 
-fun product? = x -> x isa? Tuple andalso x.1 == @"*"
+fun product? = x -> x isa? Tuple && x.1 == @"*"
 
 fun multiplier = s -> s.2
 
@@ -983,20 +983,20 @@ fun rec deriv = exp var -> cond exp {
 
 #### With simplification
 
-fun eq-number? = exp num -> number? exp andalso exp == num
+fun eq-number? = exp num -> number? exp && exp == num
 
 fun make-sum' = a1 a2 -> (
 	if    (eq-number? a1 0) a2
 	elsif (eq-number? a2 0) a1
-	elsif (number? a1 andalso number? a2) a1 + a2
+	elsif (number? a1 && number? a2) a1 + a2
 	else  (@"+", a1, a2)
 )
 
 fun make-product' = m1 m2 -> (
-	if    (eq-number? m1 0 orelse eq-number? m2 0) 0
+	if    (eq-number? m1 0 || eq-number? m2 0) 0
 	elsif (eq-number? m1 1) m2
 	elsif (eq-number? m2 1) m1
-	elsif (number? m1 andalso number? m2) m1 * m2
+	elsif (number? m1 && number? m2) m1 * m2
 	else  (@"*", m1, m2)
 )
 
@@ -1051,7 +1051,7 @@ fun adjoin-set = e set -> (
 )
 
 fun rec intersection-set = set1 set2 -> (
-	if (empty? set1 orelse empty? set2)
+	if (empty? set1 || empty? set2)
 		[]
 	else let {
 		val [x1|xs1] = set1
@@ -1084,7 +1084,7 @@ fun rec element-of-set'? = e set -> cond set {
 }
 
 fun rec intersection-set' = set1 set2 -> (
-	if (empty? set1 orelse empty? set2)
+	if (empty? set1 || empty? set2)
 		[]
 	else let {
 		val [x1|xs1] = set1
@@ -1115,7 +1115,7 @@ fun right-branch = tree -> tree.3
 fun make-tree = entry left right -> (entry, left, right)
 
 fun rec element-of-set? = e set -> (
-	if (set isa? List andalso empty? set)
+	if (set isa? List && empty? set)
 		FALSE
 	else let {
 		val x = entry set
@@ -1130,7 +1130,7 @@ fun rec element-of-set? = e set -> (
 )
 
 fun rec adjoin-set = e set -> (
-	if (set isa? List andalso empty? set)
+	if (set isa? List && empty? set)
 		make-tree x [] []
 	else let {
 		val x = entry set
@@ -1227,7 +1227,7 @@ fun lookup = given-key set-of-records -> cond set-of-records {
 
 fun make-leaf = symbol weight -> (@leaf, symbol, weight)
 
-fun leaf? = object -> object isa? Tuple andalso object.1 == @leaf
+fun leaf? = object -> object isa? Tuple && object.1 == @leaf
 
 fun symbol-leaf = x -> x.2
 

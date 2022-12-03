@@ -212,12 +212,12 @@ structure Umu = struct {
 
 		# equal-with? : ('a -> 'b -> Bool) -> ['a] -> ['b] -> Bool
 		fun rec equal-with? = eq? xs ys ->
-			if (xs isa? List andalso ys isa? List)
+			if (xs isa? List && ys isa? List)
 				cond xs {
 					Nil?	-> Nil? ys
 					else	-> cond ys {
 				  		Nil?	-> FALSE
-						else	-> eq? x y andalso equal-with? eq? xs' ys'
+						else	-> eq? x y && equal-with? eq? xs' ys'
 									where val [x|xs'] = xs
 										  val [y|ys'] = ys
 					}

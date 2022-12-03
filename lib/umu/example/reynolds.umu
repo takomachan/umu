@@ -198,7 +198,7 @@ fun rec parse = exp -> cond exp {
 	fun var? = exp -> exp isa? Symbol
 
 	# form? : 'a -> Bool
-	fun form? = exp -> exp isa? List andalso length exp >= 2
+	fun form? = exp -> exp isa? List && length exp >= 2
 
 
 
@@ -287,7 +287,7 @@ fun rec parse = exp -> cond exp {
 		in
 			binds |> foldr (parse body) { bind body-exp ->
 				let {
-					assert (bind isa? List andalso length bind == 2)
+					assert (bind isa? List && length bind == 2)
 						ERROR::syntax
 							"For LET's binding, expected pair List, but: "
 							bind
@@ -318,7 +318,7 @@ fun rec parse = exp -> cond exp {
 		in
 			binds |> foldr (parse body) { bind body-exp ->
 				let {
-					assert (bind isa? List andalso length bind >= 2)
+					assert (bind isa? List && length bind >= 2)
 						ERROR::syntax
 							("For LETREC's binding, " ^
 								"expected 2 or more List, but: ")

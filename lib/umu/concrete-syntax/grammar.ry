@@ -16,7 +16,7 @@ prechigh
 	left	'|>'
 	right	'<|'
 	left	ISA
-	left	ANDALSO ORELSE
+	left	'&&' '||'
 preclow
 
 
@@ -313,8 +313,8 @@ _infix_expr:
 | infix_expr '<|'		infix_expr	{ result = val }
 | infix_expr '|>'		infix_expr	{ result = val }
 | infix_expr ISA		infix_expr	{ result = val }
-| infix_expr ANDALSO	infix_expr	{ result = val }
-| infix_expr ORELSE		infix_expr	{ result = val }
+| infix_expr '&&'		infix_expr	{ result = val }
+| infix_expr '||'		infix_expr	{ result = val }
 
 
 # Send expression
