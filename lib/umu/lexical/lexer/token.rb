@@ -40,19 +40,19 @@ RESERVED_WORDS = [
 	# Not used, but reserved for future
 
 	# For pattern matching
-	'as', 'case', 'match',
+	'as', 'case',
 
 	# For pragma
-	'package', 'pragma', 'useing',
+	'pragma', 'use',
 
 	# For module language
-	'functor', 'including', 'opening', 'signat', 'signature',
+	'functor', 'signat', 'signature',
 
 	# For data type declaration
-	'data',	'datum', 'newtype', 'type',
+	'datum', 'type',
 
 	# For object type
-	'abstract', 'alias', 'class', 'def', 'extending',
+	'abstract', 'alias', 'class', 'def', 'extend',
 	'isa', 'new', 'self', 'super',
 
 	# For infix operator declaration
@@ -61,14 +61,17 @@ RESERVED_WORDS = [
 	# For continuation
 	'callcc', 'throw',
 
-	# For delayed evaluation
+	# For refernce type
+	'peek', 'poke', 'ref',
+
+	# For lazy evaluation
 	'delay', 'force', 'lazy',
 
 	# For non-determinism
 	'none', 'or',
 
 	# For monad
-	'do',
+	'for', 'do',
 
 	# For general purpose
 	'with'
@@ -91,12 +94,9 @@ RESERVED_SYMBOLS = [
 	# Not used, but reserved for future
 
 	# For data type declaration
-	':', '<:',
+	':',
 
-	# For refernce type
-	'!', ':=',
-
-	# For monad and ZF-notation
+	# For monad
 	'<-',
 
 	# For general purpose
@@ -109,7 +109,7 @@ RESERVED_SYMBOLS = [
 
 
 IDENTIFIER_SYMBOLS = [
-	# Empty
+	# empty
 ].inject({}) { |hash, x|
 	hash.merge(x => true) { |key, _, _|
 		ASSERT.abort format("Duplicated identifier-symbol: '%s'", key)
@@ -119,17 +119,21 @@ IDENTIFIER_SYMBOLS = [
 
 BRAKET_PAIRS = [
 	['(',	')'],	# Tuple, etc
-	['&(',	')'],	# Class
+	['&(',	')'],	# Method
 	['[',	']'],	# List
 	['{',	'}'],	# Lambda, etc
 
 
 	# Not used, but reserved for future
 
-	['%[',	']'],	# Stream
+	['%s[',	']'],	# Seq
+	['%q[',	']'],	# Queue
+	['%v[',	']'],	# Vector
+	['%a[',	']'],	# Array
 	['%(',	')'],	# Set
 	['%{',	'}'],	# Map
-	['@[',	']']	# Dictionary(Key-Value list)
+	['@[',	']'],	# Assoc(Key-Value list)
+	['&[',	']']	# Stream
 ]
 
 
