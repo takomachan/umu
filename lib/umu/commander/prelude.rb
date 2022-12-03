@@ -407,6 +407,9 @@ structure Umu = struct {
 		# 	negative?	: Number -> Bool
 		val negative? = &(Number$negative?)
 
+		# 	zero?		: Number -> Bool
+		val zero? = &(Number$zero?)
+
 		# 	odd?		: Integer -> Bool
 		val odd? = &(Integer$odd?)
 
@@ -776,7 +779,7 @@ structure struct {
 
 	#### Number ####
 	val (
-		positive?, negative?, odd?, even?,
+		positive?, negative?, zero?, odd?, even?,
 		negate, abs, to-i, to-f,
 		(+), (-), (*), (/), (mod), (pow)
 	)

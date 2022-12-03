@@ -199,15 +199,15 @@ print "\n\nSECTION 1.1.5" ;;
 
 ### abs : Float -> Float
 fun abs = x -> cond x {
-  (>  0.0) -> x
-| (== 0.0) -> 0.0
-| (<  0.0) -> negate x
-  else	   -> abort "abs"
+  positive?	-> x
+| zero?		-> 0.0
+| negative?	-> negate x
+  else		-> abort "abs"
 } ;;
 
 ### abs' : Float -> Float
 fun abs' = x -> cond x {
-  (< 0.0)	-> negate x
+  negative?	-> negate x
   else		-> x
 } ;;
 
