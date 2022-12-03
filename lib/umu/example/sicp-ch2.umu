@@ -350,10 +350,10 @@ val one-through-four = [1, 2, 3, 4]
 ;; one-through-four
 # -> [1, 2, 3, 4]
 
-;; hd one-through-four
+;; head one-through-four
 # -> 1
 
-;; tl one-through-four
+;; tail one-through-four
 # -> [2, 3, 4]
 
 ;; [10 | one-through-four]
@@ -365,8 +365,8 @@ val one-through-four = [1, 2, 3, 4]
 
 
 fun rec list-ref = items n -> (
-	if (n == 0)	hd items
-	else		list-ref (tl items) (n - 1)
+	if (n == 0)	head items
+	else		list-ref (tail items) (n - 1)
 )
 
 val squares = [1, 4, 9, 16, 25]
@@ -378,7 +378,7 @@ val squares = [1, 4, 9, 16, 25]
 
 fun rec length = items -> cond items {
 	empty?	-> 0
-	else	-> 1 + length (tl items)
+	else	-> 1 + length (tail items)
 }
 
 val odds = [1, 3, 5, 7]
@@ -393,7 +393,7 @@ fun length' = items -> (
 ) where {
 	fun rec length-iter = a count -> cond a {
 		empty?	-> count
-		else	-> length-iter (tl a) (1 + count)
+		else	-> length-iter (tail a) (1 + count)
 	}
 }
 
@@ -891,10 +891,10 @@ val b = 2
 # -> [@a, 2]
 
 
-;; hd [@a, @b, @c]
+;; head [@a, @b, @c]
 # -> @a
 
-;; tl [@a, @b, @c]
+;; tail [@a, @b, @c]
 # -> [@b, @c]
 ;;
 

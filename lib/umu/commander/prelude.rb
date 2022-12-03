@@ -202,12 +202,12 @@ structure Umu = struct {
 		val des = &(List$des)
 
 
-		# hd : ['a] -> 'a
-		fun hd = xs -> xs.des.1
+		# head : ['a] -> 'a
+		fun head = xs -> xs.des.1
 
 
-		# tl : ['a] -> ['a]
-		fun tl = xs -> xs.des.2
+		# tail : ['a] -> ['a]
+		fun tail = xs -> xs.des.2
 
 
 		# equal-with? : ('a -> 'b -> Bool) -> ['a] -> ['b] -> Bool
@@ -558,11 +558,11 @@ structure Umu = struct {
 		# des		: ['a] -> ('a, ['a])
 		val des = List::des
 
-		# hd		: ['a] -> 'a
-		val hd = List::hd
+		# head		: ['a] -> 'a
+		val head = List::head
 
-		# tl		: ['a] -> ['a]
-		val tl = List::tl
+		# tail		: ['a] -> ['a]
+		val tail = List::tail
 
 		# equal?	: 'a -> 'b -> Bool
 		val equal? = List::equal?
@@ -815,7 +815,7 @@ structure struct {
 	val (
 		(|), (++),
 		empty?,
-		des, hd, tl,
+		des, head, tail,
 		foldr, foldr1, foldl, foldl1,
 		length, reverse,
 		max, min,
