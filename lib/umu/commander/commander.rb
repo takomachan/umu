@@ -115,84 +115,54 @@ end
 
 			line_num = lexer.loc.line_num
 
-			prompt = format(
-				"%04d%s%s%s ",
-
+			prompt = format("umu:%d%s ",
 				line_num + 1,
-
-
-				if lexer.in_braket?
-					format(":%s:%d",
-							lexer.braket_stack.reverse.map { |bb|
-								format("%-2s", bb)
-							}.join('.'),
-							lexer.braket_stack.length
-					)
-				else
-					''
-				end,
-
-				if lexer.in_comment?
-					format(":%s:%d",
-							'(#' * lexer.comment_depth,
-							lexer.comment_depth
-					)
-				else
-					''
-				end,
 
 				if lexer.in_comment?
 					'#'
 				elsif lexer.in_braket?
-					'|'
+					'*'
 				else
 					'>'
 				end
 			)
 
-			opt_line = begin
-					Commander.input prompt
-				rescue ::Interrupt
-					STDERR.puts
-					STDERR.puts '^C'
-
-					''
-				end
-			break env if opt_line.nil?
-			line = opt_line
-
 			next_tokens, next_lexer, next_env = begin
-					if lexer.between_braket? && /^:/ =~ line
-						[
-							[],
-							lexer.next_line_num,
-							Subcommand.execute(line, line_num, env)
-						]
-					else
-						Commander.process_line(
-							line + "\n",
-							tokens,
-							lexer,
-							env.update_line(STDIN_FILE_NAME, line_num, line)
-						)
-					end
-				rescue X::Abstraction::RuntimeError => e
-					e.print_backtrace
-					STDERR.puts
-					STDERR.puts e.to_s
+				opt_line = Commander.input prompt
+				break env if opt_line.nil?
+				line = opt_line
 
-					[[], lexer.recover, env]
-				rescue X::Abstraction::Expected, ::SystemCallError => e
-					STDERR.puts
-					STDERR.puts e.to_s
-
-					[[], lexer.recover, env]
-				rescue ::Interrupt
-					STDERR.puts
-					STDERR.puts '^C'
-
-					[[], lexer.recover, env]
+				if lexer.between_braket? && /^:/ =~ line
+					[
+						[],
+						lexer.next_line_num,
+						Subcommand.execute(line, line_num, env)
+					]
+				else
+					Commander.process_line(
+						line + "\n",
+						tokens,
+						lexer,
+						env.update_line(STDIN_FILE_NAME, line_num, line)
+					)
 				end
+			rescue X::Abstraction::RuntimeError => e
+				e.print_backtrace
+				STDERR.puts
+				STDERR.puts e.to_s
+
+				[[], lexer.recover, env]
+			rescue X::Abstraction::Expected, ::SystemCallError => e
+				STDERR.puts
+				STDERR.puts e.to_s
+
+				[[], lexer.recover, env]
+			rescue ::Interrupt
+				STDERR.puts
+				STDERR.puts '^C'
+
+				[[], lexer.recover, env]
+			end
 
 			[next_tokens, next_lexer, next_env]
 		}
