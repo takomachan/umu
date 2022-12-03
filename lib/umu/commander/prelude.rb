@@ -203,11 +203,11 @@ structure Umu = struct {
 
 
 		# head : ['a] -> 'a
-		fun head = xs -> xs.des.1
+		val head = &(Cons$head)
 
 
 		# tail : ['a] -> ['a]
-		fun tail = xs -> xs.des.2
+		val tail = &(Cons$tail)
 
 
 		# equal-with? : ('a -> 'b -> Bool) -> ['a] -> ['b] -> Bool

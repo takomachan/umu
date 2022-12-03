@@ -145,7 +145,11 @@ NIL = Nil.new.freeze
 class Cons < Abstract
 	INSTANCE_METHOD_INFOS = [
 		[:meth_contents,	VCP::Tuple,
-			:contents]
+			:contents],
+		[ :meth_head,		VC::Top,
+			:head],
+		[ :meth_tail,		List::Abstract,
+			:tail]
 	]
 
 
@@ -179,6 +183,16 @@ class Cons < Abstract
 
 
 	alias meth_contents meth_des
+
+
+	def meth_head(_loc, _env, _event)
+		self.head
+	end
+
+
+	def meth_tail(_loc, _env, _event)
+		self.tail
+	end
 end
 
 end	# Umu::Value::Core::Object::List
