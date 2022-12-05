@@ -383,6 +383,7 @@ end
 				if pref.trace_mode?
 					STDERR.puts
 					STDERR.puts "________ Evaluator Trace ________"
+					STDERR.puts
 				end
 			}.evaluate(env).yield_self { |result|
 				ASSERT.kind_of result, SAR::Abstract
@@ -391,13 +392,11 @@ end
 				when SAR::Value
 					value = result.value
 
-					STDERR.puts
-					STDERR.printf("-> %s : %s\n",
-									value.to_s,
-									value.type_sym.to_s
-					)
+					STDERR.flush
+					STDOUT.puts value.to_s
+					STDOUT.flush
 
-					env
+					env.va_extend_value :it, value
 				when SAR::Environment
 					result.env
 				else
