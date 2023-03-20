@@ -512,7 +512,7 @@ pat:
 | '[' ']' {
 	result = SCCP.make_list val[0].loc, [],     nil
 }
-| '[' pat com_pats opt_last_pat ']' {
+| '[' var_pat com_pats opt_last_pat ']' {
 	result = SCCP.make_list val[0].loc, [val[1]] + val[2], val[3]
 }
 
