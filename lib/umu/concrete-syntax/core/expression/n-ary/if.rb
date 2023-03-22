@@ -63,8 +63,8 @@ private
 
 				SACE.make_rule(
 					rule.loc,
-					rule.test_expr.desugar(new_env),
-					rule.then_expr.desugar(new_env)
+					rule.head_expr.desugar(new_env),
+					rule.body_expr.desugar(new_env)
 				)
 			},
 

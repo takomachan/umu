@@ -17,17 +17,17 @@ module Rule
 module Abstraction
 
 class Abstract < Umu::Abstraction::Model
-	attr_reader :test_expr, :then_expr
+	attr_reader :head_expr, :body_expr
 
 
-	def initialize(loc, test_expr, then_expr)
-		ASSERT.kind_of test_expr,	SCCE::Abstract
-		ASSERT.kind_of then_expr,	SCCE::Abstract
+	def initialize(loc, head_expr, body_expr)
+		ASSERT.kind_of head_expr,	SCCE::Abstract
+		ASSERT.kind_of body_expr,	SCCE::Abstract
 
 		super(loc)
 
-		@test_expr	= test_expr
-		@then_expr	= then_expr
+		@head_expr	= head_expr
+		@body_expr	= body_expr
 	end
 end
 
@@ -35,12 +35,12 @@ class WithDeclaration < Abstract
 	attr_reader :decls
 
 
-	def initialize(loc, test_expr, then_expr, decls)
-		ASSERT.kind_of test_expr,	SCCE::Abstract
-		ASSERT.kind_of then_expr,	SCCE::Abstract
+	def initialize(loc, head_expr, body_expr, decls)
+		ASSERT.kind_of head_expr,	SCCE::Abstract
+		ASSERT.kind_of body_expr,	SCCE::Abstract
 		ASSERT.kind_of decls,		::Array
 
-		super(loc, test_expr, then_expr)
+		super(loc, head_expr, body_expr)
 
 		@decls = decls
 	end
@@ -48,9 +48,9 @@ class WithDeclaration < Abstract
 
 	def to_s
 		format("%s -> %s%s",
-				self.test_expr,
+				self.head_expr,
 
-				self.then_expr,
+				self.body_expr,
 
 				if self.decls.empty?
 					''
@@ -66,7 +66,7 @@ end
 
 class If < Abstraction::Abstract
 	def to_s
-		format "%s %s", self.test_expr, self.then_expr
+		format "%s %s", self.head_expr, self.body_expr
 	end
 end
 
@@ -85,32 +85,32 @@ end	# Umu::ConcreteSyntax::Core::Expression::Nary
 
 module_function
 
-	def make_if_rule(loc, test_expr, then_expr)
+	def make_if_rule(loc, head_expr, body_expr)
 		ASSERT.kind_of loc,			L::Location
-		ASSERT.kind_of test_expr,	SCCE::Abstract
-		ASSERT.kind_of then_expr,	SCCE::Abstract
+		ASSERT.kind_of head_expr,	SCCE::Abstract
+		ASSERT.kind_of body_expr,	SCCE::Abstract
 
-		Nary::Rule::If.new(loc, test_expr, then_expr).freeze
+		Nary::Rule::If.new(loc, head_expr, body_expr).freeze
 	end
 
 
-	def make_cond_rule(loc, test_expr, then_expr, decls)
+	def make_cond_rule(loc, head_expr, body_expr, decls)
 		ASSERT.kind_of loc,			L::Location
-		ASSERT.kind_of test_expr,	SCCE::Abstract
-		ASSERT.kind_of then_expr,	SCCE::Abstract
+		ASSERT.kind_of head_expr,	SCCE::Abstract
+		ASSERT.kind_of body_expr,	SCCE::Abstract
 		ASSERT.kind_of decls,		::Array
 
-		Nary::Rule::Cond.new(loc, test_expr, then_expr, decls.freeze).freeze
+		Nary::Rule::Cond.new(loc, head_expr, body_expr, decls.freeze).freeze
 	end
 
 
-	def make_case_rule(loc, test_expr, then_expr, decls)
+	def make_case_rule(loc, head_expr, body_expr, decls)
 		ASSERT.kind_of loc,			L::Location
-		ASSERT.kind_of test_expr,	SCCE::Abstract
-		ASSERT.kind_of then_expr,	SCCE::Abstract
+		ASSERT.kind_of head_expr,	SCCE::Abstract
+		ASSERT.kind_of body_expr,	SCCE::Abstract
 		ASSERT.kind_of decls,		::Array
 
-		Nary::Rule::Case.new(loc, test_expr, then_expr, decls.freeze).freeze
+		Nary::Rule::Case.new(loc, head_expr, body_expr, decls.freeze).freeze
 	end
 
 end	# Umu::ConcreteSyntax::Core::Expression

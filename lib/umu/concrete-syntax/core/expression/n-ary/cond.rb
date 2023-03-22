@@ -62,22 +62,22 @@ private
 		rules = self.rules.map { |rule|
 			ASSERT.kind_of rule, Rule::Cond
 
-			opr_expr	= rule.test_expr.desugar(new_env)
-			test_expr	= SACE.make_apply rule.loc, opr_expr, [opnd_expr]
-			then_expr_	= rule.then_expr.desugar(new_env)
-			then_expr	= unless rule.decls.empty?
+			opr_expr	= rule.head_expr.desugar(new_env)
+			head_expr	= SACE.make_apply rule.loc, opr_expr, [opnd_expr]
+			body_expr_	= rule.body_expr.desugar(new_env)
+			body_expr	= unless rule.decls.empty?
 								SACE.make_let(
 									rule.loc,
 									rule.decls.map { |decl|
 										decl.desugar new_env
 									},
-									then_expr_
+									body_expr_
 								)
 							else
-								then_expr_
+								body_expr_
 							end
 
-			SACE.make_rule rule.loc, test_expr, then_expr
+			SACE.make_rule rule.loc, head_expr, body_expr
 		}
 
 		else_expr_ = self.else_expr.desugar(new_env)

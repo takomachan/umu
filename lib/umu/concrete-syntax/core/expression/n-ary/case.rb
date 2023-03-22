@@ -65,12 +65,12 @@ private
 			ASSERT.kind_of leafs,	::Hash
 			ASSERT.kind_of rule,	Rule::Case
 
-			head_expr	= rule.test_expr
+			head_expr	= rule.head_expr
 			ASSERT.kind_of head_expr, SCCE::Unary::Atom::Abstract
 			head_value	= head_expr.desugar(new_env).evaluate(new_env).value
 			ASSERT.kind_of head_value, VCA::Abstract
 
-			body_expr_	= rule.then_expr.desugar(new_env)
+			body_expr_	= rule.body_expr.desugar(new_env)
 			body_expr	= unless rule.decls.empty?
 								SACE.make_let(
 									rule.loc,

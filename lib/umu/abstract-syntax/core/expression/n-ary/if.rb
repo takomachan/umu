@@ -15,22 +15,22 @@ module Nary
 module If
 
 class Rule < Abstraction::Model
-	attr_reader :test_expr, :then_expr
+	attr_reader :head_expr, :body_expr
 
 
-	def initialize(loc, test_expr, then_expr)
-		ASSERT.kind_of test_expr,	SACE::Abstract
-		ASSERT.kind_of then_expr,	SACE::Abstract
+	def initialize(loc, head_expr, body_expr)
+		ASSERT.kind_of head_expr,	SACE::Abstract
+		ASSERT.kind_of body_expr,	SACE::Abstract
 
 		super(loc)
 
-		@test_expr	= test_expr
-		@then_expr	= then_expr
+		@head_expr	= head_expr
+		@body_expr	= body_expr
 	end
 
 
 	def to_s
-		format "%s %s", self.test_expr, self.then_expr
+		format "%s %s", self.head_expr, self.body_expr
 	end
 end
 
@@ -86,23 +86,23 @@ class Entry < Expression::Abstract
 			ASSERT.kind_of expr,	SACE::Abstract
 			ASSERT.kind_of rule,	Rule
 
-			test_result = rule.test_expr.evaluate new_env
-			ASSERT.kind_of test_result, SAR::Value
+			head_result = rule.head_expr.evaluate new_env
+			ASSERT.kind_of head_result, SAR::Value
 
-			test_value = test_result.value
-			unless test_value.kind_of? VCA::Bool
+			head_value = head_result.value
+			unless head_value.kind_of? VCA::Bool
 				raise X::TypeError.new(
 					rule.loc,
 					env,
 					"Type error in if-expression, " +
 							"expected a Bool, but %s : %s",
-						test_value.to_s,
-						test_value.type_sym.to_s
+						head_value.to_s,
+						head_value.type_sym.to_s
 				)
 			end
 
-			if test_value.true?
-				break rule.then_expr
+			if head_value.true?
+				break rule.body_expr
 			end
 
 			expr
@@ -120,12 +120,12 @@ end	# Umu::AbstractSyntax::Core::Expression::Nary
 
 module_function
 
-	def make_rule(loc, test_expr, then_expr)
+	def make_rule(loc, head_expr, body_expr)
 		ASSERT.kind_of loc,			L::Location
-		ASSERT.kind_of test_expr,	SACE::Abstract
-		ASSERT.kind_of then_expr,	SACE::Abstract
+		ASSERT.kind_of head_expr,	SACE::Abstract
+		ASSERT.kind_of body_expr,	SACE::Abstract
 
-		Nary::If::Rule.new(loc, test_expr, then_expr).freeze
+		Nary::If::Rule.new(loc, head_expr, body_expr).freeze
 	end
 
 
