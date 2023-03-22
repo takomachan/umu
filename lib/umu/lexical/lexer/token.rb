@@ -24,7 +24,7 @@ WORD_PATTERN	= Regexp.new(
 RESERVED_WORDS = [
 	'__FILE__',		'__LINE__',
 	'and',			'assert',
-	'cond',
+	'case',			'cond',
 	'else',			'elsif',
 	'fun',
 	'if', 			'in',			'isa?',
@@ -40,7 +40,7 @@ RESERVED_WORDS = [
 	# Not used, but reserved for future
 
 	# For pattern matching
-	'as', 'case',
+	'as',
 
 	# For pragma
 	'pragma', 'use',

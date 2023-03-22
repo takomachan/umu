@@ -68,6 +68,7 @@ SRCS	= commander.rb \
 			concrete-syntax/core/expression/n-ary/rule.rb \
 			concrete-syntax/core/expression/n-ary/if.rb \
 			concrete-syntax/core/expression/n-ary/cond.rb \
+			concrete-syntax/core/expression/n-ary/case.rb \
 			concrete-syntax/core/expression/n-ary/lambda.rb \
 			concrete-syntax/core/expression/n-ary/let.rb \
 			concrete-syntax/core/pattern.rb \
@@ -114,6 +115,7 @@ SRCS	= commander.rb \
 			abstract-syntax/core/expression/binary/send.rb \
 			abstract-syntax/core/expression/n-ary.rb \
 			abstract-syntax/core/expression/n-ary/if.rb \
+			abstract-syntax/core/expression/n-ary/switch.rb \
 			abstract-syntax/core/expression/n-ary/lambda.rb \
 			abstract-syntax/core/expression/n-ary/let.rb \
 			value.rb \

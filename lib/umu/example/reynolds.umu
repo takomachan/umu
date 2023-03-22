@@ -208,12 +208,12 @@ fun rec parse = exp -> cond exp {
 		val [keyword|args] = exp
 	in
 		if (keyword isa? Symbol)
-			cond keyword {
-			  (== @IF)		-> parse-if		args
-			| (== @LAMBDA)	-> parse-lambda	args
-			| (== @LET)		-> parse-let	args
-			| (== @LETREC)	-> parse-letrec	args
-			  else			-> parse-apply	exp
+			case keyword {
+			  @IF		-> parse-if		args
+			| @LAMBDA	-> parse-lambda	args
+			| @LET		-> parse-let	args
+			| @LETREC	-> parse-letrec	args
+			  else		-> parse-apply	exp
 			}
 		else
 			parse-apply	exp
@@ -440,24 +440,24 @@ where {
 	######## Environment ########
 
 	# initenv : <ENV>	where { <ENV> = <VAR> -> <VAL> }
-	fun initenv = x -> cond (val-of x) {
+	fun initenv = x -> case (val-of x) {
 	#### Constant
-	  (== @TRUE)	-> VAL::mk-boolean	TRUE
-	| (== @FALSE)	-> VAL::mk-boolean	FALSE
+	  @TRUE		-> VAL::mk-boolean	TRUE
+	| @FALSE	-> VAL::mk-boolean	FALSE
 
 	#### Number
-	| (== @NEG)		-> mk-unop	negate	VAL::mk-integer
-	| (== @SUCC)	-> mk-unop	(+ 1)	VAL::mk-integer
-	| (== @PRED)	-> mk-unop	(- 1)	VAL::mk-integer
-	| (== @ADD)		-> mk-binop	(+)		VAL::mk-integer
-	| (== @SUB)		-> mk-binop	(-)		VAL::mk-integer
-	| (== @MUL)		-> mk-binop	(*)		VAL::mk-integer
-	| (== @DIV)		-> mk-binop	(/)		VAL::mk-integer
-	| (== @MOD)		-> mk-binop	(mod)	VAL::mk-integer
+	| @NEG		-> mk-unop	negate	VAL::mk-integer
+	| @SUCC		-> mk-unop	(+ 1)	VAL::mk-integer
+	| @PRED		-> mk-unop	(- 1)	VAL::mk-integer
+	| @ADD		-> mk-binop	(+)		VAL::mk-integer
+	| @SUB		-> mk-binop	(-)		VAL::mk-integer
+	| @MUL		-> mk-binop	(*)		VAL::mk-integer
+	| @DIV		-> mk-binop	(/)		VAL::mk-integer
+	| @MOD		-> mk-binop	(mod)	VAL::mk-integer
 
 	#### Relational
-	| (== @EQ)		-> mk-binop (==)	VAL::mk-boolean
-	| (== @LT)		-> mk-binop (<)		VAL::mk-boolean
+	| @EQ		-> mk-binop (==)	VAL::mk-boolean
+	| @LT		-> mk-binop (<)		VAL::mk-boolean
 
 	  else			-> ERROR::name "Unknown VAR: " x
 	} where {

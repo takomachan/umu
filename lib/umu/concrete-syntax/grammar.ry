@@ -242,6 +242,13 @@ expr:
 					val[0].loc, val[1], [val[3]] + val[4], val[7], val[8]
 				)
 }
+| CASE atom_expr '{'
+		case_rule case_rules ELSE '->' expr inner_where_decls
+  '}' {
+	result = SCCE.make_case(
+					val[0].loc, val[1], val[3], val[4], val[7], val[8]
+				)
+}
 | LET '{' core_decls IN expr '}' {
 	result = SCCE.make_let val[0].loc, val[2], val[4]
 }
@@ -269,6 +276,24 @@ _cond_rules:
 cond_rule: expr '->' expr inner_where_decls {
 	result = SCCE.make_cond_rule val[0].loc, val[0], val[2], val[3]
 }
+
+case_rules:
+  /* empty */	{ result = [] }
+| _case_rules	{ result = val[0] }
+
+_case_rules:
+  '|' case_rule				{ result = [val[1]] }
+| '|' case_rule _case_rules	{ result = [val[1]] + val[2] }
+
+case_rule: case_rule_head '->' expr inner_where_decls {
+	result = SCCE.make_case_rule val[0].loc, val[0], val[2], val[3]
+}
+
+case_rule_head:
+  INTEGER	{ result = SCCE.make_integer	val[0].loc, val[0].val }
+| FLOAT		{ result = SCCE.make_float		val[0].loc, val[0].val }
+| STRING	{ result = SCCE.make_string		val[0].loc, val[0].val }
+| SYMBOL	{ result = SCCE.make_symbol		val[0].loc, val[0].sym }
 
 
 # Infix operator expression
@@ -420,8 +445,7 @@ atom_expr:
 
 # Braket: [ ... ]
 | '[' ']' {
-	result = SCCE.make_list val[0].loc, [],                nil
-}
+	result = SCCE.make_list val[0].loc, [],                nil }
 | '[' expr com_exprs opt_last_expr ']' {
 	result = SCCE.make_list val[0].loc, [val[1]] + val[2], val[3]
 }

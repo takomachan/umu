@@ -14,7 +14,9 @@ module Nary
 
 module Rule
 
-class Abstract < Abstraction::Model
+module Abstraction
+
+class Abstract < Umu::Abstraction::Model
 	attr_reader :test_expr, :then_expr
 
 
@@ -29,15 +31,7 @@ class Abstract < Abstraction::Model
 	end
 end
 
-
-class If < Abstract
-	def to_s
-		format "%s %s", self.test_expr, self.then_expr
-	end
-end
-
-
-class Cond < Abstract
+class WithDeclaration < Abstract
 	attr_reader :decls
 
 
@@ -67,6 +61,23 @@ class Cond < Abstract
 	end
 end
 
+end
+
+
+class If < Abstraction::Abstract
+	def to_s
+		format "%s %s", self.test_expr, self.then_expr
+	end
+end
+
+
+class Cond < Abstraction::WithDeclaration
+end
+
+
+class Case < Abstraction::WithDeclaration
+end
+
 end	# Umu::ConcreteSyntax::Core::Expression::Nary::Rule
 
 end	# Umu::ConcreteSyntax::Core::Expression::Nary
@@ -90,6 +101,16 @@ module_function
 		ASSERT.kind_of decls,		::Array
 
 		Nary::Rule::Cond.new(loc, test_expr, then_expr, decls.freeze).freeze
+	end
+
+
+	def make_case_rule(loc, test_expr, then_expr, decls)
+		ASSERT.kind_of loc,			L::Location
+		ASSERT.kind_of test_expr,	SCCE::Abstract
+		ASSERT.kind_of then_expr,	SCCE::Abstract
+		ASSERT.kind_of decls,		::Array
+
+		Nary::Rule::Case.new(loc, test_expr, then_expr, decls.freeze).freeze
 	end
 
 end	# Umu::ConcreteSyntax::Core::Expression
