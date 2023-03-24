@@ -58,7 +58,10 @@ private
 	def __desugar__(env, event)
 		new_env = env.enter event
 
-		source_expr = self.expr.desugar(new_env)
+		source_expr		= self.expr.desugar(new_env)
+		fst_head_expr	= self.fst_rule.head_expr
+		fst_head_value	=
+				fst_head_expr.desugar(new_env).evaluate(new_env).value
 
 		leafs = ([self.fst_rule] + self.snd_rules).inject({}) {
 			|leafs, rule|
@@ -69,6 +72,20 @@ private
 			ASSERT.kind_of head_expr, SCCE::Unary::Atom::Abstract
 			head_value	= head_expr.desugar(new_env).evaluate(new_env).value
 			ASSERT.kind_of head_value, VCA::Abstract
+
+			unless head_expr.class == fst_head_expr.class
+				raise X::SyntaxError.new(
+					rule.loc,
+					format("Inconsistent rule types in case-expression, " +
+							"1st is %s : %s, another is %s : %s",
+						fst_head_expr.to_s,
+						fst_head_value.type_sym.to_s,
+						head_expr.to_s,
+						head_value.type_sym.to_s
+					)
+				)
+			end
+
 
 			body_expr_	= rule.body_expr.desugar(new_env)
 			body_expr	= unless rule.decls.empty?
