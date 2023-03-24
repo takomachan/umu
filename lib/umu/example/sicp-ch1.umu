@@ -322,7 +322,9 @@ fun sqrt = x -> sqrt-iter 1.0 x ;;
 #### Block-structured ####
 
 ### sqrt' :  Float -> Float
-fun sqrt' = x -> sqrt-iter 1.0 x where {
+fun sqrt' = x -> (
+	sqrt-iter 1.0 x
+) where {
 	fun good-enough? = guess x -> abs ((square guess) - x) < 0.001
 
 	fun improve = guess x -> average guess (x / guess)
@@ -343,7 +345,9 @@ in
 #### Taking advantage of lexical scoping ####
 
 ### sqrt'' :  Float -> Float
-fun sqrt'' = x -> sqrt-iter 1.0 where {
+fun sqrt'' = x -> (
+	sqrt-iter 1.0
+) where {
 	fun good-enough? = guess -> abs ((square guess) - x) < 0.001
 
 	fun improve = guess -> average guess (x / guess)
@@ -416,7 +420,9 @@ in
 #### Iterative, block-structured (from footnote) ####
 
 ### factorial'' : Integer -> Integer
-fun factorial'' = n -> iter 1 1 where {
+fun factorial'' = n -> (
+	iter 1 1
+) where {
 	fun rec iter = product counter ->
 		if (counter > n)
 			product
@@ -443,10 +449,10 @@ print "\n\nSECTION 1.2.2" ;;
 #### Recursive ####
 
 ###		fib : Integer -> Integer
-fun rec fib = n -> cond n {
-  (== 0)	-> 0
-| (== 1)	-> 1
-  else		-> fib (n - 1) + fib (n - 2)
+fun rec fib = n -> case n {
+  0		-> 0
+| 1		-> 1
+  else	-> fib (n - 1) + fib (n - 2)
 } ;;
 
 let {
@@ -481,13 +487,13 @@ in
 #### Counting change ####
 
 ### first-denomination : Integer -> Integer
-fun first-denomination = kinds-of-coins -> cond kinds-of-coins {
-  (== 1) -> 1
-| (== 2) -> 5
-| (== 3) -> 10
-| (== 4) -> 25
-| (== 5) -> 50
-  else	 -> abort "first-denomination"
+fun first-denomination = kinds-of-coins -> case kinds-of-coins {
+  1		-> 1
+| 2		-> 5
+| 3		-> 10
+| 4		-> 25
+| 5		-> 50
+  else	-> abort "first-denomination"
 }
 
 ###		cc : Integer -> Integer -> Integer
@@ -566,9 +572,9 @@ fun expt' = b n -> expt-iter b n 1
 fun even? = n -> n mod 2 == 0
 
 fun rec fast-expt = b n -> cond n {
-	  (== 0)	-> 1
-	| even?		-> square <| fast-expt b (n - 1)
-	  else		-> b * fast-expt b (n - 1)
+  zero?	-> 1
+| even?	-> square <| fast-expt b (n - 1)
+  else	-> b * fast-expt b (n - 1)
 }
 
 ;;
@@ -641,9 +647,9 @@ in
 
 ###		expmod : Integer -> Integer -> Integer -> Integer
 fun rec expmod = base exp m -> cond exp {
-  (== 0)	-> 1
-| even?		-> square (expmod base (exp / 2) m) mod m
-  else		-> (base * expmod base (exp - 1) m) mod m
+  zero?	-> 1
+| even?	-> square (expmod base (exp / 2) m) mod m
+  else	-> (base * expmod base (exp - 1) m) mod m
 }
 
 ### fermat-test : Integer -> Bool
@@ -759,7 +765,9 @@ in
 
 
 ### pi-sum' : Float -> Float -> Float
-fun pi-sum' = a b -> sum pi-term a pi-next b 0.0 where {
+fun pi-sum' = a b -> (
+	sum pi-term a pi-next b 0.0
+) where {
 	fun pi-term = x -> 1.0 / (x * (x + 2.0))
 	fun pi-next = x -> x + 4.0
 } ;;
@@ -969,7 +977,9 @@ in
 val tolerance = 0.00001
 
 ### fixed-point : (Float -> Bool) -> Float -> Float
-fun fixed-point = f first-guess -> try first-guess where {
+fun fixed-point = f first-guess -> (
+	try first-guess
+) where {
 	fun close-enough? = v1 v2 -> abs (v1 - v2) < tolerance
 
 	fun rec try = guess -> let {

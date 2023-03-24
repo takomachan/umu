@@ -25,12 +25,12 @@
 
 ###		assoc : Symbol -> [(Symbol, 'a)] -> Option (Symbol, 'a)
 fun rec assoc = key records -> cond records {
-	empty?	-> NONE
-	else	-> if (key == fst x)
+  empty?	-> NONE
+  else		-> if (key == fst x)
 					Some x
 			   else
 					assoc key xs
-				where val [x|xs] = records
+			where val [x|xs] = records
 }
 
 ### lookup1 = Symbol -> <TABLE> [(Symbol, 'a)] -> Option 'a
@@ -136,11 +136,9 @@ fun make-table' = records -> let {
 			NONE
 	}
 
-	fun dispatch = m -> cond m {
-	  (== @lookup-proc)	-> lookup
-	  else				-> abort (
-								"Unknown operation -- TABLE: " ^ inspect m
-							)
+	fun dispatch = m -> case m {
+	  @lookup-proc	-> lookup
+	  else			-> abort ("Unknown operation -- TABLE: " ^ inspect m)
 	}
 in
 	dispatch
