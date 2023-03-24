@@ -15,21 +15,21 @@ module Expression
 module Nary
 
 class Case < Expression::Abstract
-	attr_reader :expr, :head_rule, :tail_rules, :else_expr, :else_decls
+	attr_reader :expr, :fst_rule, :snd_rules, :else_expr, :else_decls
 
 
-	def initialize(loc, expr, head_rule, tail_rules, else_expr, else_decls)
+	def initialize(loc, expr, fst_rule, snd_rules, else_expr, else_decls)
 		ASSERT.kind_of expr,		SCCE::Abstract
-		ASSERT.kind_of head_rule,	SCCE::Nary::Rule::Case
-		ASSERT.kind_of tail_rules,	::Array
+		ASSERT.kind_of fst_rule,	SCCE::Nary::Rule::Case
+		ASSERT.kind_of snd_rules,	::Array
 		ASSERT.kind_of else_expr,	SCCE::Abstract
 		ASSERT.kind_of else_decls,	::Array
 
 		super(loc)
 
 		@expr		= expr
-		@head_rule	= head_rule
-		@tail_rules	= tail_rules
+		@fst_rule	= fst_rule
+		@snd_rules	= snd_rules
 		@else_expr	= else_expr
 		@else_decls	= else_decls
 	end
@@ -46,7 +46,7 @@ class Case < Expression::Abstract
 
 		format("%%CASE %s { %s %%ELSE -> %s%s}",
 			self.expr.to_s,
-			([self.head_rule] + self.tail_rules).map(&:to_s).join(' | '),
+			([self.fst_rule] + self.snd_rules).map(&:to_s).join(' | '),
 			self.else_expr.to_s,
 			decls_string
 		)
@@ -60,7 +60,7 @@ private
 
 		source_expr = self.expr.desugar(new_env)
 
-		leafs = ([self.head_rule] + self.tail_rules).inject({}) {
+		leafs = ([self.fst_rule] + self.snd_rules).inject({}) {
 			|leafs, rule|
 			ASSERT.kind_of leafs,	::Hash
 			ASSERT.kind_of rule,	Rule::Case
@@ -115,16 +115,16 @@ end	# Umu::ConcreteSyntax::Core::Expression::Nary
 
 module_function
 
-	def make_case(loc, expr, head_rule, tail_rules, else_expr, else_decls)
+	def make_case(loc, expr, fst_rule, snd_rules, else_expr, else_decls)
 		ASSERT.kind_of loc,			L::Location
 		ASSERT.kind_of expr,		SCCE::Abstract
-		ASSERT.kind_of head_rule,	SCCE::Nary::Rule::Case
-		ASSERT.kind_of tail_rules,	::Array
+		ASSERT.kind_of fst_rule,	SCCE::Nary::Rule::Case
+		ASSERT.kind_of snd_rules,	::Array
 		ASSERT.kind_of else_expr,	SCCE::Abstract
 		ASSERT.kind_of else_decls,	::Array
 
 		Nary::Case.new(
-			loc, expr, head_rule, tail_rules, else_expr, else_decls
+			loc, expr, fst_rule, snd_rules, else_expr, else_decls
 		).freeze
 	end
 
