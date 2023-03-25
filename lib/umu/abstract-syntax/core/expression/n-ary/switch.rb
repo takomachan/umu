@@ -13,17 +13,19 @@ module Expression
 module Nary
 
 class Switch < Expression::Abstract
-	attr_reader :source_expr, :leafs, :else_expr
+	attr_reader :source_expr, :souce_type_sym, :leafs, :else_expr
 
 
-	def initialize(loc, source_expr, leafs, else_expr)
-		ASSERT.kind_of source_expr,	SACE::Abstract
-		ASSERT.kind_of leafs,		::Hash
-		ASSERT.kind_of else_expr,	SACE::Abstract
+	def initialize(loc, source_expr, souce_type_sym, leafs, else_expr)
+		ASSERT.kind_of source_expr,		SACE::Abstract
+		ASSERT.kind_of souce_type_sym,	::Symbol
+		ASSERT.kind_of leafs,			::Hash
+		ASSERT.kind_of else_expr,		SACE::Abstract
 
 		super(loc)
 
 		@source_expr	= source_expr
+		@souce_type_sym	= souce_type_sym
 		@leafs			= leafs
 		@else_expr		= else_expr
 	end
@@ -50,14 +52,17 @@ class Switch < Expression::Abstract
 
 		source_result = self.source_expr.evaluate new_env
 		ASSERT.kind_of source_result, SAR::Value
-
 		source_value = source_result.value
-		unless source_value.kind_of? VCA::Abstract
+
+		source_spec = new_env.ty_lookup self.souce_type_sym, self.loc
+		ASSERT.kind_of source_spec, ECTSC::Base
+		unless env.ty_kind_of?(source_value, source_spec)
 			raise X::TypeError.new(
 				self.loc,
 				env,
 				"Type error in case-expression, " +
-					"expected a Atom, but %s : %s",
+					"expected a %s, but %s : %s",
+				self.souce_type_sym,
 				source_value,
 				source_value.type_sym
 			)
@@ -84,13 +89,16 @@ end	# Umu::AbstractSyntax::Core::Expression::Nary
 
 module_function
 
-	def make_switch(loc, source_expr, leafs, else_expr)
-		ASSERT.kind_of loc,			L::Location
-		ASSERT.kind_of source_expr,	SACE::Abstract
-		ASSERT.kind_of leafs,		::Hash
-		ASSERT.kind_of else_expr,	SACE::Abstract
+	def make_switch(loc, source_expr, souce_type_sym, leafs, else_expr)
+		ASSERT.kind_of loc,				L::Location
+		ASSERT.kind_of source_expr,		SACE::Abstract
+		ASSERT.kind_of souce_type_sym,	::Symbol
+		ASSERT.kind_of leafs,			::Hash
+		ASSERT.kind_of else_expr,		SACE::Abstract
 
-		Nary::Switch.new(loc, source_expr, leafs, else_expr).freeze
+		Nary::Switch.new(
+			loc, source_expr, souce_type_sym, leafs, else_expr
+		).freeze
 	end
 
 end	# Umu::AbstractSyntax::Core::Expression

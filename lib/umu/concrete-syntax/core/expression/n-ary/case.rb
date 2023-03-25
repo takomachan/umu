@@ -123,7 +123,13 @@ private
 							else_expr_
 						end
 
-		SACE.make_switch self.loc, source_expr, leafs, else_expr
+		SACE.make_switch(
+			self.loc,
+			source_expr,
+			fst_head_value.type_sym,
+			leafs,
+			else_expr
+		)
 	end
 end
 
