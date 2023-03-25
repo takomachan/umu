@@ -58,16 +58,6 @@ class None < Abstract
 	]
 
 
-	def to_s
-		'NONE'
-	end
-
-
-	def meth_to_string(_loc, _env, _event)
-		VC.make_string self.to_s
-	end
-
-
 	def meth_none?(_loc, _env, _event)
 		VC.make_true
 	end
@@ -90,27 +80,8 @@ class Some < Abstract
 	end
 
 
-	def to_s
-		format "Some %s", self.contents.to_s
-	end
-
-
-	def meth_to_string(loc, env, event)
-		VC.make_string(
-			format("Some %s",
-					self.contents.meth_to_string(loc, env, event).val
-			)
-		)
-	end
-
-
 	def meth_some?(_loc, _env, event)
 		VC.make_true
-	end
-
-
-	def meth_contents(_loc, _env, _event)
-		self.contents
 	end
 end
 

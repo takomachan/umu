@@ -159,14 +159,14 @@ val get = operation-table @lookup-proc
 # -> #<lookup: ....>
 
 ;; get @math @"-"
-# -> Some 45
+# -> &Some 45
 
 ;; get @letters @a
-# -> Some 97
+# -> &Some 97
 
 ;; get @nath @"-"
-# -> NONE
+# -> &None ()
 
 ;; get @math @"/"
-# -> NONE
+# -> &None ()
 ;;
