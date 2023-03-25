@@ -83,7 +83,7 @@ private
 				# Typing
 				when :ISA?
 					unless rhs_opnd.kind_of?(
-										SACE::Unary::Identifier::Abstract
+										SACE::Unary::Identifier::Short
 									)
 						raise X::SyntaxError.new(
 							rhs_opnd.loc,
