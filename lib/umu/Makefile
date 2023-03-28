@@ -107,6 +107,7 @@ SRCS	= commander.rb \
 			abstract-syntax/core/expression/unary/container/tuple.rb \
 			abstract-syntax/core/expression/unary/container/struct.rb \
 			abstract-syntax/core/expression/unary/container/list.rb \
+			abstract-syntax/core/expression/unary/raise.rb \
 			abstract-syntax/core/expression/binary.rb \
 			abstract-syntax/core/expression/binary/abstract.rb \
 			abstract-syntax/core/expression/binary/kind-of.rb \

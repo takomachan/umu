@@ -17,42 +17,54 @@ module Nary
 module Branch
 
 class Abstract < Expression::Abstract
-	attr_reader :expr, :fst_rule, :snd_rules, :else_expr, :else_decls
+	attr_reader :expr, :fst_rule, :snd_rules, :opt_else_expr, :else_decls
 
 
-	def initialize(loc, expr, fst_rule, snd_rules, else_expr, else_decls)
-		ASSERT.kind_of expr,		SCCE::Abstract
-		ASSERT.kind_of fst_rule,
+	def initialize(
+		loc, expr, fst_rule, snd_rules, opt_else_expr, else_decls
+	)
+		ASSERT.kind_of		expr,			SCCE::Abstract
+		ASSERT.kind_of		fst_rule,
 							SCCE::Nary::Rule::Abstraction::WithDeclaration
-		ASSERT.kind_of snd_rules,	::Array
-		ASSERT.kind_of else_expr,	SCCE::Abstract
-		ASSERT.kind_of else_decls,	::Array
+		ASSERT.kind_of		snd_rules,		::Array
+		ASSERT.opt_kind_of	opt_else_expr,	SCCE::Abstract
+		ASSERT.kind_of		else_decls,		::Array
 
 		super(loc)
 
 		@expr		= expr
 		@fst_rule	= fst_rule
 		@snd_rules	= snd_rules
-		@else_expr	= else_expr
+		@opt_else_expr	= opt_else_expr
 		@else_decls	= else_decls
 	end
 
 
 	def to_s
-		decls_string = if self.else_decls.empty?
-							' '
-						else
-							format(" %%WHERE %s ",
-								self.else_decls.map(&:to_s).join(' ')
-							)
-						end
-
-		format("%%%s %s { %s %%ELSE -> %s%s}",
+		format("%%%s %s { %s %s}",
 			__keyword__.upcase,
+
 			self.expr.to_s,
-			([self.fst_rule] + self.snd_rules).map(&:to_s).join(' | '),
-			self.else_expr.to_s,
-			decls_string
+
+			self.rules.map(&:to_s).join(' | '),
+			(
+				if self.opt_else_expr
+					format("%%ELSE -> %s%s",
+						self.opt_else_expr.to_s,
+						(
+							if self.else_decls.empty?
+								' '
+							else
+								format(" %%WHERE %s ",
+									self.else_decls.map(&:to_s).join(' ')
+								)
+							end
+						)
+					)
+				else
+					''
+				end
+			)
 		)
 	end
 
@@ -88,8 +100,10 @@ private
 
 
 	def __desugar_else_expr__(env)
-		else_expr_	= self.else_expr.desugar(env)
-		else_expr	= unless self.else_decls.empty?
+		else_expr = if self.opt_else_expr
+						else_expr_ = self.opt_else_expr.desugar(env)
+
+						unless self.else_decls.empty?
 							SACE.make_let(
 								else_expr_.loc,
 								self.else_decls.map { |decl|
@@ -100,6 +114,15 @@ private
 						else
 							else_expr_
 						end
+					else
+						SACE.make_raise(
+							self.loc,
+							X::UnmatchError,
+							format("No rules matched in %s-expression",
+									__keyword__
+							)
+						)
+					end
 
 		ASSERT.kind_of else_expr, SACE::Abstract
 	end
@@ -207,30 +230,30 @@ end	# Umu::ConcreteSyntax::Core::Expression::Nary
 
 module_function
 
-	def make_cond(loc, expr, fst_rule, snd_rules, else_expr, else_decls)
-		ASSERT.kind_of loc,			L::Location
-		ASSERT.kind_of expr,		SCCE::Abstract
-		ASSERT.kind_of fst_rule,	SCCE::Nary::Rule::Cond
-		ASSERT.kind_of snd_rules,	::Array
-		ASSERT.kind_of else_expr,	SCCE::Abstract
-		ASSERT.kind_of else_decls,	::Array
+	def make_cond(loc, expr, fst_rule, snd_rules, opt_else_expr, else_decls)
+		ASSERT.kind_of		loc,			L::Location
+		ASSERT.kind_of		expr,			SCCE::Abstract
+		ASSERT.kind_of		fst_rule,		SCCE::Nary::Rule::Cond
+		ASSERT.kind_of		snd_rules,		::Array
+		ASSERT.opt_kind_of	opt_else_expr,	SCCE::Abstract
+		ASSERT.kind_of		else_decls,		::Array
 
 		Nary::Branch::Cond.new(
-			loc, expr, fst_rule, snd_rules, else_expr, else_decls
+			loc, expr, fst_rule, snd_rules, opt_else_expr, else_decls
 		).freeze
 	end
 
 
-	def make_case(loc, expr, fst_rule, snd_rules, else_expr, else_decls)
-		ASSERT.kind_of loc,			L::Location
-		ASSERT.kind_of expr,		SCCE::Abstract
-		ASSERT.kind_of fst_rule,	SCCE::Nary::Rule::Case
-		ASSERT.kind_of snd_rules,	::Array
-		ASSERT.kind_of else_expr,	SCCE::Abstract
-		ASSERT.kind_of else_decls,	::Array
+	def make_case(loc, expr, fst_rule, snd_rules, opt_else_expr, else_decls)
+		ASSERT.kind_of		loc,			L::Location
+		ASSERT.kind_of		expr,			SCCE::Abstract
+		ASSERT.kind_of		fst_rule,		SCCE::Nary::Rule::Case
+		ASSERT.kind_of		snd_rules,		::Array
+		ASSERT.opt_kind_of	opt_else_expr,	SCCE::Abstract
+		ASSERT.kind_of		else_decls,		::Array
 
 		Nary::Branch::Case.new(
-			loc, expr, fst_rule, snd_rules, else_expr, else_decls
+			loc, expr, fst_rule, snd_rules, opt_else_expr, else_decls
 		).freeze
 	end
 

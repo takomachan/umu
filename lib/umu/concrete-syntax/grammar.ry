@@ -235,23 +235,30 @@ expr:
 | IF if_rule elsif_rules ELSE expr {
 	result = SCCE.make_if val[0].loc, val[1], val[2], val[4]
 }
-| COND atom_expr '{'
-		cond_rule cond_rules ELSE '->' expr inner_where_decls
-  '}' {
+| COND atom_expr '{' cond_rule cond_rules opt_else_clause '}' {
+	else_expr, else_decls = val[5]
+
 	result = SCCE.make_cond(
-					val[0].loc, val[1], val[3], val[4], val[7], val[8]
-				)
+				val[0].loc, val[1], val[3], val[4], else_expr, else_decls
+			)
 }
-| CASE atom_expr '{'
-		case_rule case_rules ELSE '->' expr inner_where_decls
-  '}' {
+| CASE atom_expr '{' case_rule case_rules opt_else_clause '}' {
+	else_expr, else_decls = val[5]
+
 	result = SCCE.make_case(
-					val[0].loc, val[1], val[3], val[4], val[7], val[8]
-				)
+				val[0].loc, val[1], val[3], val[4], else_expr, else_decls
+			)
 }
 | LET '{' core_decls IN expr '}' {
 	result = SCCE.make_let val[0].loc, val[2], val[4]
 }
+
+opt_else_clause:
+  /* empty */						{ result = [nil,    []]     }
+| ELSE '->' expr inner_where_decls	{ result = [val[2], val[3]] }
+
+
+# If-expression Rule
 
 elsif_rules:
   /* empty */		{ result = [] }
@@ -265,6 +272,9 @@ if_rule: atom_expr expr {
 	result = SCCE.make_if_rule val[0].loc, val[0], val[1]
 }
 
+
+# Cond-expresson Rule
+
 cond_rules:
   /* empty */	{ result = [] }
 | _cond_rules	{ result = val[0] }
@@ -276,6 +286,9 @@ _cond_rules:
 cond_rule: expr '->' expr inner_where_decls {
 	result = SCCE.make_cond_rule val[0].loc, val[0], val[2], val[3]
 }
+
+
+# Case-expresson Rule
 
 case_rules:
   /* empty */	{ result = [] }
