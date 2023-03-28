@@ -23,11 +23,6 @@ fun rec map = f xs -> cond xs {
 fun rec	even? = x -> if (x == 0) TRUE  else odd?  (x - 1)
 and		odd?  = x -> if (x == 0) FALSE else even? (x - 1)
 
-structure EO = struct {
-	fun even? = x -> if (x == 0) TRUE  else odd?  (x - 1)
-	fun	odd?  = x -> if (x == 0) FALSE else even? (x - 1)
-}
-
 ;;
 
 
@@ -35,7 +30,3 @@ structure EO = struct {
 fact 3 ;;
 [1,2] |> map { x -> x + 1 } ;;
 ([even? 0, even? 1, even? 2], [odd? 0, odd? 1, odd? 2]) ;;
-(
-	[EO::even? 0, EO::even? 1, EO::even? 2],
-	[EO::odd? 0,  EO::odd? 1,  EO::odd? 2]
-) ;;
