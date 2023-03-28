@@ -239,7 +239,7 @@ expr:
 		cond_rule cond_rules ELSE '->' expr inner_where_decls
   '}' {
 	result = SCCE.make_cond(
-					val[0].loc, val[1], [val[3]] + val[4], val[7], val[8]
+					val[0].loc, val[1], val[3], val[4], val[7], val[8]
 				)
 }
 | CASE atom_expr '{'

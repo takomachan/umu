@@ -67,8 +67,7 @@ SRCS	= commander.rb \
 			concrete-syntax/core/expression/n-ary.rb \
 			concrete-syntax/core/expression/n-ary/rule.rb \
 			concrete-syntax/core/expression/n-ary/if.rb \
-			concrete-syntax/core/expression/n-ary/cond.rb \
-			concrete-syntax/core/expression/n-ary/case.rb \
+			concrete-syntax/core/expression/n-ary/branch.rb \
 			concrete-syntax/core/expression/n-ary/lambda.rb \
 			concrete-syntax/core/expression/n-ary/let.rb \
 			concrete-syntax/core/pattern.rb \

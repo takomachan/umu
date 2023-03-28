@@ -14,13 +14,16 @@ module Expression
 
 module Nary
 
-class Case < Expression::Abstract
+module Branch
+
+class Abstract < Expression::Abstract
 	attr_reader :expr, :fst_rule, :snd_rules, :else_expr, :else_decls
 
 
 	def initialize(loc, expr, fst_rule, snd_rules, else_expr, else_decls)
 		ASSERT.kind_of expr,		SCCE::Abstract
-		ASSERT.kind_of fst_rule,	SCCE::Nary::Rule::Case
+		ASSERT.kind_of fst_rule,
+							SCCE::Nary::Rule::Abstraction::WithDeclaration
 		ASSERT.kind_of snd_rules,	::Array
 		ASSERT.kind_of else_expr,	SCCE::Abstract
 		ASSERT.kind_of else_decls,	::Array
@@ -44,7 +47,8 @@ class Case < Expression::Abstract
 							)
 						end
 
-		format("%%CASE %s { %s %%ELSE -> %s%s}",
+		format("%%%s %s { %s %%ELSE -> %s%s}",
+			__keyword__.upcase,
 			self.expr.to_s,
 			([self.fst_rule] + self.snd_rules).map(&:to_s).join(' | '),
 			self.else_expr.to_s,
@@ -53,17 +57,104 @@ class Case < Expression::Abstract
 	end
 
 
+	def rules
+		[self.fst_rule] + self.snd_rules
+	end
+
+
 private
+
+	def __keyword__
+		raise X::SubclassResponsibility
+	end
+
+
+	def __desugar_body_expr__(rule, env)
+		ASSERT.kind_of rule, Nary::Rule::Abstraction::WithDeclaration
+
+		body_expr_	= rule.body_expr.desugar(env)
+		body_expr	= unless rule.decls.empty?
+							SACE.make_let(
+								rule.loc,
+								rule.decls.map { |decl| decl.desugar env },
+								body_expr_
+							)
+						else
+							body_expr_
+						end
+
+		ASSERT.kind_of body_expr, SACE::Abstract
+	end
+
+
+	def __desugar_else_expr__(env)
+		else_expr_	= self.else_expr.desugar(env)
+		else_expr	= unless self.else_decls.empty?
+							SACE.make_let(
+								else_expr_.loc,
+								self.else_decls.map { |decl|
+									decl.desugar env
+								},
+								else_expr_
+							)
+						else
+							else_expr_
+						end
+
+		ASSERT.kind_of else_expr, SACE::Abstract
+	end
+end
+
+
+
+class Cond < Abstract
+
+private
+
+	def __keyword__
+		'cond'
+	end
+
 
 	def __desugar__(env, event)
 		new_env = env.enter event
 
-		source_expr		= self.expr.desugar(new_env)
+		opnd_expr = self.expr.desugar(new_env)
+
+		rules = self.rules.map { |rule|
+			ASSERT.kind_of rule, Rule::Cond
+
+			opr_expr	= rule.head_expr.desugar(new_env)
+			head_expr	= SACE.make_apply rule.loc, opr_expr, [opnd_expr]
+			body_expr	= __desugar_body_expr__ rule, new_env
+
+			SACE.make_rule rule.loc, head_expr, body_expr
+		}
+
+
+		SACE.make_if self.loc, rules, __desugar_else_expr__(new_env)
+	end
+end
+
+
+
+class Case < Abstract
+
+private
+
+	def __keyword__
+		'case'
+	end
+
+
+	def __desugar__(env, event)
+		new_env = env.enter event
+
 		fst_head_expr	= self.fst_rule.head_expr
 		fst_head_value	=
 				fst_head_expr.desugar(new_env).evaluate(new_env).value
 
-		leafs = ([self.fst_rule] + self.snd_rules).inject({}) {
+		leafs = self.rules.inject({}) {
 			|leafs, rule|
 			ASSERT.kind_of leafs,	::Hash
 			ASSERT.kind_of rule,	Rule::Case
@@ -86,19 +177,7 @@ private
 				)
 			end
 
-
-			body_expr_	= rule.body_expr.desugar(new_env)
-			body_expr	= unless rule.decls.empty?
-								SACE.make_let(
-									rule.loc,
-									rule.decls.map { |decl|
-										decl.desugar new_env
-									},
-									body_expr_
-								)
-							else
-								body_expr_
-							end
+			body_expr = __desugar_body_expr__ rule, new_env
 
 			leafs.merge(head_value.val => body_expr) { |val, _, _|
 				raise X::SyntaxError.new(
@@ -110,33 +189,37 @@ private
 			}
 		}
 
-		else_expr_ = self.else_expr.desugar(new_env)
-		else_expr	= unless self.else_decls.empty?
-							SACE.make_let(
-								else_expr_.loc,
-								self.else_decls.map { |decl|
-									decl.desugar new_env
-								},
-								else_expr_
-							)
-						else
-							else_expr_
-						end
 
 		SACE.make_switch(
 			self.loc,
-			source_expr,
+			self.expr.desugar(new_env),
 			fst_head_value.type_sym,
 			leafs,
-			else_expr
+			__desugar_else_expr__(new_env)
 		)
 	end
 end
+
+end	# Umu::ConcreteSyntax::Core::Expression::Nary::Branch
 
 end	# Umu::ConcreteSyntax::Core::Expression::Nary
 
 
 module_function
+
+	def make_cond(loc, expr, fst_rule, snd_rules, else_expr, else_decls)
+		ASSERT.kind_of loc,			L::Location
+		ASSERT.kind_of expr,		SCCE::Abstract
+		ASSERT.kind_of fst_rule,	SCCE::Nary::Rule::Cond
+		ASSERT.kind_of snd_rules,	::Array
+		ASSERT.kind_of else_expr,	SCCE::Abstract
+		ASSERT.kind_of else_decls,	::Array
+
+		Nary::Branch::Cond.new(
+			loc, expr, fst_rule, snd_rules, else_expr, else_decls
+		).freeze
+	end
+
 
 	def make_case(loc, expr, fst_rule, snd_rules, else_expr, else_decls)
 		ASSERT.kind_of loc,			L::Location
@@ -146,7 +229,7 @@ module_function
 		ASSERT.kind_of else_expr,	SCCE::Abstract
 		ASSERT.kind_of else_decls,	::Array
 
-		Nary::Case.new(
+		Nary::Branch::Case.new(
 			loc, expr, fst_rule, snd_rules, else_expr, else_decls
 		).freeze
 	end
