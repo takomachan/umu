@@ -26,6 +26,11 @@ class Abstract < Umu::AbstractSyntax::Abstract
 	end
 
 
+	def simple?
+		false
+	end
+
+
 private
 
 	def __evaluate__(env, event)

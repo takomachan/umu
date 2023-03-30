@@ -143,19 +143,41 @@ private
 		new_env = env.enter event
 
 		opnd_expr = self.expr.desugar(new_env)
+		ASSERT.kind_of opnd_expr, SACE::Abstract
+		if opnd_expr.simple? || self.rules.size <= 1
+			rules = __desugar_rules__(env) { |_| opnd_expr }
 
-		rules = self.rules.map { |rule|
+			SACE.make_if self.loc, rules, __desugar_else_expr__(new_env)
+		else
+			SACE.make_let(
+				self.loc,
+
+				[SACD.make_value(opnd_expr.loc, :'%x', opnd_expr)],
+
+				SACE.make_if(
+					self.loc,
+					__desugar_rules__(env) { |loc|
+						SACE.make_identifier loc, :'%x'
+					},
+					__desugar_else_expr__(new_env)
+				)
+			)
+		end
+	end
+
+
+	def __desugar_rules__(env, &fn)
+		self.rules.map { |rule|
 			ASSERT.kind_of rule, Rule::Cond
 
-			opr_expr	= rule.head_expr.desugar(new_env)
-			head_expr	= SACE.make_apply rule.loc, opr_expr, [opnd_expr]
-			body_expr	= __desugar_body_expr__ rule, new_env
+			opr_expr	= rule.head_expr.desugar env
+			head_expr	= SACE.make_apply(
+								rule.loc, opr_expr, [fn.call(rule.loc)]
+							)
+			body_expr	= __desugar_body_expr__ rule, env
 
 			SACE.make_rule rule.loc, head_expr, body_expr
 		}
-
-
-		SACE.make_if self.loc, rules, __desugar_else_expr__(new_env)
 	end
 end
 

@@ -39,6 +39,11 @@ class Abstract < Unary::Abstract
 			yield expr
 		end
 	end
+
+
+	def simple?
+		false
+	end
 end
 
 

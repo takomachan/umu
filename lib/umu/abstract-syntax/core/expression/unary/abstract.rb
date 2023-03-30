@@ -23,6 +23,11 @@ class Abstract < Expression::Abstract
 
 		@obj = obj
 	end
+
+
+	def simple?
+		true
+	end
 end
 
 end # Umu::AbstractSyntax::Core::Expression::Unary
