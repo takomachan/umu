@@ -81,7 +81,7 @@ private
 	end
 
 
-	def __desugar_body_expr__(rule, env)
+	def __desugar_body_expr__(env, rule)
 		ASSERT.kind_of rule, Nary::Rule::Abstraction::WithDeclaration
 
 		body_expr_	= rule.body_expr.desugar(env)
@@ -174,7 +174,7 @@ private
 			head_expr	= SACE.make_apply(
 								rule.loc, opr_expr, [fn.call(rule.loc)]
 							)
-			body_expr	= __desugar_body_expr__ rule, env
+			body_expr	= __desugar_body_expr__ env, rule
 
 			SACE.make_rule rule.loc, head_expr, body_expr
 		}
@@ -201,7 +201,7 @@ private
 				when Rule::Case::Head::Atom
 					__desugar_atom__ new_env, fst_head
 				when Rule::Case::Head::Datum
-					ASSERT.abort "Rule::Case::Head::Datum"
+					__desugar_datum__ new_env, fst_head
 				else
 					ASSERT.abort "Rule::Case::Head::???"
 				end
@@ -251,7 +251,7 @@ private
 				)
 			end
 
-			body_expr = __desugar_body_expr__ rule, env
+			body_expr = __desugar_body_expr__ env, rule
 
 			leafs.merge(head_value.val => body_expr) { |val, _, _|
 				raise X::SyntaxError.new(
@@ -267,6 +267,54 @@ private
 			self.loc,
 			self.expr.desugar(env),
 			fst_head_value.type_sym,
+			leafs,
+			__desugar_else_expr__(env)
+		)
+	end
+
+
+	def __desugar_datum__(env, fst_head)
+		ASSERT.kind_of fst_head, Rule::Case::Head::Datum
+
+		leafs = self.rules.inject({}) { |leafs, rule|
+			ASSERT.kind_of leafs,	::Hash
+			ASSERT.kind_of rule,	Rule::Case::Entry
+
+			head = rule.head
+			ASSERT.kind_of head, Rule::Case::Head::Abstract
+			unless head.kind_of? Rule::Case::Head::Datum
+				raise X::SyntaxError.new(
+					rule.loc,
+					format("Inconsistent rule types in case-expression, " +
+							"1st is %s : %s, but another is %s : %s",
+						fst_head.to_s,
+						fst_head.type_sym.to_s,
+						head.to_s,
+						head.type_sym.to_s
+					)
+				)
+			end
+
+			body_expr = __desugar_body_expr__ env, rule
+
+			leafs.merge(head.tag_sym => body_expr) { |val, _, _|
+				raise X::SyntaxError.new(
+					rule.loc,
+					format("Duplicated rules in case-expression: %s",
+						head.to_s
+					)
+				)
+			}
+		}
+
+		SACE.make_switch(
+			self.loc,
+			SACE.make_send(
+				self.expr.loc,
+				self.expr.desugar(env),
+				[SACE.make_method(self.expr.loc, :tag, [])]
+			),
+			:Symbol,
 			leafs,
 			__desugar_else_expr__(env)
 		)
