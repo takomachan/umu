@@ -195,34 +195,63 @@ private
 	def __desugar__(env, event)
 		new_env = env.enter event
 
-		fst_head_expr	= self.fst_rule.head_expr
-		fst_head_value	=
-				fst_head_expr.desugar(new_env).evaluate(new_env).value
+		fst_head = self.fst_rule.head
+		ASSERT.kind_of fst_head, Rule::Case::Head::Abstract
+		expr = case fst_head
+				when Rule::Case::Head::Atom
+					__desugar_atom__ new_env, fst_head
+				when Rule::Case::Head::Datum
+					ASSERT.abort "Rule::Case::Head::Datum"
+				else
+					ASSERT.abort "Rule::Case::Head::???"
+				end
+		ASSERT.kind_of expr, SACE::Abstract
+	end
 
-		leafs = self.rules.inject({}) {
-			|leafs, rule|
+
+	def __desugar_atom__(env, fst_head)
+		ASSERT.kind_of fst_head, Rule::Case::Head::Atom
+
+		fst_head_expr	= fst_head.atom_expr
+		fst_head_value	= fst_head_expr.to_value
+
+		leafs = self.rules.inject({}) { |leafs, rule|
 			ASSERT.kind_of leafs,	::Hash
-			ASSERT.kind_of rule,	Rule::Case
+			ASSERT.kind_of rule,	Rule::Case::Entry
 
-			head_expr	= rule.head_expr
-			ASSERT.kind_of head_expr, SCCE::Unary::Atom::Abstract
-			head_value	= head_expr.desugar(new_env).evaluate(new_env).value
-			ASSERT.kind_of head_value, VCA::Abstract
-
-			unless head_expr.class == fst_head_expr.class
+			head = rule.head
+			ASSERT.kind_of head, Rule::Case::Head::Abstract
+			unless head.kind_of? Rule::Case::Head::Atom
 				raise X::SyntaxError.new(
 					rule.loc,
 					format("Inconsistent rule types in case-expression, " +
-							"1st is %s : %s, another is %s : %s",
-						fst_head_expr.to_s,
+							"1st is %s : %s, but another is %s : %s",
+						fst_head.to_s,
+						fst_head.type_sym.to_s,
+						head.to_s,
+						head.type_sym.to_s
+					)
+				)
+			end
+
+			head_expr	= head.atom_expr
+			ASSERT.kind_of head_expr, SCCE::Unary::Atom::Abstract
+			head_value	= head_expr.to_value
+			ASSERT.kind_of head_value, VCA::Abstract
+			unless head_value.class == fst_head_value.class
+				raise X::SyntaxError.new(
+					rule.loc,
+					format("Inconsistent rule types in case-expression, " +
+							"1st is %s : %s, but another is %s : %s",
+						fst_head_value.to_s,
 						fst_head_value.type_sym.to_s,
-						head_expr.to_s,
+						head_value.to_s,
 						head_value.type_sym.to_s
 					)
 				)
 			end
 
-			body_expr = __desugar_body_expr__ rule, new_env
+			body_expr = __desugar_body_expr__ rule, env
 
 			leafs.merge(head_value.val => body_expr) { |val, _, _|
 				raise X::SyntaxError.new(
@@ -234,13 +263,12 @@ private
 			}
 		}
 
-
 		SACE.make_switch(
 			self.loc,
-			self.expr.desugar(new_env),
+			self.expr.desugar(env),
 			fst_head_value.type_sym,
 			leafs,
-			__desugar_else_expr__(new_env)
+			__desugar_else_expr__(env)
 		)
 	end
 end
@@ -269,7 +297,7 @@ module_function
 	def make_case(loc, expr, fst_rule, snd_rules, opt_else_expr, else_decls)
 		ASSERT.kind_of		loc,			L::Location
 		ASSERT.kind_of		expr,			SCCE::Abstract
-		ASSERT.kind_of		fst_rule,		SCCE::Nary::Rule::Case
+		ASSERT.kind_of		fst_rule,		SCCE::Nary::Rule::Case::Entry
 		ASSERT.kind_of		snd_rules,		::Array
 		ASSERT.opt_kind_of	opt_else_expr,	SCCE::Abstract
 		ASSERT.kind_of		else_decls,		::Array

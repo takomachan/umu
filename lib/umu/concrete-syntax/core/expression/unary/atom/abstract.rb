@@ -28,6 +28,11 @@ class Abstract < Unary::Abstract
 					__desugar__ env, event
 				}
 	end
+
+
+	def to_value
+		raise X::SubclassResponsibility
+	end
 end
 
 end	# Umu::ConcreteSyntax::Core::Expression::Unary::Atom

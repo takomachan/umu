@@ -38,6 +38,11 @@ class Integer < Abstract
 	end
 
 
+	def to_value
+		VC.make_integer self.obj
+	end
+
+
 private
 
 	def __desugar__(_env, _event)
@@ -51,6 +56,11 @@ class Float < Abstract
 		ASSERT.kind_of obj, ::Float
 
 		super
+	end
+
+
+	def to_value
+		VC.make_float self.obj
 	end
 
 
