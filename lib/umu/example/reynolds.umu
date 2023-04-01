@@ -565,7 +565,7 @@ structure ASSERT = struct {
 
 fun test = interpret -> let {
 	val run = mk-runner interpret
-in
+in (
 	print "[CONSTANT]" ;
 
 		#[INPUT] 100
@@ -811,6 +811,7 @@ in
 		nl () ;
 
 		nl ()
+	)
 }
 
 ;;
