@@ -93,7 +93,7 @@ private
 						)
 					end
 
-					SACE.make_kind_of loc, lhs_opnd, rhs_opnd.sym
+					SACE.make_test_kind_of loc, lhs_opnd, rhs_opnd
 
 				# Conditional
 				when :'&&'

@@ -14,20 +14,20 @@ module Binary
 
 class KindOf < Binary::Abstract
 	alias expr		lhs_expr
-	alias type_sym	rhs
+	alias class_id	rhs
 
 
-	def initialize(loc, expr, type_sym)
+	def initialize(loc, expr, class_id)
 		ASSERT.kind_of loc,			L::Location
 		ASSERT.kind_of expr,		SACE::Abstract
-		ASSERT.kind_of type_sym,	::Symbol
+		ASSERT.kind_of class_id,	SACE::Unary::Identifier::Short
 
 		super
 	end
 
 
 	def to_s
-		format "(%s %%ISA? %s)", self.expr.to_s, self.type_sym.to_s
+		format "(%s %%ISA? %s)", self.expr.to_s, self.class_id.to_s
 	end
 
 
@@ -35,7 +35,7 @@ class KindOf < Binary::Abstract
 		ASSERT.kind_of env,		E::Entry
 		ASSERT.kind_of event,	E::Tracer::Event
 
-		rhs_spec = env.ty_lookup self.type_sym, self.loc
+		rhs_spec = env.ty_lookup self.class_id.sym, self.loc
 		ASSERT.kind_of rhs_spec, ECTSC::Base
 
 		lhs_value = self.expr.evaluate(env.enter event).value
@@ -50,12 +50,12 @@ end	# Umu::AbstractSyntax::Core::Expression::Binary
 
 module_function
 
-	def make_kind_of(loc, expr, type)
-		ASSERT.kind_of loc,		L::Location
-		ASSERT.kind_of expr,	SACE::Abstract
-		ASSERT.kind_of type,	::Symbol
+	def make_test_kind_of(loc, expr, class_id)
+		ASSERT.kind_of loc,			L::Location
+		ASSERT.kind_of expr,		SACE::Abstract
+		ASSERT.kind_of class_id,	SACE::Unary::Identifier::Short
 
-		Binary::KindOf.new(loc, expr, type).freeze
+		Binary::KindOf.new(loc, expr, class_id).freeze
 	end
 
 end	# Umu::AbstractSyntax::Core::Expression
