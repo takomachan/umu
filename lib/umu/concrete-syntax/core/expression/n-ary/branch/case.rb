@@ -109,6 +109,8 @@ private
 	def __desugar_datum__(env, fst_head)
 		ASSERT.kind_of fst_head, Rule::Case::Head::Datum
 
+		source_expr = self.expr.desugar env
+
 		leafs = self.rules.inject({}) { |leafs, rule|
 			ASSERT.kind_of leafs,	::Hash
 			ASSERT.kind_of rule,	Rule::Case::Entry
@@ -132,7 +134,13 @@ private
 					contents_decl = head.opt_contents_pat.desugar_value(
 						SACE.make_send(
 							self.expr.loc,
-							self.expr.desugar(env),
+
+							if source_expr.simple?
+								source_expr
+							else
+								SACE.make_identifier(source_expr.loc, :'%x')
+							end,
+
 							[SACE.make_method(self.expr.loc, :contents, [])]
 						),
 						env
@@ -151,27 +159,47 @@ private
 					__desugar_body_expr__ env, rule
 				end
 
-			leafs.merge(head.tag_sym => body_expr) { |val, _, _|
+			leafs.merge(head.tag_sym => body_expr) { |sym, _, _|
 				raise X::SyntaxError.new(
 					rule.loc,
 					format("Duplicated rules in case-expression: %s",
-						head.to_s
+						sym.to_s
 					)
 				)
 			}
 		}
 
-		SACE.make_switch(
-			self.loc,
-			SACE.make_send(
-				self.expr.loc,
-				self.expr.desugar(env),
-				[SACE.make_method(self.expr.loc, :tag, [])]
-			),
-			:Symbol,
-			leafs,
-			__desugar_else_expr__(env)
-		)
+		if source_expr.simple?
+			SACE.make_switch(
+				self.loc,
+				SACE.make_send(
+					source_expr.loc,
+					source_expr,
+					[SACE.make_method(source_expr.loc, :tag, [])]
+				),
+				:Symbol,
+				leafs,
+				__desugar_else_expr__(env)
+			)
+		else
+			SACE.make_let(
+				self.loc,
+
+				[SACD.make_value(source_expr.loc, :'%x', source_expr)],
+
+				SACE.make_switch(
+					self.loc,
+					SACE.make_send(
+						source_expr.loc,
+						SACE.make_identifier(source_expr.loc, :'%x'),
+						[SACE.make_method(source_expr.loc, :tag, [])]
+					),
+					:Symbol,
+					leafs,
+					__desugar_else_expr__(env)
+				)
+			)
+		end
 	end
 end
 
