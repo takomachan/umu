@@ -376,7 +376,9 @@ send_expr: apply_expr messages {
 	result = if val[1].empty?
 					val[0]
 				else
-					SCCE.make_send val[0].loc, val[0], val[1]
+					hd_msg, *tl_msgs = val[1]
+
+					SCCE.make_send val[0].loc, val[0], hd_msg, tl_msgs
 				end
 }
 

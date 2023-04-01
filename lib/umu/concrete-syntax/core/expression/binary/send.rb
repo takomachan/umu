@@ -93,14 +93,18 @@ end	# Umu::ConcreteSyntax::Core::Expression::Binary::Send::Message
 
 
 class Entry < Binary::Abstract
-	alias rhs_messages rhs
+	alias		rhs_head_message rhs
+	attr_reader	:rhs_tail_messages
 
 
-	def initialize(loc, lhs_expr, rhs_messages)
-		ASSERT.kind_of lhs_expr,	SCCE::Abstract
-		ASSERT.kind_of rhs_messages,	::Array
+	def initialize(loc, lhs_expr, rhs_head_message, rhs_tail_messages)
+		ASSERT.kind_of lhs_expr,			SCCE::Abstract
+		ASSERT.kind_of rhs_head_message,	Message::Abstract
+		ASSERT.kind_of rhs_tail_messages,	::Array
 
-		super(loc, lhs_expr, rhs_messages)
+		super(loc, lhs_expr, rhs_head_message)
+
+		@rhs_tail_messages = rhs_tail_messages
 	end
 
 
@@ -112,6 +116,11 @@ class Entry < Binary::Abstract
 	end
 
 
+	def rhs_messages
+		[self.rhs_head_message] + self.rhs_tail_messages
+	end
+
+
 private
 
 	def __desugar__(env, event)
@@ -120,7 +129,12 @@ private
 		SACE.make_send(
 			self.loc,
 			self.lhs_expr.desugar(new_env),
-			self.rhs_messages.map { |mess| mess.desugar(new_env) }
+			self.rhs_head_message.desugar(new_env),
+			self.rhs_tail_messages.map { |mess|
+				ASSERT.kind_of mess, Message::Abstract
+
+				mess.desugar(new_env)
+			}
 		)
 	end
 end
@@ -149,12 +163,15 @@ module_function
 	end
 
 
-	def make_send(loc, lhs_expr, rhs_messages)
-		ASSERT.kind_of loc,			L::Location
-		ASSERT.kind_of lhs_expr,	SCCE::Abstract
-		ASSERT.kind_of rhs_messages,	::Array
+	def make_send(loc, lhs_expr, rhs_head_message, rhs_tail_messages = [])
+		ASSERT.kind_of loc,					L::Location
+		ASSERT.kind_of lhs_expr,			SCCE::Abstract
+		ASSERT.kind_of rhs_head_message,	Binary::Send::Message::Abstract
+		ASSERT.kind_of rhs_tail_messages,	::Array
 
-		Binary::Send::Entry.new(loc, lhs_expr, rhs_messages.freeze).freeze
+		Binary::Send::Entry.new(
+			loc, lhs_expr, rhs_head_message, rhs_tail_messages.freeze
+		).freeze
 	end
 
 end	# Umu::ConcreteSyntax::Core::Expression

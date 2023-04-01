@@ -62,7 +62,7 @@ private
 				SACE.make_send(
 					self.else_expr.loc,
 					self.else_expr.desugar(new_env),
-					[SACE.make_method(self.else_expr.loc, :abort)]
+					SACE.make_method(self.else_expr.loc, :abort)
 				)
 
 			)

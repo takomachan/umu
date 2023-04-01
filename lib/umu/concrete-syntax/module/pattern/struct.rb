@@ -147,7 +147,7 @@ private
 			expr = SACE.make_send(
 						loc,
 						SACE.make_identifier(loc, :'%r'),
-						[SACE.make_label_selector(loc, field.label)]
+						SACE.make_label_selector(loc, field.label)
 					)
 
 			SACD.make_value vpat.loc, vpat.var_sym, expr

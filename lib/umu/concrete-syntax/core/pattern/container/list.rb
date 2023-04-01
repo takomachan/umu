@@ -152,7 +152,7 @@ private
 								SACE.make_send(
 									loc,
 									__make_send_des__(loc, tail_list_expr),
-									[SACE.make_number_selector(loc, 2)]
+									SACE.make_number_selector(loc, 2)
 								)
 							)
 						]
@@ -208,7 +208,7 @@ private
 		ASSERT.kind_of loc,		L::Location
 		ASSERT.kind_of expr, SACE::Abstract
 
-		SACE.make_send loc, expr, [SACE.make_method(loc, :des)]
+		SACE.make_send loc, expr, SACE.make_method(loc, :des)
 	end
 
 
@@ -220,7 +220,7 @@ private
 		SACE.make_send(
 			loc,
 			SACE.make_identifier(loc, var_sym),
-			[SACE.make_number_selector(loc, sel_num)]
+			SACE.make_number_selector(loc, sel_num)
 		)
 	end
 

@@ -90,7 +90,7 @@ private
 			expr = SACE.make_send(
 						vpat.loc,
 						SACE.make_identifier(vpat.loc, var_sym),
-						[SACE.make_number_selector(vpat.loc, index + 1)]
+						SACE.make_number_selector(vpat.loc, index + 1)
 					)
 
 			SACD.make_value vpat.loc, vpat.var_sym, expr

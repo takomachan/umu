@@ -138,7 +138,7 @@ private
 								SACE.make_identifier(source_expr.loc, :'%x')
 							end,
 
-							[SACE.make_method(self.expr.loc, :contents)]
+							SACE.make_method(self.expr.loc, :contents)
 						),
 						env
 					)
@@ -172,7 +172,7 @@ private
 				SACE.make_send(
 					source_expr.loc,
 					source_expr,
-					[SACE.make_method(source_expr.loc, :tag)]
+					SACE.make_method(source_expr.loc, :tag)
 				),
 				:Symbol,
 				leafs,
@@ -189,7 +189,7 @@ private
 					SACE.make_send(
 						source_expr.loc,
 						SACE.make_identifier(source_expr.loc, :'%x'),
-						[SACE.make_method(source_expr.loc, :tag)]
+						SACE.make_method(source_expr.loc, :tag)
 					),
 					:Symbol,
 					leafs,
