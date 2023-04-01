@@ -327,10 +327,11 @@ case_rule_head:
 						SCCE.make_symbol(val[0].loc, val[0].val)
 					)
 }
-| ID {
+| ID opt_pat {
   	result = SCCE.make_case_rule_datum(
 						val[0].loc,
-						val[0].sym
+						val[0].sym,
+						val[1]
 					)
 }
 
@@ -555,6 +556,12 @@ opt_last_expr:
 pats:
   /* empty */	{ result = [] }
 | pat pats		{ result = [val[0]] + val[1] }
+
+
+opt_pat:
+  /* empty */	{ result = nil }
+| pat			{ result = val[0] }
+
 
 pat:
 # Variable

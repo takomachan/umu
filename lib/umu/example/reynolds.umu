@@ -355,21 +355,19 @@ where {
 	######## Evaluator ########
 
 	# eval : (<EXP>, <ENV>) -> <VAL>
-	fun rec eval = (r, e) -> cond r {
+	fun rec eval = (r, e) -> case r {
 
 	#### CONST ####
-	  EXP::const? -> evcon r
+	  Const -> evcon r
 		where
 			# evcon : <CONST> -> <INTEGER>
 			fun evcon = r -> VAL::mk-integer (val-of r)
 
 	#### VAR ####
-	| EXP::var? -> e r
+	| Var -> e r
 
 	#### APPL ####
-	| EXP::appl? -> let {
-		val (opr, opnd) = val-of r
-
+	| Appl (opr, opnd) -> let {
 		val va-opr  = eval (opr, e)
 
 		assert (VAL::funval? va-opr)
@@ -382,12 +380,10 @@ where {
 	}
 
 	#### LAMBDA ####
-	| EXP::lambda? -> evlambda (r, e)
+	| Lambda -> evlambda (r, e)
 
 	#### COND ####
-	| EXP::cond? -> let {
-		val (prem, conc, altr) = val-of r
-
+	| Cond (prem, conc, altr) -> let {
 		val va-prem = eval (prem, e)
 
 		assert (VAL::boolean? va-prem)
@@ -400,9 +396,7 @@ where {
 	}
 
 	#### LETREC ####
-	| EXP::letrec? -> let {
-		val (dvar, dexp, body)	= val-of r
-
+	| Letrec (dvar, dexp, body) -> let {
 		assert (EXP::lambda? dexp)
 			ERROR::failure "In LETREC, expected a LAMBDA, but: " r
 
@@ -459,7 +453,7 @@ where {
 	| @EQ		-> mk-binop (==)	VAL::mk-boolean
 	| @LT		-> mk-binop (<)		VAL::mk-boolean
 
-	  else			-> ERROR::name "Unknown VAR: " x
+	  else		-> ERROR::name "Unknown VAR: " x
 	} where {
 		# int : <VAL> -> Integer
 		fun int = x ->
@@ -521,14 +515,14 @@ val GE = [LAMBDA, [@x, @y], [NOT, [LT, @x, @y]]]
 
 ######## Runner - Frontend of Interpreter ########
 
-fun run = interpret ->
+fun mk-runner = interpret ->
 	   tee { src -> (puts "<SRC> : " ; p src) }
 	>> parse
 	>> tee { exp -> (puts "<EXP> : " ; p exp) }
 	>> interpret
 	>> tee { value -> (puts "-> <VAL> : " ; p value) }
 
-val run-I = run interpret-I
+val run-I = mk-runner interpret-I
 
 
 
@@ -569,12 +563,14 @@ structure ASSERT = struct {
 
 ######## Test ########
 
-fun test = interpret -> (
+fun test = interpret -> let {
+	val run = mk-runner interpret
+in
 	print "[CONSTANT]" ;
 
 		#[INPUT] 100
 		let {
-			val result = run' 100
+			val result = run 100
 		in
 			ASSERT::integer result 100
 		} ;
@@ -587,7 +583,7 @@ fun test = interpret -> (
 
 		#[INPUT] TRUE
 		let {
-			val result = run' T
+			val result = run T
 		in
 			ASSERT::true result
 		} ;
@@ -596,7 +592,7 @@ fun test = interpret -> (
 
 		#[INPUT] succ
 		let {
-			val result = run' SUCC
+			val result = run SUCC
 		in
 			ASSERT::funval result
 		} ;
@@ -609,7 +605,7 @@ fun test = interpret -> (
 
 		#[INPUT] if TRUE then 1 else 2
 		let {
-			val result = run' [IF, T, 1, 2]
+			val result = run [IF, T, 1, 2]
 		in
 			ASSERT::integer result 1
 		} ;
@@ -618,7 +614,7 @@ fun test = interpret -> (
 
 		#[INPUT] if FALSE then 1 else 2
 		let {
-			val result = run' [IF, F, 1, 2]
+			val result = run [IF, F, 1, 2]
 		in
 			ASSERT::integer result 2
 		} ;
@@ -631,7 +627,7 @@ fun test = interpret -> (
 
 		#[INPUT] succ 2
 		let {
-			val result = run' [SUCC, 2]
+			val result = run [SUCC, 2]
 		in
 			ASSERT::integer result 3
 		} ;
@@ -640,7 +636,7 @@ fun test = interpret -> (
 
 		#[INPUT] succ succ succ 2
 		let {
-			val result = run' [SUCC, [SUCC, [SUCC, 2]]]
+			val result = run [SUCC, [SUCC, [SUCC, 2]]]
 		in
 			ASSERT::integer result 5
 		} ;
@@ -649,7 +645,7 @@ fun test = interpret -> (
 
 		#[INPUT] 1 + 2
 		let {
-			val result = run' [ADD, 1, 2]
+			val result = run [ADD, 1, 2]
 		in
 			ASSERT::integer result 3
 		} ;
@@ -658,7 +654,7 @@ fun test = interpret -> (
 
 		#[INPUT] 1 = 1
 		let {
-			val result = run' [EQ, 1, 1]
+			val result = run [EQ, 1, 1]
 		in
 			ASSERT::true result
 		} ;
@@ -671,7 +667,7 @@ fun test = interpret -> (
 
 		#[INPUT] (fn x => succ x) 2
 		let {
-			val result = run' [
+			val result = run [
 				[LAMBDA, [@x], [SUCC, @x]],
 				2
 			]
@@ -683,7 +679,7 @@ fun test = interpret -> (
 
 		#[INPUT] (fn x y z => x - y - z) 10 1 2
 		let {
-			val result = run' [
+			val result = run [
 				[LAMBDA, [@x, @y, @z], [SUB, [SUB, @x, @y], @z]],
 				10, 1, 2
 			]
@@ -699,7 +695,7 @@ fun test = interpret -> (
 
 		#[INPUT] let x = 2 in succ x
 		let {
-			val result = run' [LET, [SUCC, @x], [@x, 2]]
+			val result = run [LET, [SUCC, @x], [@x, 2]]
 		in
 			ASSERT::integer result 3
 		} ;
@@ -711,7 +707,7 @@ fun test = interpret -> (
 		#	let y = 3 in
 		#	x * x + y * y
 		let {
-			val result = run' [
+			val result = run [
 				LET, [ADD, [MUL, @x, @x], [MUL, @y, @y]],
 				[@x, 2],
 				[@y, 3]
@@ -728,7 +724,7 @@ fun test = interpret -> (
 		#	let x = 2 in
 		#	x + y
 		let {
-			val result = run' [
+			val result = run [
 				LET, [ADD, @x, @y],
 				[@x, 1],
 				[@y, @x],
@@ -746,7 +742,7 @@ fun test = interpret -> (
 
 		#[INPUT] let f = fn x => succ x in f 2
 		let {
-			val result = run' [
+			val result = run [
 				LETREC, [@f, 2],
 				[@f, LAMBDA, [@x], [SUCC, @x]]
 			]
@@ -761,7 +757,7 @@ fun test = interpret -> (
 		#	letrec mul = fn x y => x * y in
 		#	add (mul 2 3) (mul 4 5)
 		let {
-			val result = run' [
+			val result = run [
 				LETREC, [@add, [@mul, 2, 3], [@mul, 4, 5]],
 				[@add, LAMBDA, [@x, @y], [ADD, @x, @y]],
 				[@mul, LAMBDA, [@x, @y], [MUL, @x, @y]]
@@ -778,7 +774,7 @@ fun test = interpret -> (
 		#   in
 		#	    fact 4 
 		let {
-			val result = run' [
+			val result = run [
 				LETREC, [@fact, 4],
 				[@fact, LAMBDA, [@x],
 					[IF, [LE, @x, 1],
@@ -799,7 +795,7 @@ fun test = interpret -> (
 		#   in
 		#	   gcd 16 28
 		let {
-			val result = run' [
+			val result = run [
 				LETREC, [@gcd, 16, 28],
 				[@gcd, LAMBDA, [@a, @b],
 					[IF, [EQ, @b, 0],
@@ -815,8 +811,6 @@ fun test = interpret -> (
 		nl () ;
 
 		nl ()
-) where {
-	val run' = run interpret
 }
 
 ;;

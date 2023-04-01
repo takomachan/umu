@@ -137,18 +137,35 @@ end
 
 
 class Datum < Abstract
-	alias tag_sym obj
+	alias		tag_sym obj
+	attr_reader	:opt_contents_pat
 
 
-	def initialize(loc, tag_sym)
-		ASSERT.kind_of tag_sym, ::Symbol
+	def initialize(loc, tag_sym, opt_contents_pat)
+		ASSERT.kind_of		tag_sym,			::Symbol
+		ASSERT.opt_kind_of	opt_contents_pat,	SCCP::Abstract
 
-		super
+		super(loc, tag_sym)
+
+		@opt_contents_pat = opt_contents_pat
 	end
 
 
 	def type_sym
 		:Datum
+	end
+
+
+	def to_s
+		format("%s%s",
+				self.tag_sym.to_s,
+
+				if self.opt_contents_pat
+					' ' + self.opt_contents_pat.to_s
+				else
+					''
+				end
+		)
 	end
 end
 
@@ -205,15 +222,20 @@ module_function
 		ASSERT.kind_of loc,			L::Location
 		ASSERT.kind_of atom_expr,	SCCE::Unary::Atom::Abstract
 
-		Nary::Rule::Case::Head::Atom.new(loc, atom_expr).freeze
+		Nary::Rule::Case::Head::Atom.new(
+			loc, atom_expr
+		).freeze
 	end
 
 
-	def make_case_rule_datum(loc, tag_sym)
-		ASSERT.kind_of loc,		L::Location
-		ASSERT.kind_of tag_sym,	::Symbol
+	def make_case_rule_datum(loc, tag_sym, opt_contents_pat)
+		ASSERT.kind_of		loc,				L::Location
+		ASSERT.kind_of		tag_sym,			::Symbol
+		ASSERT.opt_kind_of	opt_contents_pat,	SCCP::Abstract
 
-		Nary::Rule::Case::Head::Datum.new(loc, tag_sym).freeze
+		Nary::Rule::Case::Head::Datum.new(
+			loc, tag_sym, opt_contents_pat
+		).freeze
 	end
 
 end	# Umu::ConcreteSyntax::Core::Expression

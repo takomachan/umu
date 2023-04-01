@@ -295,7 +295,28 @@ private
 				)
 			end
 
-			body_expr = __desugar_body_expr__ env, rule
+			body_expr = if head.opt_contents_pat
+					contents_decl = head.opt_contents_pat.desugar_value(
+						SACE.make_send(
+							self.expr.loc,
+							self.expr.desugar(env),
+							[SACE.make_method(self.expr.loc, :contents, [])]
+						),
+						env
+					)
+					ASSERT.kind_of contents_decl, SACD::Abstract
+
+					SACE.make_let(
+						rule.loc,
+						(
+							[contents_decl] +
+							rule.decls.map { |decl| decl.desugar env }
+						),
+						rule.body_expr.desugar(env)
+					)
+				else
+					__desugar_body_expr__ env, rule
+				end
 
 			leafs.merge(head.tag_sym => body_expr) { |val, _, _|
 				raise X::SyntaxError.new(
