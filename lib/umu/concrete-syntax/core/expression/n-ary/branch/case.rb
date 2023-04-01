@@ -45,8 +45,7 @@ private
 	def __desugar_atom__(env, fst_head)
 		ASSERT.kind_of fst_head, Rule::Case::Head::Atom
 
-		fst_head_expr	= fst_head.atom_expr
-		fst_head_value	= fst_head_expr.to_value
+		fst_head_value	= fst_head.atom_value
 
 		leafs = self.rules.inject({}) { |leafs, rule|
 			ASSERT.kind_of leafs,	::Hash
@@ -67,9 +66,7 @@ private
 				)
 			end
 
-			head_expr	= head.atom_expr
-			ASSERT.kind_of head_expr, SCCE::Unary::Atom::Abstract
-			head_value	= head_expr.to_value
+			head_value	= head.atom_value
 			ASSERT.kind_of head_value, VCA::Abstract
 			unless head_value.class == fst_head_value.class
 				raise X::SyntaxError.new(

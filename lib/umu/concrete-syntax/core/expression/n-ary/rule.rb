@@ -120,11 +120,11 @@ end
 
 
 class Atom < Abstract
-	alias atom_expr obj
+	alias atom_value obj
 
 
-	def initialize(loc, atom_expr)
-		ASSERT.kind_of atom_expr, SCCE::Unary::Atom::Abstract
+	def initialize(loc, atom_value)
+		ASSERT.kind_of atom_value, VCA::Abstract
 
 		super
 	end
@@ -218,12 +218,12 @@ module_function
 	end
 
 
-	def make_case_rule_atom(loc, atom_expr)
+	def make_case_rule_atom(loc, atom_value)
 		ASSERT.kind_of loc,			L::Location
-		ASSERT.kind_of atom_expr,	SCCE::Unary::Atom::Abstract
+		ASSERT.kind_of atom_value,	VCA::Abstract
 
 		Nary::Rule::Case::Head::Atom.new(
-			loc, atom_expr
+			loc, atom_value
 		).freeze
 	end
 

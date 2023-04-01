@@ -28,11 +28,6 @@ class String < Atom::Abstract
 	end
 
 
-	def to_value
-		VC.make_string self.obj
-	end
-
-
 private
 
 	def __desugar__(_env, _event)

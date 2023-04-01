@@ -303,36 +303,24 @@ case_rule: case_rule_head '->' expr inner_where_decls {
 }
 
 case_rule_head:
-  INTEGER {
-  	result = SCCE.make_case_rule_atom(
-						val[0].loc,
-						SCCE.make_integer(val[0].loc, val[0].val)
-					)
+  INTEGER	{ result = SCCE.make_case_rule_atom(
+								val[0].loc, VC.make_integer(val[0].val)
+							)
 }
-| FLOAT {
-  	result = SCCE.make_case_rule_atom(
-						val[0].loc,
-						SCCE.make_float(val[0].loc, val[0].val)
-					)
+| FLOAT		{ result = SCCE.make_case_rule_atom(
+								val[0].loc, VC.make_float(val[0].val)
+							)
 }
-| STRING {
-  	result = SCCE.make_case_rule_atom(
-						val[0].loc,
-						SCCE.make_string(val[0].loc, val[0].val)
-					)
+| STRING	{ result = SCCE.make_case_rule_atom(
+								val[0].loc, VC.make_string(val[0].val)
+							)
 }
-| SYMBOL {
-  	result = SCCE.make_case_rule_atom(
-						val[0].loc,
-						SCCE.make_symbol(val[0].loc, val[0].val)
-					)
+| SYMBOL	{ result = SCCE.make_case_rule_atom(
+								val[0].loc, VC.make_symbol(val[0].val)
+							)
 }
 | ID opt_pat {
-  	result = SCCE.make_case_rule_datum(
-						val[0].loc,
-						val[0].sym,
-						val[1]
-					)
+  	result = SCCE.make_case_rule_datum val[0].loc, val[0].sym, val[1]
 }
 
 
