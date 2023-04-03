@@ -154,7 +154,7 @@ module_function
 	end
 
 
-	def make_method(loc, sym, exprs)
+	def make_method(loc, sym, exprs = [])
 		ASSERT.kind_of loc,		L::Location
 		ASSERT.kind_of sym,		::Symbol
 		ASSERT.kind_of exprs,	::Array

@@ -398,7 +398,7 @@ message:
 }
 | mess_ident {
 	result = SCCE.make_method(
-						val[0].loc, val[0].sym, []
+						val[0].loc, val[0].sym
 					)
 }
 | '(' mess_ident expr com_exprs ')' {
