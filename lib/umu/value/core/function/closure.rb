@@ -43,13 +43,15 @@ class Closure < Abstract
 
 private
 
-	def __apply__(init_values, loc, env, event)
-		ASSERT.kind_of init_values,	::Array
-		ASSERT.kind_of loc,			L::Location
-		ASSERT.kind_of env,			E::Entry
-		ASSERT.kind_of event,		E::Tracer::Event
+	def __apply__(init_head_value, init_tail_values, loc, env, event)
+		ASSERT.kind_of init_head_value,		VC::Top
+		ASSERT.kind_of init_tail_values,	::Array
+		ASSERT.kind_of loc,					L::Location
+		ASSERT.kind_of env,					E::Entry
+		ASSERT.kind_of event,				E::Tracer::Event
 
-		lam = self.lam
+		init_values	= [init_head_value] + init_tail_values
+		lam			= self.lam
 
 		init_idents		= lam.idents
 		init_idents_num	= init_idents.size
@@ -77,12 +79,15 @@ private
 				)
 				ASSERT.assert final_idents.empty?
 				ASSERT.assert (not final_values.empty?)
+				final_head_value, *final_tail_values = final_values
 
 				new_env	= final_env.enter event
 				result	= self.lam.expr.evaluate new_env
 				ASSERT.kind_of result, SAR::Value
 
-				result.value.apply final_values, loc, new_env
+				result.value.apply(
+					final_head_value, final_tail_values, loc, new_env
+				)
 			elsif init_idents_num > init_values_num
 				final_idents, final_values, final_env = __bind__(
 					init_values_num, init_idents, init_values, init_env

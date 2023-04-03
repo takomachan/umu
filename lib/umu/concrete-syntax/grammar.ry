@@ -416,7 +416,9 @@ apply_expr: atom_expr atom_exprs {
 	result = if val[1].empty?
 					val[0]
 				else
-					SCCE.make_apply val[0].loc, val[0], val[1]
+					hd_expr, *tl_exprs = val[1]
+
+					SCCE.make_apply val[0].loc, val[0], hd_expr, tl_exprs
 				end
 }
 

@@ -58,7 +58,7 @@ private
 
 			opr_expr	= rule.head_expr.desugar env
 			head_expr	= SACE.make_apply(
-								rule.loc, opr_expr, [fn.call(rule.loc)]
+								rule.loc, opr_expr, fn.call(rule.loc)
 							)
 			body_expr	= __desugar_body_expr__ env, rule
 

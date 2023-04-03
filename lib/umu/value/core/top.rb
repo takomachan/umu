@@ -110,7 +110,7 @@ class Top < ::Object
 	end
 
 
-	def apply(_values, loc, env)
+	def apply(_head_value, _tail_values, loc, env)
 		ASSERT.kind_of loc,	L::Location
 		ASSERT.kind_of env,	E::Entry
 

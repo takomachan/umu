@@ -13,16 +13,19 @@ module Expression
 module Binary
 
 class Apply < Binary::Abstract
-	alias opr_expr		lhs_expr
-	alias opnd_exprs	rhs
+	alias		opr_expr		lhs_expr
+	alias		opnd_head_expr	rhs
+	attr_reader	:opnd_tail_exprs
 
 
-	def initialize(loc, opr_expr, opnd_exprs)
-		ASSERT.kind_of opr_expr,	SACE::Abstract
-		ASSERT.kind_of opnd_exprs,	::Array
-		ASSERT.assert opnd_exprs.size >= 1
+	def initialize(loc, opr_expr, opnd_head_expr, opnd_tail_exprs)
+		ASSERT.kind_of opr_expr,		SACE::Abstract
+		ASSERT.kind_of opnd_head_expr,	SACE::Abstract
+		ASSERT.kind_of opnd_tail_exprs,	::Array
 
-		super
+		super(loc, opr_expr, opnd_head_expr)
+
+		@opnd_tail_exprs = opnd_tail_exprs
 	end
 
 
@@ -31,6 +34,11 @@ class Apply < Binary::Abstract
 				self.opr_expr,
 				self.opnd_exprs.map(&:to_s).join(' ')
 		)
+	end
+
+
+	def opnd_exprs
+		[self.opnd_head_expr] + self.opnd_tail_exprs
 	end
 
 
@@ -43,7 +51,10 @@ class Apply < Binary::Abstract
 		opr_result = self.opr_expr.evaluate new_env
 		ASSERT.kind_of opr_result, SAR::Value
 
-		opnd_values = self.opnd_exprs.map { |expr|
+		opnd_head_result = self.opnd_head_expr.evaluate new_env
+		ASSERT.kind_of opnd_head_result, SAR::Value
+
+		opnd_tail_values = self.opnd_tail_exprs.map { |expr|
 			ASSERT.kind_of expr, SACE::Abstract
 
 			result = expr.evaluate new_env
@@ -52,7 +63,9 @@ class Apply < Binary::Abstract
 			result.value
 		}
 
-		value = opr_result.value.apply opnd_values, self.loc, new_env
+		value = opr_result.value.apply(
+				opnd_head_result.value, opnd_tail_values, self.loc, new_env
+			)
 
 		ASSERT.kind_of value, VC::Top
 	end
@@ -63,12 +76,15 @@ end	# Umu::AbstractSyntax::Core::Expression::Binary
 
 module_function
 
-	def make_apply(loc, opr_expr, opnd_exprs)
-		ASSERT.kind_of loc,			L::Location
-		ASSERT.kind_of opr_expr,	SACE::Abstract
-		ASSERT.kind_of opnd_exprs,	::Array
+	def make_apply(loc, opr_expr, opnd_head_expr, opnd_tail_exprs = [])
+		ASSERT.kind_of loc,				L::Location
+		ASSERT.kind_of opr_expr,		SACE::Abstract
+		ASSERT.kind_of opnd_head_expr,	SACE::Abstract
+		ASSERT.kind_of opnd_tail_exprs,	::Array
 
-		Binary::Apply.new(loc, opr_expr, opnd_exprs.freeze).freeze
+		Binary::Apply.new(
+			loc, opr_expr, opnd_head_expr, opnd_tail_exprs.freeze
+		).freeze
 	end
 
 end	# Umu::AbstractSyntax::Core::Expression

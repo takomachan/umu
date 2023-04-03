@@ -76,7 +76,8 @@ private
 				SACE.make_apply(
 					loc,
 					SACE.make_identifier(loc, opr_sym),
-					[lhs_opnd, rhs_opnd]
+					lhs_opnd,
+					[rhs_opnd]
 				)
 			else
 				case opr_sym

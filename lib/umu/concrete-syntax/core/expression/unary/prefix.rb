@@ -43,10 +43,8 @@ private
 			SACE.make_apply(
 				self.loc,
 				SACE.make_identifier(self.loc, self.sym),
-				[
-					SACE.make_identifier(self.loc, :'%x'),
-					self.rhs_expr.desugar(env.enter(event))
-				]
+				SACE.make_identifier(self.loc, :'%x'),
+				[self.rhs_expr.desugar(env.enter(event))]
 			),
 
 			self.sym

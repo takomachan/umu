@@ -41,16 +41,19 @@ private
 
 
 	def __nary_invoke__(
-		receiver, arg_values, method_spec, loc, env, event, n
+		receiver, arg_head_value, arg_tail_values, method_spec,
+		loc, env, event, n
 	)
-		ASSERT.kind_of receiver,	VC::Top
-		ASSERT.kind_of arg_values,	::Array
-		ASSERT.kind_of method_spec, ECTS::Method
-		ASSERT.kind_of loc,			L::Location
-		ASSERT.kind_of env,			E::Entry
-		ASSERT.kind_of event,		E::Tracer::Event
-		ASSERT.kind_of n,			::Integer
+		ASSERT.kind_of receiver,		VC::Top
+		ASSERT.kind_of arg_head_value,	VC::Top
+		ASSERT.kind_of arg_tail_values,	::Array
+		ASSERT.kind_of method_spec, 	ECTS::Method
+		ASSERT.kind_of loc,				L::Location
+		ASSERT.kind_of env,				E::Entry
+		ASSERT.kind_of event,			E::Tracer::Event
+		ASSERT.kind_of n,				::Integer
 
+		arg_values	= [arg_head_value] + arg_tail_values
 		arg_num		= arg_values.size
 		param_num	= method_spec.param_class_specs.size
 		unless arg_num == param_num
@@ -89,7 +92,8 @@ private
 					loc,
 					env.enter(event),
 					event,
-					*arg_values
+					arg_head_value,
+					*arg_tail_values
 				)
 		ASSERT.assert env.ty_kind_of?(value, method_spec.ret_class_spec)
 
@@ -106,21 +110,21 @@ class ClassUnary < Abstract
 
 private
 
-	def __apply__(arg_values, loc, env, event)
-		ASSERT.kind_of arg_values,	::Array
-		ASSERT.kind_of loc,			L::Location
-		ASSERT.kind_of env,			E::Entry
-		ASSERT.kind_of event,		E::Tracer::Event
+	def __apply__(arg_head_value, arg_tail_values, loc, env, event)
+		ASSERT.kind_of arg_head_value,	VC::Top
+		ASSERT.kind_of arg_tail_values,	::Array
+		ASSERT.kind_of loc,				L::Location
+		ASSERT.kind_of env,				E::Entry
+		ASSERT.kind_of event,			E::Tracer::Event
 
-		unit_value = arg_values[0]
-		unless unit_value.kind_of?(VC::Unit)
+		unless arg_head_value.kind_of?(VC::Unit)
 			raise X::TypeError.new(
 				loc,
 				env,
-				"In '%s', expected a Unit, but %s : %s",
+				"In class method: '%s', expected a Unit, but %s : %s",
 					self.method_sym,
-					unit_value.to_s,
-					unit_value.type_sym
+					arg_head_value.to_s,
+					arg_head_value.type_sym
 			)
 		end
 
@@ -141,7 +145,7 @@ private
 		value = if arg_values.size == 1
 					invoked_value
 				else
-					invoked_value.apply arg_values[1..-1], loc, env
+					invoked_value.apply arg_tail_values, loc, env
 				end
 
 		ASSERT.kind_of value, VC::Top
@@ -157,11 +161,12 @@ class ClassBinary < Abstract
 
 private
 
-	def __apply__(arg_values, loc, env, event)
-		ASSERT.kind_of arg_values,	::Array
-		ASSERT.kind_of loc,			L::Location
-		ASSERT.kind_of env,			E::Entry
-		ASSERT.kind_of event,		E::Tracer::Event
+	def __apply__(arg_head_value, arg_tail_values, loc, env, event)
+		ASSERT.kind_of arg_head_value,	VC::Top
+		ASSERT.kind_of arg_tail_values,	::Array
+		ASSERT.kind_of loc,				L::Location
+		ASSERT.kind_of env,				E::Entry
+		ASSERT.kind_of event,			E::Tracer::Event
 
 		receiver_spec	= self.formal_receiver_spec
 		ASSERT.kind_of receiver_spec, ECTSC::Base
@@ -173,16 +178,15 @@ private
 		ASSERT.assert method_spec.param_class_specs.size == 1
 		param_spec		= method_spec.param_class_specs[0]
 
-		arg_value = arg_values[0]
-		unless env.ty_kind_of?(arg_value, param_spec)
+		unless env.ty_kind_of?(arg_head_value, param_spec)
 			raise X::TypeError.new(
 				loc,
 				env,
 				"For '%s's argument, expected a %s, but %s : %s",
 					self.method_sym.to_s,
 					param_spec.symbol,
-					arg_value.to_s,
-					arg_value.type_sym
+					arg_head_value.to_s,
+					arg_head_value.type_sym
 			)
 		end
 
@@ -191,7 +195,8 @@ private
 					loc,
 					env.enter(event),
 					event,
-					arg_value
+					arg_head_value,
+					*arg_tail_values
 				)
 
 		ASSERT.assert env.ty_kind_of?(value, method_spec.ret_class_spec)
@@ -210,11 +215,12 @@ class ClassNary < Abstract
 
 private
 
-	def __apply__(arg_values, loc, env, event)
-		ASSERT.kind_of arg_values,	::Array
-		ASSERT.kind_of loc,			L::Location
-		ASSERT.kind_of env,			E::Entry
-		ASSERT.kind_of event,		E::Tracer::Event
+	def __apply__(arg_head_value, arg_tail_values, loc, env, event)
+		ASSERT.kind_of arg_head_value,	VC::Top
+		ASSERT.kind_of arg_tail_values,	::Array
+		ASSERT.kind_of loc,				L::Location
+		ASSERT.kind_of env,				E::Entry
+		ASSERT.kind_of event,			E::Tracer::Event
 
 		receiver_spec	= self.formal_receiver_spec
 		ASSERT.kind_of receiver_spec, ECTSC::Base
@@ -225,7 +231,11 @@ private
 		ASSERT.kind_of method_spec, ECTS::Method
 
 		value = __nary_invoke__(
-					receiver, arg_values, method_spec, loc, env, event, 0
+					receiver,
+					arg_head_value,
+					arg_tail_values,
+					method_spec,
+					loc, env, event, 0
 				)
 
 		ASSERT.kind_of value, VC::Top
@@ -241,14 +251,14 @@ class InstanceUnary < Abstract
 
 private
 
-	def __apply__(arg_values, loc, env, event)
-		ASSERT.kind_of arg_values,	::Array
-		ASSERT.kind_of loc,			L::Location
-		ASSERT.kind_of env,			E::Entry
-		ASSERT.kind_of event,		E::Tracer::Event
-		ASSERT.assert arg_values.size >= 1
+	def __apply__(arg_head_value, arg_tail_values, loc, env, event)
+		ASSERT.kind_of arg_head_value,	VC::Top
+		ASSERT.kind_of arg_tail_values,	::Array
+		ASSERT.kind_of loc,				L::Location
+		ASSERT.kind_of env,				E::Entry
+		ASSERT.kind_of event,			E::Tracer::Event
 
-		receiver		= arg_values[0]
+		receiver		= arg_head_value
 		receiver_spec	= self.formal_receiver_spec
 		ASSERT.kind_of receiver_spec, ECTSC::Base
 		method_spec		= receiver_spec.lookup_instance_method(
@@ -274,10 +284,12 @@ private
 		ASSERT.assert env.ty_kind_of?(
 								invoked_value, method_spec.ret_class_spec
 							)
-		value = if arg_values.size == 1
+		value = if arg_tail_values.empty?
 					invoked_value
 				else
-					invoked_value.apply arg_values[1..-1], loc, env
+					hd_value, *tl_value = arg_tail_values
+
+					invoked_value.apply hd_value, tl_value, loc, env
 				end
 
 		ASSERT.kind_of value, VC::Top
@@ -294,13 +306,16 @@ class InstanceNary < Abstract
 
 private
 
-	def __apply__(arg_values, loc, env, event)
-		ASSERT.kind_of arg_values,	::Array
-		ASSERT.kind_of loc,			L::Location
-		ASSERT.kind_of env,			E::Entry
-		ASSERT.kind_of event,		E::Tracer::Event
+	def __apply__(arg_head_value, arg_tail_values, loc, env, event)
+		ASSERT.kind_of arg_head_value,	VC::Top
+		ASSERT.kind_of arg_tail_values,	::Array
+		ASSERT.kind_of loc,				L::Location
+		ASSERT.kind_of env,				E::Entry
+		ASSERT.kind_of event,			E::Tracer::Event
 
-		receiver, *meth_params = arg_values
+		receiver	= arg_head_value
+		meth_params	= arg_tail_values
+		ASSERT.assert meth_params.size >= 1
 
 		unless env.ty_kind_of?(receiver, self.formal_receiver_spec)
 			raise X::TypeError.new(
@@ -321,8 +336,10 @@ private
 										)
 		ASSERT.kind_of method_spec, ECTS::Method
 
+		hd_meth_param, *tl_meth_params = meth_params
 		value = __nary_invoke__(
-					receiver, meth_params, method_spec, loc, env, event, 1
+					receiver, hd_meth_param, tl_meth_params, method_spec,
+					loc, env, event, 1
 				)
 
 		ASSERT.kind_of value, VC::Top

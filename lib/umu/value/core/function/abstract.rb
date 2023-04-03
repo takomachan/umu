@@ -11,12 +11,13 @@ module Core
 module Function
 
 class Abstract < Core::Top
-	def apply(app_values, loc, env)
-		ASSERT.kind_of app_values,	::Array
+	def apply(head_value, tail_values, loc, env)
+		ASSERT.kind_of head_value,	VC::Top
+		ASSERT.kind_of tail_values,	::Array
 		ASSERT.kind_of loc,			L::Location
 		ASSERT.kind_of env,			E::Entry
 
-		value = E::Tracer.trace(
+		result_value = E::Tracer.trace(
 							env.pref,
 							env.trace_stack.count,
 							'Apply',
@@ -24,18 +25,22 @@ class Abstract < Core::Top
 							loc,
 							format("(%s %s)",
 								self.to_s,
-								app_values.map(&:to_s).join(' ')
+								(
+									[head_value] + tail_values
+								).map(&:to_s).join(' ')
 							)
 						) { |event|
-							__apply__ app_values, loc, env, event
+							__apply__(
+								head_value, tail_values, loc, env, event
+							)
 						}
-		ASSERT.kind_of value, VC::Top
+		ASSERT.kind_of result_value, VC::Top
 	end
 
 
 private
 
-	def __apply__(_app_value, _loc, _env, _event)
+	def __apply__(_head_value, _tail_values, _loc, _env, _event)
 		raise X::SubclassResponsibility
 	end
 end

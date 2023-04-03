@@ -13,16 +13,19 @@ module Expression
 module Binary
 
 class Apply < Binary::Abstract
-	alias opr_expr		lhs_expr
-	alias opnd_exprs	rhs
+	alias		opr_expr			lhs_expr
+	alias		opnd_head_expr		rhs
+	attr_reader	:opnd_tail_exprs
 
 
-	def initialize(loc, opr_expr, opnd_exprs)
-		ASSERT.kind_of opr_expr,	SCCE::Abstract
-		ASSERT.kind_of opnd_exprs,	::Array
-		ASSERT.assert opnd_exprs.size >= 1
+	def initialize(loc, opr_expr, opnd_head_expr, opnd_tail_exprs)
+		ASSERT.kind_of opr_expr,		SCCE::Abstract
+		ASSERT.kind_of opnd_head_expr,	SCCE::Abstract
+		ASSERT.kind_of opnd_tail_exprs,	::Array
 
-		super
+		super(loc, opr_expr, opnd_head_expr)
+
+		@opnd_tail_exprs = opnd_tail_exprs
 	end
 
 
@@ -34,6 +37,11 @@ class Apply < Binary::Abstract
 	end
 
 
+	def opnd_exprs
+		[self.opnd_head_expr] + self.opnd_tail_exprs
+	end
+
+
 private
 
 	def __desugar__(env, event)
@@ -42,7 +50,12 @@ private
 		SACE.make_apply(
 			self.loc,
 			self.opr_expr.desugar(new_env),
-			self.opnd_exprs.map { |expr| expr.desugar(new_env) }
+			self.opnd_head_expr.desugar(new_env),
+			self.opnd_tail_exprs.map { |expr|
+				ASSERT.kind_of expr, SCCE::Abstract
+
+				expr.desugar new_env
+			}
 		)
 	end
 end
@@ -52,12 +65,15 @@ end	# Umu::ConcreteSyntax::Core::Expression::Binary
 
 module_function
 
-	def make_apply(loc, opr_expr, opnd_exprs)
-		ASSERT.kind_of loc,			L::Location
-		ASSERT.kind_of opr_expr,	SCCE::Abstract
-		ASSERT.kind_of opnd_exprs,	::Array
+	def make_apply(loc, opr_expr, opnd_head_expr, opnd_tail_exprs = [])
+		ASSERT.kind_of loc,				L::Location
+		ASSERT.kind_of opr_expr,		SCCE::Abstract
+		ASSERT.kind_of opnd_head_expr,	SCCE::Abstract
+		ASSERT.kind_of opnd_tail_exprs,	::Array
 
-		Binary::Apply.new(loc, opr_expr, opnd_exprs.freeze).freeze
+		Binary::Apply.new(
+			loc, opr_expr, opnd_head_expr, opnd_tail_exprs.freeze
+		).freeze
 	end
 
 end	# Umu::ConcreteSyntax::Core::Expression
