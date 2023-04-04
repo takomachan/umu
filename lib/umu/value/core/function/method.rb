@@ -41,19 +41,17 @@ private
 
 
 	def __nary_invoke__(
-		receiver, arg_head_value, arg_tail_values, method_spec,
+		receiver, arg_values, method_spec,
 		loc, env, event, n
 	)
-		ASSERT.kind_of receiver,		VC::Top
-		ASSERT.kind_of arg_head_value,	VC::Top
-		ASSERT.kind_of arg_tail_values,	::Array
-		ASSERT.kind_of method_spec, 	ECTS::Method
-		ASSERT.kind_of loc,				L::Location
-		ASSERT.kind_of env,				E::Entry
-		ASSERT.kind_of event,			E::Tracer::Event
-		ASSERT.kind_of n,				::Integer
+		ASSERT.kind_of receiver,	VC::Top
+		ASSERT.kind_of arg_values,	::Array
+		ASSERT.kind_of method_spec,	ECTS::Method
+		ASSERT.kind_of loc,			L::Location
+		ASSERT.kind_of env,			E::Entry
+		ASSERT.kind_of event,		E::Tracer::Event
+		ASSERT.kind_of n,			::Integer
 
-		arg_values	= [arg_head_value] + arg_tail_values
 		arg_num		= arg_values.size
 		param_num	= method_spec.param_class_specs.size
 		unless arg_num == param_num
@@ -92,8 +90,7 @@ private
 					loc,
 					env.enter(event),
 					event,
-					arg_head_value,
-					*arg_tail_values
+					*arg_values
 				)
 		ASSERT.assert env.ty_kind_of?(value, method_spec.ret_class_spec)
 
@@ -142,10 +139,12 @@ private
 		ASSERT.assert env.ty_kind_of?(
 								invoked_value, method_spec.ret_class_spec
 							)
-		value = if arg_values.size == 1
+		value = if arg_tail_values.empty?
 					invoked_value
 				else
-					invoked_value.apply arg_tail_values, loc, env
+					hd_value, *tl_values = arg_tail_values
+
+					invoked_value.apply hd_value, tl_values, loc, env
 				end
 
 		ASSERT.kind_of value, VC::Top
@@ -167,6 +166,17 @@ private
 		ASSERT.kind_of loc,				L::Location
 		ASSERT.kind_of env,				E::Entry
 		ASSERT.kind_of event,			E::Tracer::Event
+
+		unless arg_tail_values.empty?
+			raise X::ArgumentError.new(
+				loc,
+				env,
+				"In '%s', wrong number of arguments, " +
+						"expected 1, but given %d",
+					self.method_sym.to_s,
+					arg_tail_values.size + 1
+			)
+		end
 
 		receiver_spec	= self.formal_receiver_spec
 		ASSERT.kind_of receiver_spec, ECTSC::Base
@@ -232,8 +242,7 @@ private
 
 		value = __nary_invoke__(
 					receiver,
-					arg_head_value,
-					arg_tail_values,
+					[arg_head_value] + arg_tail_values,
 					method_spec,
 					loc, env, event, 0
 				)
@@ -314,8 +323,7 @@ private
 		ASSERT.kind_of event,			E::Tracer::Event
 
 		receiver	= arg_head_value
-		meth_params	= arg_tail_values
-		ASSERT.assert meth_params.size >= 1
+		meth_args	= arg_tail_values
 
 		unless env.ty_kind_of?(receiver, self.formal_receiver_spec)
 			raise X::TypeError.new(
@@ -336,10 +344,8 @@ private
 										)
 		ASSERT.kind_of method_spec, ECTS::Method
 
-		hd_meth_param, *tl_meth_params = meth_params
 		value = __nary_invoke__(
-					receiver, hd_meth_param, tl_meth_params, method_spec,
-					loc, env, event, 1
+					receiver, meth_args, method_spec, loc, env, event, 1
 				)
 
 		ASSERT.kind_of value, VC::Top
