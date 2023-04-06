@@ -52,22 +52,125 @@ private
 		ASSERT.kind_of event,		E::Tracer::Event
 		ASSERT.kind_of n,			::Integer
 
+		param_specs	= method_spec.param_class_specs
+		param_num	= param_specs.size
 		arg_num		= arg_values.size
-		param_num	= method_spec.param_class_specs.size
-		unless arg_num == param_num
-			raise X::ArgumentError.new(
-				loc,
-				env,
-				"In '%s', wrong number of arguments, " +
-						"expected %d, but given %d",
-					self.method_sym.to_s,
-					param_num + n,
-					arg_num + n
-			)
-		end
 
-		arg_values.zip(method_spec.param_class_specs).each_with_index do
-			|(arg_value, param_spec), i|
+		result_value =
+			if param_num == arg_num
+				__validate_type_of_args__(
+					param_num, arg_values, param_specs, env
+				)
+
+				value = receiver.invoke(
+					method_spec, loc, env.enter(event), event,
+					*arg_values
+				)
+				ASSERT.assert env.ty_kind_of?(
+										value, method_spec.ret_class_spec
+									)
+				ASSERT.kind_of value, VC::Top
+			elsif param_num < arg_num
+				__validate_type_of_args__(
+					param_num, arg_values, param_specs, env
+				)
+
+				value = receiver.invoke(
+					method_spec, loc, env.enter(event), event,
+					*(arg_values[0 .. param_num - 1])
+				)
+				ASSERT.assert env.ty_kind_of?(
+										value, method_spec.ret_class_spec
+									)
+				ASSERT.kind_of value, VC::Top
+
+				hd_arg_value, *tl_arg_values = arg_values[param_num .. -1]
+
+				value.apply hd_arg_value, tl_arg_values, loc, env
+			elsif param_num > arg_num
+=begin
+				p({
+					param_num: param_num,
+					arg_num: arg_num,
+					arg_values: arg_values
+				})
+=end
+				free_idents, bound_idents = (0 .. param_num - 1).inject(
+							 [[],     []]
+						) { |(fr_ids, bo_ids), i|
+					if i < arg_num
+						[
+							fr_ids + [
+								SACE.make_identifier(
+									loc,
+									format("%%x_%d", i + 1).to_sym
+								)
+							],
+							bo_ids
+						]
+					else
+						[
+							fr_ids,
+							bo_ids + [
+								SACE.make_identifier(
+									loc,
+									format("%%x_%d", i + 1).to_sym
+								)
+							]
+						]
+					end
+				}
+=begin
+				p({
+					free_idents: free_idents,
+					bound_idents: bound_idents
+				})
+=end
+				new_env = free_idents.zip(
+						arg_values
+					).inject(
+						env.va_extend_value :'%r', receiver
+					) { |e, (id, va)|
+					ASSERT.kind_of e,	E::Entry
+					ASSERT.kind_of id,	SACE::Unary::Identifier::Short
+					ASSERT.kind_of va,	VC::Top
+
+					e.va_extend_value(id.sym, va)
+				}
+
+				VC.make_closure(
+					SACE.make_lambda(
+						loc,
+						bound_idents,
+						SACE.make_send(
+							loc,
+							SACE.make_identifier(loc, :'%r'),
+							SACE.make_method(
+								loc,
+								method_spec.symbol,
+								free_idents + bound_idents
+							)
+						)
+					),
+					new_env.va_context
+				)
+			else
+				ASSERT.abort 'No case'
+			end
+
+		ASSERT.kind_of result_value, VC::Top
+	end
+
+
+	def __validate_type_of_args__(num, arg_values, param_specs, env)
+		ASSERT.kind_of num,			::Integer
+		ASSERT.kind_of arg_values,	::Array
+		ASSERT.kind_of param_specs,	::Array
+		ASSERT.kind_of env,			E::Entry
+
+		(0 .. num - 1).each do |i|
+			arg_value	= arg_values[i]
+			param_spec	= param_specs[i]
 			ASSERT.kind_of arg_value,	VC::Top
 			ASSERT.kind_of param_spec,	ECTSC::Base
 
@@ -84,17 +187,6 @@ private
 				)
 			end
 		end
-
-		value = receiver.invoke(
-					method_spec,
-					loc,
-					env.enter(event),
-					event,
-					*arg_values
-				)
-		ASSERT.assert env.ty_kind_of?(value, method_spec.ret_class_spec)
-
-		ASSERT.kind_of value, VC::Top
 	end
 end
 
