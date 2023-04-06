@@ -32,8 +32,10 @@ class Switch < Expression::Abstract
 
 
 	def to_s
-		format("%%SWITCH %s { %s %%ELSE -> %s}",
+		format("%%SWITCH %s : %s { %s %%ELSE -> %s}",
 			self.source_expr.to_s,
+
+			self.souce_type_sym.to_s,
 
 			self.leafs.map { |(head, body)|
 				format "%s -> %s", head.to_s, body.to_s
