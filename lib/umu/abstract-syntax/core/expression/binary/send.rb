@@ -213,22 +213,37 @@ end	# Umu::AbstractSyntax::Core::Expression::Binary::Send::Message
 class Entry < Binary::Abstract
 	alias		rhs_head_message rhs
 	attr_reader	:rhs_tail_messages
+	attr_reader	:opt_receiver_type_sym
 
 
-	def initialize(loc, lhs_expr, rhs_head_message, rhs_tail_messages)
-		ASSERT.kind_of lhs_expr,			SACE::Abstract
-		ASSERT.kind_of rhs_head_message,	Message::Abstraction::Abstract
-		ASSERT.kind_of rhs_tail_messages,	::Array
+	def initialize(
+		loc, lhs_expr,
+		rhs_head_message, rhs_tail_messages,
+		opt_receiver_type_sym
+	)
+		ASSERT.kind_of		lhs_expr,				SACE::Abstract
+		ASSERT.kind_of		rhs_head_message,
+								Binary::Send::Message::Abstraction::Abstract
+		ASSERT.kind_of		rhs_tail_messages,		::Array
+		ASSERT.opt_kind_of	opt_receiver_type_sym,	::Symbol
 
 		super(loc, lhs_expr, rhs_head_message)
 
-		@rhs_tail_messages = rhs_tail_messages
+		@rhs_tail_messages		= rhs_tail_messages
+		@opt_receiver_type_sym	= opt_receiver_type_sym
 	end
 
 
 	def to_s
-		format("(%s).%s",
+		format("(%s%s).%s",
 			self.lhs_expr.to_s,
+
+			if self.opt_receiver_type_sym
+				format " : %s", self.opt_receiver_type_sym.to_s
+			else
+				''
+			end,
+
 			self.rhs_messages.map(&:to_s).join('.')
 		)
 	end
@@ -248,6 +263,23 @@ class Entry < Binary::Abstract
 		lhs_result = self.lhs_expr.evaluate new_env
 		ASSERT.kind_of lhs_result, SAR::Value
 		init_receiver = lhs_result.value
+
+		if self.opt_receiver_type_sym
+			receiver_type_sym = opt_receiver_type_sym
+
+			receiver_spec = new_env.ty_lookup receiver_type_sym, self.loc
+			ASSERT.kind_of receiver_spec, ECTSC::Base
+			unless env.ty_kind_of?(init_receiver, receiver_spec)
+				raise X::TypeError.new(
+					self.loc,
+					env,
+					"Expected a %s, but %s : %s",
+					receiver_type_sym,
+					init_receiver,
+					init_receiver.type_sym
+				)
+			end
+		end
 
 		final_receiver = self.rhs_messages.inject(init_receiver) {
 			|receiver, message|
@@ -292,15 +324,21 @@ module_function
 	end
 
 
-	def make_send(loc, lhs_expr, rhs_head_message, rhs_tail_messages = [])
-		ASSERT.kind_of loc,					L::Location
-		ASSERT.kind_of lhs_expr,			SACE::Abstract
-		ASSERT.kind_of rhs_head_message,
+	def make_send(
+		loc, lhs_expr,
+		rhs_head_message, rhs_tail_messages = [],
+		opt_receiver_type_sym = nil
+	)
+		ASSERT.kind_of		loc,					L::Location
+		ASSERT.kind_of		lhs_expr,				SACE::Abstract
+		ASSERT.kind_of		rhs_head_message,
 								Binary::Send::Message::Abstraction::Abstract
-		ASSERT.kind_of rhs_tail_messages,	::Array
+		ASSERT.kind_of		rhs_tail_messages,		::Array
+		ASSERT.opt_kind_of	opt_receiver_type_sym,	::Symbol
 
 		Binary::Send::Entry.new(
-			loc, lhs_expr, rhs_head_message, rhs_tail_messages.freeze
+			loc, lhs_expr, rhs_head_message, rhs_tail_messages.freeze,
+			opt_receiver_type_sym
 		).freeze
 	end
 

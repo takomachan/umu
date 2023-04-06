@@ -172,7 +172,9 @@ private
 				SACE.make_send(
 					source_expr.loc,
 					source_expr,
-					SACE.make_method(source_expr.loc, :tag)
+					SACE.make_method(source_expr.loc, :tag),
+					[],
+					:Datum
 				),
 				:Symbol,
 				leafs,
