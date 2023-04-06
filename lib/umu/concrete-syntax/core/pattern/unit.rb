@@ -25,7 +25,7 @@ private
 	def __desugar_value__(expr, _env, _event)
 		ASSERT.kind_of expr, SACE::Abstract
 
-		SACD.make_value self.loc, WILDCARD, expr
+		SACD.make_value self.loc, WILDCARD, expr, :Unit
 	end
 
 

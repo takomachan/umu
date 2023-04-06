@@ -75,7 +75,7 @@ private
 		ASSERT.kind_of expr, SACE::Abstract
 
 		if self.pats.empty?
-			SACD.make_value self.loc, WILDCARD, expr
+			SACD.make_value self.loc, WILDCARD, expr, :Nil
 		else
 			SACD.make_declarations self.loc, __desugar__(expr, env)
 		end

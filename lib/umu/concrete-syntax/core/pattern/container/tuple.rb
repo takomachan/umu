@@ -58,7 +58,7 @@ private
 		SACD.make_declarations(
 			self.loc,
 			[
-				SACD.make_value(self.loc, :'%t', expr)
+				SACD.make_value(self.loc, :'%t', expr, :Tuple)
 			] + (
 				__desugar__(:'%t', env)
 			)
