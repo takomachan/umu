@@ -12,18 +12,50 @@ module Expression
 
 module Nary
 
-class Lambda < Expression::Abstract
-	attr_reader	:idents, :expr, :opt_name
+module Lambda
+
+class Parameter < Abstraction::Model
+	attr_reader :ident, :opt_type_sym
 
 
-	def initialize(loc, idents, expr, opt_name)
-		ASSERT.kind_of		idents,		::Array
+	def initialize(loc, ident, opt_type_sym)
+		ASSERT.kind_of		ident,			SACE::Unary::Identifier::Short
+		ASSERT.opt_kind_of	opt_type_sym,	::Symbol
+
+		super(loc)
+
+		@ident			= ident
+		@opt_type_sym	= opt_type_sym
+	end
+
+
+	def to_s
+		format("%s%s",
+			self.ident.to_s,
+
+			if self.opt_type_sym
+				format " : %s", self.opt_type_sym
+			else
+				''
+			end
+		)
+	end
+end
+
+
+
+class Entry < Expression::Abstract
+	attr_reader	:params, :expr, :opt_name
+
+
+	def initialize(loc, params, expr, opt_name)
+		ASSERT.kind_of		params,		::Array
 		ASSERT.kind_of		expr,		SACE::Abstract
 		ASSERT.opt_kind_of	opt_name,	::Symbol
 
 		super(loc)
 
-		@idents		= idents
+		@params		= params
 		@expr		= expr
 		@opt_name	= opt_name
 	end
@@ -31,7 +63,7 @@ class Lambda < Expression::Abstract
 
 	def to_s
 		format("{%s -> %s}",
-			self.idents.map(&:to_s).join(' ').to_s,
+			self.params.map(&:to_s).join(' ').to_s,
 			self.expr.to_s
 		)
 	end
@@ -45,18 +77,29 @@ class Lambda < Expression::Abstract
 	end
 end
 
+end	# Umu::AbstractSyntax::Core::Expression::Nary::Lambda
+
 end	# Umu::AbstractSyntax::Core::Expression::Nary
 
 
 module_function
 
-	def make_lambda(loc, idents, expr, opt_name = nil)
+	def make_parameter(loc, ident, opt_type_sym = nil)
 		ASSERT.kind_of		loc,			L::Location
-		ASSERT.kind_of		idents,			::Array
+		ASSERT.kind_of		ident,			SACE::Unary::Identifier::Short
+		ASSERT.opt_kind_of	opt_type_sym,	::Symbol
+
+		Nary::Lambda::Parameter.new(loc, ident, opt_type_sym).freeze
+	end
+
+
+	def make_lambda(loc, params, expr, opt_name = nil)
+		ASSERT.kind_of		loc,			L::Location
+		ASSERT.kind_of		params,			::Array
 		ASSERT.kind_of		expr,			SACE::Abstract
 		ASSERT.opt_kind_of	opt_name,		::Symbol
 
-		Nary::Lambda.new(loc, idents, expr, opt_name).freeze
+		Nary::Lambda::Entry.new(loc, params, expr, opt_name).freeze
 	end
 
 end	# Umu::AbstractSyntax::Core::Expression

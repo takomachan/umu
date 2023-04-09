@@ -95,60 +95,52 @@ private
 					arg_values: arg_values
 				})
 =end
-				free_idents, bound_idents = (0 .. param_num - 1).inject(
-							 [[],     []]
-						) { |(fr_ids, bo_ids), i|
+				free_params, bound_params = (0 .. param_num - 1).inject(
+							 [[],        []]
+						) { |(fr_params, bo_params), i|
+					param = SACE.make_parameter(
+								loc,
+								SACE.make_identifier(
+									loc,
+									format("%%x_%d", i + 1).to_sym
+								)
+							)
+
 					if i < arg_num
-						[
-							fr_ids + [
-								SACE.make_identifier(
-									loc,
-									format("%%x_%d", i + 1).to_sym
-								)
-							],
-							bo_ids
-						]
+						[fr_params + [param],	bo_params]
 					else
-						[
-							fr_ids,
-							bo_ids + [
-								SACE.make_identifier(
-									loc,
-									format("%%x_%d", i + 1).to_sym
-								)
-							]
-						]
+						[fr_params,				bo_params + [param]]
 					end
 				}
 =begin
 				p({
-					free_idents: free_idents,
-					bound_idents: bound_idents
+					free_params: free_params,
+					bound_params: bound_params
 				})
 =end
-				new_env = free_idents.zip(
+				new_env = free_params.zip(
 						arg_values
 					).inject(
 						env.va_extend_value :'%r', receiver
-					) { |e, (id, va)|
-					ASSERT.kind_of e,	E::Entry
-					ASSERT.kind_of id,	SACE::Unary::Identifier::Short
-					ASSERT.kind_of va,	VC::Top
+					) { |e, (param, va)|
+					ASSERT.kind_of e,		E::Entry
+					ASSERT.kind_of param,	SACE::Nary::Lambda::Parameter
+					ASSERT.kind_of va,		VC::Top
 
-					e.va_extend_value(id.sym, va)
+					e.va_extend_value(param.ident.sym, va)
 				}
 
 				VC.make_closure(
 					SACE.make_lambda(
 						loc,
-						bound_idents,
+						bound_params,
 						SACE.make_send(
 							loc,
 							SACE.make_identifier(loc, :'%r'),
 							SACE.make_method(
 								loc,
 								method_spec.symbol,
-								free_idents + bound_idents
+								free_params + bound_params
 							)
 						)
 					),

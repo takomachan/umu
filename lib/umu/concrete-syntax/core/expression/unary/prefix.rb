@@ -38,7 +38,12 @@ private
 		SACE.make_lambda(
 			self.loc,
 
-			[SACE.make_identifier(self.loc, :'%x')],
+			[
+				SACE.make_parameter(
+					self.loc,
+					SACE.make_identifier(self.loc, :'%x')
+				)
+			],
 
 			SACE.make_apply(
 				self.loc,

@@ -46,19 +46,22 @@ private
 	def __desugar__(env, event)
 		new_env = env.enter event
 
-		lamb_idents, lamb_decls = self.pats.each_with_index.inject(
+		lamb_params, lamb_decls = self.pats.each_with_index.inject(
 			 [[],		[]]
 		) {
-			|(idents,	decls),			(pat, index)|
-			ASSERT.kind_of idents,	::Array
+			|(params,	decls),			(pat, index)|
+			ASSERT.kind_of params,	::Array
 			ASSERT.kind_of decls,	::Array
 			ASSERT.kind_of pat,		SCCP::Abstract
 			ASSERT.kind_of index,	::Integer
 
 			result = pat.desugar_lambda index + 1, new_env
 			ASSERT.kind_of result, SCCP::Result
+			param = SACE.make_parameter(
+						result.ident.loc, result.ident, result.opt_type_sym
+					)
 
-			[idents + [result.ident], decls + result.decls]
+			[params + [param], decls + result.decls]
 		}
 
 		local_decls = lamb_decls + self.decls.map { |decl|
@@ -71,7 +74,7 @@ private
 						SACE.make_let self.loc, local_decls, body_expr
 					end
 
-		SACE.make_lambda self.loc, lamb_idents, lamb_expr, __name_sym__
+		SACE.make_lambda self.loc, lamb_params, lamb_expr, __name_sym__
 	end
 end
 

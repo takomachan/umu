@@ -16,7 +16,7 @@ class Closure < Abstract
 
 
 	def initialize(lam, va_context)
-		ASSERT.kind_of lam,			SACE::Nary::Lambda
+		ASSERT.kind_of lam,			SACE::Nary::Lambda::Entry
 		ASSERT.kind_of va_context,	ECV::Abstract
 
 		super()
@@ -53,19 +53,19 @@ private
 		init_values	= [init_head_value] + init_tail_values
 		lam			= self.lam
 
-		init_idents		= lam.idents
-		init_idents_num	= init_idents.size
+		init_params		= lam.params
+		init_params_num	= init_params.size
 		init_values_num	= init_values.size
-		ASSERT.assert init_idents_num >= 1
+		ASSERT.assert init_params_num >= 1
 		ASSERT.assert init_values_num >= 1
 		init_env		= env.update_va_context self.va_context
 
 		result_value = 
-			if init_idents_num == init_values_num
-				final_idents, final_values, final_env = __bind__(
-					init_idents_num, init_idents, init_values, init_env
+			if init_params_num == init_values_num
+				final_params, final_values, final_env = __bind__(
+					init_params_num, init_params, init_values, init_env
 				)
-				ASSERT.assert final_idents.empty?
+				ASSERT.assert final_params.empty?
 				ASSERT.assert final_values.empty?
 
 				new_env	= final_env.enter event
@@ -73,11 +73,11 @@ private
 				ASSERT.kind_of result, SAR::Value
 
 				result.value
-			elsif init_idents_num < init_values_num
-				final_idents, final_values, final_env = __bind__(
-					init_idents_num, init_idents, init_values, init_env
+			elsif init_params_num < init_values_num
+				final_params, final_values, final_env = __bind__(
+					init_params_num, init_params, init_values, init_env
 				)
-				ASSERT.assert final_idents.empty?
+				ASSERT.assert final_params.empty?
 				ASSERT.assert (not final_values.empty?)
 				final_head_value, *final_tail_values = final_values
 
@@ -88,16 +88,16 @@ private
 				result.value.apply(
 					final_head_value, final_tail_values, loc, new_env
 				)
-			elsif init_idents_num > init_values_num
-				final_idents, final_values, final_env = __bind__(
-					init_values_num, init_idents, init_values, init_env
+			elsif init_params_num > init_values_num
+				final_params, final_values, final_env = __bind__(
+					init_values_num, init_params, init_values, init_env
 				)
-				ASSERT.assert (not final_idents.empty?)
+				ASSERT.assert (not final_params.empty?)
 				ASSERT.assert final_values.empty?
 
 				VC.make_closure(
 					SACE.make_lambda(
-						loc, final_idents, lam.expr, lam.opt_name
+						loc, final_params, lam.expr, lam.opt_name
 					),
 					final_env.va_context
 				)
@@ -109,35 +109,52 @@ private
 	end
 
 
-	def __bind__(init_num, init_idents, init_values, init_env)
+	def __bind__(init_num, init_params, init_values, init_env)
 		tuple = loop.inject(
-			 [init_num,	init_idents,	init_values,	init_env]
+			 [init_num,	init_params,	init_values,	init_env]
 		) {
-			|(num,		idents,			values,			env),		_|
+			|(num,		params,			values,			env),		_|
 			ASSERT.kind_of num,		::Integer
-			ASSERT.kind_of idents,	::Array
+			ASSERT.kind_of params,	::Array
 			ASSERT.kind_of values,	::Array
 			ASSERT.kind_of env,		E::Entry
 
 			if num <= 0
-				break [idents, values, env]
+				break [params, values, env]
 			end
 
-			head_ident, *tail_idents	= idents
+			head_param, *tail_params	= params
 			head_value, *tail_values	= values
-			ASSERT.kind_of head_ident,	SACE::Unary::Identifier::Short
-			ASSERT.kind_of tail_idents,	::Array
+			ASSERT.kind_of head_param,	SACE::Nary::Lambda::Parameter
+			ASSERT.kind_of tail_params,	::Array
 			ASSERT.kind_of head_value,	VC::Top
 			ASSERT.kind_of tail_values,	::Array
+
+			if head_param.opt_type_sym
+				type_sym = head_param.opt_type_sym
+
+				spec = env.ty_lookup type_sym, head_param.loc
+				ASSERT.kind_of spec, ECTSC::Base
+				unless env.ty_kind_of?(head_value, spec)
+					raise X::TypeError.new(
+						head_param.loc,
+						env,
+						"Expected a %s, but %s : %s",
+						type_sym,
+						head_value,
+						head_value.type_sym
+					)
+				end
+			end
 
 			[
 				num - 1,
 
-				tail_idents,
+				tail_params,
 
 				tail_values,
 
-				env.va_extend_value(head_ident.sym, head_value)
+				env.va_extend_value(head_param.ident.sym, head_value)
 			]
 		}
 
@@ -151,7 +168,7 @@ end	# Umu::Value::Core::Function
 module_function
 
 	def make_closure(lam, va_context)
-		ASSERT.kind_of lam,			SACE::Nary::Lambda
+		ASSERT.kind_of lam,			SACE::Nary::Lambda::Entry
 		ASSERT.kind_of va_context,	ECV::Abstract
 
 		Function::Closure.new(lam, va_context).freeze

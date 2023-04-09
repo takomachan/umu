@@ -90,12 +90,14 @@ private
 		if self.pats.empty?
 			SCCP.make_result(
 				SACE.make_identifier(self.loc, WILDCARD),
-				[]
+				[],
+				:Nil
 			)
 		else
 			SCCP.make_result(
 				SACE.make_identifier(self.loc, var_sym),
-				__desugar__(SACE.make_identifier(self.loc, var_sym), env)
+				__desugar__(SACE.make_identifier(self.loc, var_sym), env),
+				:Cons
 			)
 		end
 	end
@@ -191,7 +193,14 @@ private
 					)
 				]
 			else
-				[]
+				[
+					SACD.make_value(
+						loc,
+						WILDCARD,
+						__make_select_tail__(loc, final_pair_sym),
+						:Nil
+					)
+				]
 			end
 		)
 	end
@@ -209,7 +218,7 @@ private
 		ASSERT.kind_of expr, SACE::Abstract
 
 		SACE.make_send(
-			loc, expr, SACE.make_method(loc, :des), [], :List
+			loc, expr, SACE.make_method(loc, :des), [], :Cons
 		)
 	end
 

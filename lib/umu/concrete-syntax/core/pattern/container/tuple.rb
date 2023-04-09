@@ -73,7 +73,8 @@ private
 
 		SCCP.make_result(
 			SACE.make_identifier(self.loc, var_sym),
-			__desugar__(var_sym, env)
+			__desugar__(var_sym, env),
+			:Tuple
 		)
 	end
 

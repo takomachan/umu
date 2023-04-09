@@ -100,7 +100,7 @@ class Entry < Abstraction::Record
 
 	def va_extend_recursive(sym, lam_expr)
 		ASSERT.kind_of sym,			::Symbol
-		ASSERT.kind_of lam_expr,	SACE::Nary::Lambda
+		ASSERT.kind_of lam_expr,	SACE::Nary::Lambda::Entry
 
 
 		self.update_va_context(

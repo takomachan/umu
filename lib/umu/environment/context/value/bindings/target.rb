@@ -55,7 +55,7 @@ class Recursive < Abstract
 
 
 	def initialize(lam_expr)
-		ASSERT.kind_of lam_expr, SACE::Nary::Lambda
+		ASSERT.kind_of lam_expr, SACE::Nary::Lambda::Entry
 
 		super(lam_expr)
 	end
@@ -81,7 +81,7 @@ module_function
 
 
 	def make_recursive(lam_expr)
-		ASSERT.kind_of lam_expr, SACE::Nary::Lambda
+		ASSERT.kind_of lam_expr, SACE::Nary::Lambda::Entry
 
 		Target::Recursive.new(lam_expr).freeze
 	end
