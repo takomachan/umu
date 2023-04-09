@@ -83,7 +83,7 @@ private
 		self.each_with_index.reject { |vpat, _index|
 			ASSERT.kind_of vpat, Variable
 
-			vpat.wildcard?
+			vpat.wildcard? && vpat.opt_type_sym.nil?
 		}.map { |vpat, index|
 			ASSERT.kind_of vpat,	Variable
 			ASSERT.kind_of index,	::Integer
@@ -94,7 +94,7 @@ private
 						SACE.make_number_selector(vpat.loc, index + 1)
 					)
 
-			SACD.make_value vpat.loc, vpat.var_sym, expr
+			SACD.make_value vpat.loc, vpat.var_sym, expr, vpat.opt_type_sym
 		}
 	end
 end

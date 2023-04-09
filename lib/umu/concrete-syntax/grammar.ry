@@ -594,21 +594,25 @@ _com_pats:
 
 opt_last_pat:
   /* empty */	{ result = nil }
-| '|' var_pat	{ result = val[1] }
+| '|' ID		{ result = SCCP.make_variable val[1].loc, val[1].sym }
 
 
 # Variable pattern
 
 var_pat:
-  ID						{
-  	result = SCCP.make_variable val[0].loc, val[0].sym
+  ID opt_type_assert						{
+  	result = SCCP.make_variable val[0].loc, val[0].sym, val[1]
 }
 | '(' infix_opr ')'	{
 	result = SCCP.make_variable val[1].loc, val[1].sym
 }
-| '_'						{
-	result = SCCP.make_variable val[0].loc, WILDCARD
+| '_' opt_type_assert						{
+	result = SCCP.make_variable val[0].loc, WILDCARD,   val[1]
 }
+
+opt_type_assert:
+  /* empty */	{ result = nil }
+| ':' ID		{ result = val[1].sym }
 
 
 

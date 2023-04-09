@@ -125,7 +125,8 @@ private
 			SACD.make_value(
 				init_loc,
 				head_vpat.var_sym,
-				__make_select_head__(init_loc, init_pair_sym)
+				__make_select_head__(init_loc, init_pair_sym),
+				head_vpat.opt_type_sym
 			)
 		]
 
@@ -155,7 +156,8 @@ private
 									loc,
 									__make_send_des__(loc, tail_list_expr),
 									SACE.make_number_selector(loc, 2)
-								)
+								),
+								vpat.opt_type_sym
 							)
 						]
 					else
@@ -169,7 +171,8 @@ private
 							SACD.make_value(
 								loc,
 								vpat.var_sym,
-								__make_select_head__(loc, next_pair_sym)
+								__make_select_head__(loc, next_pair_sym),
+								vpat.opt_type_sym
 							)
 
 						]

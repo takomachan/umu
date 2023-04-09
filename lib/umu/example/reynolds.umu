@@ -29,6 +29,8 @@
 	-> <VAL> : Integer 100
 			:
 			:
+			:  (running tests)
+			:
 			:
 	0001> run-I [ADD, 1, 2]
 	      ^^^^^^^^^^^^^^^^^
@@ -81,43 +83,47 @@ structure EXP = struct {
 	#### Constructor ####
 
 	# mk-const : Integer -> <CONST>
-	fun mk-const = x -> Datum @Const x
+	fun mk-const  = x : Integer -> Datum @Const x
 
 	# mk-var : Symbol -> <VAR>
-	fun mk-var = x -> Datum @Var x
+	fun mk-var    = x : Symbol -> Datum @Var x
 
 	# mk-appl : (<EXP>, <EXP>) -> <APPL>
-	fun mk-appl = (opr, opnd) -> Datum @Appl (opr, opnd)
+	fun mk-appl   = (opr : Datum, opnd : Datum) ->
+						Datum @Appl (opr, opnd)
 
 	# mk-lambda : (<VAR>, <EXP>) -> <LAMBDA>
-	fun mk-lambda = (fp, body) -> Datum @Lambda (fp, body)
+	fun mk-lambda = (fp : Datum, body : Datum) ->
+						Datum @Lambda (fp, body)
 
 	# mk-cond : (<EXP>, <EXP>, <EXP>) -> <COND>
-	fun mk-cond = (prem, conc, altr) -> Datum @Cond (prem, conc, altr)
+	fun mk-cond   = (prem : Datum, conc : Datum, altr : Datum) ->
+						Datum @Cond (prem, conc, altr)
 
 	# mk-letrec : (<VAR>, <LAMBDA>, <EXP>) -> <LETREC>
-	fun mk-letrec = (dvar, dexp, body) -> Datum @Letrec (dvar, dexp, body)
+	fun mk-letrec = (dvar : Datum, dexp : Datum, body : Datum) ->
+						Datum @Letrec (dvar, dexp, body)
 
 
 	#### Classifier ####
 
 	# const? : <EXP> -> Bool
-	fun const? = exp -> tag-of exp == @Const
+	fun const?  = exp : Datum -> tag-of exp == @Const
 
 	# var? : <EXP> -> Bool
-	fun var? = exp -> tag-of exp == @Var
+	fun var?    = exp : Datum -> tag-of exp == @Var
 
 	# appl? : <EXP> -> Bool
-	fun appl? = exp -> tag-of exp == @Appl
+	fun appl?   = exp : Datum -> tag-of exp == @Appl
 
 	# lambda? : <EXP> -> Bool
-	fun lambda? = exp -> tag-of exp == @Lambda
+	fun lambda? = exp : Datum -> tag-of exp == @Lambda
 
 	# cond? : <EXP> -> Bool
-	fun cond? = exp -> tag-of exp == @Cond
+	fun cond?   = exp : Datum -> tag-of exp == @Cond
 
 	# letrec? : <EXP> -> Bool
-	fun letrec? = exp -> tag-of exp == @Letrec
+	fun letrec? = exp : Datum -> tag-of exp == @Letrec
 }
 
 
@@ -132,25 +138,25 @@ structure VAL = struct {
 	#### Constructor ####
 
 	# Integer -> <INTEGER>
-	fun mk-integer = x -> Datum @Integer x
+	fun mk-integer = x : Integer -> Datum @Integer x
 
 	# Bool -> <BOOLEAN>
-	fun mk-boolean = x -> Datum @Boolean x
+	fun mk-boolean = x : Bool -> Datum @Boolean x
 
 	# Function -> <FUNVAL>
-	fun mk-funval = x -> Datum @Funval x
+	fun mk-funval  = x : Function -> Datum @Funval x
 
 
 	#### Classifier ####
 
 	# <VAL> -> Bool
-	fun integer? = exp -> tag-of exp == @Integer
+	fun integer? = exp : Datum -> tag-of exp == @Integer
 
 	# <VAL> -> Bool
-	fun boolean? = exp -> tag-of exp == @Boolean
+	fun boolean? = exp : Datum -> tag-of exp == @Boolean
 
 	# <VAL> -> Bool
-	fun funval?	 = exp -> tag-of exp == @Funval
+	fun funval?	 = exp : Datum -> tag-of exp == @Funval
 }
 
 
@@ -185,7 +191,7 @@ structure VAL = struct {
 ########################)
 
 # parse : 'a -> <EXP>
-fun rec parse = exp -> cond exp {
+fun rec parse = exp : Top -> cond exp {
   const?	-> EXP::mk-const exp
 | var?		-> EXP::mk-var exp
 | form?		-> parse-form exp
@@ -204,7 +210,7 @@ fun rec parse = exp -> cond exp {
 
 	#### <Form> ####
 	# parse-form : ['a] -> <EXP>
-	fun parse-form = exp -> let {
+	fun parse-form = exp : List -> let {
 		val [keyword|args] = exp
 	in
 		if (keyword isa? Symbol)
@@ -267,8 +273,12 @@ fun rec parse = exp -> cond exp {
 
 		#### <Apply> ####
 		# parse-apply : ['a] -> <APPL>
-		fun parse-apply = form -> let {
-			val [opr, init-opnd|opnds] = form
+		fun parse-apply = args -> let {
+			assert (length args >= 2)
+				ERROR::syntax
+					"For APPLY's arity, expected 2 or more, but: " args
+
+			val [opr, init-opnd|opnds] = args
 			val init-opr-exp = EXP::mk-appl (parse opr, parse init-opnd)
 		in
 			opnds |> foldl init-opr-exp { opnd opr-exp ->
@@ -327,9 +337,11 @@ fun rec parse = exp -> cond exp {
 					val [dvar|dexp] = bind
 
 					assert (var? dvar)
-						ERROR::syntax "In LETREC, expected <VAR>, but: " dvar
+						ERROR::syntax "In LETREC, expected <VAR>, but: "
+						dvar
 					assert (form? dexp)
-						ERROR::syntax "In LETREC, expected <Form>, but: " dexp
+						ERROR::syntax "In LETREC, expected <Form>, but: "
+						dexp
 
 					val [keyword|lam] = dexp
 
@@ -349,13 +361,13 @@ fun rec parse = exp -> cond exp {
 ######## Interpreter I ########
 
 # interpret-I : <EXP> -> <VAL>
-fun interpret-I = r -> eval (r, initenv)
+fun interpret-I = r : Datum -> eval (r, initenv)
 where {
 
 	######## Evaluator ########
 
 	# eval : (<EXP>, <ENV>) -> <VAL>
-	fun rec eval = (r, e) -> case r {
+	fun rec eval = (r: Datum, e : Function) -> case r {
 
 	#### CONST ####
 	  Const -> evcon r
@@ -434,7 +446,7 @@ where {
 	######## Environment ########
 
 	# initenv : <ENV>	where { <ENV> = <VAR> -> <VAL> }
-	fun initenv = x -> case (val-of x) {
+	fun initenv = x : Datum -> case (val-of x) {
 	#### Constant
 	  @TRUE		-> VAL::mk-boolean	TRUE
 	| @FALSE	-> VAL::mk-boolean	FALSE
@@ -515,14 +527,14 @@ val GE = [LAMBDA, [@x, @y], [NOT, [LT, @x, @y]]]
 
 ######## Runner - Frontend of Interpreter ########
 
-fun mk-runner = interpret ->
+fun mk-runner = interpret : Function ->
 	   tee { src -> (puts "<SRC> : " ; p src) }
 	>> parse
 	>> tee { exp -> (puts "<EXP> : " ; p exp) }
 	>> interpret
 	>> tee { value -> (puts "-> <VAL> : " ; p value) }
 
-val run-I = mk-runner interpret-I
+val run-I : Function = mk-runner interpret-I
 
 
 
@@ -563,7 +575,7 @@ structure ASSERT = struct {
 
 ######## Test ########
 
-fun test = interpret -> let {
+fun test = interpret : Function -> let {
 	val run = mk-runner interpret
 in (
 	print "[CONSTANT]" ;
