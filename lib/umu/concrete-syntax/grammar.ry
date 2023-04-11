@@ -322,6 +322,13 @@ case_rule_head:
 | ID opt_pat {
   	result = SCCE.make_case_rule_datum val[0].loc, val[0].sym, val[1]
 }
+| '&' ID opt_pat {
+  	result = SCCE.make_case_rule_class(
+						val[1].loc,
+						SCCE.make_identifier(val[1].loc, val[1].sym),
+						val[2]
+					)
+}
 
 
 # Infix operator expression

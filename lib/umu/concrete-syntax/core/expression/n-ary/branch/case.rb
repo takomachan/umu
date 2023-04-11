@@ -35,8 +35,9 @@ private
 					__desugar_atom__ new_env, fst_head
 				when Rule::Case::Head::Datum
 					__desugar_datum__ new_env, fst_head
+				when Rule::Case::Head::Class
+					__desugar_class__ new_env, fst_head
 				else
-					ASSERT.abort "Rule::Case::Head::???"
 				end
 		ASSERT.kind_of expr, SACE::Abstract
 	end
@@ -199,6 +200,93 @@ private
 				)
 			)
 		end
+	end
+
+
+	def __desugar_class__(env, fst_head)
+		ASSERT.kind_of fst_head, Rule::Case::Head::Class
+
+		source_expr = self.expr.desugar env
+		ASSERT.kind_of source_expr, SACE::Abstract
+		if source_expr.simple?
+			rules = __desugar_rules__(env, source_expr) { |_| source_expr }
+
+			SACE.make_if self.loc, rules, __desugar_else_expr__(env)
+		else
+			SACE.make_let(
+				self.loc,
+
+				[SACD.make_value(source_expr.loc, :'%x', source_expr)],
+
+				SACE.make_if(
+					self.loc,
+					__desugar_rules__(env, source_expr) { |loc|
+						SACE.make_identifier loc, :'%x'
+					},
+					__desugar_else_expr__(env)
+				)
+			)
+		end
+	end
+
+
+	def __desugar_rules__(env, source_expr, &fn)
+		ASSERT.kind_of source_expr, SACE::Abstract
+
+		self.rules.map { |rule|
+			ASSERT.kind_of rule, Rule::Case::Entry
+
+			head = rule.head
+			ASSERT.kind_of head, Rule::Case::Head::Abstract
+			unless head.kind_of? Rule::Case::Head::Class
+				raise X::SyntaxError.new(
+					rule.loc,
+					format("Inconsistent rule types in case-expression, " +
+							"1st is %s : %s, but another is %s : %s",
+						fst_head.to_s,
+						fst_head.type_sym.to_s,
+						head.to_s,
+						head.type_sym.to_s
+					)
+				)
+			end
+
+			head_expr	= SACE.make_test_kind_of(
+								head.loc,
+								fn.call(head.loc),
+								head.class_ident.desugar(env)
+							)
+			body_expr = if head.opt_contents_pat
+					contents_decl = head.opt_contents_pat.desugar_value(
+						SACE.make_send(
+							self.expr.loc,
+
+							if source_expr.simple?
+								source_expr
+							else
+								SACE.make_identifier(source_expr.loc, :'%x')
+							end,
+
+							SACE.make_method(self.expr.loc, :contents)
+						),
+						env
+					)
+					ASSERT.kind_of contents_decl, SACD::Abstract
+
+					SACE.make_let(
+						rule.loc,
+						(
+							[contents_decl] +
+							rule.decls.map { |decl| decl.desugar env }
+						),
+						rule.body_expr.desugar(env)
+					)
+				else
+					__desugar_body_expr__ env, rule
+				end
+
+			SACE.make_rule rule.loc, head_expr, body_expr
+		}
 	end
 end
 

@@ -31,6 +31,8 @@ class Abstract < Umu::Abstraction::Model
 	end
 end
 
+
+
 class WithDeclaration < Abstract
 	attr_reader :decls
 
@@ -64,6 +66,7 @@ end
 end
 
 
+
 class If < Abstraction::Abstract
 	alias head_expr head
 
@@ -80,6 +83,7 @@ class If < Abstraction::Abstract
 end
 
 
+
 class Cond < Abstraction::WithDeclaration
 	alias head_expr head
 
@@ -89,6 +93,7 @@ class Cond < Abstraction::WithDeclaration
 		super
 	end
 end
+
 
 
 module Case
@@ -119,6 +124,7 @@ class Abstract < Umu::Abstraction::Model
 end
 
 
+
 class Atom < Abstract
 	alias atom_value obj
 
@@ -134,6 +140,7 @@ class Atom < Abstract
 		:Atom
 	end
 end
+
 
 
 class Datum < Abstract
@@ -159,6 +166,42 @@ class Datum < Abstract
 	def to_s
 		format("%s%s",
 				self.tag_sym.to_s,
+
+				if self.opt_contents_pat
+					' ' + self.opt_contents_pat.to_s
+				else
+					''
+				end
+		)
+	end
+end
+
+
+
+class Class < Abstract
+	alias		class_ident obj
+	attr_reader	:opt_contents_pat
+
+
+	def initialize(loc, class_ident, opt_contents_pat)
+		ASSERT.kind_of		class_ident,
+							SCCE::Unary::Identifier::Short
+		ASSERT.opt_kind_of	opt_contents_pat,	SCCP::Abstract
+
+		super(loc, class_ident)
+
+		@opt_contents_pat = opt_contents_pat
+	end
+
+
+	def type_sym
+		:Class
+	end
+
+
+	def to_s
+		format("&%s%s",
+				self.class_ident.to_s,
 
 				if self.opt_contents_pat
 					' ' + self.opt_contents_pat.to_s
@@ -235,6 +278,18 @@ module_function
 
 		Nary::Rule::Case::Head::Datum.new(
 			loc, tag_sym, opt_contents_pat
+		).freeze
+	end
+
+
+	def make_case_rule_class(loc, class_ident, opt_contents_pat)
+		ASSERT.kind_of		loc,				L::Location
+		ASSERT.kind_of		class_ident,
+							SCCE::Unary::Identifier::Short
+		ASSERT.opt_kind_of	opt_contents_pat,	SCCP::Abstract
+
+		Nary::Rule::Case::Head::Class.new(
+			loc, class_ident, opt_contents_pat
 		).freeze
 	end
 
