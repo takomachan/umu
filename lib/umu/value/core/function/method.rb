@@ -118,7 +118,7 @@ private
 						arg_values
 					).inject(
 						env.va_extend_value :'%r', receiver
-					) { |e, (ident, va)|
+					) { |e, (ident, v)|
 					ASSERT.kind_of e,		E::Entry
 					ASSERT.kind_of ident,	SACE::Unary::Identifier::Short
 					ASSERT.kind_of v,		VC::Top

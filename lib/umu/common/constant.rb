@@ -55,7 +55,9 @@ module Umu
 					class Abstract < Object::Abstract; end
 				end
 			end
-			module Function; end
+			module Function
+				class Abstract < Top; end
+			end
 		end
 	end
 	module Environment

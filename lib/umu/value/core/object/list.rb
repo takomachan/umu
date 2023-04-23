@@ -13,6 +13,11 @@ module Object
 module List
 
 class Abstract < Object::Abstract
+	CLASS_METHOD_INFOS = [
+		[ :meth_map,	self,
+			:map,		VCF::Abstract, self]
+	]
+
 	INSTANCE_METHOD_INFOS = [
 		[ :meth_nil?,	VCA::Bool,
 			:nil?],
@@ -23,6 +28,23 @@ class Abstract < Object::Abstract
 		[ :meth_des,	VCP::Tuple,
 			:des]
 	]
+
+
+	def self.meth_map(loc, env, event, func, xs)
+		ASSERT.kind_of func,	VCF::Abstract
+		ASSERT.kind_of xs,		List::Abstract
+
+		new_env = env.enter event
+		ys = []
+		xs.each do |x|
+			ASSERT.kind_of x, VC::Top
+
+			ys.unshift func.apply(x, [], loc, new_env)
+		end
+
+		result_value = ys.inject(VC.make_nil) { |zs, y| VC.make_cons y, zs }
+		ASSERT.kind_of result_value, List::Abstract
+	end
 
 
 	include Enumerable

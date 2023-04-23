@@ -270,7 +270,8 @@ structure Umu = struct {
 
 
 		# map : ('a -> 'b) -> ['a] -> ['b]
-		fun map = f -> foldr [] { x xs -> [f x | xs] }
+		#fun map = f -> foldr [] { x xs -> [f x | xs] }
+		val map = &(List.map)
 
 
 		# filter : ('a -> Bool) -> ['a] -> ['a]
