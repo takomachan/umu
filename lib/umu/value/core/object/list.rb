@@ -26,7 +26,9 @@ class Abstract < Object::Abstract
 		[ :meth_cons,	self,
 			:cons,		VC::Top],
 		[ :meth_des,	VCP::Tuple,
-			:des]
+			:des],
+		[ :meth_map,	self,
+			:map,		VCF::Abstract]
 	]
 
 
@@ -34,15 +36,7 @@ class Abstract < Object::Abstract
 		ASSERT.kind_of func,	VCF::Abstract
 		ASSERT.kind_of xs,		List::Abstract
 
-		new_env = env.enter event
-		ys = []
-		xs.each do |x|
-			ASSERT.kind_of x, VC::Top
-
-			ys.unshift func.apply(x, [], loc, new_env)
-		end
-
-		result_value = ys.inject(VC.make_nil) { |zs, y| VC.make_cons y, zs }
+		result_value = xs.meth_map(loc, env, event, func)
 		ASSERT.kind_of result_value, List::Abstract
 	end
 
@@ -108,6 +102,22 @@ class Abstract < Object::Abstract
 
 	def meth_des(_loc, _env, _event)
 		raise X::SubclassResponsibility
+	end
+
+
+	def meth_map(loc, env, event, func)
+		ASSERT.kind_of func, VCF::Abstract
+
+		new_env = env.enter event
+		ys = []
+		self.each do |x|
+			ASSERT.kind_of x, VC::Top
+
+			ys.unshift func.apply(x, [], loc, new_env)
+		end
+
+		result_value = ys.inject(VC.make_nil) { |zs, y| VC.make_cons y, zs }
+		ASSERT.kind_of result_value, List::Abstract
 	end
 end
 
