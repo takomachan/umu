@@ -75,9 +75,15 @@ private
 					param_num, arg_values, param_specs, loc, env
 				)
 
+				invoked_values = if param_num == 0
+										[]
+									else
+										arg_values[0 .. param_num - 1]
+									end
+
 				value = receiver.invoke(
 					method_spec, loc, env.enter(event), event,
-					*(arg_values[0 .. param_num - 1])
+					*invoked_values
 				)
 				ASSERT.assert env.ty_kind_of?(
 										value, method_spec.ret_class_spec
