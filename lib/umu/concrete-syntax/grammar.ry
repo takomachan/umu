@@ -324,9 +324,29 @@ case_rule_head:
 }
 | '&' ID opt_pat {
   	result = SCCE.make_case_rule_class(
-						val[1].loc,
+						val[0].loc,
 						SCCE.make_identifier(val[1].loc, val[1].sym),
 						val[2]
+					)
+}
+| '[' var_pat opt_last_pat ']' {
+	tail = if val[2]
+				val[2]
+			else
+				SCCP.make_variable val[0].loc, WILDCARD, :Nil
+			end
+
+  	result = SCCE.make_case_rule_class(
+						val[0].loc,
+						SCCE.make_identifier(val[0].loc, :Cons),
+						SCCP.make_tuple(val[0].loc, [val[1], tail])
+					)
+}
+| '[' ']' {
+  	result = SCCE.make_case_rule_class(
+						val[0].loc,
+						SCCE.make_identifier(val[0].loc, :Nil),
+						SCCP.make_unit(val[0].loc)
 					)
 }
 
@@ -601,7 +621,7 @@ _com_pats:
 
 opt_last_pat:
   /* empty */	{ result = nil }
-| '|' ID		{ result = SCCP.make_variable val[1].loc, val[1].sym }
+| '|' var_pat	{ result = SCCP.make_variable val[1].loc, val[1].var_sym }
 
 
 # Variable pattern

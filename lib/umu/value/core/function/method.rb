@@ -95,52 +95,54 @@ private
 					arg_values: arg_values
 				})
 =end
-				free_params, bound_params = (0 .. param_num - 1).inject(
+				free_idents, bound_idents = (0 .. param_num - 1).inject(
 							 [[],        []]
-						) { |(fr_params, bo_params), i|
-					param = SACE.make_parameter(
-								loc,
-								SACE.make_identifier(
-									loc,
-									format("%%x_%d", i + 1).to_sym
-								)
+						) { |(fr_idents, bo_idents), i|
+					ident = SACE.make_identifier(
+								loc, format("%%x_%d", i + 1).to_sym
 							)
 
 					if i < arg_num
-						[fr_params + [param],	bo_params]
+						[fr_idents + [ident],	bo_idents]
 					else
-						[fr_params,				bo_params + [param]]
+						[fr_idents,				bo_idents + [ident]]
 					end
 				}
 =begin
 				p({
-					free_params: free_params,
-					bound_params: bound_params
+					free_idents: free_idents,
+					bound_idents: bound_idents
 				})
 =end
-				new_env = free_params.zip(
+				new_env = free_idents.zip(
 						arg_values
 					).inject(
 						env.va_extend_value :'%r', receiver
-					) { |e, (param, va)|
+					) { |e, (ident, va)|
 					ASSERT.kind_of e,		E::Entry
-					ASSERT.kind_of param,	SACE::Nary::Lambda::Parameter
-					ASSERT.kind_of va,		VC::Top
+					ASSERT.kind_of ident,	SACE::Unary::Identifier::Short
+					ASSERT.kind_of v,		VC::Top
 
-					e.va_extend_value(param.ident.sym, va)
+					e.va_extend_value ident.sym, v
+				}
+
+				lamb_params = bound_idents.map { |ident|
+					ASSERT.kind_of ident, SACE::Unary::Identifier::Short
+
+					SACE.make_parameter ident.loc, ident
 				}
 
 				VC.make_closure(
 					SACE.make_lambda(
 						loc,
-						bound_params,
+						lamb_params,
 						SACE.make_send(
 							loc,
 							SACE.make_identifier(loc, :'%r'),
 							SACE.make_method(
 								loc,
 								method_spec.symbol,
-								free_params + bound_params
+								free_idents + bound_idents
 							)
 						)
 					),

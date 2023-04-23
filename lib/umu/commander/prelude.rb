@@ -213,13 +213,12 @@ structure Umu = struct {
 		# equal-with? : ('a -> 'b -> Bool) -> ['a] -> ['b] -> Bool
 		fun rec equal-with? = eq? xs ys ->
 			if (xs isa? List && ys isa? List)
-				cond xs {
-					Nil?	-> Nil? ys
-					else	-> cond ys {
-				  		Nil?	-> FALSE
-						else	-> eq? x y && equal-with? eq? xs' ys'
-									where val [x|xs'] = xs
-										  val [y|ys'] = ys
+				case xs {
+				  []	  -> Nil? ys
+				| [x|xs'] -> case ys {
+					  []	  -> FALSE
+					| [y|ys'] -> equal-with? eq? x   y &&
+								 equal-with? eq? xs' ys'
 					}
 				}
 			else
@@ -231,10 +230,9 @@ structure Umu = struct {
 
 
 		# foldr : 'b -> ('a -> 'b -> 'b) -> ['a] -> 'b
-		fun rec foldr = a f xs -> cond xs {
-			Nil?	-> a
-			else	-> f x (foldr a f xs')
-						where val [x|xs'] = xs
+		fun rec foldr = a f xs -> case xs {
+		  []	  -> a
+		| [x|xs'] -> f x (foldr a f xs')
 		}
 
 
@@ -244,10 +242,9 @@ structure Umu = struct {
 
 
 		# foldl : 'b -> ('a -> 'b -> 'b) -> ['a] -> 'b
-		fun rec foldl = a f xs -> cond xs {
-			Nil?	-> a
-			else	-> foldl (f x a) f xs'
-						where val [x|xs'] = xs
+		fun rec foldl = a f xs -> case xs {
+		  []	  -> a
+		| [x|xs'] -> foldl (f x a) f xs'
 		}
 
 
@@ -293,10 +290,9 @@ structure Umu = struct {
 		where {
 			fun e = _ -> []
 
-			fun g = x h ys -> cond ys {
-				Nil?	-> []
-				else	-> [f x y | h ys']
-							where val [y|ys'] = ys
+			fun g = x h ys -> case ys {
+			  []	  -> []
+			| [y|ys'] -> [f x y | h ys']
 			}
 		}
 
@@ -319,12 +315,11 @@ structure Umu = struct {
 
 
 		# sort : ('a -> 'a -> Bool) -> ['a] -> ['a]
-		fun rec sort = f xs -> cond xs {
-			Nil?	-> []
-			else	->
+		fun rec sort = f xs -> case xs {
+		  []		  -> []
+		| [pivot|xs'] ->
 				concat [sort f littles, [pivot], sort f bigs]
-				where val [pivot|xs']	  = xs
-					  val (littles, bigs) = partition { x -> f x pivot } xs'
+			where val (littles, bigs) = partition { x -> f x pivot } xs'
 		}
 	}
 
@@ -338,15 +333,13 @@ structure Umu = struct {
 
 
 		# join : String -> [String] -> String
-		fun join = j xs -> cond xs {
-			List::Nil?	-> ""
-			else		-> cond xs' {
-				List::Nil?	-> x
-				else		-> x.(^ xs'')
-					where val [x|xs'] = xs
-						  val xs'' = List::foldl
-											""
-											{ x' s -> s.(^ j).(^ x') }
+		fun join = j xs -> case xs {
+		  []	  -> ""
+		| [x|xs'] -> case xs' {
+			  []   -> x
+			  else -> x.(^ xs'')
+				where val xs'' =
+							List::foldl "" { x' s -> s.(^ j).(^ x') } xs'
 			}
 		}
 

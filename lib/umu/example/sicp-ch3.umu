@@ -24,13 +24,12 @@
 ;;
 
 ###		assoc : Symbol -> [(Symbol, 'a)] -> Option (Symbol, 'a)
-fun rec assoc = key records -> cond records {
-  empty?	-> NONE
-  else		-> if (key == fst x)
+fun rec assoc = key records -> case records {
+  []	 -> NONE
+| [x|xs] -> if (key == fst x)
 					Some x
 			   else
 					assoc key xs
-			where val [x|xs] = records
 }
 
 ### lookup1 = Symbol -> <TABLE> [(Symbol, 'a)] -> Option 'a
