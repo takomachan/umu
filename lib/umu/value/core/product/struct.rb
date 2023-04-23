@@ -28,7 +28,7 @@ class Field < ::Object
 
 
 	def to_s
-		format "%s = %s", self.label, self.value
+		format "%%VAL %s = %s", self.label, self.value
 	end
 end
 
@@ -58,7 +58,16 @@ class Entry < Product::Abstract
 
 
 	def to_s
-		__to_s__ &:to_s
+		format("%%STRUCT {%s}",
+				self.map { |field|
+					case field.value
+					when Entry
+						format "%%STRUCTURE %s", field.label
+					else
+						field.to_s
+					end
+				}.join(' ')
+		)
 	end
 
 
@@ -118,15 +127,6 @@ class Entry < Product::Abstract
 				).true?
 			}
 		)
-	end
-
-
-private
-
-	def __to_s__
-		ASSERT.assert block_given?
-
-		format "{%s}", self.map { |obj| yield obj }.join(', ')
 	end
 end
 
