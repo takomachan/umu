@@ -59,7 +59,7 @@ private
 		result_value =
 			if param_num == arg_num
 				__validate_type_of_args__(
-					param_num, arg_values, param_specs, env
+					param_num, arg_values, param_specs, loc, env
 				)
 
 				value = receiver.invoke(
@@ -72,7 +72,7 @@ private
 				ASSERT.kind_of value, VC::Top
 			elsif param_num < arg_num
 				__validate_type_of_args__(
-					param_num, arg_values, param_specs, env
+					param_num, arg_values, param_specs, loc, env
 				)
 
 				value = receiver.invoke(
@@ -156,10 +156,11 @@ private
 	end
 
 
-	def __validate_type_of_args__(num, arg_values, param_specs, env)
+	def __validate_type_of_args__(num, arg_values, param_specs, loc, env)
 		ASSERT.kind_of num,			::Integer
 		ASSERT.kind_of arg_values,	::Array
 		ASSERT.kind_of param_specs,	::Array
+		ASSERT.kind_of loc,			L::Location
 		ASSERT.kind_of env,			E::Entry
 
 		(0 .. num - 1).each do |i|
@@ -174,7 +175,7 @@ private
 					env,
 					"For '%s's #%d argument, expected a %s, but %s : %s",
 						self.method_sym.to_s,
-						i + 1 + n,
+						i + 1,
 						param_spec.symbol,
 						arg_value.to_s,
 						arg_value.type_sym

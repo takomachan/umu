@@ -183,11 +183,11 @@ structure Umu = struct {
 
 	structure List = struct {
 		# Nil : () -> ['a]
-		val Nil = &(List.make-nil)
+		val Nil = &(Nil.make)
 
 
 		# Cons : 'a -> ['a] -> ['a]
-		val Cons = &(List.make-cons)
+		val Cons = &(Cons.make)
 
 
 		# Nil? : ['a] -> Bool
