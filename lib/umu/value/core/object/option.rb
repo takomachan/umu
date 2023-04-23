@@ -12,13 +12,6 @@ module Object
 module Option
 
 class Abstract < Object::Abstract
-	CLASS_METHOD_INFOS = [
-		[:meth_make_none,	self,
-			:'make-none'],
-		[:meth_make_some,	self,
-			:'make-some',	VC::Top]
-	]
-
 	INSTANCE_METHOD_INFOS = [
 		[:meth_none?,		VCA::Bool,
 			:none?],
@@ -26,17 +19,6 @@ class Abstract < Object::Abstract
 			:some?]
 	]
 
-
-	def self.meth_make_none(_loc, _env, _event)
-		VC.make_none
-	end
-
-
-	def self.meth_make_some(_loc, _env, _event, contents)
-		ASSERT.kind_of contents, VC::Top
-
-		VC.make_some contents
-	end
 
 
 	def meth_none?(_loc, _env, event)
@@ -52,10 +34,20 @@ end
 
 
 class None < Abstract
+	CLASS_METHOD_INFOS = [
+		[:meth_make,		self,
+			:'make']
+	]
+
 	INSTANCE_METHOD_INFOS = [
 		[:meth_contents,	VC::Unit,
 			:contents]
 	]
+
+
+	def self.meth_make(_loc, _env, _event)
+		VC.make_none
+	end
 
 
 	def meth_none?(_loc, _env, _event)
@@ -68,6 +60,19 @@ NONE = None.new.freeze
 
 
 class Some < Abstract
+	CLASS_METHOD_INFOS = [
+		[:meth_make,		self,
+			:'make',		VC::Top]
+	]
+
+
+	def self.meth_make(_loc, _env, _event, contents)
+		ASSERT.kind_of contents, VC::Top
+
+		VC.make_some contents
+	end
+
+
 	attr_reader :contents
 
 

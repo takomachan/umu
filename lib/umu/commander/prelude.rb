@@ -30,10 +30,10 @@ structure Umu = struct {
 		#### Constructor ####
 
 		# Some : 'a -> Option 'a
-		val Some = &(Option.make-some)
+		val Some = &(Some.make)
 
 		# NONE : Option 'a
-		val NONE = &(Option).make-none
+		val NONE = &(None).make
 
 
 		#### Classifier ####
