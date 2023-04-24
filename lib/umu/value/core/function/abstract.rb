@@ -10,7 +10,7 @@ module Core
 
 module Function
 
-class Abstract < Core::Top
+class Abstract < Top
 	def apply(head_value, tail_values, loc, env)
 		ASSERT.kind_of head_value,	VC::Top
 		ASSERT.kind_of tail_values,	::Array

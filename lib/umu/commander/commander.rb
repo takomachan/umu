@@ -383,7 +383,6 @@ end
 				if pref.trace_mode?
 					STDERR.puts
 					STDERR.puts "________ Evaluator Trace ________"
-					STDERR.puts
 				end
 			}.evaluate(env).yield_self { |result|
 				ASSERT.kind_of result, SAR::Abstract
