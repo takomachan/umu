@@ -354,7 +354,7 @@ case_rule_head:
 # Infix operator expression
 
 infix_expr:
-  apply_expr
+  send_expr
 | _infix_expr {
 	v = val[0]
 
@@ -397,26 +397,9 @@ _infix_expr:
 | infix_expr '||'		infix_expr	{ result = val }
 
 
-# Apply expression
-
-apply_expr: send_expr send_exprs {
-	result = if val[1].empty?
-					val[0]
-				else
-					hd_expr, *tl_exprs = val[1]
-
-					SCCE.make_apply val[0].loc, val[0], hd_expr, tl_exprs
-				end
-}
-
-
 # Send expression
 
-send_exprs:
-  /* empty */			{ result = [] }
-| send_expr send_exprs	{ result = [val[0]] + val[1] }
-
-send_expr: atom_expr messages {
+send_expr: apply_expr messages {
 	result = if val[1].empty?
 					val[0]
 				else
@@ -440,21 +423,40 @@ message:
 						val[0].loc, val[0].val
 					)
 }
-| mess_ident {
+| mess_ident atom_exprs {
 	result = SCCE.make_method(
-						val[0].loc, val[0].sym
+						val[0].loc, val[0].sym, [],     val[1]
 					)
 }
-| '(' mess_ident expr com_exprs ')' {
+| '(' mess_ident expr com_exprs ')' atom_exprs {
+	params = [val[2]] + val[3]
+
 	result = SCCE.make_method(
-						val[1].loc, val[1].sym, [val[2]] + val[3]
+						val[1].loc, val[1].sym, params, val[5]
 					)
 }
 
 mess_ident: ID | norm_infix_opr
 
 
+# Apply expression
+
+apply_expr: atom_expr atom_exprs {
+	result = if val[1].empty?
+					val[0]
+				else
+					hd_expr, *tl_exprs = val[1]
+
+					SCCE.make_apply val[0].loc, val[0], hd_expr, tl_exprs
+				end
+}
+
+
 # Atomic expression
+
+atom_exprs:
+  /* empty */			{ result = [] }
+| atom_expr atom_exprs	{ result = [val[0]] + val[1] }
 
 atom_expr:
 # Identifier

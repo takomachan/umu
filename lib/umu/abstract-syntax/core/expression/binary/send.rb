@@ -112,27 +112,36 @@ end
 
 
 class Method < Abstraction::Abstract
-	attr_reader	:sym, :exprs
+	attr_reader	:sym, :param_exprs, :opnd_exprs
 
 
-	def initialize(loc, sym, exprs)
-		ASSERT.kind_of sym,		::Symbol
-		ASSERT.kind_of exprs,	::Array
+	def initialize(loc, sym, param_exprs, opnd_exprs)
+		ASSERT.kind_of sym,			::Symbol
+		ASSERT.kind_of param_exprs,	::Array
+		ASSERT.kind_of opnd_exprs,	::Array
 
 		super(loc)
 
-		@sym	= sym
-		@exprs	= exprs
+		@sym			= sym
+		@param_exprs	= param_exprs
+		@opnd_exprs		= opnd_exprs
 	end
 
 
 	def to_s
-		if self.exprs.empty?
-			self.sym.to_s
+		opnd_str = if self.opnd_exprs.empty?
+						''
+					else
+						' ' + self.opnd_exprs.map(&:to_s).join(' ')
+					end
+
+		if self.param_exprs.empty?
+			self.sym.to_s + opnd_str
 		else
-			format("(%s %s)",
+			format("(%s %s)%s",
 				self.sym.to_s,
-				self.exprs.map(&:to_s).join(', ')
+				self.param_exprs.map(&:to_s).join(', '),
+				opnd_str
 			)
 		end
 	end
@@ -144,7 +153,7 @@ class Method < Abstraction::Abstract
 		ASSERT.kind_of event,		E::Tracer::Event
 
 		method_sym	= self.sym
-		arg_values	= self.exprs.map { |expr|
+		arg_values	= self.param_exprs.map { |expr|
 			result = expr.evaluate env
 			ASSERT.kind_of result, SAR::Value
 
@@ -201,8 +210,21 @@ class Method < Abstraction::Abstract
 		ASSERT.assert env.ty_kind_of?(
 							next_receiver, method_spec.ret_class_spec
 						)
-
 		ASSERT.kind_of next_receiver, VC::Top
+
+		final_receiver = if self.opnd_exprs.empty?
+				next_receiver
+			else
+				hd_value, *tl_values = self.opnd_exprs.map { |expr|
+					result = expr.evaluate env
+					ASSERT.kind_of result, SAR::Value
+
+					result.value
+				}
+
+				next_receiver.apply hd_value, tl_values, self.loc, env
+			end
+		ASSERT.kind_of final_receiver, VC::Top
 	end
 end
 
@@ -315,12 +337,15 @@ module_function
 
 
 
-	def make_method(loc, sym, exprs = [])
-		ASSERT.kind_of loc,		L::Location
-		ASSERT.kind_of sym,		::Symbol
-		ASSERT.kind_of exprs,	::Array
+	def make_method(loc, sym, param_exprs = [], opnd_exprs = [])
+		ASSERT.kind_of loc,			L::Location
+		ASSERT.kind_of sym,			::Symbol
+		ASSERT.kind_of param_exprs,	::Array
+		ASSERT.kind_of opnd_exprs,	::Array
 
-		Binary::Send::Message::Method.new(loc, sym, exprs.freeze).freeze
+		Binary::Send::Message::Method.new(
+			loc, sym, param_exprs.freeze, opnd_exprs.freeze
+		).freeze
 	end
 
 
