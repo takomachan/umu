@@ -424,16 +424,7 @@ message:
 					)
 }
 | mess_ident atom_exprs {
-	result = SCCE.make_method(
-						val[0].loc, val[0].sym, [],     val[1]
-					)
-}
-| '(' mess_ident expr com_exprs ')' atom_exprs {
-	params = [val[2]] + val[3]
-
-	result = SCCE.make_method(
-						val[1].loc, val[1].sym, params, val[5]
-					)
+	result = SCCE.make_method val[0].loc, val[0].sym, val[1]
 }
 
 mess_ident: ID | norm_infix_opr

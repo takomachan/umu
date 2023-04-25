@@ -69,7 +69,7 @@ structure Umu = struct {
 		val infinite? = &(Float$infinite?)
 
 		# equal?		: Float -> Float -> Integer -> Bool
-		fun equal? = x y n -> x.(truncate n).(== y.(truncate n))
+		fun equal? = x y n -> x.truncate n.== (y.truncate n)
 
 		# finite?		: Float -> Bool
 		val finite? = &(Float$finite?)
@@ -144,30 +144,30 @@ structure Umu = struct {
 		fun gets = () -> _STDIN.gets
 
 		# puts : String -> ()
-		fun puts = x -> _STDOUT.(puts x)
+		fun puts = x -> _STDOUT.puts x
 
 		# display : 'a -> ()
-		fun display = x -> _STDOUT.(puts x.to-s)
+		fun display = x -> _STDOUT.puts (x.to-s)
 
 		# tab : Integer -> ()
 		fun rec tab = n ->
-			if (0.(< n)) (
-				_STDOUT.(puts " ")
-			;	tab (n.(- 1))
+			if (0.< n) (
+				_STDOUT.puts " " ;
+				tab (n.- 1)
 			) else
 				()
 
 		# nl : () -> ()
-		fun nl = () -> _STDOUT.(puts "\n")
+		fun nl = () -> _STDOUT.puts "\n"
 
 		# print : 'a -> ()
-		fun print = x -> _STDOUT.(puts x.to-s.(^ "\n"))
+		fun print = x -> _STDOUT.puts (x.to-s.^ "\n")
 
 		# p : 'a -> ()
-		fun p = x -> _STDOUT.(puts x.inspect.(^ "\n"))
+		fun p = x -> _STDOUT.puts (x.inspect.^ "\n")
 
 		# msgout : 'a -> ()
-		fun msgout = x -> _STDERR.(puts x.to-s.(^ "\n"))
+		fun msgout = x -> _STDERR.puts (x.to-s.^ "\n")
 
 		# random : 'a -> 'a	where { 'a <- Number }
 		val random = &(Number$random)
@@ -254,7 +254,7 @@ structure Umu = struct {
 
 
 		# length : ['a] -> Integer
-		val length = foldl 0 { _ len -> len.(+ 1) }
+		val length = foldl 0 { _ len -> len.+ 1 }
 
 
 		# reverse : ['a] -> ['a]
@@ -262,11 +262,11 @@ structure Umu = struct {
 
 
 		# max : ['a] -> 'a
-		val max = foldl1 { x y -> if (y.(< x)) x else y }
+		val max = foldl1 { x y -> if (y.< x) x else y }
 
 
 		# min : ['a] -> 'a
-		val min = foldl1 { x y -> if (x.(< y)) x else y }
+		val min = foldl1 { x y -> if (x.< y) x else y }
 
 
 		# map : ('a -> 'b) -> ['a] -> ['b]
@@ -338,9 +338,9 @@ structure Umu = struct {
 		  []	  -> ""
 		| [x|xs'] -> case xs' {
 			  []   -> x
-			  else -> x.(^ xs'')
+			  else -> x.^ xs''
 				where val xs'' =
-							List::foldl "" { x' s -> s.(^ j).(^ x') } xs'
+							List::foldl "" { x' s -> s.^ j.^ x' } xs'
 			}
 		}
 
@@ -366,19 +366,19 @@ structure Umu = struct {
 		val (==) = &(Top$==)
 
 		# (<>)		: 'a -> 'b -> Bool
-		fun (<>) = x y -> x.(== y).not
+		fun (<>) = x y -> x.== y.not
 
 		# (<)		: 'a -> 'a -> Bool
 		val (<) = &(Top$<)
 
 		# (>)		: 'a -> 'a -> Bool
-		fun (>) = x y -> y.(< x)
+		fun (>) = x y -> y.< x
 
 		# (<=)		: 'a -> 'a -> Bool
-		fun (<=) = x y -> y.(< x).not
+		fun (<=) = x y -> y.< x.not
 
 		# (>=)		: 'a -> 'a -> Bool
-		fun (>=) = x y -> x.(< y).not
+		fun (>=) = x y -> x.< y.not
 
 
 		#### Bool ####
