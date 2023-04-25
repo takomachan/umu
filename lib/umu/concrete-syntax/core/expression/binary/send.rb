@@ -48,38 +48,28 @@ end
 
 
 class Method < Abstract
-	attr_reader :sym, :param_exprs, :opnd_exprs
+	attr_reader :sym, :exprs
 
 
-	def initialize(loc, sym, param_exprs, opnd_exprs)
-		ASSERT.kind_of sym,			::Symbol
-		ASSERT.kind_of param_exprs,	::Array
-		ASSERT.kind_of opnd_exprs,	::Array
+	def initialize(loc, sym, exprs)
+		ASSERT.kind_of sym,		::Symbol
+		ASSERT.kind_of exprs,	::Array
 
 		super(loc)
 
-		@sym			= sym
-		@param_exprs	= param_exprs
-		@opnd_exprs		= opnd_exprs
+		@sym	= sym
+		@exprs	= exprs
 	end
 
 
 	def to_s
-		opnd_str = if self.opnd_exprs.empty?
-						''
-					else
-						' ' + self.opnd_exprs.map(&:to_s).join(' ')
-					end
-
-		if self.param_exprs.empty?
-			self.sym.to_s + opnd_str
-		else
-			format("(%s %s)%s",
-				self.sym.to_s,
-				self.param_exprs.map(&:to_s).join(', '),
-				opnd_str
-			)
-		end
+		self.sym.to_s + (
+			if self.exprs.empty?
+				''
+			else
+				' ' + self.exprs.map(&:to_s).join(' ')
+			end
+		)
 	end
 
 
@@ -91,8 +81,7 @@ private
 		SACE.make_method(
 			self.loc,
 			self.sym,
-			self.param_exprs.map { |expr| expr.desugar(new_env) },
-			self.opnd_exprs.map  { |expr| expr.desugar(new_env) }
+			self.exprs.map { |expr| expr.desugar(new_env) },
 		)
 	end
 end
@@ -163,15 +152,12 @@ module_function
 	end
 
 
-	def make_method(loc, sym, param_exprs = [], opnd_exprs = [])
-		ASSERT.kind_of loc,			L::Location
-		ASSERT.kind_of sym,			::Symbol
-		ASSERT.kind_of param_exprs,	::Array
-		ASSERT.kind_of opnd_exprs,	::Array
+	def make_method(loc, sym, exprs = [])
+		ASSERT.kind_of loc,		L::Location
+		ASSERT.kind_of sym,		::Symbol
+		ASSERT.kind_of exprs,	::Array
 
-		Binary::Send::Message::Method.new(
-			loc, sym, param_exprs.freeze, opnd_exprs
-		).freeze
+		Binary::Send::Message::Method.new(loc, sym, exprs.freeze).freeze
 	end
 
 
