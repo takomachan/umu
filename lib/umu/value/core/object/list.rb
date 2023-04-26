@@ -13,11 +13,6 @@ module Object
 module List
 
 class Abstract < Object::Abstract
-	CLASS_METHOD_INFOS = [
-		[ :meth_map,	self,
-			:map,		VCF::Abstract, self]
-	]
-
 	INSTANCE_METHOD_INFOS = [
 		[ :meth_nil?,	VCA::Bool,
 			:nil?],
@@ -28,19 +23,8 @@ class Abstract < Object::Abstract
 		[ :meth_des,	VCP::Tuple,
 			:des],
 		[ :meth_map,	self,
-			:map,		VCF::Abstract],
-		[ :meth_cmap,	VCF::Abstract,
-			:cmap]
+			:map,		VCF::Abstract]
 	]
-
-
-	def self.meth_map(loc, env, event, func, xs)
-		ASSERT.kind_of func,	VCF::Abstract
-		ASSERT.kind_of xs,		List::Abstract
-
-		result_value = xs.meth_map(loc, env, event, func)
-		ASSERT.kind_of result_value, List::Abstract
-	end
 
 
 	include Enumerable
@@ -120,25 +104,6 @@ class Abstract < Object::Abstract
 
 		result_value = ys.inject(VC.make_nil) { |zs, y| VC.make_cons y, zs }
 		ASSERT.kind_of result_value, List::Abstract
-	end
-
-
-	def meth_cmap(loc, env, event)
-		new_env = env.va_extend_value :'%self', self
-		id_func	= SACE.make_identifier(loc, :'%f')
-
-		VC.make_closure(
-			SACE.make_lambda(
-				loc,
-				[SACE.make_parameter(loc, id_func)],
-				SACE.make_send(
-					loc,
-					SACE.make_identifier(loc, :'%self'),
-					SACE.make_method(loc, :map, [id_func])
-				)
-			),
-			new_env.va_context
-		)
 	end
 end
 

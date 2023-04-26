@@ -103,25 +103,17 @@ module_function
 			printf "%sCLASS METHODS:\n", indent_0
 
 			class_spec.each_class_method(env).sort.each do |meth_spec|
-				printf("%s%s.%s -> %s\n",
-						indent_1,
+				printf("%s%s.%s : %s\n",
+					indent_1,
 
-						class_spec.symbol,
+					class_spec.symbol,
 
-						if meth_spec.param_class_specs.empty?
-							meth_spec.symbol
-						else
-							format("(%s %s)",
-								meth_spec.symbol,
-								meth_spec.param_class_specs.map(
-									&:to_sym
-								).join(
-									', '
-								)
-							)
-						end,
+					meth_spec.symbol,
 
-						meth_spec.ret_class_spec.symbol
+					(
+						meth_spec.param_class_specs +
+						[meth_spec.ret_class_spec.symbol]
+					).map(&:to_sym).join(' -> ')
 				)
 			end
 		end
@@ -130,25 +122,17 @@ module_function
 			printf "%sINSTANCE METHODS:\n", indent_0
 
 			class_spec.each_instance_method(env).sort.each do |meth_spec|
-				printf("%s%s$%s -> %s\n",
-						indent_1,
+				printf("%s%s#%s : %s\n",
+					indent_1,
 
-						class_spec.symbol,
+					class_spec.symbol,
 
-						if meth_spec.param_class_specs.empty?
-							meth_spec.symbol
-						else
-							format("(%s %s)",
-								meth_spec.symbol,
-								meth_spec.param_class_specs.map(
-									&:to_sym
-								).join(
-									', '
-								)
-							)
-						end,
+					meth_spec.symbol,
 
-						meth_spec.ret_class_spec.symbol
+					(
+						meth_spec.param_class_specs +
+						[meth_spec.ret_class_spec.symbol]
+					).map(&:to_sym).join(' -> ')
 				)
 			end
 		end

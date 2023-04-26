@@ -29,20 +29,20 @@ structure Umu = struct {
 	structure Option = struct {
 		#### Constructor ####
 
-		# Some : 'a -> Option 'a
-		val Some = &(Some.make)
+		# Some : 'a -> Some 'a
+		val Some = &(Some).make
 
-		# NONE : Option 'a
+		# NONE : None
 		val NONE = &(None).make
 
 
 		#### Classifier ####
 
 		# Some? : Option 'a -> Bool
-		val Some? = &(Option$some?)
+		fun Some? = x : Option -> x.some?
 
 		# NONE? : Option 'a -> Bool
-		val NONE? = &(Option$none?)
+		fun NONE? = x : Option -> x.none?
 	}
 
 
@@ -63,76 +63,77 @@ structure Umu = struct {
 		val E = &(Float).make-e
 
 		# nan?			: Float -> Bool
-		val nan? = &(Float$nan?)
+		fun nan? = x : Float -> x.nan?
 
 		# infinite?		: Float -> Bool
-		val infinite? = &(Float$infinite?)
+		fun infinite? = x : Float -> x.infinite?
 
 		# equal?		: Float -> Float -> Integer -> Bool
-		fun equal? = x y n -> x.truncate n.== (y.truncate n)
+		fun equal? = (x : Float) (y : Float) (n : Integer) ->
+			x.truncate n.== (y.truncate n)
 
 		# finite?		: Float -> Bool
-		val finite? = &(Float$finite?)
+		fun finite? = x : Float -> x.finite?
 
 		# sin			: Float -> Float
-		val sin = &(Float$sin)
+		fun sin = x : Float -> x.sin
 
 		# cos			: Float -> Float
-		val cos = &(Float$cos)
+		fun cos = x : Float -> x.cos
 
 		# tan			: Float -> Float
-		val tan = &(Float$tan)
+		fun tan = x : Float -> x.tan
 
 		# asin			: Float -> Float
-		val asin = &(Float$asin)
+		fun asin = x : Float -> x.asin
 
 		# acos			: Float -> Float
-		val acos = &(Float$acos)
+		fun acos = x : Float -> x.acos
 
 		# atan			: Float -> Float
-		val atan = &(Float$atan)
+		fun atan = x : Float -> x.atan
 
 		# atan2			: Float -> Float -> Float
-		val atan2 = &(Float$atan2)
+		fun atan2 = x : Float -> x.atan2
 
 		# sinh			: Float -> Float
-		val sinh = &(Float$sinh)
+		fun sinh = x : Float -> x.sinh
 
 		# cosh			: Float -> Float
-		val cosh = &(Float$cosh)
+		fun cosh = x : Float -> x.cosh
 
 		# tanh			: Float -> Float
-		val tanh = &(Float$tanh)
+		fun tanh = x : Float -> x.tanh
 
 		# exp			: Float -> Float
-		val exp = &(Float$exp)
+		fun exp = x : Float -> x.exp
 
 		# log			: Float -> Float
-		val log = &(Float$log)
+		fun log = x : Float -> x.log
 
 		# log10			: Float -> Float
-		val log10 = &(Float$log10)
+		fun log10 = x : Float -> x.log10
 
 		# sqrt			: Float -> Float
-		val sqrt = &(Float$sqrt)
+		fun sqrt = x : Float -> x.sqrt
 
 		# truncate		: Float -> Integer -> Float
-		val truncate = &(Float$truncate)
+		fun truncate = x : Float -> x.truncate
 
 		# ceil			: Float -> Integer -> Float
-		val ceil = &(Float$ceil)
+		fun ceil = x : Float -> x.ceil
 
 		# floor			: Float -> Integer -> Float
-		val floor = &(Float$floor)
+		fun floor = x : Float -> x.floor
 
 		# ldexp			: Float -> Integer -> Float
-		val ldexp = &(Float$ldexp)
+		fun ldexp = x : Float -> x.ldexp
 
 		# frexp			: Float -> (Float, Float)
-		val frexp = &(Float$frexp)
+		fun frexp = x : Float -> x.frexp
 
 		# divmod		: Float -> Float -> (Float, Float)
-		val divmod = &(Float$divmod)
+		fun divmod = x : Float -> x.divmod
 	}
 
 
@@ -170,7 +171,7 @@ structure Umu = struct {
 		fun msgout = x -> _STDERR.puts (x.to-s.^ "\n")
 
 		# random : 'a -> 'a	where { 'a <- Number }
-		val random = &(Number$random)
+		fun random = x : Number -> x.random
 	} where {
 		val _STDIN	= &(IO).make-stdin
 		val _STDOUT	= &(IO).make-stdout
@@ -183,31 +184,31 @@ structure Umu = struct {
 
 	structure List = struct {
 		# Nil : () -> ['a]
-		val Nil = &(Nil.make)
+		fun Nil = () -> &(Nil).make
 
 
 		# Cons : 'a -> ['a] -> ['a]
-		val Cons = &(Cons.make)
+		fun Cons = x (xs : List) -> &(Cons).make x xs
 
 
 		# Nil? : ['a] -> Bool
-		val Nil? = &(List$nil?)
+		fun Nil? = xs : List -> xs.nil?
 
 
 		# Cons? : ['a] -> Bool
-		val Cons? = &(List$cons?)
+		fun Cons? = xs : List -> xs.cons?
 
 
 		# des : ['a] -> ('a, ['a])
-		val des = &(List$des)
+		fun des = xs : List -> xs.des
 
 
 		# head : ['a] -> 'a
-		val head = &(Cons$head)
+		fun head = xs : Cons -> xs.head
 
 
 		# tail : ['a] -> ['a]
-		val tail = &(Cons$tail)
+		fun tail = xs : Cons -> xs.tail
 
 
 		# equal-with? : ('a -> 'b -> Bool) -> ['a] -> ['b] -> Bool
@@ -226,7 +227,7 @@ structure Umu = struct {
 
 
 		# equal? : ['a] -> ['b] -> Bool
-		val equal? = equal-with? &(Top$==)
+		val equal? = equal-with? { x y -> x.== y }
 
 
 		# foldr : 'b -> ('a -> 'b -> 'b) -> ['a] -> 'b
@@ -271,7 +272,7 @@ structure Umu = struct {
 
 		# map : ('a -> 'b) -> ['a] -> ['b]
 		#fun map = f -> foldr [] { x xs -> [f x | xs] }
-		val map = &(List.map)
+		fun map = (f : Function) (xs : List) -> xs.map f
 
 
 		# filter : ('a -> Bool) -> ['a] -> ['a]
@@ -330,7 +331,7 @@ structure Umu = struct {
 
 	structure String = struct {
 		# abort : String -> ()
-		val abort = &(String$abort)
+		fun abort = x : String -> x.abort
 
 
 		# join : String -> [String] -> String
@@ -357,19 +358,19 @@ structure Umu = struct {
 		#### Top ####
 
 		# inspect	: 'a -> String
-		val inspect = &(Top$inspect)
+		fun inspect = x -> x.inspect
 
 		# to-s		: 'a -> String
-		val to-s = &(Top$to-s)
+		fun to-s = x -> x.to-s
 
 		# (==)		: 'a -> 'b -> Bool
-		val (==) = &(Top$==)
+		fun (==) = x y -> x.== y
 
 		# (<>)		: 'a -> 'b -> Bool
 		fun (<>) = x y -> x.== y.not
 
 		# (<)		: 'a -> 'a -> Bool
-		val (<) = &(Top$<)
+		fun (<) = x y -> x.< y
 
 		# (>)		: 'a -> 'a -> Bool
 		fun (>) = x y -> y.< x
@@ -390,55 +391,55 @@ structure Umu = struct {
 		val FALSE = FALSE
 
 		# not		: Bool -> Bool
-		val not = &(Bool$not)
+		fun not = x : Bool -> x.not
 
 
 		#### Number ####
 
 		# 	positive?	: Number -> Bool
-		val positive? = &(Number$positive?)
+		fun positive? = x : Number -> x.positive?
 
 		# 	negative?	: Number -> Bool
-		val negative? = &(Number$negative?)
+		fun negative? = x : Number -> x.negative?
 
 		# 	zero?		: Number -> Bool
-		val zero? = &(Number$zero?)
+		fun zero? = x : Number -> x.zero?
 
 		# 	odd?		: Integer -> Bool
-		val odd? = &(Integer$odd?)
+		fun odd? = x : Integer -> x.odd?
 
 		# 	even?		: Integer -> Bool
-		val even? = &(Integer$even?)
+		fun even? = x : Integer -> x.even?
 
 		# abs			: 'a -> 'a	where { 'a <- Number }
-		val abs = &(Number$abs)
+		fun abs = x : Number -> x.abs
 
 		# negate		: 'a -> 'a	where { 'a <- Number }
-		val negate = &(Number$negate)
+		fun negate = x : Number -> x.negate
 
 		# to-i			: Number -> Integer
-		val to-i = &(Number$to-i)
+		fun to-i = x : Number -> x.to-i
 
 		# to-f			: Number -> Float
-		val to-f = &(Number$to-f)
+		fun to-f = x : Number -> x.to-f
 
 		# (+)			: 'a -> 'a -> 'a		where { 'a <- Number }
-		val (+) = &(Number$+)
+		fun (+) = (x : Number) (y : Number) -> x.+ y
 
 		# (-)			: 'a -> 'a -> 'a		where { 'a <- Number }
-		val (-) = &(Number$-)
+		fun (-) = (x : Number) (y : Number) -> x.- y
 
 		# (*)			: 'a -> 'a -> 'a		where { 'a <- Number }
-		val (*) = &(Number$*)
+		fun (*) = (x : Number) (y : Number) -> x.* y
 
 		# (/)			: 'a -> 'a -> 'a		where { 'a <- Number }
-		val (/) = &(Number$/)
+		fun (/) = (x : Number) (y : Number) -> x./ y
 
 		# (mod)			: 'a -> 'a -> 'a		where { 'a <- Number }
-		val (mod) = &(Number$mod)
+		fun (mod) = (x : Number) (y : Number) -> x.mod y
 
 		# (pow)			: 'a -> 'a -> 'a		where { 'a <- Number }
-		val (pow) = &(Number$pow)
+		fun (pow) = (x : Number) (y : Number) -> x.pow y
 
 
 		#### Math ####
@@ -465,7 +466,7 @@ structure Umu = struct {
 		val abort = String::abort
 
 		# (^)		: String -> String -> String
-		val (^) = &(String$^)
+		fun (^) = (x : String) (y : String) -> x.^ y
 
 		# join	 	: String -> [String] -> String
 		val join = String::join
@@ -510,17 +511,17 @@ structure Umu = struct {
 		#### Object ####
 
 		# val-of : Object 'a -> Top
-		val val-of = &(Object$contents)
+		fun val-of = x : Object -> x.contents
 
 
 		#### Datum ####
 		# See SICP(Wizard Book), 2.4.2 Tagged data
 
 		# Datum : Symbol -> 'a -> Datum 'a
-		val Datum = &(Datum.make)
+		fun Datum = x : Symbol -> &(Datum).make x
 
 		# tag-of : Datum 'a -> Symbol
-		val tag-of = &(Datum$tag)
+		fun tag-of = x : Datum -> x.tag
 
 
 		#### Option ####
@@ -610,19 +611,19 @@ structure Umu = struct {
 		#### Function application - Aka. "PIPE" ####
 
 		## (|>)	: 'a -> ('a -> 'b) -> 'b
-		fun (|>) = x f -> f x
+		fun (|>) = x (f : Function) -> f x
 
 		## (<|)	: ('a -> 'b) -> 'a -> 'b
-		fun (<|) = f x -> f x
+		fun (<|) = (f : Function) x -> f x
 
 
 		#### Function composition ####
 
 		## (>>)	: ('a -> 'b) -> ('b -> 'c) -> 'a -> 'c
-		fun (>>) = f g -> {x -> g (f x)}
+		fun (>>) = (f : Function) (g : Function) -> {x -> g (f x)}
 
 		## (<<)	: ('b -> 'c) -> ('a -> 'b) -> 'a -> 'c
-		fun (<<) = g f -> {x -> g (f x)}
+		fun (<<) = (g : Function) (f : Function) -> {x -> g (f x)}
 
 
 		#### High order Function ####

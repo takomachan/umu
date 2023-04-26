@@ -157,66 +157,143 @@ class Method < Abstraction::Abstract
 										method_sym, self.loc, env
 									)
 		ASSERT.kind_of method_spec, ECTS::Method
-		param_num		= method_spec.param_class_specs.size
 
-		unless arg_num == param_num
-			raise X::ArgumentError.new(
-				self.loc,
-				env,
-				"Wrong number of arguments, " +
-					"expected: %d, but given: %d",
-				param_num, arg_num
-			)
-		end
+		param_specs	= method_spec.param_class_specs
+		param_num	= method_spec.param_class_specs.size
 
-		arg_values.zip(
-			method_spec.param_class_specs
-		).each_with_index do
-			|(arg_value, param_class_spec), i|
-			ASSERT.kind_of arg_value,			VC::Top
-			ASSERT.kind_of param_class_spec,	ECTSC::Base
+		result_value =
+			if param_num == arg_num
+				__validate_type_of_args__(
+					param_num, arg_values, param_specs, loc, env
+				)
 
-			unless env.ty_kind_of?(arg_value, param_class_spec)
+				next_receiver = receiver.invoke(
+					method_spec, self.loc, env, event, *arg_values
+				)
+				ASSERT.assert env.ty_kind_of?(
+					next_receiver, method_spec.ret_class_spec
+				)
+				ASSERT.kind_of next_receiver, VC::Top
+			elsif param_num < arg_num
+				__validate_type_of_args__(
+					param_num, arg_values, param_specs, loc, env
+				)
+
+				invoked_values = if param_num == 0
+										[]
+									else
+										arg_values[0 .. param_num - 1]
+									end
+
+				value = receiver.invoke(
+					method_spec, loc, env.enter(event), event,
+					*invoked_values
+				)
+				ASSERT.assert env.ty_kind_of?(
+					value, method_spec.ret_class_spec
+				)
+				ASSERT.kind_of value, VC::Top
+
+				hd_arg_value, *tl_arg_values = arg_values[param_num .. -1]
+
+				value.apply hd_arg_value, tl_arg_values, loc, env
+			elsif param_num > arg_num
+=begin
+				p({
+					param_num: param_num,
+					arg_num: arg_num,
+					arg_values: arg_values
+				})
+=end
+				free_idents, bound_idents = (0 .. param_num - 1).inject(
+							 [[],        []]
+						) { |(fr_idents, bo_idents), i|
+					ident = SACE.make_identifier(
+								loc, format("%%x_%d", i + 1).to_sym
+							)
+
+					if i < arg_num
+						[fr_idents + [ident],	bo_idents]
+					else
+						[fr_idents,				bo_idents + [ident]]
+					end
+				}
+=begin
+				p({
+					free_idents: free_idents,
+					bound_idents: bound_idents
+				})
+=end
+				new_env = free_idents.zip(
+						arg_values
+					).inject(
+						env.va_extend_value :'%r', receiver
+					) { |e, (ident, v)|
+					ASSERT.kind_of e,		E::Entry
+					ASSERT.kind_of ident,	SACE::Unary::Identifier::Short
+					ASSERT.kind_of v,		VC::Top
+
+					e.va_extend_value ident.sym, v
+				}
+
+				lamb_params = bound_idents.map { |ident|
+					ASSERT.kind_of ident, SACE::Unary::Identifier::Short
+
+					SACE.make_parameter ident.loc, ident
+				}
+
+				VC.make_closure(
+					SACE.make_lambda(
+						loc,
+						lamb_params,
+						SACE.make_send(
+							loc,
+							SACE.make_identifier(loc, :'%r'),
+							SACE.make_method(
+								loc,
+								method_spec.symbol,
+								free_idents + bound_idents
+							)
+						)
+					),
+					new_env.va_context
+				)
+			else
+				ASSERT.abort 'No case'
+			end
+
+		ASSERT.kind_of result_value, VC::Top
+	end
+
+
+private
+
+	def __validate_type_of_args__(num, arg_values, param_specs, loc, env)
+		ASSERT.kind_of num,			::Integer
+		ASSERT.kind_of arg_values,	::Array
+		ASSERT.kind_of param_specs,	::Array
+		ASSERT.kind_of loc,			L::Location
+		ASSERT.kind_of env,			E::Entry
+
+		(0 .. num - 1).each do |i|
+			arg_value	= arg_values[i]
+			param_spec	= param_specs[i]
+			ASSERT.kind_of arg_value,	VC::Top
+			ASSERT.kind_of param_spec,	ECTSC::Base
+
+			unless env.ty_kind_of?(arg_value, param_spec)
 				raise X::TypeError.new(
-					self.loc,
+					loc,
 					env,
-					"Type error at #%d argument, " +
-							"expected a %s, but %s : %s",
+					"For '%s's #%d argument, expected a %s, but %s : %s",
+						self.sym.to_s,
 						i + 1,
-						param_class_spec.symbol,
-						arg_value,
-						arg_value.type_sym.to_s
+						param_spec.symbol,
+						arg_value.to_s,
+						arg_value.type_sym
 				)
 			end
 		end
-
-		next_receiver = receiver.invoke(
-							method_spec,
-							self.loc,
-							env,
-							event,
-							*arg_values
-						)
-		ASSERT.assert env.ty_kind_of?(
-							next_receiver, method_spec.ret_class_spec
-						)
-		ASSERT.kind_of next_receiver, VC::Top
-
-=begin
-		final_receiver = if self.opnd_exprs.empty?
-				next_receiver
-			else
-				hd_value, *tl_values = self.opnd_exprs.map { |expr|
-					result = expr.evaluate env
-					ASSERT.kind_of result, SAR::Value
-
-					result.value
-				}
-
-				next_receiver.apply hd_value, tl_values, self.loc, env
-			end
-		ASSERT.kind_of final_receiver, VC::Top
-=end
 	end
 end
 
