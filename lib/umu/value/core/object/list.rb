@@ -23,7 +23,7 @@ class Abstract < Object::Abstract
 		[ :meth_des,	VCP::Tuple,
 			:des],
 		[ :meth_map,	self,
-			:map,		VCF::Abstract]
+			:map,		VC::Function]
 	]
 
 
@@ -92,7 +92,7 @@ class Abstract < Object::Abstract
 
 
 	def meth_map(loc, env, event, func)
-		ASSERT.kind_of func, VCF::Abstract
+		ASSERT.kind_of func, VC::Function
 
 		new_env = env.enter event
 		ys = []

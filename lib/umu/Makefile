@@ -53,7 +53,6 @@ SRCS	= commander.rb \
 			concrete-syntax/core/expression/unary/prefix.rb \
 			concrete-syntax/core/expression/unary/identifier.rb \
 			concrete-syntax/core/expression/unary/class.rb \
-			concrete-syntax/core/expression/unary/method.rb \
 			concrete-syntax/core/expression/unary/container.rb \
 			concrete-syntax/core/expression/unary/container/abstract.rb \
 			concrete-syntax/core/expression/unary/container/tuple.rb \
@@ -104,7 +103,6 @@ SRCS	= commander.rb \
 			abstract-syntax/core/expression/unary/atom/symbol.rb \
 			abstract-syntax/core/expression/unary/identifier.rb \
 			abstract-syntax/core/expression/unary/class.rb \
-			abstract-syntax/core/expression/unary/method.rb \
 			abstract-syntax/core/expression/unary/container.rb \
 			abstract-syntax/core/expression/unary/container/abstraction.rb \
 			abstract-syntax/core/expression/unary/container/tuple.rb \
@@ -146,9 +144,6 @@ SRCS	= commander.rb \
 			value/core/object/option.rb \
 			value/core/object/list.rb \
 			value/core/function.rb \
-			value/core/function/abstract.rb \
-			value/core/function/closure.rb \
-			value/core/function/method.rb \
 			environment.rb \
 			environment/preference.rb \
 			environment/tracer/tracer.rb \

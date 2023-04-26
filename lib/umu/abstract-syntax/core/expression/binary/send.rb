@@ -242,7 +242,7 @@ class Method < Abstraction::Abstract
 					SACE.make_parameter ident.loc, ident
 				}
 
-				VC.make_closure(
+				VC.make_function(
 					SACE.make_lambda(
 						loc,
 						lamb_params,

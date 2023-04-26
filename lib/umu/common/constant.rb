@@ -55,9 +55,7 @@ module Umu
 					class Abstract < Object::Abstract; end
 				end
 			end
-			module Function
-				class Abstract < Top; end
-			end
+			class Function < Top; end
 		end
 	end
 	module Environment
@@ -98,7 +96,6 @@ module Umu
 	VCAN	= Value::Core::Atom::Number
 	VCP		= Value::Core::Product
 	VCO		= Value::Core::Object
-	VCF		= Value::Core::Function
 	E		= Environment
 	EC		= Environment::Context
 	ECT		= Environment::Context::Type

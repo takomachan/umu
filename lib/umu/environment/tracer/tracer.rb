@@ -169,7 +169,6 @@ module_function
 		[['Value',			'Core',	'Atom'],					'VCA'],
 		[['Value',			'Core',	'Product'],					'VCP'],
 		[['Value',			'Core',	'Object'],					'VCO'],
-		[['Value',			'Core',	'Function'],				'VCF'],
 
 		# Environment
 		[['Environment'],										'E']

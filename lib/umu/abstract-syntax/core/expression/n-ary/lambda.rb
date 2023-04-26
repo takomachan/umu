@@ -73,7 +73,7 @@ class Entry < Expression::Abstract
 		ASSERT.kind_of env,		E::Entry
 		ASSERT.kind_of event,	E::Tracer::Event
 
-		VC.make_closure self, env.va_context
+		VC.make_function self, env.va_context
 	end
 end
 

@@ -488,12 +488,6 @@ atom_expr:
 | '&(' ID ')' {
 	result = SCCE.make_class val[1].loc, val[1].sym
 }
-| '&(' ID '.' mess_ident ')' {
-	result = SCCE.make_class_method val[1].loc, val[1].sym, val[3].sym
-}
-| '&(' ID '$' mess_ident ')' {
-	result = SCCE.make_instance_method val[1].loc, val[1].sym, val[3].sym
-}
 
 # Braket: [ ... ]
 | '[' ']' {
