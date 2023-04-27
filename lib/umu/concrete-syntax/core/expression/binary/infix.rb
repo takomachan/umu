@@ -83,9 +83,7 @@ private
 				case opr_sym
 				# Typing
 				when :ISA?
-					unless rhs_opnd.kind_of?(
-										SACE::Unary::Identifier::Short
-									)
+					unless rhs_opnd.kind_of?(SACEU::Identifier::Short)
 						raise X::SyntaxError.new(
 							rhs_opnd.loc,
 							"RHS of 'isa?' operator " +

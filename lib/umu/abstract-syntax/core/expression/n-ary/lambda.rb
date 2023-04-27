@@ -19,7 +19,7 @@ class Parameter < Abstraction::Model
 
 
 	def initialize(loc, ident, opt_type_sym)
-		ASSERT.kind_of		ident,			SACE::Unary::Identifier::Short
+		ASSERT.kind_of		ident,			SACEU::Identifier::Short
 		ASSERT.opt_kind_of	opt_type_sym,	::Symbol
 
 		super(loc)
@@ -86,7 +86,7 @@ module_function
 
 	def make_parameter(loc, ident, opt_type_sym = nil)
 		ASSERT.kind_of		loc,			L::Location
-		ASSERT.kind_of		ident,			SACE::Unary::Identifier::Short
+		ASSERT.kind_of		ident,			SACEU::Identifier::Short
 		ASSERT.opt_kind_of	opt_type_sym,	::Symbol
 
 		Nary::Lambda::Parameter.new(loc, ident, opt_type_sym).freeze

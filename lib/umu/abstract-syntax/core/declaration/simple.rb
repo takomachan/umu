@@ -95,7 +95,7 @@ class Recursive < Abstract
 
 
 	def initialize(loc, sym, lam_expr)
-		ASSERT.kind_of lam_expr, SACE::Nary::Lambda::Entry
+		ASSERT.kind_of lam_expr, SACEN::Lambda::Entry
 
 		super(loc, sym)
 
@@ -136,7 +136,7 @@ module_function
 	def make_recursive(loc, sym, lam_expr)
 		ASSERT.kind_of loc,			L::Location
 		ASSERT.kind_of sym,			::Symbol
-		ASSERT.kind_of lam_expr,	SACE::Nary::Lambda::Entry
+		ASSERT.kind_of lam_expr,	SACEN::Lambda::Entry
 
 		Simple::Recursive.new(loc, sym, lam_expr).freeze
 	end

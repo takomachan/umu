@@ -25,7 +25,7 @@ class Abstract < Expression::Abstract
 	)
 		ASSERT.kind_of		expr,			SCCE::Abstract
 		ASSERT.kind_of		fst_rule,
-							SCCE::Nary::Rule::Abstraction::WithDeclaration
+							SCCEN::Rule::Abstraction::WithDeclaration
 		ASSERT.kind_of		snd_rules,		::Array
 		ASSERT.opt_kind_of	opt_else_expr,	SCCE::Abstract
 		ASSERT.kind_of		else_decls,		::Array

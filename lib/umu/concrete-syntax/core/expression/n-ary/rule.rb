@@ -184,8 +184,7 @@ class Class < Abstract
 
 
 	def initialize(loc, class_ident, opt_contents_pat)
-		ASSERT.kind_of		class_ident,
-							SCCE::Unary::Identifier::Short
+		ASSERT.kind_of		class_ident,		SCCEU::Identifier::Short
 		ASSERT.opt_kind_of	opt_contents_pat,	SCCP::Abstract
 
 		super(loc, class_ident)
@@ -251,7 +250,7 @@ module_function
 
 	def make_case_rule(loc, head, body_expr, decls)
 		ASSERT.kind_of loc,			L::Location
-		ASSERT.kind_of head,		SCCE::Nary::Rule::Case::Head::Abstract
+		ASSERT.kind_of head,		SCCEN::Rule::Case::Head::Abstract
 		ASSERT.kind_of body_expr,	SCCE::Abstract
 		ASSERT.kind_of decls,		::Array
 
@@ -284,8 +283,7 @@ module_function
 
 	def make_case_rule_class(loc, class_ident, opt_contents_pat)
 		ASSERT.kind_of		loc,				L::Location
-		ASSERT.kind_of		class_ident,
-							SCCE::Unary::Identifier::Short
+		ASSERT.kind_of		class_ident,		SCCEU::Identifier::Short
 		ASSERT.opt_kind_of	opt_contents_pat,	SCCP::Abstract
 
 		Nary::Rule::Case::Head::Class.new(

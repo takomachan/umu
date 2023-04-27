@@ -16,7 +16,11 @@ module Umu
 		end
 		module Core
 			module Declaration; end
-			module Expression;  end
+			module Expression
+				module Unary;	end
+				module Binary;	end
+				module Nary;	end
+			end
 			module Pattern;     end
 		end
 
@@ -26,7 +30,11 @@ module Umu
 		module Result;		end
 		module Core
 			module Declaration;	end
-			module Expression;	end
+			module Expression
+				module Unary;	end
+				module Binary;	end
+				module Nary;	end
+			end
 		end
 	end
 	module Value
@@ -84,12 +92,18 @@ module Umu
 	SCC		= ConcreteSyntax::Core
 	SCCD	= ConcreteSyntax::Core::Declaration
 	SCCE	= ConcreteSyntax::Core::Expression
+	SCCEU	= ConcreteSyntax::Core::Expression::Unary
+	SCCEB	= ConcreteSyntax::Core::Expression::Binary
+	SCCEN	= ConcreteSyntax::Core::Expression::Nary
 	SCCP	= ConcreteSyntax::Core::Pattern
 	SA		= AbstractSyntax
 	SAR		= AbstractSyntax::Result
 	SAC		= AbstractSyntax::Core
 	SACD	= AbstractSyntax::Core::Declaration
 	SACE	= AbstractSyntax::Core::Expression
+	SACEU	= AbstractSyntax::Core::Expression::Unary
+	SACEB	= AbstractSyntax::Core::Expression::Binary
+	SACEN	= AbstractSyntax::Core::Expression::Nary
 	V		= Value
 	VC		= Value::Core
 	VCA		= Value::Core::Atom

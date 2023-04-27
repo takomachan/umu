@@ -230,14 +230,14 @@ class Method < Abstraction::Abstract
 						env.va_extend_value :'%r', receiver
 					) { |e, (ident, v)|
 					ASSERT.kind_of e,		E::Entry
-					ASSERT.kind_of ident,	SACE::Unary::Identifier::Short
+					ASSERT.kind_of ident,	SACEU::Identifier::Short
 					ASSERT.kind_of v,		VC::Top
 
 					e.va_extend_value ident.sym, v
 				}
 
 				lamb_params = bound_idents.map { |ident|
-					ASSERT.kind_of ident, SACE::Unary::Identifier::Short
+					ASSERT.kind_of ident, SACEU::Identifier::Short
 
 					SACE.make_parameter ident.loc, ident
 				}
