@@ -27,7 +27,7 @@ structure List = struct {
 		then TRUE, else FALSE
 	#)
 	fun rec equal? = eq? xs ys ->
-		if (xs isa? List && ys isa? List)
+		if (xs kind-of? List && ys kind-of? List)
 			case xs {
 			  []	  -> empty? ys
 			| [x|xs'] ->

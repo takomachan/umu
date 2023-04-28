@@ -198,13 +198,13 @@ fun rec parse = exp : Top -> cond exp {
   else		-> ERROR::syntax "Unknown Expression: " exp
 } where {
 	# const? : 'a -> Bool
-	fun const? = exp -> exp isa? Integer
+	fun const? = exp -> exp kind-of? Integer
 
 	# var? : 'a -> Bool
-	fun var? = exp -> exp isa? Symbol
+	fun var? = exp -> exp kind-of? Symbol
 
 	# form? : 'a -> Bool
-	fun form? = exp -> exp isa? List && length exp >= 2
+	fun form? = exp -> exp kind-of? List && length exp >= 2
 
 
 
@@ -213,7 +213,7 @@ fun rec parse = exp : Top -> cond exp {
 	fun parse-form = exp : List -> let {
 		val [keyword|args] = exp
 	in
-		if (keyword isa? Symbol)
+		if (keyword kind-of? Symbol)
 			case keyword {
 			  @IF		-> parse-if		args
 			| @LAMBDA	-> parse-lambda	args
@@ -244,7 +244,7 @@ fun rec parse = exp : Top -> cond exp {
 
 			val [fps, body] = args
 
-			assert (fps isa? List)
+			assert (fps kind-of? List)
 				ERROR::syntax
 					"In LAMBDA, expected a List of <Var>, but: " fps
 			assert (length fps >= 1)
@@ -297,7 +297,7 @@ fun rec parse = exp : Top -> cond exp {
 		in
 			binds |> foldr (parse body) { bind body-exp ->
 				let {
-					assert (bind isa? List && length bind == 2)
+					assert (bind kind-of? List && length bind == 2)
 						ERROR::syntax
 							"For LET's binding, expected pair List, but: "
 							bind
@@ -328,7 +328,7 @@ fun rec parse = exp : Top -> cond exp {
 		in
 			binds |> foldr (parse body) { bind body-exp ->
 				let {
-					assert (bind isa? List && length bind >= 2)
+					assert (bind kind-of? List && length bind >= 2)
 						ERROR::syntax
 							("For LETREC's binding, " ^
 								"expected 2 or more List, but: ")
@@ -542,10 +542,10 @@ val run-I : Function = mk-runner interpret-I
 
 structure ASSERT = struct {
 	fun integer = actual expect -> let {
-		assert (actual isa? Datum)				"Datum"
-		assert (tag-of actual == @Integer)		"@Integer"
-		assert (val-of actual isa? Integer)		"Integer"
-		assert (val-of actual == expect)		(inspect expect)
+		assert (actual kind-of? Datum)				"Datum"
+		assert (tag-of actual == @Integer)			"@Integer"
+		assert (val-of actual kind-of? Integer)		"Integer"
+		assert (val-of actual == expect)			(inspect expect)
 	in
 		()
 	}
@@ -554,18 +554,18 @@ structure ASSERT = struct {
 	fun false = actual -> boolean actual FALSE
 
 	fun funval = actual -> let {
-		assert (actual isa? Datum)				"Datum"
-		assert (tag-of actual == @Funval)		"@Funval"
-		assert (val-of actual isa? Function)	"Function"
+		assert (actual kind-of? Datum)				"Datum"
+		assert (tag-of actual == @Funval)			"@Funval"
+		assert (val-of actual kind-of? Function)	"Function"
 	in
 		()
 	}
 } where {
 	fun boolean = actual expect -> let {
-		assert (actual isa? Datum)				"Datum"
-		assert (tag-of actual == @Boolean)		"@Boolean"
-		assert (val-of actual isa? Bool)		"Bool"
-		assert (val-of actual == expect)		(inspect expect)
+		assert (actual kind-of? Datum)				"Datum"
+		assert (tag-of actual == @Boolean)			"@Boolean"
+		assert (val-of actual kind-of? Bool)		"Bool"
+		assert (val-of actual == expect)			(inspect expect)
 	in
 		()
 	}

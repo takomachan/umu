@@ -27,7 +27,7 @@ RESERVED_WORDS = [
 	'case',			'cond',
 	'else',			'elsif',
 	'fun',
-	'if', 			'in',			'isa?',
+	'if', 			'in',			'kind-of?',
 	'let',
 	'mod',
 	'pow',

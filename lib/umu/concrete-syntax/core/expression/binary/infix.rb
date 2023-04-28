@@ -82,11 +82,11 @@ private
 			else
 				case opr_sym
 				# Typing
-				when :ISA?
+				when :'KIND-OF?'
 					unless rhs_opnd.kind_of?(SACEU::Identifier::Short)
 						raise X::SyntaxError.new(
 							rhs_opnd.loc,
-							"RHS of 'isa?' operator " +
+							"RHS of 'kind-of?' operator " +
 								"require a identifier, but: %s",
 							rhs_opnd.to_s
 						)

@@ -30,7 +30,7 @@ class KindOf < Binary::Abstract
 
 
 	def to_s
-		format("(%s%s %%ISA? %s)",
+		format("(%s%s %%KIND-OF? %s)",
 			self.expr.to_s,
 
 			if self.opt_type_sym

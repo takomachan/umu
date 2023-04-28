@@ -2,7 +2,7 @@ class Umu::ConcreteSyntax::Parser
 
 
 convert
-	ISAQ	':ISA?'
+	KIND_OF	":'KIND-OF?'"
 end
 
 prechigh
@@ -15,7 +15,7 @@ prechigh
 	right	'<<'
 	left	'|>'
 	right	'<|'
-	left	ISAQ
+	left	KIND_OF
 	left	'&&' '||'
 preclow
 
@@ -392,7 +392,7 @@ _infix_expr:
 | infix_expr '>>'		infix_expr	{ result = val }
 | infix_expr '<|'		infix_expr	{ result = val }
 | infix_expr '|>'		infix_expr	{ result = val }
-| infix_expr ISAQ		infix_expr	{ result = val }
+| infix_expr KIND_OF	infix_expr	{ result = val }
 | infix_expr '&&'		infix_expr	{ result = val }
 | infix_expr '||'		infix_expr	{ result = val }
 
