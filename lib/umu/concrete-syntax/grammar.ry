@@ -485,9 +485,6 @@ atom_expr:
 | '(' expr ';' expr sem_exprs ')' {
 	result = SCCE.make_sequence val[0].loc, [val[1], val[3]] + val[4]
 }
-| '&(' ID ')' {
-	result = SCCE.make_class val[1].loc, val[1].sym
-}
 
 # Braket: [ ... ]
 | '[' ']' {
@@ -499,6 +496,9 @@ atom_expr:
 # Braket: { ... }
 | '{' pat pats '->' expr inner_where_decls '}' {
 	result = SCCE.make_lambda val[0].loc, [val[1]] + val[2], val[4], val[5]
+}
+| '&{' ID '}' {
+	result = SCCE.make_class val[1].loc, val[1].sym
 }
 
 

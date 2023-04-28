@@ -116,9 +116,9 @@ IDENTIFIER_SYMBOLS = [
 
 BRAKET_PAIRS = [
 	['(',	')'],	# Tuple, etc
-	['&(',	')'],	# Method
 	['[',	']'],	# List
 	['{',	'}'],	# Lambda, etc
+	['&{',	'}'],	# Class
 
 
 	# Not used, but reserved for future

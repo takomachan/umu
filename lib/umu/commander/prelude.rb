@@ -17,10 +17,10 @@ structure Umu = struct {
 	######## Bool ########
 
 	# TRUE : Bool
-	val TRUE = &(Bool).make-true
+	val TRUE = &{Bool}.make-true
 
 	# FALSE : Bool
-	val FALSE = &(Bool).make-false
+	val FALSE = &{Bool}.make-false
 
 
 
@@ -30,10 +30,10 @@ structure Umu = struct {
 		#### Constructor ####
 
 		# Some : 'a -> Some 'a
-		val Some = &(Some).make
+		val Some = &{Some}.make
 
 		# NONE : None
-		val NONE = &(None).make
+		val NONE = &{None}.make
 
 
 		#### Classifier ####
@@ -51,16 +51,16 @@ structure Umu = struct {
 
 	structure Math = struct {
 		# NAN 			: Float
-		val NAN = &(Float).make-nan
+		val NAN = &{Float}.make-nan
 
 		# INFINITY	 	: Float
-		val INFINITY = &(Float).make-infinity
+		val INFINITY = &{Float}.make-infinity
 
 		# PI 			: Float
-		val PI = &(Float).make-pi
+		val PI = &{Float}.make-pi
 
 		# E 			: Float
-		val E = &(Float).make-e
+		val E = &{Float}.make-e
 
 		# nan?			: Float -> Bool
 		fun nan? = x : Float -> x.nan?
@@ -173,9 +173,9 @@ structure Umu = struct {
 		# random : 'a -> 'a	where { 'a <- Number }
 		fun random = x : Number -> x.random
 	} where {
-		val _STDIN	= &(IO).make-stdin
-		val _STDOUT	= &(IO).make-stdout
-		val _STDERR	= &(IO).make-stderr
+		val _STDIN	= &{IO}.make-stdin
+		val _STDOUT	= &{IO}.make-stdout
+		val _STDERR	= &{IO}.make-stderr
 	}
 
 
@@ -184,11 +184,11 @@ structure Umu = struct {
 
 	structure List = struct {
 		# Nil : () -> ['a]
-		fun Nil = () -> &(Nil).make
+		fun Nil = () -> &{Nil}.make
 
 
 		# Cons : 'a -> ['a] -> ['a]
-		fun Cons = x (xs : List) -> &(Cons).make x xs
+		fun Cons = x (xs : List) -> &{Cons}.make x xs
 
 
 		# Nil? : ['a] -> Bool
@@ -518,7 +518,7 @@ structure Umu = struct {
 		# See SICP(Wizard Book), 2.4.2 Tagged data
 
 		# Datum : Symbol -> 'a -> Datum 'a
-		fun Datum = x : Symbol -> &(Datum).make x
+		fun Datum = x : Symbol -> &{Datum}.make x
 
 		# tag-of : Datum 'a -> Symbol
 		fun tag-of = x : Datum -> x.tag
