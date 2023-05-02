@@ -118,6 +118,7 @@ BRAKET_PAIRS = [
 	['(',	')'],	# Tuple, etc
 	['[',	']'],	# List
 	['{',	'}'],	# Lambda, etc
+	['&(',	')'],	# Method
 	['&{',	'}'],	# Class
 
 

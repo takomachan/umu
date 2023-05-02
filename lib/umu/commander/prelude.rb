@@ -358,10 +358,10 @@ structure Umu = struct {
 		#### Top ####
 
 		# inspect	: 'a -> String
-		fun inspect = x -> x.inspect
+		val inspect = &(inspect)
 
 		# to-s		: 'a -> String
-		fun to-s = x -> x.to-s
+		val to-s = &(to-s)
 
 		# (==)		: 'a -> 'b -> Bool
 		fun (==) = x y -> x.== y
