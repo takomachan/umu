@@ -122,7 +122,7 @@ module_function
 			printf "%sINSTANCE METHODS:\n", indent_0
 
 			class_spec.each_instance_method(env).sort.each do |meth_spec|
-				printf("%s%s#%s : %s\n",
+				printf("%s%s$%s : %s\n",
 					indent_1,
 
 					class_spec.symbol,

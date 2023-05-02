@@ -39,10 +39,10 @@ structure Umu = struct {
 		#### Classifier ####
 
 		# Some? : Option 'a -> Bool
-		fun Some? = x : Option -> x.some?
+		val Some? = &(Option$some?)
 
-		# NONE? : Option 'a -> Bool
-		fun NONE? = x : Option -> x.none?
+		# None? : Option 'a -> Bool
+		val None? = &(Option$none?)
 	}
 
 
@@ -63,77 +63,77 @@ structure Umu = struct {
 		val E = &{Float}.make-e
 
 		# nan?			: Float -> Bool
-		fun nan? = x : Float -> x.nan?
+		val nan? = &(Float$nan?)
 
 		# infinite?		: Float -> Bool
-		fun infinite? = x : Float -> x.infinite?
+		val infinite? = &(Float$infinite?)
 
 		# equal?		: Float -> Float -> Integer -> Bool
 		fun equal? = (x : Float) (y : Float) (n : Integer) ->
 			x.truncate n.== (y.truncate n)
 
 		# finite?		: Float -> Bool
-		fun finite? = x : Float -> x.finite?
+		val finite? = &(Float$finite?)
 
 		# sin			: Float -> Float
-		fun sin = x : Float -> x.sin
+		val sin = &(Float$sin)
 
 		# cos			: Float -> Float
-		fun cos = x : Float -> x.cos
+		val cos = &(Float$cos)
 
 		# tan			: Float -> Float
-		fun tan = x : Float -> x.tan
+		val tan = &(Float$tan)
 
 		# asin			: Float -> Float
-		fun asin = x : Float -> x.asin
+		val asin = &(loat$asin)
 
 		# acos			: Float -> Float
-		fun acos = x : Float -> x.acos
+		val acos = &(Float$acos)
 
 		# atan			: Float -> Float
-		fun atan = x : Float -> x.atan
+		val atan = &(Float$atan)
 
 		# atan2			: Float -> Float -> Float
-		fun atan2 = x : Float -> x.atan2
+		val atan2 = &(Float$atan2)
 
 		# sinh			: Float -> Float
-		fun sinh = x : Float -> x.sinh
+		val sinh = &(Float$sinh)
 
 		# cosh			: Float -> Float
-		fun cosh = x : Float -> x.cosh
+		val cosh = &(Float$cosh)
 
 		# tanh			: Float -> Float
-		fun tanh = x : Float -> x.tanh
+		val tanh = &(Float$tanh)
 
 		# exp			: Float -> Float
-		fun exp = x : Float -> x.exp
+		val exp = &(Float$exp)
 
 		# log			: Float -> Float
-		fun log = x : Float -> x.log
+		val log = &(Float$log)
 
 		# log10			: Float -> Float
-		fun log10 = x : Float -> x.log10
+		val log10 = &(Float$log10)
 
 		# sqrt			: Float -> Float
-		fun sqrt = x : Float -> x.sqrt
+		val sqrt = &(Float$sqrt)
 
 		# truncate		: Float -> Integer -> Float
-		fun truncate = x : Float -> x.truncate
+		fun truncate = (x : Float) (n : Integer) -> x.truncate n
 
 		# ceil			: Float -> Integer -> Float
-		fun ceil = x : Float -> x.ceil
+		fun ceil = (x : Float) (n : Integer) -> x.ceil n
 
 		# floor			: Float -> Integer -> Float
-		fun floor = x : Float -> x.floor
+		fun floor = (x : Float) (n : Integer) -> x.floor n
 
 		# ldexp			: Float -> Integer -> Float
-		fun ldexp = x : Float -> x.ldexp
+		fun ldexp = (x : Float) (y : Integer) -> x.ldexp y
 
 		# frexp			: Float -> (Float, Float)
-		fun frexp = x : Float -> x.frexp
+		fun frexp = (x : Float) (y : Integer) -> x.frexp y
 
 		# divmod		: Float -> Float -> (Float, Float)
-		fun divmod = x : Float -> x.divmod
+		fun divmod = (x : Float) (y : Integer) -> x.divmod y
 	}
 
 
@@ -192,23 +192,23 @@ structure Umu = struct {
 
 
 		# Nil? : ['a] -> Bool
-		fun Nil? = xs : List -> xs.nil?
+		val Nil? = &(List$nil?)
 
 
 		# Cons? : ['a] -> Bool
-		fun Cons? = xs : List -> xs.cons?
+		val Cons? = &(List$cons?)
 
 
-		# des : ['a] -> ('a, ['a])
-		fun des = xs : List -> xs.des
+		# des : ['a] -> ('a, ['a]) or EmptyError
+		val des = &(List$des)
 
 
 		# head : ['a] -> 'a
-		fun head = xs : Cons -> xs.head
+		val head = &(Cons$head)
 
 
 		# tail : ['a] -> ['a]
-		fun tail = xs : Cons -> xs.tail
+		val tail = &(Cons$tail)
 
 
 		# equal-with? : ('a -> 'b -> Bool) -> ['a] -> ['b] -> Bool
@@ -331,7 +331,7 @@ structure Umu = struct {
 
 	structure String = struct {
 		# abort : String -> ()
-		fun abort = x : String -> x.abort
+		val abort = &(String$abort)
 
 
 		# join : String -> [String] -> String
@@ -391,37 +391,37 @@ structure Umu = struct {
 		val FALSE = FALSE
 
 		# not		: Bool -> Bool
-		fun not = x : Bool -> x.not
+		val not = &(Bool$not)
 
 
 		#### Number ####
 
 		# 	positive?	: Number -> Bool
-		fun positive? = x : Number -> x.positive?
+		val positive? = &(Number$positive?)
 
 		# 	negative?	: Number -> Bool
-		fun negative? = x : Number -> x.negative?
+		val negative? = &(Number$negative?)
 
 		# 	zero?		: Number -> Bool
-		fun zero? = x : Number -> x.zero?
+		val zero? = &(Number$zero?)
 
 		# 	odd?		: Integer -> Bool
-		fun odd? = x : Integer -> x.odd?
+		val odd? = &(Integer$odd?)
 
 		# 	even?		: Integer -> Bool
-		fun even? = x : Integer -> x.even?
+		val even? = &(Integer$even?)
 
 		# abs			: 'a -> 'a	where { 'a <- Number }
-		fun abs = x : Number -> x.abs
+		val abs = &(Number$abs)
 
 		# negate		: 'a -> 'a	where { 'a <- Number }
-		fun negate = x : Number -> x.negate
+		val negate = &(Number$negate)
 
 		# to-i			: Number -> Integer
-		fun to-i = x : Number -> x.to-i
+		val to-i = &(Number$to-i)
 
 		# to-f			: Number -> Float
-		fun to-f = x : Number -> x.to-f
+		val to-f = &(Number$to-f)
 
 		# (+)			: 'a -> 'a -> 'a		where { 'a <- Number }
 		fun (+) = (x : Number) (y : Number) -> x.+ y
@@ -518,10 +518,10 @@ structure Umu = struct {
 		# See SICP(Wizard Book), 2.4.2 Tagged data
 
 		# Datum : Symbol -> 'a -> Datum 'a
-		fun Datum = x : Symbol -> &{Datum}.make x
+		fun Datum = (t : Symbol) x -> &{Datum}.make t x
 
 		# tag-of : Datum 'a -> Symbol
-		fun tag-of = x : Datum -> x.tag
+		val tag-of = &(Datum$tag)
 
 
 		#### Option ####
@@ -535,8 +535,8 @@ structure Umu = struct {
 		# Some?	: Option 'a -> Bool
 		val Some? = Option::Some?
 
-		# NONE?	: Option 'a -> Bool
-		val NONE? = Option::NONE?
+		# None?	: Option 'a -> Bool
+		val None? = Option::None?
 
 
 		#### List ####
@@ -635,25 +635,26 @@ structure Umu = struct {
 		fun const = x _ -> x
 
 		## tee      : ('a -> 'b) -> 'a -> 'a
-		fun tee = f x -> (f x ; x)
+		fun tee = (f : Function) x -> (f x ; x)
 
 		## curry	: (('a, 'b) -> 'c) -> ('a -> 'b -> 'c)
-		fun curry = f x y -> f (x, y)
+		fun curry = (f : Function) x y -> f (x, y)
 
 		## uncurry	: ('a -> 'b -> 'c) -> (('a, 'b) -> 'c)
-		fun uncurry = f (x, y) -> f x y
+		fun uncurry = (f : Function) (x, y) -> f x y
 
 		## swap		: (('a, 'b) -> 'c) -> (('b, 'a) -> 'c)
-		fun swap = f (x, y) -> f (y, x)
+		fun swap = (f : Function) (x, y) -> f (y, x)
 
 		## flip		: ('a -> 'b -> 'c) -> ('b -> 'a -> 'c)
-		fun flip = f x y -> f y x
+		fun flip = (f : Function) x y -> f y x
 
 		## pair		: ('a -> 'b, 'a -> 'c) -> ('a -> ('b, 'c))
-		fun pair = (f, g) x -> (f x, g x)
+		fun pair = (f : Function, g : Function) x -> (f x, g x)
 
 		## cross	: ('a -> 'b, 'c -> 'd) -> (('a, 'c) -> ('b, 'd))
-		fun cross = (f, g) -> pair (fst >> f, snd >> g)
+		fun cross = (f : Function, g : Function) ->
+						pair (fst >> f, snd >> g)
 	}
 
 
@@ -670,7 +671,10 @@ structure Umu = struct {
 
 
 		# bool : 'a -> Bool -> Bool
-		fun bool = actual expect -> let {
+		fun bool =
+				actual
+				(expect : Bool)
+		-> let {
 			assert (actual kind-of? Bool)	"Bool"
 			assert (actual == expect)		(msg expect actual)
 		in
@@ -679,7 +683,11 @@ structure Umu = struct {
 
 
 		# bools : ['a] -> ('a -> 'b) -> [Bool] -> [Bool]
-		fun bools = sources f expects -> let {
+		fun bools =
+				(sources : List)
+				(f       : Function)
+				(expects : List)
+		-> let {
 			val results = sources |> map { source -> f source }
 		in
 			results |> zip expects |> map { (result, expect) ->
@@ -697,7 +705,10 @@ structure Umu = struct {
 
 
 		# integer : 'a -> Integer -> Integer
-		fun integer = actual expect -> let {
+		fun integer =
+				actual
+				(expect : Integer)
+		-> let {
 			assert (actual kind-of? Integer)	"Integer"
 			assert (actual == expect)			(msg expect actual)
 		in
@@ -706,7 +717,11 @@ structure Umu = struct {
 
 
 		# integers : ['a] -> ('a -> 'b) -> [Integer] -> [Integer]
-		fun integers = sources f expects -> let {
+		fun integers =
+				(sources : List)
+				(f       : Function)
+				(expects : List)
+		-> let {
 			val results = sources |> map { source -> f source }
 		in
 			results |> zip expects |> map { (result, expect) ->
@@ -716,7 +731,11 @@ structure Umu = struct {
 
 
 		# float : 'a -> Float -> Integer -> Float
-		fun float = actual expect n -> let {
+		fun float =
+				actual
+				(expect	: Float)
+				(n		: Integer)
+		-> let {
 			assert (actual kind-of? Float)			"Float"
 			assert (Math::equal? actual expect n)	(msg expect actual)
 		in
@@ -725,7 +744,10 @@ structure Umu = struct {
 
 
 		# symbol : 'a -> Symbol -> Symbol
-		fun symbol = actual expect -> let {
+		fun symbol =
+				actual
+				(expect : Symbol)
+		-> let {
 			assert (actual kind-of? Symbol)	"Symbol"
 			assert (actual == expect)		(msg expect actual)
 		in
@@ -734,7 +756,10 @@ structure Umu = struct {
 
 
 		# string : 'a -> String -> String
-		fun string = actual expect -> let {
+		fun string =
+				actual
+				(expect : String)
+		-> let {
 			assert (actual kind-of? String)	"String"
 			assert (actual == expect)		(msg expect actual)
 		in
@@ -803,7 +828,7 @@ structure struct {
 	#### Option ####
 	val (
 		Some, NONE,
-		Some?, NONE?
+		Some?, None?
 	)
 
 	#### List ####
