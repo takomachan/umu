@@ -20,8 +20,6 @@ class Abstract < Object::Abstract
 			:cons?],
 		[ :meth_cons,	self,
 			:cons,		VC::Top],
-		[ :meth_des,	VCP::Tuple,
-			:des],
 		[ :meth_map,	self,
 			:map,		VC::Function]
 	]
@@ -86,11 +84,6 @@ class Abstract < Object::Abstract
 	end
 
 
-	def meth_des(_loc, _env, _event)
-		raise X::SubclassResponsibility
-	end
-
-
 	def meth_map(loc, env, event, func)
 		ASSERT.kind_of func, VC::Function
 
@@ -134,15 +127,6 @@ class Nil < Abstract
 	def meth_nil?(_loc, _env, _event)
 		VC.make_true
 	end
-
-
-	def meth_des(loc, env, _event)
-		raise X::EmptyError.new(
-				loc,
-				env,
-				"Empty error on des(truct) operation"
-			)
-	end
 end
 
 NIL = Nil.new.freeze
@@ -156,11 +140,13 @@ class Cons < Abstract
 	]
 
 	INSTANCE_METHOD_INFOS = [
-		[:meth_contents,	VCP::Tuple,
+		[:meth_contents,		VCP::Tuple,
 			:contents],
-		[ :meth_head,		VC::Top,
+		[ :meth_partial_des,	VCP::Tuple,
+			:pdes],
+		[ :meth_head,			VC::Top,
 			:head],
-		[ :meth_tail,		List::Abstract,
+		[ :meth_tail,			List::Abstract,
 			:tail]
 	]
 
@@ -197,12 +183,12 @@ class Cons < Abstract
 	end
 
 
-	def meth_des(_loc, _env, _event)
+	def meth_partial_des(_loc, _env, _event)
 		VC.make_tuple [self.head, self.tail]
 	end
 
 
-	alias meth_contents meth_des
+	alias meth_contents meth_partial_des
 
 
 	def meth_head(_loc, _env, _event)

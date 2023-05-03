@@ -221,7 +221,7 @@ private
 		ASSERT.kind_of expr, SACE::Abstract
 
 		SACE.make_send(
-			loc, expr, SACE.make_method(loc, :des), [], :Cons
+			loc, expr, SACE.make_method(loc, :pdes), [], :Cons
 		)
 	end
 

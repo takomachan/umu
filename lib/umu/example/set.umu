@@ -8,8 +8,8 @@ structure SetBasedOnList = struct {
 	# cons : 'a -> %('a) -> %('a)
 	fun cons = x -> val-of >>_cons x >> wrap
 
-	# des : %('a) -> ('a, %('a))
-	fun des = xs -> (x, wrap _xs)
+	# pdes : %('a) -> ('a, %('a))
+	fun pdes = xs -> (x, wrap _xs)
 	where { val [x|_xs] = val-of xs }
 
 

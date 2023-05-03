@@ -112,7 +112,6 @@ class OrderError			< Abstraction::RuntimeError; end
 class NoMethodError			< Abstraction::RuntimeError; end
 class UnmatchError			< Abstraction::RuntimeError; end
 class ZeroDivisionError		< Abstraction::RuntimeError; end
-class EmptyError			< Abstraction::RuntimeError; end
 class Abort					< Abstraction::RuntimeError; end
 
 
