@@ -231,14 +231,21 @@ structure Umu = struct {
 
 
 		# foldr : 'b -> ('a -> 'b -> 'b) -> ['a] -> 'b
+		(#
 		fun rec foldr = a f xs -> case xs {
 		  []	  -> a
 		| [x|xs'] -> f x (foldr a f xs')
 		}
+		#)
+		fun foldr = a (f : Function) (xs : List) -> xs.foldr a f
 
 
 		# foldr1 : ('a -> 'a -> 'a) -> ['a] -> 'a
+		(#
 		fun foldr1 = f xs -> foldr x f xs'
+							where { val [x|xs'] = xs }
+		#)
+		fun foldr1 = (f : Function) (xs : Cons) -> xs'.foldr x f
 							where { val [x|xs'] = xs }
 
 
@@ -280,16 +287,19 @@ structure Umu = struct {
 
 
 		# map : ('a -> 'b) -> ['a] -> ['b]
-		#fun map = f -> foldr [] { x xs -> [f x | xs] }
+		# fun map = f -> foldr [] { x xs -> [f x | xs] }
 		fun map = (f : Function) (xs : List) -> xs.map f
 
 
 		# filter : ('a -> Bool) -> ['a] -> ['a]
-		fun filter = f -> foldr [] { x xs -> if (f x) [x|xs] else xs }
+		# fun filter = f -> foldr [] { x xs -> if (f x) [x|xs] else xs }
+		fun filter = (f : Function) (xs : List) ->
+						xs.foldr [] { x xs' -> if (f x) [x|xs'] else xs' }
 
 
 		# append : ['a] -> ['a] -> ['a]
-		fun append = xs ys -> foldr ys Cons xs
+		# fun append = (xs : List) (ys : List) -> foldr ys Cons xs
+		fun append = (xs : List) (ys : List) -> xs.foldr ys Cons
 
 
 		# concat : [['a]] -> ['a]
@@ -316,11 +326,26 @@ structure Umu = struct {
 
 
 		# unzip : [('a, 'b)] -> (['a], ['b])
-		val unzip = foldr ([], []) { (y, z) (ys, zs) -> ([y|ys], [z|zs]) }
+		# val unzip = foldr ([], []) { (y, z) (ys, zs) -> ([y|ys], [z|zs]) }
+		fun unzip = xs : List -> xs.foldr ([], []) { (y, z) (ys, zs) ->
+										([y|ys], [z|zs])
+									}
 
 
 		# partition : ('a -> Bool) -> ['a] -> (['a], ['a])
-		fun partition = f -> foldr ([], []) { x (ys, zs) ->
+		(#
+		fun partition = (f : Function) (xs : List) -> foldr ([], []) {
+			x (ys, zs)
+		->
+			if (f x)
+				([x|ys],    zs)
+			else
+				(   ys,  [x|zs])
+		} xs
+		#)
+		fun partition = (f : Function) (xs : List) -> xs.foldr ([], []) {
+			x (ys, zs)
+		->
 			if (f x)
 				([x|ys],    zs)
 			else

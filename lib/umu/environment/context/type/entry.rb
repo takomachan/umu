@@ -50,7 +50,7 @@ def update_method_info_of_symbol(info_of_symbol, infos, klass)
 				ASSERT.abort(
 					"In class: %s, " +
 					"duplicated a method symbol: %s",
-					klass.type_sym, method_sym
+					klass.type_sym, meth_sym
 				)
 			}
 		}
