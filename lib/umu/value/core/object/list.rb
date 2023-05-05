@@ -118,14 +118,13 @@ class Abstract < Object::Abstract
 		ASSERT.kind_of func, VC::Function
 
 		new_env = env.enter event
-		ys = []
-		self.each do |x|
-			ASSERT.kind_of x, VC::Top
 
-			ys.unshift func.apply(x, [], loc, new_env)
-		end
-
-		result_value = ys.inject(VC.make_nil) { |zs, y| VC.make_cons y, zs }
+		result_value = self.reverse_each.inject(VC.make_nil) { |ys, x|
+			VC.make_cons(
+				func.apply(x, [], loc, new_env),
+				ys
+			)
+		}
 		ASSERT.kind_of result_value, List::Abstract
 	end
 end
