@@ -20,6 +20,8 @@ class Abstract < Object::Abstract
 			:cons?],
 		[ :meth_cons,	self,
 			:cons,		VC::Top],
+		[ :meth_foldl,	VC::Top,
+			:foldl,		VC::Top, VC::Function],
 		[ :meth_map,	self,
 			:map,		VC::Function]
 	]
@@ -81,6 +83,19 @@ class Abstract < Object::Abstract
 		ASSERT.kind_of value, VC::Top
 
 		VC.make_cons value, self
+	end
+
+
+	def meth_foldl(loc, env, event, init, func)
+		ASSERT.kind_of init,	VC::Top
+		ASSERT.kind_of func,	VC::Function
+
+		new_env = env.enter event
+
+		result_value = self.inject(init) { |acc, x|
+			func.apply(x, [acc], loc, new_env)
+		}
+		ASSERT.kind_of result_value, VC::Top
 	end
 
 

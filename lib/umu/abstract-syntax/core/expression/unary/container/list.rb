@@ -56,7 +56,7 @@ private
 					tail_value = opt_last_expr.evaluate(new_env).value
 					unless tail_value.kind_of? VCO::List::Abstract
 						raise X::TypeError.new(
-							tail_value.loc,
+							opt_last_expr.loc,
 							env,
 							"expected a List, but %s : %s",
 											tail_value, tail_value.type_sym

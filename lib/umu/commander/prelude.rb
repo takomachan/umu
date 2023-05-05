@@ -243,23 +243,32 @@ structure Umu = struct {
 
 
 		# foldl : 'b -> ('a -> 'b -> 'b) -> ['a] -> 'b
+		(#
 		fun rec foldl = a f xs -> case xs {
 		  []	  -> a
 		| [x|xs'] -> foldl (f x a) f xs'
 		}
+		#)
+		fun foldl = a (f : Function) (xs : List) -> xs.foldl a f
 
 
 		# foldl1 : ('a -> 'a -> 'a) -> ['a] -> 'a
-		fun foldl1 = f xs -> foldl x f xs'
+		(#
+		fun foldl1 = (f : Function) (xs : Cons) -> foldl x f xs'
+							where { val [x|xs'] = xs }
+		#)
+		fun foldl1 = (f : Function) (xs : Cons) -> xs'.foldl x f
 							where { val [x|xs'] = xs }
 
 
 		# length : ['a] -> Integer
-		val length = foldl 0 { _ len -> len.+ 1 }
+		# val length = foldl 0 { _ len -> len.+ 1 }
+		fun length = xs : List -> xs.foldl 0 { _ len -> len.+ 1 }
 
 
 		# reverse : ['a] -> ['a]
-		val reverse = foldl [] Cons
+		# val reverse = foldl [] Cons
+		fun reverse = xs : List -> xs.foldl [] Cons
 
 
 		# max : ['a] -> 'a
@@ -284,7 +293,10 @@ structure Umu = struct {
 
 
 		# concat : [['a]] -> ['a]
-		val concat = foldl [] { xs xss -> append xss xs }
+		# val concat = foldl [] { xs xss -> append xss xs }
+		fun concat = xss : List -> xss.foldl [] {
+										(xs : List) xss' -> append xss' xs
+									}
 
 
 		# zip-with : ('a -> 'b -> 'c) -> ['a] -> ['b] -> ['c]
@@ -339,9 +351,7 @@ structure Umu = struct {
 		  []	  -> ""
 		| [x|xs'] -> case xs' {
 			  []   -> x
-			  else -> x.^ xs''
-				where val xs'' =
-							List::foldl "" { x' s -> s.^ j.^ x' } xs'
+			  else -> x.^ (xs'.foldl "" { x' s -> s.^ j.^ x' })
 			}
 		}
 
