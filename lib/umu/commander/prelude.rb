@@ -306,6 +306,10 @@ structure Umu = struct {
 		val concat = &(List$concat)
 
 
+		# concat-map : ('a -> 'b) -> [['a]] -> ['b]
+		fun concat-map = (f : Function) (xs : List) -> xs.concat-map f
+
+
 		# zip-with : ('a -> 'b -> 'c) -> ['a] -> ['b] -> ['c]
 		fun zip-with = f -> foldr e g
 		where {

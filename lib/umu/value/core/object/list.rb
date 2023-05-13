@@ -32,6 +32,8 @@ class Abstract < Object::Abstract
 			:append,		self],
 		[ :meth_concat,		self,
 			:concat],
+		[ :meth_concat_map,	self,
+			:'concat-map',	VC::Function],
 		[ :meth_zip,		self,
 			:zip,			self],
 		[ :meth_unzip,		VCP::Tuple,
@@ -179,7 +181,7 @@ class Abstract < Object::Abstract
 
 
 	def meth_concat(loc, env, event)
-		result_value = self.inject(VC.make_nil) { |xss, xs|
+		result_value = self.reverse_each.inject(VC.make_nil) { |xss, xs|
 			ASSERT.kind_of xs, VC::Top
 
 			unless xs.kind_of? List::Abstract
@@ -192,7 +194,36 @@ class Abstract < Object::Abstract
 				)
 			end
 
-			xss.meth_append loc, env, event, xs
+			xs.meth_append loc, env, event, xss
+		}
+
+		ASSERT.kind_of result_value, List::Abstract
+	end
+
+
+	def meth_concat_map(loc, env, event, func)
+		ASSERT.kind_of func, VC::Function
+
+		new_env = env.enter event
+
+		result_value = self.reverse_each.inject(VC.make_nil) { |xss, xs|
+			ASSERT.kind_of xs, VC::Top
+
+			unless xs.kind_of? List::Abstract
+				raise X::TypeError.new(
+					loc,
+					env,
+					"concat-map: expected a List, but %s : %s",
+					xs.to_s,
+					xs.type_sym.to_s
+				)
+			end
+
+			xs.map { |x|
+				func.apply x, [], loc, new_env
+			}.reverse_each.inject(xss) { |yss, x|
+				VC.make_cons x, yss
+			}
 		}
 
 		ASSERT.kind_of result_value, List::Abstract
