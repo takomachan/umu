@@ -150,7 +150,7 @@ private
 					SACE.make_method(
 						generator.loc,
 
-						:map,
+						:'concat-map',
 
 						[
 							SACE.make_lambda(
@@ -170,7 +170,7 @@ private
 						]
 					),
 
-					[SACE.make_method(generator.loc, :concat)],
+					[],
 
 					:List
 				)

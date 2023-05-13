@@ -206,9 +206,10 @@ class Abstract < Object::Abstract
 
 		new_env = env.enter event
 
-		result_value = self.reverse_each.inject(VC.make_nil) { |xss, xs|
-			ASSERT.kind_of xs, VC::Top
+		result_value = self.reverse_each.inject(VC.make_nil) { |xss, x|
+			ASSERT.kind_of x, VC::Top
 
+			xs = func.apply x, [], loc, new_env
 			unless xs.kind_of? List::Abstract
 				raise X::TypeError.new(
 					loc,
@@ -219,10 +220,8 @@ class Abstract < Object::Abstract
 				)
 			end
 
-			xs.map { |x|
-				func.apply x, [], loc, new_env
-			}.reverse_each.inject(xss) { |yss, x|
-				VC.make_cons x, yss
+			xs.reverse_each.inject(xss) { |xss_, x|
+				VC.make_cons x, xss_
 			}
 		}
 
