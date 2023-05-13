@@ -40,6 +40,43 @@ class Generator < Abstract
 	def to_s
 		format "%s <- %s", self.pat.to_s, self.expr.to_s
 	end
+
+
+	def desugar(elem_expr, tail_qualifiers, env)
+		ASSERT.kind_of elem_expr,		SCCE::Abstract
+		ASSERT.kind_of tail_qualifiers,	::Array
+		ASSERT.kind_of env,				E::Entry
+
+		SACE.make_send(
+			self.loc,
+
+			self.expr.desugar(env),
+
+			SACE.make_method(
+				self.loc,
+
+				:'concat-map',
+
+				[
+					SCCE.make_lambda(
+						self.loc,
+
+						[self.pat],
+
+						SCCE.make_comprehension(
+							self.loc,
+							elem_expr,
+							tail_qualifiers
+						)
+					).desugar(env)
+				]
+			),
+
+			[],
+
+			:List
+		)
+	end
 end
 
 end	# Umu::ConcreteSyntax::Core::Expression::Unary::Container::Comprehension::Qualifier
@@ -85,42 +122,7 @@ private
 			hd_qualifier, *tl_qualifiers = qualifiers
 			ASSERT.kind_of hd_qualifier, Qualifier::Abstract
 
-			case hd_qualifier
-			when Qualifier::Generator
-				generator = hd_qualifier
-
-				SACE.make_send(
-					generator.loc,
-
-					generator.expr.desugar(new_env),
-
-					SACE.make_method(
-						generator.loc,
-
-						:'concat-map',
-
-						[
-							SCCE.make_lambda(
-								generator.loc,
-
-								[generator.pat],
-
-								SCCE.make_comprehension(
-									generator.loc,
-									self.expr,
-									tl_qualifiers
-								)
-							).desugar(new_env)
-						]
-					),
-
-					[],
-
-					:List
-				)
-			else
-				ASSERT.abort hd_qualifier.inspect
-			end
+			hd_qualifier.desugar(self.expr, tl_qualifiers, new_env)
 		end
 	end
 end
