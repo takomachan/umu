@@ -583,13 +583,7 @@ _qualifiers:
 | ',' qualifier _qualifiers	{ result = [val[1]] + val[2] }
 
 qualifier:
-  ID '<-' expr	{
-  	result = SCCE.make_generator(
-					val[0].loc,
-					SCCE.make_identifier(val[0].loc, val[0].sym),
-					val[2]
-				)
-}
+  pat '<-' expr	{ result = SCCE.make_generator val[0].loc, val[0], val[2] }
 
 
 ###################################

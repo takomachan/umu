@@ -148,7 +148,7 @@ end	# Umu::ConcreteSyntax::Core::Expression::Nary
 
 module_function
 
-	def make_lambda(loc, pats, expr, decls)
+	def make_lambda(loc, pats, expr, decls = [])
 		ASSERT.kind_of loc,		L::Location
 		ASSERT.kind_of pats,	::Array
 		ASSERT.kind_of expr,	SCCE::Abstract

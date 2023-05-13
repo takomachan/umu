@@ -23,22 +23,22 @@ class Abstract < Umu::Abstraction::Model; end
 
 
 class Generator < Abstract
-	attr_reader :ident, :expr
+	attr_reader :pat, :expr
 
 
-	def initialize(loc, ident, expr)
+	def initialize(loc, pat, expr)
 		ASSERT.kind_of expr,	SCCE::Abstract
-		ASSERT.kind_of ident,	SCCEU::Identifier::Short
+		ASSERT.kind_of pat,		SCCP::Abstract
 
 		super(loc)
 
-		@ident	= ident
+		@pat	= pat
 		@expr	= expr
 	end
 
 
 	def to_s
-		format "%s <- %s", self.ident.to_s, self.expr.to_s
+		format "%s <- %s", self.pat.to_s, self.expr.to_s
 	end
 end
 
@@ -100,20 +100,17 @@ private
 						:'concat-map',
 
 						[
-							SACE.make_lambda(
+							SCCE.make_lambda(
 								generator.loc,
-								[
-									SACE.make_parameter(
-										generator.ident.loc,
-										generator.ident.desugar(new_env)
-									)
-								],
+
+								[generator.pat],
+
 								SCCE.make_comprehension(
 									generator.loc,
 									self.expr,
 									tl_qualifiers
-								).desugar(new_env)
-							)
+								)
+							).desugar(new_env)
 						]
 					),
 
@@ -137,13 +134,13 @@ end	# Umu::ConcreteSyntax::Core::Expression::Unary
 
 module_function
 
-	def make_generator(loc, ident, expr)
+	def make_generator(loc, pat, expr)
 		ASSERT.kind_of loc,		L::Location
 		ASSERT.kind_of expr,	SCCE::Abstract
-		ASSERT.kind_of ident,	SCCEU::Identifier::Short
+		ASSERT.kind_of pat,		SCCP::Abstract
 
 		Unary::Container::Comprehension::Qualifier::Generator.new(
-			loc, ident, expr
+			loc, pat, expr
 		).freeze
 	end
 
