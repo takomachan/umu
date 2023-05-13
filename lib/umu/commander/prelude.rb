@@ -293,20 +293,17 @@ structure Umu = struct {
 
 		# filter : ('a -> Bool) -> ['a] -> ['a]
 		# fun filter = f -> foldr [] { x xs -> if (f x) [x|xs] else xs }
-		fun filter = (f : Function) (xs : List) ->
-						xs.foldr [] { x xs' -> if (f x) [x|xs'] else xs' }
+		fun filter = (f : Function) (xs : List) -> xs.filter f
 
 
 		# append : ['a] -> ['a] -> ['a]
 		# fun append = (xs : List) (ys : List) -> foldr ys Cons xs
-		fun append = (xs : List) (ys : List) -> xs.foldr ys Cons
+		fun append = (xs : List) (ys : List) -> xs.append ys
 
 
 		# concat : [['a]] -> ['a]
 		# val concat = foldl [] { xs xss -> append xss xs }
-		fun concat = xss : List -> xss.foldl [] {
-										(xs : List) xss' -> append xss' xs
-									}
+		val concat = &(List$concat)
 
 
 		# zip-with : ('a -> 'b -> 'c) -> ['a] -> ['b] -> ['c]
@@ -322,14 +319,13 @@ structure Umu = struct {
 
 
 		# zip : ['a] -> ['b] -> [('a, 'b)]
-		val zip = zip-with { x y -> (x, y) }
+		# val zip = zip-with { x y -> (x, y) }
+		fun zip = (xs : List) (ys : List) -> xs.zip ys
 
 
 		# unzip : [('a, 'b)] -> (['a], ['b])
 		# val unzip = foldr ([], []) { (y, z) (ys, zs) -> ([y|ys], [z|zs]) }
-		fun unzip = xs : List -> xs.foldr ([], []) { (y, z) (ys, zs) ->
-										([y|ys], [z|zs])
-									}
+		val unzip = &(List$unzip)
 
 
 		# partition : ('a -> Bool) -> ['a] -> (['a], ['a])
@@ -343,23 +339,19 @@ structure Umu = struct {
 				(   ys,  [x|zs])
 		} xs
 		#)
-		fun partition = (f : Function) (xs : List) -> xs.foldr ([], []) {
-			x (ys, zs)
-		->
-			if (f x)
-				([x|ys],    zs)
-			else
-				(   ys,  [x|zs])
-		}
+		fun partition = (f : Function) (xs : List) -> xs.partition f
 
 
-		# sort : ('a -> 'a -> Bool) -> ['a] -> ['a]
-		fun rec sort = f xs -> case xs {
+		# sort : ['a] -> ['a]
+		(#
+		fun rec sort = xs -> case xs {
 		  []		  -> []
 		| [pivot|xs'] ->
-				concat [sort f littles, [pivot], sort f bigs]
-			where val (littles, bigs) = partition { x -> f x pivot } xs'
+				concat [sort littles, [pivot], sort bigs]
+			where val (littles, bigs) = partition (< pivot) xs'
 		}
+		#)
+		val sort = &(List$sort)
 	}
 
 
