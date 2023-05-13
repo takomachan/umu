@@ -58,6 +58,7 @@ SRCS	= commander.rb \
 			concrete-syntax/core/expression/unary/container/abstract.rb \
 			concrete-syntax/core/expression/unary/container/tuple.rb \
 			concrete-syntax/core/expression/unary/container/list.rb \
+			concrete-syntax/core/expression/unary/container/comprehension.rb \
 			concrete-syntax/core/expression/unary/container/sequence.rb \
 			concrete-syntax/core/expression/binary.rb \
 			concrete-syntax/core/expression/binary/abstract.rb \

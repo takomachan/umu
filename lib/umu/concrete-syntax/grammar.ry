@@ -507,7 +507,7 @@ atom_expr:
 	result = SCCE.make_list val[0].loc, [val[1]] + val[2], val[3]
 }
 | '[' '|' expr '|' qualifiers  ']' {
-	result = SCCE.make_list_comprehension val[0].loc, val[2], val[4]
+	result = SCCE.make_comprehension val[0].loc, val[2], val[4]
 }
 
 # Braket: { ... }
