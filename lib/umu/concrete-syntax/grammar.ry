@@ -501,9 +501,13 @@ atom_expr:
 
 # Braket: [ ... ]
 | '[' ']' {
-	result = SCCE.make_list val[0].loc, [],                nil }
+	result = SCCE.make_list val[0].loc, [],                nil
+}
 | '[' expr com_exprs opt_last_expr ']' {
 	result = SCCE.make_list val[0].loc, [val[1]] + val[2], val[3]
+}
+| '[' '|' expr '|' qualifiers  ']' {
+	result = SCCE.make_list_comprehension val[0].loc, val[2], val[4]
 }
 
 # Braket: { ... }
@@ -566,6 +570,26 @@ opt_last_expr:
   /* empty */	{ result = nil }
 | '|' expr		{ result = val[1] }
 
+
+# Qualifiers for List Comprehension
+
+qualifiers:
+  /* empty */			{ result = [] }
+| qualifier				{ result = [val[0]] }
+| qualifier _qualifiers	{ result = [val[0]] + val[1] }
+
+_qualifiers:
+  ',' qualifier				{ result = [val[1]] }
+| ',' qualifier _qualifiers	{ result = [val[1]] + val[2] }
+
+qualifier:
+  ID '<-' expr	{
+  	result = SCCE.make_generator(
+					val[0].loc,
+					SCCE.make_identifier(val[0].loc, val[0].sym),
+					val[2]
+				)
+}
 
 
 ###################################

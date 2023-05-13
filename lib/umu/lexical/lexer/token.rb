@@ -88,13 +88,10 @@ RESERVED_SYMBOLS = [
 	'^',	'++',   '&&',   '||',
 	'=',	'&',	'$',	'|',	'_',
 	'.',	',',	':',	';',
-	'->',	'::',	';;',
+	'->',	'<-',	'::',	';;',
 
 
 	# Not used, but reserved for future
-
-	# For monad
-	'<-',
 
 	# For general purpose
 	'..'

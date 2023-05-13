@@ -87,7 +87,7 @@ end	# Umu::AbstractSyntax::Core::Expression::Unary
 
 module_function
 
-	def make_list(loc, exprs, opt_last_expr)
+	def make_list(loc, exprs, opt_last_expr = nil)
 		ASSERT.kind_of		loc,			L::Location
 		ASSERT.kind_of		exprs,			::Array
 		ASSERT.opt_kind_of	opt_last_expr,	SACE::Abstract
