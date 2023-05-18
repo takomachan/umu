@@ -18,22 +18,32 @@ module Comprehension
 
 module Qualifier
 
-class Abstract < Umu::Abstraction::Model; end
+class Abstract < Umu::Abstraction::Model
+	attr_reader :expr
+
+
+	def initialize(loc, expr)
+		ASSERT.kind_of expr, SCCE::Abstract
+
+		super(loc)
+
+		@expr = expr
+	end
+end
 
 
 
 class Generator < Abstract
-	attr_reader :pat, :expr
+	attr_reader :pat
 
 
 	def initialize(loc, pat, expr)
-		ASSERT.kind_of expr,	SCCE::Abstract
 		ASSERT.kind_of pat,		SCCP::Abstract
+		ASSERT.kind_of expr,	SCCE::Abstract
 
-		super(loc)
+		super(loc, expr)
 
-		@pat	= pat
-		@expr	= expr
+		@pat = pat
 	end
 
 
@@ -75,6 +85,39 @@ class Generator < Abstract
 			[],
 
 			:List
+		)
+	end
+end
+
+
+
+class Guard < Abstract
+	def to_s
+		format "%%IF %s", self.expr.to_s
+	end
+
+
+	def desugar(elem_expr, tail_qualifiers, env)
+		ASSERT.kind_of elem_expr,		SCCE::Abstract
+		ASSERT.kind_of tail_qualifiers,	::Array
+		ASSERT.kind_of env,				E::Entry
+
+		SACE.make_if(
+			self.loc,
+
+			[
+				SACE.make_rule(
+					elem_expr.loc,
+					self.expr.desugar(env),
+					SCCE.make_comprehension(
+						self.loc,
+						elem_expr,
+						tail_qualifiers
+					).desugar(env)
+				)
+			],
+
+			SACE.make_list(self.loc, [])
 		)
 	end
 end
@@ -138,11 +181,21 @@ module_function
 
 	def make_generator(loc, pat, expr)
 		ASSERT.kind_of loc,		L::Location
-		ASSERT.kind_of expr,	SCCE::Abstract
 		ASSERT.kind_of pat,		SCCP::Abstract
+		ASSERT.kind_of expr,	SCCE::Abstract
 
 		Unary::Container::Comprehension::Qualifier::Generator.new(
 			loc, pat, expr
+		).freeze
+	end
+
+
+	def make_guard(loc, expr)
+		ASSERT.kind_of loc,		L::Location
+		ASSERT.kind_of expr,	SCCE::Abstract
+
+		Unary::Container::Comprehension::Qualifier::Guard.new(
+			loc, expr
 		).freeze
 	end
 

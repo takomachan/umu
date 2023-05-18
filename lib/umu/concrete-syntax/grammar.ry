@@ -584,6 +584,8 @@ _qualifiers:
 
 qualifier:
   pat '<-' expr	{ result = SCCE.make_generator val[0].loc, val[0], val[2] }
+| IF expr		{ result = SCCE.make_guard     val[0].loc, val[1] }
+
 
 
 ###################################
