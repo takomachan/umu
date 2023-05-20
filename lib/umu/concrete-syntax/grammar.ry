@@ -231,7 +231,7 @@ inner_where_decls:
 ######################################
 
 expr:
-  infix_expr
+  resrv_infix_expr
 | IF if_rule elsif_rules ELSE expr {
 	result = SCCE.make_if val[0].loc, val[1], val[2], val[4]
 }
@@ -351,50 +351,62 @@ case_rule_head:
 }
 
 
-# Infix operator expression
+# Reserved infix operator expression
 
-infix_expr:
-  send_expr
-| _infix_expr {
-	v = val[0]
-
-	result = SCCE.make_infix v[1].loc, v[0], v[1].sym, v[2]
+resrv_infix_expr:
+  redef_infix_expr
+| resrv_infix_expr KIND_OF resrv_infix_expr {
+	result = SCCE.make_infix val[0].loc, val[0], val[1].sym, val[2]
+}
+| resrv_infix_expr '&&' resrv_infix_expr {
+	result = SCCE.make_infix val[0].loc, val[0], val[1].sym, val[2]
+}
+| resrv_infix_expr '||' resrv_infix_expr {
+	result = SCCE.make_infix val[0].loc, val[0], val[1].sym, val[2]
 }
 
-_infix_expr:
-  infix_expr '+'  		infix_expr	{ result = val }
-| infix_expr '-'  		infix_expr	{ result = val }
-| infix_expr '^'  		infix_expr	{ result = val }
-| infix_expr '*'  		infix_expr	{ result = val }
-| infix_expr '/'  		infix_expr	{ result = val }
-| infix_expr MOD  		infix_expr	{
+
+# Redefinable infix operator expression
+
+redef_infix_expr:
+  send_expr
+| _redef_infix_expr {
+	v = val[0]
+
+	result = SCCE.make_infix v[0].loc, v[0], v[1].sym, v[2]
+}
+
+_redef_infix_expr:
+  redef_infix_expr '+'    redef_infix_expr	{ result = val }
+| redef_infix_expr '-'    redef_infix_expr	{ result = val }
+| redef_infix_expr '^'    redef_infix_expr	{ result = val }
+| redef_infix_expr '*'    redef_infix_expr	{ result = val }
+| redef_infix_expr '/'    redef_infix_expr	{ result = val }
+| redef_infix_expr MOD    redef_infix_expr	{
 	result = [
 				val[0],
 				LT.make_reserved_symbol(val[1].loc, 'mod'),
 				val[2]
 			]
 }
-| infix_expr POW  		infix_expr	{
+| redef_infix_expr POW    redef_infix_expr	{
 	result = [
 				val[0],
 				LT.make_reserved_symbol(val[1].loc, 'pow'),
 				val[2]
 			]
 }
-| infix_expr '=='		infix_expr	{ result = val }
-| infix_expr '<>'		infix_expr	{ result = val }
-| infix_expr '<'		infix_expr	{ result = val }
-| infix_expr '>'		infix_expr	{ result = val }
-| infix_expr '<='		infix_expr	{ result = val }
-| infix_expr '>='		infix_expr	{ result = val }
-| infix_expr '++'		infix_expr	{ result = val }
-| infix_expr '<<'		infix_expr	{ result = val }
-| infix_expr '>>'		infix_expr	{ result = val }
-| infix_expr '<|'		infix_expr	{ result = val }
-| infix_expr '|>'		infix_expr	{ result = val }
-| infix_expr KIND_OF	infix_expr	{ result = val }
-| infix_expr '&&'		infix_expr	{ result = val }
-| infix_expr '||'		infix_expr	{ result = val }
+| redef_infix_expr '=='    redef_infix_expr	{ result = val }
+| redef_infix_expr '<>'    redef_infix_expr	{ result = val }
+| redef_infix_expr '<'     redef_infix_expr	{ result = val }
+| redef_infix_expr '>'     redef_infix_expr	{ result = val }
+| redef_infix_expr '<='    redef_infix_expr	{ result = val }
+| redef_infix_expr '>='    redef_infix_expr	{ result = val }
+| redef_infix_expr '++'    redef_infix_expr	{ result = val }
+| redef_infix_expr '<<'    redef_infix_expr	{ result = val }
+| redef_infix_expr '>>'    redef_infix_expr	{ result = val }
+| redef_infix_expr '<|'    redef_infix_expr	{ result = val }
+| redef_infix_expr '|>'    redef_infix_expr	{ result = val }
 
 
 # Send expression
