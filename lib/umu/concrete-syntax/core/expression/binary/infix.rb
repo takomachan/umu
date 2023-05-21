@@ -12,16 +12,20 @@ module Expression
 
 module Binary
 
-class Infix < Abstract
+module Infix
+
+module Abstraction
+
+class Abstract < Binary::Abstract
 	alias		lhs_opnd lhs
-	attr_reader :opr_sym
+	attr_reader	:opr_sym
 	alias		rhs_opnd rhs
 
 
 	def initialize(loc, lhs_opnd, opr_sym, rhs_opnd)
-		ASSERT.kind_of lhs_opnd,	SCCE::Abstract
+		ASSERT.kind_of lhs_opnd,	Umu::Abstraction::Model
 		ASSERT.kind_of opr_sym,		::Symbol
-		ASSERT.kind_of rhs_opnd,	SCCE::Abstract
+		ASSERT.kind_of rhs_opnd,	Umu::Abstraction::Model
 
 		super(loc, lhs_opnd, rhs_opnd)
 
@@ -31,7 +35,7 @@ class Infix < Abstract
 
 	def to_s
 		_opr = self.opr_sym.to_s
-		opr = if /^[a-zA-Z]+\??$/ =~ _opr
+		opr = if /^[a-zA-Z\-]+\??$/ =~ _opr
 					'%' + _opr.upcase
 				else
 					_opr
@@ -39,27 +43,52 @@ class Infix < Abstract
 
 		format "(%s %s %s)", self.lhs_opnd.to_s, opr, self.rhs_opnd.to_s
 	end
+end
 
 
-	REDEFINABLE_OPR_SYMS = [
-		# Number
-		:'+',	:'-',	:'*',	:'/',	:mod,	:pow,
 
-		# String
-		:'^',
+class Simple < Abstract
+	def initialize(loc, lhs_opnd, opr_sym, rhs_opnd)
+		ASSERT.kind_of lhs_opnd,	SCCE::Abstract
+		ASSERT.kind_of opr_sym,		::Symbol
+		ASSERT.kind_of rhs_opnd,	SCCE::Abstract
 
-		# Relational
-		:'==',	:'<>',	:'<',	:'>',	:'<=',	:'>=',
+		super
+	end
+end
 
-		# List
-		:'++',
+end	# Umu::ConcreteSyntax::Core::Expression::Binary::Infix::Abstraction
 
-		# Function application
-		:'<|', :'|>',
 
-		# Function composition
-		:'<<', :'>>'
-	].inject({}) { |hash, sym| hash.merge(sym => true) }
+
+class Redefinable < Abstraction::Simple
+
+private
+
+	def __desugar__(env, event)
+		new_env = env.enter event
+
+		SACE.make_apply(
+			self.loc,
+			SACE.make_identifier(loc, self.opr_sym),
+			self.lhs_opnd.desugar(new_env),
+			[self.rhs_opnd.desugar(new_env)]
+		)
+	end
+end
+
+
+
+class KindOf < Abstraction::Abstract
+	alias rhs_ident rhs_opnd
+
+	def initialize(loc, lhs_opnd, opr_sym, rhs_ident)
+		ASSERT.kind_of lhs_opnd,	SCCE::Abstract
+		ASSERT.kind_of opr_sym,		::Symbol
+		ASSERT.kind_of rhs_ident,	SCCEU::Identifier::Short
+
+		super
+	end
 
 
 private
@@ -67,67 +96,62 @@ private
 	def __desugar__(env, event)
 		new_env = env.enter event
 
-		lhs_opnd	= self.lhs_opnd.desugar(new_env)
-		opr_sym		= self.opr_sym
-		rhs_opnd	= self.rhs_opnd.desugar(new_env)
-		loc			= self.loc
-
-		expr = if REDEFINABLE_OPR_SYMS[opr_sym]
-				SACE.make_apply(
-					loc,
-					SACE.make_identifier(loc, opr_sym),
-					lhs_opnd,
-					[rhs_opnd]
-				)
-			else
-				case opr_sym
-				# Typing
-				when :'KIND-OF?'
-					unless rhs_opnd.kind_of?(SACEU::Identifier::Short)
-						raise X::SyntaxError.new(
-							rhs_opnd.loc,
-							"RHS of 'kind-of?' operator " +
-								"require a identifier, but: %s",
-							rhs_opnd.to_s
-						)
-					end
-
-					SACE.make_test_kind_of loc, lhs_opnd, rhs_opnd
-
-				# Conditional
-				when :'&&'
-					SACE.make_if(
-						loc,
-						[
-							SACE.make_rule(
-								loc,
-								lhs_opnd,
-								rhs_opnd
-							)
-						],
-						SACE.make_bool(loc, false)
-					)
-				when :'||'
-					SACE.make_if(
-						loc,
-						[
-							SACE.make_rule(
-								loc,
-								lhs_opnd,
-								SACE.make_bool(loc, true)
-							)
-						],
-						rhs_opnd
-					)
-
-				else
-					ASSERT.abort self.opr_sym.inspect
-				end
-			end
-
-		ASSERT.kind_of expr, SACE::Abstract
+		SACE.make_test_kind_of(
+			self.loc,
+			self.lhs_opnd.desugar(new_env),
+			self.rhs_ident.desugar(new_env)
+		)
 	end
 end
+
+
+
+class AndAlso < Abstraction::Simple
+
+private
+
+	def __desugar__(env, event)
+		new_env = env.enter event
+
+		SACE.make_if(
+			self.loc,
+			[
+				SACE.make_rule(
+					self.loc,
+					self.lhs_opnd.desugar(new_env),
+					self.rhs_opnd.desugar(new_env)
+				)
+			],
+			SACE.make_bool(self.loc, false)
+		)
+	end
+end
+
+
+
+class OrElse < Abstraction::Simple
+
+private
+
+	def __desugar__(env, event)
+		new_env = env.enter event
+
+		SACE.make_if(
+			self.loc,
+			loc,
+			[
+				SACE.make_rule(
+					self.loc,
+					self.lhs_opnd.desugar(new_env),
+					SACE.make_bool(loc, true)
+				)
+			],
+			self.rhs_opnd.desugar(new_env)
+		)
+	end
+end
+
+end	# Umu::ConcreteSyntax::Core::Expression::Binary::Infix
 
 end	# Umu::ConcreteSyntax::Core::Expression::Binary
 
@@ -140,7 +164,45 @@ module_function
 		ASSERT.kind_of opr_sym,		::Symbol
 		ASSERT.kind_of rhs_opnd,	SCCE::Abstract
 
-		Binary::Infix.new(loc, lhs_opnd, opr_sym, rhs_opnd).freeze
+		Binary::Infix::Redefinable.new(
+			loc, lhs_opnd, opr_sym, rhs_opnd
+		).freeze
+	end
+
+
+	def make_kindof(loc, lhs_opnd, opr_sym, rhs_ident)
+		ASSERT.kind_of loc,			L::Location
+		ASSERT.kind_of lhs_opnd,	SCCE::Abstract
+		ASSERT.kind_of opr_sym,		::Symbol
+		ASSERT.kind_of rhs_ident,	SCCEU::Identifier::Short
+
+		Binary::Infix::KindOf.new(
+			loc, lhs_opnd, opr_sym, rhs_ident
+		).freeze
+	end
+
+
+	def make_andalso(loc, lhs_opnd, opr_sym, rhs_opnd)
+		ASSERT.kind_of loc,			L::Location
+		ASSERT.kind_of lhs_opnd,	SCCE::Abstract
+		ASSERT.kind_of opr_sym,		::Symbol
+		ASSERT.kind_of rhs_opnd,	SCCE::Abstract
+
+		Binary::Infix::AndAlso.new(
+			loc, lhs_opnd, opr_sym, rhs_opnd
+		).freeze
+	end
+
+
+	def make_orelse(loc, lhs_opnd, opr_sym, rhs_opnd)
+		ASSERT.kind_of loc,			L::Location
+		ASSERT.kind_of lhs_opnd,	SCCE::Abstract
+		ASSERT.kind_of opr_sym,		::Symbol
+		ASSERT.kind_of rhs_opnd,	SCCE::Abstract
+
+		Binary::Infix::OrElse.new(
+			loc, lhs_opnd, opr_sym, rhs_opnd
+		).freeze
 	end
 
 end	# Umu::ConcreteSyntax::Core::Expression

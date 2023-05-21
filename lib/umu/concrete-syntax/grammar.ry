@@ -355,14 +355,16 @@ case_rule_head:
 
 resrv_infix_expr:
   redef_infix_expr
-| resrv_infix_expr KIND_OF resrv_infix_expr {
-	result = SCCE.make_infix val[0].loc, val[0], val[1].sym, val[2]
+| resrv_infix_expr KIND_OF ID {
+  	ty_ident = SCCE.make_identifier val[2].loc, val[2].sym
+
+	result = SCCE.make_kindof	val[0].loc, val[0], val[1].sym, ty_ident
 }
 | resrv_infix_expr '&&' resrv_infix_expr {
-	result = SCCE.make_infix val[0].loc, val[0], val[1].sym, val[2]
+	result = SCCE.make_andalso	val[0].loc, val[0], val[1].sym, val[2]
 }
 | resrv_infix_expr '||' resrv_infix_expr {
-	result = SCCE.make_infix val[0].loc, val[0], val[1].sym, val[2]
+	result = SCCE.make_orelse	val[0].loc, val[0], val[1].sym, val[2]
 }
 
 
