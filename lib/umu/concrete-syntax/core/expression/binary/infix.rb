@@ -13,7 +13,7 @@ module Expression
 module Binary
 
 class Infix < Abstract
-	alias		lhs_opnd lhs_expr
+	alias		lhs_opnd lhs
 	attr_reader :opr_sym
 	alias		rhs_opnd rhs
 

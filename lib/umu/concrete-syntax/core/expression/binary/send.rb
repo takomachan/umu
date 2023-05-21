@@ -91,7 +91,8 @@ end	# Umu::ConcreteSyntax::Core::Expression::Binary::Send::Message
 
 
 class Entry < Binary::Abstract
-	alias		rhs_head_message rhs
+	alias		lhs_expr			lhs
+	alias		rhs_head_message	rhs
 	attr_reader	:rhs_tail_messages
 
 

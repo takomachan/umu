@@ -13,7 +13,7 @@ module Expression
 module Binary
 
 class Apply < Binary::Abstract
-	alias		opr_expr			lhs_expr
+	alias		opr_expr			lhs
 	alias		opnd_head_expr		rhs
 	attr_reader	:opnd_tail_exprs
 
