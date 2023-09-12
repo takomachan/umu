@@ -1,0 +1,285 @@
+(#
+	An Introduction to Database Systems Vol.1 Third Edition. 1075, C.J.Date
+	データベース・システム概論 第三販, 1984, C.J.Date
+#)
+
+
+structure UAS = Umu::Assert
+
+
+# 3 Data Structures and Corresponding Operators -- p63
+# 3 データ構造および対応する演算子 -- p65
+
+# 3.2 THE RELATIONAL APPROACH -- p64
+# 3.2 関係型の方法 -- p66
+
+structure SUPPLIERS = struct {
+	val rows = [
+	#	 S#		SNAME   	STATUS	CITY
+	#-----------------------------------------
+		(@S1,	@Smith,		20,		@London),
+		(@S2,	@Jones,		10,		@Paris),
+		(@S3,	@Blake,		30,		@Paris)
+	]
+
+	fun sno		= r : Tuple -> r.1
+	fun sname	= r : Tuple -> r.2
+	fun status	= r : Tuple -> r.3
+	fun city	= r : Tuple -> r.4
+}
+
+
+structure PARTS = struct {
+	val rows = [
+	#	 P#		PNAME  	COLOR	WEIGHT	CITY
+	#---------------------------------------------
+		(@P1,	@Nut,	@Red,	12,		@London),
+		(@P2,	@Bolt,	@Green,	17,		@Paris),
+		(@P3,	@Screw,	@Blue,	17,		@Rome),
+		(@P4,	@Screw,	@Red,	14,		@London)
+	]
+
+	fun pno		= r : Tuple -> r.1
+	fun pname	= r : Tuple -> r.2
+	fun color	= r : Tuple -> r.3
+	fun weight	= r : Tuple -> r.4
+	fun city	= r : Tuple -> r.5
+}
+
+
+structure SHIPMENTS = struct {
+	val rows = [
+	#	 S#		P#		QTY
+	#-------------------------
+		(@S1,	@P1,	300),
+		(@S1,	@P2,	200),
+		(@S1,	@P3,	400),
+		(@S2,	@P1,	300),
+		(@S2,	@P2,	400),
+		(@S2,	@P2,	200)
+	]
+
+	fun sno	= r : Tuple -> r.1
+	fun pno	= r : Tuple -> r.2
+	fun qty	= r : Tuple -> r.3
+}
+
+
+structure S  = SUPPLIERS
+structure P  = PARTS
+structure SP = SHIPMENTS
+;;
+
+
+
+# 3.5 HIGHT-LEVEL OPERATORS -- p73
+# 3.5 高水準演算子 -- p75
+
+# 3.5.1 Find CITY for supplier S1.
+# 3.5.1 納入業者 S1 に対して CITY を見つけること。
+
+[|S::city s|
+	s <- S::rows, if S::sno s == @S1
+] ;;
+# --> [@London]
+
+
+# 3.5.2 Find S# and STATUS for suppliers in Paris.
+# 3.5.2 Paris にある納入業者に対して S# と STATUS を見つけること。
+
+[|(S::sno s, S::status s)|
+	s <- S::rows, if S::city s == @Paris
+] ;;
+# --> [(@S2, 10), (@S3, 30)]
+
+
+# 3.5.3 Find PNAME for parts supplied by suppliers S1.
+# 3.5.3 納入業者 S1 から納入される部品に対して PNAME を見つけること。
+
+[|P::pname p|
+	sp <- SP::rows, if SP::sno sp == @S1,
+	p  <- P::rows,  if P::pno p == SP::pno sp
+] ;;
+# --> [@Nut, @Bolt, @Screw]
+
+
+# 3.5.4 For each part supplied, find P# and names of all cities supplying
+#		the parts.
+# 3.5.4 納入される各部品に対して、P# およびその部品を納入しているすべての
+#		都市の名前を見つけること。
+
+[|(SP::pno sp, S::city s)|
+	sp <- SP::rows,
+	s  <- S::rows,  if S::sno s == SP::sno sp
+] ;;
+# --> [(@P1, @London), (@P2, @London), (@P3, @London),
+#	   (@P1, @Paris),  (@P2, @Paris),  (@P2, @Paris)]
+
+
+
+# 4 Relational Data Structures -- p83
+# 4 関係型データ構造 -- p65
+
+# 4.5 SUMMARY -- p91
+# 4.5 要約 -- p96
+
+structure SUPPLIERS = struct {
+	val rows = [
+	#	 S#		SNAME   	STATUS	CITY
+	#-----------------------------------------
+		(@S1,	@Smith,		20,		@London),
+		(@S2,	@Jones,		10,		@Paris),
+		(@S3,	@Blake,		30,		@Paris),
+		(@S4,	@Clark,		20,		@London),
+		(@S5,	@Adams,		30,		@Athens)
+	]
+
+	fun sno		= r : Tuple -> r.1
+	fun sname	= r : Tuple -> r.2
+	fun status	= r : Tuple -> r.3
+	fun city	= r : Tuple -> r.4
+}
+
+
+structure PARTS = struct {
+	val rows = [
+	#	 P#		PNAME  	COLOR	WEIGHT	CITY
+	#---------------------------------------------
+		(@P1,	@Nut,	@Red,	12,		@London),
+		(@P2,	@Bolt,	@Green,	17,		@Paris),
+		(@P3,	@Screw,	@Blue,	17,		@Rome),
+		(@P4,	@Screw,	@Red,	14,		@London),
+		(@P5,	@Cam,	@Blue,	12,		@Paris),
+		(@P6,	@Cog,	@Red,	19,		@London)
+	]
+
+	fun pno		= r : Tuple -> r.1
+	fun pname	= r : Tuple -> r.2
+	fun color	= r : Tuple -> r.3
+	fun weight	= r : Tuple -> r.4
+	fun city	= r : Tuple -> r.5
+}
+
+
+structure SHIPMENTS = struct {
+	val rows = [
+	#	 S#		P#		QTY
+	#-------------------------
+		(@S1,	@P1,	300),
+		(@S1,	@P2,	200),
+		(@S1,	@P3,	400),
+		(@S1,	@P4,	200),
+		(@S1,	@P5,	100),
+		(@S1,	@P6,	100),
+		(@S2,	@P1,	300),
+		(@S2,	@P2,	400),
+		(@S3,	@P2,	200),
+		(@S4,	@P2,	200),
+		(@S4,	@P4,	300),
+		(@S4,	@P5,	400)
+	]
+
+	fun sno	= r : Tuple -> r.1
+	fun pno	= r : Tuple -> r.2
+	fun qty	= r : Tuple -> r.3
+}
+
+
+structure UAS = Umu::Assert
+
+structure S  = SUPPLIERS
+structure P  = PARTS
+structure SP = SHIPMENTS
+;;
+
+
+
+# 7 System R Data Manipulation -- p117
+# 7 システムRのデータ操作 -- p121
+
+# 7.2 RETRIEVAL OPERATIONS -- p117
+# 7.2 検索操作 -- p121
+
+# Get supplier numbers and status for suppliers in Paris
+# Paris の納入業者について納入業者番号と状態を求めよ
+(#
+	SELECT S#, STATUS
+	FROM   S
+	WHERE  CITY = 'PARIS'
+#)
+
+[|(S::sno s, S::status s)|
+	s <- S::rows, if S::city s == @Paris
+] ;;
+# --> [(@S2, 10), (@S3, 30)]
+
+
+# 7.2.1 Simple retrieval: Get part numbers for all parts supplied.
+# 7.2.1 単純検索: 納入されたすべての部品に対して部品番号を求める。
+(#
+	SELECT P#
+	FROM   SP
+#)
+
+[|SP::pno sp| sp <- SP::rows] ;;
+# --> [@P1, @P2, @P3, @P4, @P5, @P6, @P1, @P2, @P2, @P2, @P4, @P5]
+
+
+# 7.2.2 Simple retrieval: Get full details of all suppliers.
+# 7.2.2 単純検索: すべての納入業者の完全な記述を求める。
+(#
+	SELECT *
+	FROM   S
+#)
+
+[|sp| sp <- SP::rows] ;;
+# --> [(@S1, @P1, 300), (@S1, @P2, 200), (@S1, @P3, 400),
+#	   (@S1, @P4, 200), (@S1, @P5, 100), (@S1, @P6, 100),
+#	   (@S2, @P1, 300), (@S2, @P2, 400),
+#	   (@S3, @P2, 200),
+#	   (@S4, @P2, 200), (@S4, @P4, 300), (@S4, @P5, 400)]
+
+
+# 7.2.3 Qualified retrieval: Get supplier numbers for suppliers in Paris
+#		with status > 20.
+# 7.2.3 限定検索: 状態 >20 なる Paris の納入業者に対する納入業者番号を
+#		求める。
+(#
+	SELECT S#
+	FROM   S
+	WHERE  CITY = 'PARIS'
+	AND    STATUS > 20
+#)
+
+[|S::sno s|
+	s <- S::rows, if S::city s == @Paris && S::status s > 20
+] ;;
+# --> [@S3]
+
+
+# 7.2.4 Retrieval with ordring: Get supplier numbers and status for
+#		suppliers in Paris, in descending order of status.
+# 7.2.4 順序付けを伴う検索: Paris の納入業者に対する納入業者番号と状態を
+#		状態の降順で求める。
+(#
+	SELECT S#, STATUS
+	FROM   S
+	WHERE  CITY = 'PARIS'
+	ORDER  BY STATUS DESC
+#)
+
+
+# 7.2.5 Retrieval with ordring: Get supplier numbers and status for 
+#       suppliers in Paris, in descending order of status.
+# 7.2.5 2個以上の表からの検索: 納入された各部品について、部品番号および
+#       その部品を納入しているすべての都市の名前を求める。
+(#
+    SELECT UNIQUE P#, CITY
+    FROM   SP, S
+    WHERE  SP.S# = S.S#
+#)
+
+[|(SP::pno sp, S::city s)|
+	sp <- SP::rows, s <- S::rows, if SP::sno sp == S::sno s
+]
+# --> [@S3]
