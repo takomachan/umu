@@ -56,13 +56,16 @@ end
 		ASSERT.kind_of args, ::Array
 
 		exit_code = begin
+			pref, file_names = Commander.parse_option(
+									args, E::INITIAL_PREFERENCE
+								)
+
 			prelude_env = Commander.process_file(
 							Prelude::SOURCE_TEXT,
 							Prelude::FILE_NAME,
 							E.setup(E::INITIAL_PREFERENCE),
 							Prelude::START_LINE_NUM
 						)
-			pref, file_names = Commander.parse_option args, prelude_env.pref
 			init_env = prelude_env.update_preference pref
 
 			if pref.interactive_mode?
@@ -253,17 +256,15 @@ end
 				)
 			end
 
-			[
-				[],
-				next_lexer,
-				Commander.execute(next_tokens, env)
-			]
+			next_env = Commander.process_tokens(next_tokens, env) do |value|
+							STDERR.flush
+							STDOUT.puts value.to_s
+							STDOUT.flush
+						end
+
+			[[],			next_lexer, next_env]
 		else
-			[
-				next_tokens,
-				next_lexer,
-				env
-			]
+			[next_tokens,	next_lexer, env]
 		end
 	end
 
@@ -336,11 +337,11 @@ end
 			STDERR.puts
 		end
 
-		Commander.execute(tokens, env)
+		Commander.process_tokens(tokens, env)
 	end
 
 
-	def execute(tokens, init_env)
+	def process_tokens(tokens, init_env)
 		ASSERT.kind_of tokens,		::Array
 		ASSERT.kind_of init_env,	E::Entry
 
@@ -350,61 +351,68 @@ end
 			ASSERT.kind_of env,			E::Entry
 			ASSERT.kind_of con_syntax,	SC::Abstract
 
-			pref = env.pref
+			result = execute(con_syntax, env)
+			ASSERT.kind_of result, SAR::Abstract
 
-			con_syntax.tap { |csyn|
-				ASSERT.kind_of csyn, SC::Abstract
+			case result
+			when SAR::Value
+				value = result.value
 
-				if pref.trace_mode?
-					STDERR.puts
-					STDERR.printf(
-						"________ Concrete Syntax: %s ________\n",
-						csyn.loc.to_s
-					)
-					STDERR.puts csyn.to_s
-				end
+				yield value if block_given?
 
-				if pref.trace_mode?
-					STDERR.puts
-					STDERR.puts "________ Desugar Trace ________"
-				end
-			}.desugar(env).tap { |asyn|
-				ASSERT.kind_of asyn, SA::Abstract
-
-				if pref.trace_mode?
-					STDERR.puts
-					STDERR.printf(
-						"________ Abstract Syntax: %s ________\n",
-						asyn.loc.to_s
-					)
-					STDERR.puts asyn.to_s
-				end
-
-				if pref.trace_mode?
-					STDERR.puts
-					STDERR.puts "________ Evaluator Trace ________"
-				end
-			}.evaluate(env).yield_self { |result|
-				ASSERT.kind_of result, SAR::Abstract
-
-				case result
-				when SAR::Value
-					value = result.value
-
-					STDERR.flush
-					STDOUT.puts value.to_s
-					STDOUT.flush
-
-					env.va_extend_value :it, value
-				when SAR::Environment
-					result.env
-				else
-					ASSERT.abort result.inspect
-				end
-			}
+				env.va_extend_value :it, value
+			when SAR::Environment
+				result.env
+			else
+				ASSERT.abort result.inspect
+			end
 		}
 
 		ASSERT.kind_of final_env, E::Entry
+	end
+
+
+	def execute(con_syntax, env)
+		ASSERT.kind_of env,			E::Entry
+		ASSERT.kind_of con_syntax,	SC::Abstract
+
+		pref = env.pref
+
+		result = con_syntax.tap { |csyn|
+			ASSERT.kind_of csyn, SC::Abstract
+
+			if pref.trace_mode?
+				STDERR.puts
+				STDERR.printf(
+					"________ Concrete Syntax: %s ________\n",
+					csyn.loc.to_s
+				)
+				STDERR.puts csyn.to_s
+			end
+
+			if pref.trace_mode?
+				STDERR.puts
+				STDERR.puts "________ Desugar Trace ________"
+			end
+		}.desugar(env).tap { |asyn|
+			ASSERT.kind_of asyn, SA::Abstract
+
+			if pref.trace_mode?
+				STDERR.puts
+				STDERR.printf(
+					"________ Abstract Syntax: %s ________\n",
+					asyn.loc.to_s
+				)
+				STDERR.puts asyn.to_s
+			end
+
+			if pref.trace_mode?
+				STDERR.puts
+				STDERR.puts "________ Evaluator Trace ________"
+			end
+		}.evaluate(env)
+
+		ASSERT.kind_of result, SAR::Abstract
 	end
 
 end # Umu::Commander
