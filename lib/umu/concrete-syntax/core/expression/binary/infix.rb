@@ -138,7 +138,6 @@ private
 
 		SACE.make_if(
 			self.loc,
-			loc,
 			[
 				SACE.make_rule(
 					self.loc,
