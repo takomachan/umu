@@ -199,10 +199,6 @@ structure Umu = struct {
 		val Cons? = &(List$cons?)
 
 
-		# pdes : ['a] -> ('a, ['a])
-		val pdes = &(Cons$pdes)
-
-
 		# head : ['a] -> 'a
 		val head = &(Cons$head)
 
@@ -581,9 +577,6 @@ structure Umu = struct {
 		# empty?	: ['a] -> Bool
 		val empty? = List::Nil?
 
-		# pdes		: ['a] -> ('a, ['a])
-		val pdes = List::pdes
-
 		# head		: ['a] -> 'a
 		val head = List::head
 
@@ -866,7 +859,7 @@ structure struct {
 	val (
 		(|), (++),
 		empty?,
-		pdes, head, tail,
+		head, tail,
 		foldr, foldr1, foldl, foldl1,
 		length, reverse,
 		max, min,
