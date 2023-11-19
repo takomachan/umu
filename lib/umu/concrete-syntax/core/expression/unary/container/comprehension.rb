@@ -65,7 +65,7 @@ class Generator < Abstract
 			SACE.make_method(
 				self.loc,
 
-				:'concat-map',
+				:'concat-with',
 
 				[
 					SCCE.make_lambda(

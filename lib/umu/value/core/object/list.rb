@@ -14,35 +14,35 @@ module List
 
 class Abstract < Object::Abstract
 	INSTANCE_METHOD_INFOS = [
-		[ :meth_empty?,		VCA::Bool,
+		[ :meth_empty?,			VCA::Bool,
 			:empty?],
-		[ :meth_cons,		self,
-			:cons,			VC::Top],
-		[ :meth_des,		VCO::Option::Abstract,
+		[ :meth_cons,			self,
+			:cons,				VC::Top],
+		[ :meth_des,			VCO::Option::Abstract,
 			:des],
-		[ :meth_des!,		VCP::Tuple,
+		[ :meth_des!,			VCP::Tuple,
 			:des!],
-		[ :meth_foldr,		VC::Top,
-			:foldr,			VC::Top, VC::Function],
-		[ :meth_foldl,		VC::Top,
-			:foldl,			VC::Top, VC::Function],
-		[ :meth_map,		self,
-			:map,			VC::Function],
-		[ :meth_filter,		self,
-			:filter,		VC::Function],
-		[ :meth_append,		self,
-			:append,		self],
-		[ :meth_concat,		self,
+		[ :meth_foldr,			VC::Top,
+			:foldr,				VC::Top, VC::Function],
+		[ :meth_foldl,			VC::Top,
+			:foldl,				VC::Top, VC::Function],
+		[ :meth_map,			self,
+			:map,				VC::Function],
+		[ :meth_filter,			self,
+			:filter,			VC::Function],
+		[ :meth_append,			self,
+			:append,			self],
+		[ :meth_concat,			self,
 			:concat],
-		[ :meth_concat_map,	self,
-			:'concat-map',	VC::Function],
-		[ :meth_zip,		self,
-			:zip,			self],
-		[ :meth_unzip,		VCP::Tuple,
+		[ :meth_concat_with,	self,
+			:'concat-with',		VC::Function],
+		[ :meth_zip,			self,
+			:zip,				self],
+		[ :meth_unzip,			VCP::Tuple,
 			:unzip],
-		[ :meth_partition,	VCP::Tuple,
-			:partition,		VC::Function],
-		[ :meth_sort,		self,
+		[ :meth_partition,		VCP::Tuple,
+			:partition,			VC::Function],
+		[ :meth_sort,			self,
 			:sort]
 	]
 
@@ -208,7 +208,7 @@ class Abstract < Object::Abstract
 	end
 
 
-	def meth_concat_map(loc, env, event, func)
+	def meth_concat_with(loc, env, event, func)
 		ASSERT.kind_of func, VC::Function
 
 		new_env = env.enter event
@@ -221,7 +221,7 @@ class Abstract < Object::Abstract
 				raise X::TypeError.new(
 					loc,
 					env,
-					"concat-map: expected a List, but %s : %s",
+					"concat-with: expected a List, but %s : %s",
 					xs.to_s,
 					xs.type_sym.to_s
 				)
