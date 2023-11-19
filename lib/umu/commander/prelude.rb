@@ -191,12 +191,8 @@ structure Umu = struct {
 		fun Cons = x (xs : List) -> &{Cons}.make x xs
 
 
-		# Nil? : ['a] -> Bool
-		val Nil? = &(List$nil?)
-
-
-		# Cons? : ['a] -> Bool
-		val Cons? = &(List$cons?)
+		# empty? : ['a] -> Bool
+		val empty? = &(List$empty?)
 
 
 		# des : ['a] -> Option ('a, ['a])
@@ -215,7 +211,7 @@ structure Umu = struct {
 		fun rec equal-with? = eq? xs ys ->
 			if (xs kind-of? List && ys kind-of? List)
 				case xs {
-				  []	  -> Nil? ys
+				  []	  -> empty? ys
 				| [x|xs'] -> case ys {
 					  []	  -> FALSE
 					| [y|ys'] -> equal-with? eq? x   y &&
@@ -579,7 +575,7 @@ structure Umu = struct {
 		val (++) = List::append
 
 		# empty?	: ['a] -> Bool
-		val empty? = List::Nil?
+		val empty? = List::empty?
 
 		# head		: ['a] -> 'a
 		val head = List::head

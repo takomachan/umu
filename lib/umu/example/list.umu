@@ -197,7 +197,7 @@ structure List = struct {
 	}
 } where {
 	structure struct {
-		val (Nil? -> empty?, Cons -> cons)
+		val Cons -> cons
 	} = Umu::List
 }
 

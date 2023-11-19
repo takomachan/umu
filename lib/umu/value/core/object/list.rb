@@ -14,10 +14,8 @@ module List
 
 class Abstract < Object::Abstract
 	INSTANCE_METHOD_INFOS = [
-		[ :meth_nil?,		VCA::Bool,
-			:nil?],
-		[ :meth_cons?,		VCA::Bool,
-			:cons?],
+		[ :meth_empty?,		VCA::Bool,
+			:empty?],
 		[ :meth_cons,		self,
 			:cons,			VC::Top],
 		[ :meth_des,		VCO::Option::Abstract,
@@ -56,7 +54,7 @@ class Abstract < Object::Abstract
 		return self.to_enum unless block_given?
 
 		xs = self
-		until xs.nil?
+		until xs.empty?
 			begin
 				yield xs.head
 			rescue StopIteration
@@ -75,7 +73,7 @@ class Abstract < Object::Abstract
 	end
 
 
-	def nil?
+	def empty?
 		raise X::SubclassResponsibility
 	end
 
@@ -91,13 +89,8 @@ class Abstract < Object::Abstract
 	end
 
 
-	def meth_nil?(_loc, _env, _event)
-		VC.make_false
-	end
-
-
-	def meth_cons?(_loc, _env, _event)
-		VC.make_false
+	def meth_empty?(_loc, _env, _event)
+		VC.make_bool self.empty?
 	end
 
 
@@ -354,13 +347,8 @@ class Nil < Abstract
 	end
 
 
-	def nil?
+	def empty?
 		true
-	end
-
-
-	def meth_nil?(_loc, _env, _event)
-		VC.make_true
 	end
 
 
@@ -420,7 +408,7 @@ class Cons < Abstract
 	end
 
 
-	def nil?
+	def empty?
 		false
 	end
 
