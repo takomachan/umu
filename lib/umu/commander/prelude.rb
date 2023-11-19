@@ -199,6 +199,10 @@ structure Umu = struct {
 		val Cons? = &(List$cons?)
 
 
+		# des : ['a] -> Option ('a, ['a])
+		val des = &(List$des)
+
+
 		# head : ['a] -> 'a
 		val head = &(Cons$head)
 

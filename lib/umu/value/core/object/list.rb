@@ -20,6 +20,8 @@ class Abstract < Object::Abstract
 			:cons?],
 		[ :meth_cons,		self,
 			:cons,			VC::Top],
+		[ :meth_des,		VCO::Option::Abstract,
+			:des],
 		[ :meth_des!,		VCP::Tuple,
 			:des!],
 		[ :meth_foldr,		VC::Top,
@@ -103,6 +105,11 @@ class Abstract < Object::Abstract
 		ASSERT.kind_of value, VC::Top
 
 		VC.make_cons value, self
+	end
+
+
+	def meth_des(_loc, _env, _event)
+		raise X::SubclassResponsibility
 	end
 
 
@@ -357,6 +364,11 @@ class Nil < Abstract
 	end
 
 
+	def meth_des(_loc, _env, _event)
+		VC.make_none
+	end
+
+
 	def meth_des!(loc, env, _event)
 		raise X::EmptyError.new(
 					loc,
@@ -415,6 +427,11 @@ class Cons < Abstract
 
 	def meth_cons?(_loc, _env, _event)
 		VC.make_true
+	end
+
+
+	def meth_des(_loc, _env, _event)
+		VC.make_some VC.make_tuple [self.head, self.tail]
 	end
 
 
