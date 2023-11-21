@@ -1064,12 +1064,12 @@ fun rec intersection-set = set1 set2 -> (
 
 #### ORDERED
 
-fun rec element-of-set'? = e set -> case set {
+fun rec element-of-set?' = e set -> case set {
   []	 -> FALSE
 | [x|xs] -> cond e {
 			  (== x) -> TRUE
 			| (<  x) -> FALSE
-			  else	 -> element-of-set'? e xs
+			  else	 -> element-of-set?' e xs
 			}
 }
 

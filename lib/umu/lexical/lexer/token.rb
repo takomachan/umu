@@ -17,7 +17,7 @@ class Token < Abstract
 HEAD_WORD		= '[a-zA-Z][a-zA-Z0-9]*'
 TAIL_WORD		= '[a-zA-Z0-9]*'
 WORD_PATTERN	= Regexp.new(
-						"(@)?(_*#{HEAD_WORD}(\\-#{TAIL_WORD})*_*'*\[\?!]?)"
+						"(@)?(_*#{HEAD_WORD}(\\-#{TAIL_WORD})*_*\[\?!]?'*)"
 					)
 
 
