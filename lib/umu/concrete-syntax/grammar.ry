@@ -520,8 +520,14 @@ atom_expr:
 | '[' expr com_exprs opt_last_expr ']' {
 	result = SCCE.make_list val[0].loc, [val[1]] + val[2], val[3]
 }
-| '[' '|' expr '|' qualifiers  ']' {
-	result = SCCE.make_comprehension val[0].loc, val[2], val[4]
+| '[' '|' expr com_exprs '|' qualifiers  ']' {
+	expr = if val[3].empty?
+				val[2]
+			else
+				SCCE.make_tuple val[0].loc, [val[2]] + val[3]
+			end
+
+	result = SCCE.make_comprehension val[0].loc, expr, val[5]
 }
 
 # Braket: { ... }

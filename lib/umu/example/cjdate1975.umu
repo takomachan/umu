@@ -87,7 +87,7 @@ structure SP = SHIPMENTS
 # 3.5.2 Find S# and STATUS for suppliers in Paris.
 # 3.5.2 Paris にある納入業者に対して S# と STATUS を見つけること。
 
-[|(S::sno s, S::status s)|
+[|S::sno s, S::status s|
 	s <- S::rows, if S::city s == @Paris
 ] ;;
 # --> [(@S2, 10), (@S3, 30)]
@@ -108,7 +108,7 @@ structure SP = SHIPMENTS
 # 3.5.4 納入される各部品に対して、P# およびその部品を納入しているすべての
 #		都市の名前を見つけること。
 
-[|(SP::pno sp, S::city s)|
+[|SP::pno sp, S::city s|
 	sp <- SP::rows,
 	s  <- S::rows,  if S::sno s == SP::sno sp
 ] ;;
@@ -208,7 +208,7 @@ structure SP = SHIPMENTS
 	WHERE  CITY = 'PARIS'
 #)
 
-[|(S::sno s, S::status s)|
+[|S::sno s, S::status s|
 	s <- S::rows, if S::city s == @Paris
 ] ;;
 # --> [(@S2, 10), (@S3, 30)]
@@ -279,7 +279,7 @@ structure SP = SHIPMENTS
     WHERE  SP.S# = S.S#
 #)
 
-[|(SP::pno sp, S::city s)|
+[|SP::pno sp, S::city s|
 	sp <- SP::rows, s <- S::rows, if SP::sno sp == S::sno s
 ]
 # --> [@S3]
