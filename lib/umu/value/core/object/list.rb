@@ -188,7 +188,8 @@ class Abstract < Object::Abstract
 
 
 	def meth_concat(loc, env, event)
-		result_value = self.reverse_each.inject(VC.make_nil) { |xss, xs|
+		mut_ys = []
+		self.each do |xs|
 			ASSERT.kind_of xs, VC::Top
 
 			unless xs.kind_of? List::Abstract
@@ -201,10 +202,10 @@ class Abstract < Object::Abstract
 				)
 			end
 
-			xs.meth_append loc, env, event, xss
-		}
+			mut_ys.concat xs.to_a
+		end
 
-		ASSERT.kind_of result_value, List::Abstract
+		VC.make_list mut_ys
 	end
 
 
@@ -213,7 +214,8 @@ class Abstract < Object::Abstract
 
 		new_env = env.enter event
 
-		result_value = self.reverse_each.inject(VC.make_nil) { |xss, x|
+		mut_ys = []
+		self.each do |x|
 			ASSERT.kind_of x, VC::Top
 
 			xs = func.apply x, [], loc, new_env
@@ -221,18 +223,16 @@ class Abstract < Object::Abstract
 				raise X::TypeError.new(
 					loc,
 					env,
-					"concat-with: expected a List, but %s : %s",
+					"concat: expected a List, but %s : %s",
 					xs.to_s,
 					xs.type_sym.to_s
 				)
 			end
 
-			xs.reverse_each.inject(xss) { |xss_, x|
-				VC.make_cons x, xss_
-			}
-		}
+			mut_ys.concat xs.to_a
+		end
 
-		ASSERT.kind_of result_value, List::Abstract
+		VC.make_list mut_ys
 	end
 
 

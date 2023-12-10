@@ -302,8 +302,8 @@ structure Umu = struct {
 		val concat = &(List$concat)
 
 
-		# concat-map : ('a -> ['b]) -> ['a] -> ['b]
-		fun concat-map = (f : Function) (xs : List) -> xs.concat-map f
+		# concat-with : ('a -> ['b]) -> ['a] -> ['b]
+		fun concat-with = (f : Function) (xs : List) -> xs.concat-with f
 
 
 		# zip-with : ('a -> 'b -> 'c) -> ['a] -> ['b] -> ['c]
@@ -619,6 +619,9 @@ structure Umu = struct {
 		# concat	: [['a]] -> ['a]
 		val concat = List::concat
 
+		# concat-with : ('a -> ['b]) -> ['a] -> ['b]
+		val concat-with = List::concat-with
+
 		# zip		: ['a] -> ['b] -> (['a, 'b])
 		val zip = List::zip
 
@@ -863,7 +866,7 @@ structure struct {
 		foldr, foldr1, foldl, foldl1,
 		length, reverse,
 		max, min,
-		map, filter, concat,
+		map, filter, concat, concat-with,
 		zip, unzip,
 		partition, sort
 	)
