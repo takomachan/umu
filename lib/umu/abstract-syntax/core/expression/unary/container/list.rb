@@ -52,30 +52,28 @@ private
 
 		new_env = env.enter event
 
-		xs = if opt_last_expr
-					tail_value = opt_last_expr.evaluate(new_env).value
-					unless tail_value.kind_of? VCO::List::Abstract
+		xs = self.map { |x|
+			ASSERT.kind_of x, SACE::Abstract
+
+			x.evaluate(new_env).value
+		}
+
+		tail = if self.opt_last_expr
+					t = self.opt_last_expr.evaluate(new_env).value
+					unless t.kind_of? VCO::List::Abstract
 						raise X::TypeError.new(
 							opt_last_expr.loc,
 							env,
-							"expected a List, but %s : %s",
-											tail_value, tail_value.type_sym
+							"expected a List, but %s : %s", t, t.type_sym
 						)
 					end
 
-					tail_value
+					t
 				else
 					VC.make_nil
 				end
 
-		self.exprs.reverse_each do |x|
-			ASSERT.kind_of x, SACE::Abstract
-
-			xs = VC.make_cons x.evaluate(new_env).value, xs
-
-		end
-
-		ASSERT.kind_of xs, VCO::List::Abstract
+		VC.make_list xs, tail
 	end
 end
 

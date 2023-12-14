@@ -461,10 +461,11 @@ module_function
 	end
 
 
-	def make_list(xs)
-		ASSERT.kind_of xs, ::Array
+	def make_list(xs, tail = VC.make_nil)
+		ASSERT.kind_of xs,		::Array
+		ASSERT.kind_of tail,	Object::List::Abstract
 
-		xs.reverse_each.inject(VC.make_nil) { |ys, x|
+		xs.reverse_each.inject(tail) { |ys, x|
 			VC.make_cons x, ys
 		}
 	end
