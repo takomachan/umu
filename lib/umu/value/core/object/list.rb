@@ -13,6 +13,13 @@ module Object
 module List
 
 class Abstract < Object::Abstract
+	CLASS_METHOD_INFOS = [
+		[:meth_make_empty,		self,
+			:'make-empty'],
+		[:meth_make_cons,		self,
+			:'make-cons',		VC::Top, List::Abstract]
+	]
+
 	INSTANCE_METHOD_INFOS = [
 		[ :meth_empty?,			VCA::Bool,
 			:empty?],
@@ -45,6 +52,19 @@ class Abstract < Object::Abstract
 		[ :meth_sort,			self,
 			:sort]
 	]
+
+
+	def self.meth_make_empty(_loc, _env, _event)
+		VC.make_nil
+	end
+
+
+	def self.meth_make_cons(_loc, _env, _event, x, xs)
+		ASSERT.kind_of x,	VC::Top
+		ASSERT.kind_of xs,	List::Abstract
+
+		VC.make_cons x, xs
+	end
 
 
 	include Enumerable
@@ -331,20 +351,10 @@ end
 
 
 class Nil < Abstract
-	CLASS_METHOD_INFOS = [
-		[:meth_make,		self,
-			:'make'],
-	]
-
 	INSTANCE_METHOD_INFOS = [
 		[:meth_contents,	VC::Unit,
 			:contents]
 	]
-
-
-	def self.meth_make(_loc, _env, _event)
-		VC.make_nil
-	end
 
 
 	def empty?
@@ -371,11 +381,6 @@ NIL = Nil.new.freeze
 
 
 class Cons < Abstract
-	CLASS_METHOD_INFOS = [
-		[:meth_make,		self,
-			:'make',		VC::Top, List::Abstract]
-	]
-
 	INSTANCE_METHOD_INFOS = [
 		[:meth_contents,		VCP::Tuple,
 			:contents],
@@ -384,14 +389,6 @@ class Cons < Abstract
 		[ :meth_tail,			List::Abstract,
 			:tail]
 	]
-
-
-	def self.meth_make(_loc, _env, _event, x, xs)
-		ASSERT.kind_of x,	VC::Top
-		ASSERT.kind_of xs,	List::Abstract
-
-		VC.make_cons x, xs
-	end
 
 
 	attr_reader :head, :tail

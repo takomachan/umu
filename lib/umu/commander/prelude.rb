@@ -184,11 +184,11 @@ structure Umu = struct {
 
 	structure List = struct {
 		# Nil : () -> ['a]
-		fun Nil = () -> &{Nil}.make
+		fun Nil = () -> &{List}.make-nil
 
 
 		# Cons : 'a -> ['a] -> ['a]
-		fun Cons = x (xs : List) -> &{Cons}.make x xs
+		fun Cons = x (xs : List) -> &{List}.make-cons x xs
 
 
 		# empty? : ['a] -> Bool
