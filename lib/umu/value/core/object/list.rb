@@ -25,10 +25,10 @@ class Abstract < Object::Abstract
 			:empty?],
 		[ :meth_cons,			self,
 			:cons,				VC::Top],
-		[ :meth_des,			VCO::Option::Abstract,
-			:des],
 		[ :meth_des!,			VCP::Tuple,
 			:des!],
+		[ :meth_des,			VCO::Option::Abstract,
+			:des],
 		[ :meth_foldr,			VC::Top,
 			:foldr,				VC::Top, VC::Function],
 		[ :meth_foldl,			VC::Top,
@@ -121,13 +121,17 @@ class Abstract < Object::Abstract
 	end
 
 
-	def meth_des(_loc, _env, _event)
+	def meth_des!(_loc, _env, _event)
 		raise X::SubclassResponsibility
 	end
 
 
-	def meth_des!(_loc, _env, _event)
-		raise X::SubclassResponsibility
+	def meth_des(loc, env, event)
+		if self.meth_empty?(loc, env, event).true?
+			VC.make_none
+		else
+			VC.make_some self.meth_des!(loc, env, event)
+		end
 	end
 
 
@@ -362,11 +366,6 @@ class Nil < Abstract
 	end
 
 
-	def meth_des(_loc, _env, _event)
-		VC.make_none
-	end
-
-
 	def meth_des!(loc, env, _event)
 		raise X::EmptyError.new(
 					loc,
@@ -382,12 +381,8 @@ NIL = Nil.new.freeze
 
 class Cons < Abstract
 	INSTANCE_METHOD_INFOS = [
-		[:meth_contents,		VCP::Tuple,
-			:contents],
-		[ :meth_head,			VC::Top,
-			:head],
-		[ :meth_tail,			List::Abstract,
-			:tail]
+		[:meth_contents,	VCP::Tuple,
+			:contents]
 	]
 
 
@@ -410,32 +405,12 @@ class Cons < Abstract
 	end
 
 
-	def meth_cons?(_loc, _env, _event)
-		VC.make_true
-	end
-
-
-	def meth_des(_loc, _env, _event)
-		VC.make_some VC.make_tuple [self.head, self.tail]
-	end
-
-
 	def meth_des!(_loc, _env, _event)
 		VC.make_tuple [self.head, self.tail]
 	end
 
 
 	alias meth_contents meth_des!
-
-
-	def meth_head(_loc, _env, _event)
-		self.head
-	end
-
-
-	def meth_tail(_loc, _env, _event)
-		self.tail
-	end
 end
 
 end	# Umu::Value::Core::Object::List
