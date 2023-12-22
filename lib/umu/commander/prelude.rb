@@ -209,17 +209,23 @@ structure Umu = struct {
 
 		# equal-with? : ('a -> 'b -> Bool) -> ['a] -> ['b] -> Bool
 		fun rec equal-with? = eq? xs ys ->
-			if (xs kind-of? List && ys kind-of? List)
-				case xs {
-				  []	  -> empty? ys
-				| [x|xs'] -> case ys {
-					  []	  -> FALSE
-					| [y|ys'] -> equal-with? eq? x   y &&
-								 equal-with? eq? xs' ys'
+			if (xs kind-of? List)
+				if (ys kind-of? List)
+					case xs {
+					  []	  -> empty? ys
+					| [x|xs'] -> case ys {
+						  []	  -> FALSE
+						| [y|ys'] -> equal-with? eq? x	 y &&
+									 equal-with? eq? xs' ys'
+						}
 					}
-				}
+				else
+					FALSE
 			else
-				FALSE
+				if (ys kind-of? List)
+					FALSE
+				else
+					eq? xs ys
 
 
 		# equal? : ['a] -> ['b] -> Bool
