@@ -2,15 +2,6 @@ module Umu
 
 module Commander
 
-unless ::Object.new.respond_to?(:yield_self)	# Ruby 2.5 or after
-	class ::Object
-		def yield_self
-			yield self
-		end
-	end
-end
-
-
 unless ::Numeric.new.respond_to?(:positive?)	# Ruby 2.3 or after
 	class ::Numeric
 		def positive?
@@ -345,13 +336,13 @@ end
 		ASSERT.kind_of tokens,		::Array
 		ASSERT.kind_of init_env,	E::Entry
 
-		con_syntaxes = PARSER.parse tokens
+		csyn_stmts = PARSER.parse tokens
 
-		final_env = con_syntaxes.inject(init_env) { |env, con_syntax|
+		final_env = csyn_stmts.inject(init_env) { |env, csyn_stmt|
 			ASSERT.kind_of env,			E::Entry
-			ASSERT.kind_of con_syntax,	SC::Abstract
+			ASSERT.kind_of csyn_stmt,	SC::Abstract
 
-			result = execute(con_syntax, env)
+			result = execute(csyn_stmt, env)
 			ASSERT.kind_of result, SAR::Abstract
 
 			case result
@@ -372,47 +363,51 @@ end
 	end
 
 
-	def execute(con_syntax, env)
-		ASSERT.kind_of env,			E::Entry
-		ASSERT.kind_of con_syntax,	SC::Abstract
+	def execute(csyn, env)
+		ASSERT.kind_of env,		E::Entry
+		ASSERT.kind_of csyn,	SC::Abstract
 
-		pref = env.pref
+		print_trace_of_con_syntax csyn, env.pref
 
-		result = con_syntax.tap { |csyn|
-			ASSERT.kind_of csyn, SC::Abstract
+		asyn = csyn.desugar env
 
-			if pref.trace_mode?
-				STDERR.puts
-				STDERR.printf(
-					"________ Concrete Syntax: %s ________\n",
-					csyn.loc.to_s
-				)
-				STDERR.puts csyn.to_s
-			end
+		print_trace_of_abs_syntax asyn, env.pref
 
-			if pref.trace_mode?
-				STDERR.puts
-				STDERR.puts "________ Desugar Trace ________"
-			end
-		}.desugar(env).tap { |asyn|
-			ASSERT.kind_of asyn, SA::Abstract
-
-			if pref.trace_mode?
-				STDERR.puts
-				STDERR.printf(
-					"________ Abstract Syntax: %s ________\n",
-					asyn.loc.to_s
-				)
-				STDERR.puts asyn.to_s
-			end
-
-			if pref.trace_mode?
-				STDERR.puts
-				STDERR.puts "________ Evaluator Trace ________"
-			end
-		}.evaluate(env)
+		result = asyn.evaluate env
 
 		ASSERT.kind_of result, SAR::Abstract
+	end
+
+
+	def print_trace_of_con_syntax(csyn, pref)
+		ASSERT.kind_of csyn,	SC::Abstract
+
+		return unless pref.trace_mode?
+
+		STDERR.puts
+		STDERR.printf(
+			"________ Concrete Syntax: %s ________\n",
+			csyn.loc.to_s
+		)
+		STDERR.puts csyn.to_s
+		STDERR.puts
+		STDERR.puts "________ Desugar Trace ________"
+	end
+
+
+	def print_trace_of_abs_syntax(asyn, pref)
+		ASSERT.kind_of asyn,	SA::Abstract
+
+		return unless pref.trace_mode?
+
+		STDERR.puts
+		STDERR.printf(
+			"________ Abstract Syntax: %s ________\n",
+			asyn.loc.to_s
+		)
+		STDERR.puts asyn.to_s
+		STDERR.puts
+		STDERR.puts "________ Evaluator Trace ________"
 	end
 
 end # Umu::Commander

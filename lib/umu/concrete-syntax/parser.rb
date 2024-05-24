@@ -22,8 +22,8 @@ class Parser
 			token.separator?
 		}.to_enum
 
-		syntaxes = do_parse
-		ASSERT.kind_of syntaxes, ::Array
+		stmts = do_parse
+		ASSERT.kind_of stmts, ::Array
 	end
 
 

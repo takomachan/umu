@@ -23,13 +23,13 @@ preclow
 
 rule
 
-# Program
+# Statement
 
-progs:
-  prog				{ result = val[0] }
-| prog ';;' progs	{ result = val[0] + val[2] }
+stmts:
+  stmt				{ result = val[0] }
+| stmt ';;' stmts	{ result = val[0] + val[2] }
 
-prog:
+stmt:
   modu_decls	{ result = val[0] }
 | expr			{ result = [val[0]] }
 
