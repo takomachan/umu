@@ -142,9 +142,11 @@ SRCS	= commander.rb \
 			value/core/product/struct.rb \
 			value/core/object.rb \
 			value/core/object/abstract.rb \
-			value/core/object/datum.rb \
-			value/core/object/option.rb \
 			value/core/object/list.rb \
+			value/core/val-of.rb \
+			value/core/val-of/abstract.rb \
+			value/core/val-of/datum.rb \
+			value/core/val-of/option.rb \
 			value/core/function.rb \
 			environment.rb \
 			environment/preference.rb \

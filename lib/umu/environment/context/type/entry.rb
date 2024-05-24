@@ -379,7 +379,7 @@ end
 
 BUILTIN = Entry.new.freeze
 
-# BUILTIN.print
+# BUILTIN.root_class_spec.print_class_tree
 
 
 
