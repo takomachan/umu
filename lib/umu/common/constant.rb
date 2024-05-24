@@ -54,10 +54,10 @@ module Umu
 				class Abstract < Top; end
 				class Tuple < Abstract; end
 			end
-			module ValOf
+			module Union
 				class Abstract < Top; end
 				module Option
-					class Abstract < ValOf::Abstract; end
+					class Abstract < Union::Abstract; end
 				end
 			end
 			module Object
@@ -112,7 +112,7 @@ module Umu
 	VCA		= Value::Core::Atom
 	VCAN	= Value::Core::Atom::Number
 	VCP		= Value::Core::Product
-	VCV		= Value::Core::ValOf
+	VCU		= Value::Core::Union
 	VCO		= Value::Core::Object
 	E		= Environment
 	EC		= Environment::Context

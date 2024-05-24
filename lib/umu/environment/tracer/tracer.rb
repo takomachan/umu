@@ -168,7 +168,7 @@ module_function
 		[['Value',			'Core'],							'VC'],
 		[['Value',			'Core',	'Atom'],					'VCA'],
 		[['Value',			'Core',	'Product'],					'VCP'],
-		[['Value',			'Core',	'ValOf'],					'VCV'],
+		[['Value',			'Core',	'Union'],					'VCU'],
 		[['Value',			'Core',	'Object'],					'VCO'],
 
 		# Environment

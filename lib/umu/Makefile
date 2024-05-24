@@ -143,10 +143,10 @@ SRCS	= commander.rb \
 			value/core/object.rb \
 			value/core/object/abstract.rb \
 			value/core/object/list.rb \
-			value/core/val-of.rb \
-			value/core/val-of/abstract.rb \
-			value/core/val-of/datum.rb \
-			value/core/val-of/option.rb \
+			value/core/union.rb \
+			value/core/union/abstract.rb \
+			value/core/union/datum.rb \
+			value/core/union/option.rb \
 			value/core/function.rb \
 			environment.rb \
 			environment/preference.rb \

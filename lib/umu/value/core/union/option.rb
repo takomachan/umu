@@ -7,11 +7,11 @@ module Value
 
 module Core
 
-module ValOf
+module Union
 
 module Option
 
-class Abstract < ValOf::Abstract
+class Abstract < Union::Abstract
 	INSTANCE_METHOD_INFOS = [
 		[:meth_none?,		VCA::Bool,
 			:none?],
@@ -90,22 +90,22 @@ class Some < Abstract
 	end
 end
 
-end	# Umu::Core::ValOf::Option
+end	# Umu::Core::Union::Option
 
-end	# Umu::Core::ValOf
+end	# Umu::Core::Union
 
 
 module_function
 
 	def make_none
-		ValOf::Option::NONE
+		Union::Option::NONE
 	end
 
 
 	def make_some(contents)
 		ASSERT.kind_of contents, VC::Top
 
-		ValOf::Option::Some.new(contents).freeze
+		Union::Option::Some.new(contents).freeze
 	end
 
 end	# Umu::Core

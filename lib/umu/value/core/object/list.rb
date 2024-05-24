@@ -27,7 +27,7 @@ class Abstract < Object::Abstract
 			:cons,				VC::Top],
 		[ :meth_des!,			VCP::Tuple,
 			:des!],
-		[ :meth_des,			VCV::Option::Abstract,
+		[ :meth_des,			VCU::Option::Abstract,
 			:des],
 		[ :meth_foldr,			VC::Top,
 			:foldr,				VC::Top, VC::Function],

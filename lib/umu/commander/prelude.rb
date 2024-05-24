@@ -544,7 +544,7 @@ structure Umu = struct {
 		#### Object ####
 
 		# val-of : Object 'a -> Top
-		fun val-of = x : ValOf -> x.contents
+		fun val-of = x : Union -> x.contents
 
 
 		#### Datum ####

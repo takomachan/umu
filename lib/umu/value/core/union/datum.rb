@@ -7,7 +7,7 @@ module Value
 
 module Core
 
-module ValOf
+module Union
 
 class Datum < Abstract
 	CLASS_METHOD_INFOS = [
@@ -83,7 +83,7 @@ class Datum < Abstract
 	end
 end
 
-end	# Umu::Core::ValOf
+end	# Umu::Core::Union
 
 
 module_function
@@ -92,7 +92,7 @@ module_function
 		ASSERT.kind_of tag_sym,		::Symbol
 		ASSERT.kind_of contents,	VC::Top
 
-		ValOf::Datum.new(tag_sym, contents).freeze
+		Union::Datum.new(tag_sym, contents).freeze
 	end
 
 end	# Umu::Core
