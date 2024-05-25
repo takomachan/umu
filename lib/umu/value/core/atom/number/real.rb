@@ -81,13 +81,13 @@ class Real < Abstract
 		[:meth_sqrt,			self,
 			:sqrt],
 		[:meth_truncate,		self,
-			:truncate,			VCAN::Integer],
+			:truncate,			VCAN::Int],
 		[:meth_ceil,			self,
-			:ceil,				VCAN::Integer],
+			:ceil,				VCAN::Int],
 		[:meth_floor,			self,
-			:floor,				VCAN::Integer],
+			:floor,				VCAN::Int],
 		[:meth_ldexp,			self,
-			:ldexp,				VCAN::Integer],
+			:ldexp,				VCAN::Int],
 		[:meth_frexp,			VCLP::Tuple,
 			:frexp],
 		[:meth_divmod,			VCLP::Tuple,
@@ -233,7 +233,7 @@ class Real < Abstract
 
 
 	def meth_truncate(loc, env, _event, ndigits)
-		ASSERT.kind_of ndigits, VCAN::Integer
+		ASSERT.kind_of ndigits, VCAN::Int
 
 		unless ndigits.val >= 0
 			raise X::ArgumentError.new(
@@ -249,7 +249,7 @@ class Real < Abstract
 
 
 	def meth_ceil(loc, env, _event, ndigits)
-		ASSERT.kind_of ndigits, VCAN::Integer
+		ASSERT.kind_of ndigits, VCAN::Int
 
 		unless ndigits.val >= 0
 			raise X::ArgumentError.new(
@@ -265,7 +265,7 @@ class Real < Abstract
 
 
 	def meth_floor(loc, env, _event, ndigits)
-		ASSERT.kind_of ndigits, VCAN::Integer
+		ASSERT.kind_of ndigits, VCAN::Int
 
 		unless ndigits.val >= 0
 			raise X::ArgumentError.new(
@@ -281,7 +281,7 @@ class Real < Abstract
 
 
 	def meth_ldexp(_loc, _env, _event, other)
-		ASSERT.kind_of other, VCAN::Integer
+		ASSERT.kind_of other, VCAN::Int
 
 		VC.make_real Math.ldexp(self.val, other.val)
 	end

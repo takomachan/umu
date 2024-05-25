@@ -13,16 +13,16 @@ require 'umu/lexical/lexer/lexer'
 #######################################
 
 	%DATA Token =
-	  TkNewline		(String, Integer)
-	| TkWhite		(String, Integer)
-	| TkComment		(String, Integer)
-	| TkBeginBraket	(String, Integer)
-	| TkEndBraket	(String, Integer)
-	| TkNumber		(Number, Integer)
-	| TkReserved	(Symbol, Integer)
-	| TkIdentifier	(Symbol, Integer)
-	| TkSymbol		(Symbol, Integer)
-	| TkString		(String, Integer)
+	  TkNewline		(String, Int)
+	| TkWhite		(String, Int)
+	| TkComment		(String, Int)
+	| TkBeginBraket	(String, Int)
+	| TkEndBraket	(String, Int)
+	| TkNumber		(Number, Int)
+	| TkReserved	(Symbol, Int)
+	| TkIdentifier	(Symbol, Int)
+	| TkSymbol		(Symbol, Int)
+	| TkString		(String, Int)
 
 	%DATA Pattern =
 	  BeginComment	String
@@ -43,7 +43,7 @@ require 'umu/lexical/lexer/lexer'
 
 	%ABSTRACT %STATE Abstract
 	%ATTRIBUTE {
-		line-num:		Integer,
+		line-num:		Int,
 		braket-stack:	String List
 	}
 	%ABSTRACT %STATE AbstractString %ISA Abstract
@@ -55,8 +55,8 @@ require 'umu/lexical/lexer/lexer'
 	%STATE Comment   %ISA Abstract
 	%ATTRIBUTE {
 		buf:			String,
-		saved-line-num:	Integer,
-		comment-depth:	Integer
+		saved-line-num:	Int,
+		comment-depth:	Int
 	}
 	%STATE Token     %ISA Abstract
 

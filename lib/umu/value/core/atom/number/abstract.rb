@@ -24,7 +24,7 @@ class Abstract < Atom::Abstract
 			:negate],
 		[:meth_absolute,	self,
 			:abs],
-		[:meth_to_int,		VCAN::Integer,
+		[:meth_to_int,		VCAN::Int,
 			:'to-i'],
 		[:meth_to_real,		VCAN::Real,
 			:'to-f'],

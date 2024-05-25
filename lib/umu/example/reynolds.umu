@@ -82,8 +82,8 @@ structure ERROR = struct {
 structure EXP = struct {
 	#### Constructor ####
 
-	# mk-const : Integer -> <CONST>
-	fun mk-const  = x : Integer -> Datum @Const x
+	# mk-const : Int -> <CONST>
+	fun mk-const  = x : Int -> Datum @Const x
 
 	# mk-var : Symbol -> <VAR>
 	fun mk-var    = x : Symbol -> Datum @Var x
@@ -137,8 +137,8 @@ structure EXP = struct {
 structure VAL = struct {
 	#### Constructor ####
 
-	# Integer -> <INTEGER>
-	fun mk-integer = x : Integer -> Datum @Integer x
+	# Int -> <INTEGER>
+	fun mk-integer = x : Int -> Datum @Integer x
 
 	# Bool -> <BOOLEAN>
 	fun mk-boolean = x : Bool -> Datum @Boolean x
@@ -163,7 +163,7 @@ structure VAL = struct {
 
 (######## Parser ########
 
- <Exp> ::= <Const>	/* Undefined, Umu's Integer */
+ <Exp> ::= <Const>	/* Undefined, Umu's Int */
          | <Var>	/* Undefined, Umu's Symbol */
 		 | <Form>
 
@@ -198,7 +198,7 @@ fun rec parse = exp : Top -> cond exp {
   else		-> ERROR::syntax "Unknown Expression: " exp
 } where {
 	# const? : 'a -> Bool
-	fun const? = exp -> exp kind-of? Integer
+	fun const? = exp -> exp kind-of? Int
 
 	# var? : 'a -> Bool
 	fun var? = exp -> exp kind-of? Symbol
@@ -467,18 +467,18 @@ where {
 
 	  else		-> ERROR::name "Unknown VAR: " x
 	} where {
-		# int : <VAL> -> Integer
+		# int : <VAL> -> Int
 		fun int = x ->
 			if (VAL::integer? x)
 				val-of x
 			else
-				ERROR::type' "Expected a Integer, but: " x
+				ERROR::type' "Expected a Int, but: " x
 
-		# mk-unop : (Integer -> 'a) -> ('a -> <VAL>) -> <FUNVAL>
+		# mk-unop : (Int -> 'a) -> ('a -> <VAL>) -> <FUNVAL>
 		fun mk-unop = unop mk ->
 			VAL::mk-funval { x -> unop (int x) |> mk }
 
-		# mk-binop : (Integer -> Integer -> 'a) -> ('a -> <VAL>) -> <FUNVAL>
+		# mk-binop : (Int -> Int -> 'a) -> ('a -> <VAL>) -> <FUNVAL>
 		fun mk-binop = binop mk ->
 			VAL::mk-funval { x ->
 				VAL::mk-funval { y -> binop (int x) (int y) |> mk }
@@ -544,7 +544,7 @@ structure ASSERT = struct {
 	fun integer = actual expect -> let {
 		assert (actual kind-of? Datum)				"Datum"
 		assert (tag-of actual == @Integer)			"@Integer"
-		assert (val-of actual kind-of? Integer)		"Integer"
+		assert (val-of actual kind-of? Int)			"Int"
 		assert (val-of actual == expect)			(inspect expect)
 	in
 		()

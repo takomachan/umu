@@ -173,7 +173,7 @@ SYMBOL_PATTERNS = [
 		ASSERT.kind_of scanner, ::StringScanner
 
 		case
-		# Real or Integer
+		# Real or Int
 		when scanner.scan(/[+-]?\d+(\.\d+)?/)
 			[
 				:Number,

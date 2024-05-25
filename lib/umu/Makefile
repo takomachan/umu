@@ -131,7 +131,7 @@ SRCS	= commander.rb \
 			value/core/atom/bool.rb \
 			value/core/atom/number.rb \
 			value/core/atom/number/abstract.rb \
-			value/core/atom/number/integer.rb \
+			value/core/atom/number/int.rb \
 			value/core/atom/number/real.rb \
 			value/core/atom/string.rb \
 			value/core/atom/symbol.rb \

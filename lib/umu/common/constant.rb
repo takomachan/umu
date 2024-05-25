@@ -45,7 +45,7 @@ module Umu
 				class Bool < Abstract; end
 				module Number
 					class Abstract < Atom::Abstract; end
-					class Integer < Abstract; end
+					class Int < Abstract; end
 					class Real < Abstract; end
 				end
 				class String < Abstract; end

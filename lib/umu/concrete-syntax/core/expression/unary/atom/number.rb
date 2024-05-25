@@ -30,7 +30,7 @@ class Abstract < Atom::Abstract
 end
 
 
-class Integer < Abstract
+class Int < Abstract
 	def initialize(loc, obj)
 		ASSERT.kind_of obj, ::Integer
 
@@ -75,7 +75,7 @@ module_function
 		ASSERT.kind_of loc,	L::Location
 		ASSERT.kind_of obj, ::Integer
 
-		Unary::Atom::Number::Integer.new(loc, obj).freeze
+		Unary::Atom::Number::Int.new(loc, obj).freeze
 	end
 
 

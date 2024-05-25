@@ -86,7 +86,7 @@ end
 
 
 
-class Integer < Abstraction::Abstract
+class Int < Abstraction::Abstract
 	def initialize(loc, val)
 		ASSERT.kind_of val, ::Integer
 
@@ -172,7 +172,7 @@ module_function
 		ASSERT.kind_of loc, L::Location
 		ASSERT.kind_of val, ::Integer
 
-		Integer.new(loc, val).freeze
+		Int.new(loc, val).freeze
 	end
 
 

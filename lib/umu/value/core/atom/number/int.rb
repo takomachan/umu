@@ -11,7 +11,7 @@ module Atom
 
 module Number
 
-class Integer < Abstract
+class Int < Abstract
 	INSTANCE_METHOD_INFOS = [
 		# Number
 		[:meth_odd?,			VCA::Bool,
@@ -75,7 +75,7 @@ module_function
 	def make_integer(val)
 		ASSERT.kind_of val, ::Integer
 
-		Atom::Number::Integer.new(val).freeze
+		Atom::Number::Int.new(val).freeze
 	end
 
 end # Umu::Value::Core

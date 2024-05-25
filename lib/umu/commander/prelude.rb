@@ -68,8 +68,8 @@ structure Umu = struct {
 		# infinite?		: Real -> Bool
 		val infinite? = &(Real$infinite?)
 
-		# equal?		: Real -> Real -> Integer -> Bool
-		fun equal? = (x : Real) (y : Real) (n : Integer) ->
+		# equal?		: Real -> Real -> Int -> Bool
+		fun equal? = (x : Real) (y : Real) (n : Int) ->
 			x.truncate n.== (y.truncate n)
 
 		# finite?		: Real -> Bool
@@ -117,23 +117,23 @@ structure Umu = struct {
 		# sqrt			: Real -> Real
 		val sqrt = &(Real$sqrt)
 
-		# truncate		: Real -> Integer -> Real
-		fun truncate = (x : Real) (n : Integer) -> x.truncate n
+		# truncate		: Real -> Int -> Real
+		fun truncate = (x : Real) (n : Int) -> x.truncate n
 
-		# ceil			: Real -> Integer -> Real
-		fun ceil = (x : Real) (n : Integer) -> x.ceil n
+		# ceil			: Real -> Int -> Real
+		fun ceil = (x : Real) (n : Int) -> x.ceil n
 
-		# floor			: Real -> Integer -> Real
-		fun floor = (x : Real) (n : Integer) -> x.floor n
+		# floor			: Real -> Int -> Real
+		fun floor = (x : Real) (n : Int) -> x.floor n
 
-		# ldexp			: Real -> Integer -> Real
-		fun ldexp = (x : Real) (y : Integer) -> x.ldexp y
+		# ldexp			: Real -> Int -> Real
+		fun ldexp = (x : Real) (y : Int) -> x.ldexp y
 
 		# frexp			: Real -> (Real, Real)
-		fun frexp = (x : Real) (y : Integer) -> x.frexp y
+		fun frexp = (x : Real) (y : Int) -> x.frexp y
 
 		# divmod		: Real -> Real -> (Real, Real)
-		fun divmod = (x : Real) (y : Integer) -> x.divmod y
+		fun divmod = (x : Real) (y : Int) -> x.divmod y
 	}
 
 
@@ -150,7 +150,7 @@ structure Umu = struct {
 		# display : 'a -> ()
 		fun display = x -> _STDOUT.puts (x.to-s)
 
-		# tab : Integer -> ()
+		# tab : Int -> ()
 		fun rec tab = n ->
 			if (0.< n) (
 				_STDOUT.puts " " ;
@@ -270,7 +270,7 @@ structure Umu = struct {
 							where { val [x|xs'] = xs }
 
 
-		# length : ['a] -> Integer
+		# length : ['a] -> Int
 		# val length = foldl 0 { _ len -> len.+ 1 }
 		fun length = xs : List -> xs.foldl 0 { _ len -> len.+ 1 }
 
@@ -438,11 +438,11 @@ structure Umu = struct {
 		# 	zero?		: Number -> Bool
 		val zero? = &(Number$zero?)
 
-		# 	odd?		: Integer -> Bool
-		val odd? = &(Integer$odd?)
+		# 	odd?		: Int -> Bool
+		val odd? = &(Int$odd?)
 
-		# 	even?		: Integer -> Bool
-		val even? = &(Integer$even?)
+		# 	even?		: Int -> Bool
+		val even? = &(Int$even?)
 
 		# abs			: 'a -> 'a	where { 'a <- Number }
 		val abs = &(Number$abs)
@@ -450,7 +450,7 @@ structure Umu = struct {
 		# negate		: 'a -> 'a	where { 'a <- Number }
 		val negate = &(Number$negate)
 
-		# to-i			: Number -> Integer
+		# to-i			: Number -> Int
 		val to-i = &(Number$to-i)
 
 		# to-f			: Number -> Real
@@ -516,7 +516,7 @@ structure Umu = struct {
 		# display	: 'a -> ()
 		val display = IO::display
 
-		# tab		: Integer -> ()
+		# tab		: Int -> ()
 		val tab = IO::tab
 
 		# nl		: () -> ()
@@ -604,7 +604,7 @@ structure Umu = struct {
 		# foldl1	: ('a -> 'a -> 'a) -> ['a] -> 'a
 		val foldl1 = List::foldl1
 
-		# length	: ['a] -> Integer
+		# length	: ['a] -> Int
 		val length = List::length
 
 		# reverse	: ['a] -> ['a]
@@ -737,19 +737,19 @@ structure Umu = struct {
 		fun false = actual -> bool actual FALSE
 
 
-		# integer : 'a -> Integer -> Integer
+		# integer : 'a -> Int -> Int
 		fun integer =
 				actual
-				(expect : Integer)
+				(expect : Int)
 		-> let {
-			assert (actual kind-of? Integer)	"Integer"
-			assert (actual == expect)			(msg expect actual)
+			assert (actual kind-of? Int)	"Int"
+			assert (actual == expect)		(msg expect actual)
 		in
 			actual
 		}
 
 
-		# integers : ['a] -> ('a -> 'b) -> [Integer] -> [Integer]
+		# integers : ['a] -> ('a -> 'b) -> [Int] -> [Int]
 		fun integers =
 				(sources : List)
 				(f       : Function)
@@ -763,11 +763,11 @@ structure Umu = struct {
 		}
 
 
-		# real : 'a -> Real -> Integer -> Real
+		# real : 'a -> Real -> Int -> Real
 		fun real =
 				actual
 				(expect	: Real)
-				(n		: Integer)
+				(n		: Int)
 		-> let {
 			assert (actual kind-of? Real)			"Real"
 			assert (Math::equal? actual expect n)	(msg expect actual)
