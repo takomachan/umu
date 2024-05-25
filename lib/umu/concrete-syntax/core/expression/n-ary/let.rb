@@ -18,7 +18,7 @@ class Let < Expression::Abstract
 
 	def initialize(loc, decls, expr)
 		ASSERT.kind_of decls,	::Array
-		ASSERT.kind_of expr,	SCCE::Abstract
+		ASSERT.kind_of expr,	CSCE::Abstract
 
 		super(loc)
 
@@ -46,7 +46,7 @@ private
 			SACE.make_let(
 				self.loc,
 				self.decls.map { |decl|
-					ASSERT.kind_of decl, SCCD::Abstract
+					ASSERT.kind_of decl, CSCD::Abstract
 
 					decl.desugar(new_env)
 				},
@@ -64,7 +64,7 @@ module_function
 	def make_let(loc, decls, expr)
 		ASSERT.kind_of loc,		L::Location
 		ASSERT.kind_of decls,	::Array
-		ASSERT.kind_of expr,	SCCE::Abstract
+		ASSERT.kind_of expr,	CSCE::Abstract
 
 		Nary::Let.new(loc, decls.freeze, expr).freeze
 	end

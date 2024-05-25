@@ -31,7 +31,7 @@ class LabelValuePair < Umu::Abstraction::LabelValuePair
 						self.label
 					end
 
-		SCCP.make_variable self.loc, var_sym
+		CSCP.make_variable self.loc, var_sym
 	end
 end
 

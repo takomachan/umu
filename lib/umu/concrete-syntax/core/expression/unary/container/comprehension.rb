@@ -23,7 +23,7 @@ class Abstract < Umu::Abstraction::Model
 
 
 	def initialize(loc, expr)
-		ASSERT.kind_of expr, SCCE::Abstract
+		ASSERT.kind_of expr, CSCE::Abstract
 
 		super(loc)
 
@@ -38,8 +38,8 @@ class Generator < Abstract
 
 
 	def initialize(loc, pat, expr)
-		ASSERT.kind_of pat,		SCCP::Abstract
-		ASSERT.kind_of expr,	SCCE::Abstract
+		ASSERT.kind_of pat,		CSCP::Abstract
+		ASSERT.kind_of expr,	CSCE::Abstract
 
 		super(loc, expr)
 
@@ -53,7 +53,7 @@ class Generator < Abstract
 
 
 	def desugar(elem_expr, tail_qualifiers, env)
-		ASSERT.kind_of elem_expr,		SCCE::Abstract
+		ASSERT.kind_of elem_expr,		CSCE::Abstract
 		ASSERT.kind_of tail_qualifiers,	::Array
 		ASSERT.kind_of env,				E::Entry
 
@@ -68,12 +68,12 @@ class Generator < Abstract
 				:'concat-with',
 
 				[
-					SCCE.make_lambda(
+					CSCE.make_lambda(
 						self.loc,
 
 						[self.pat],
 
-						SCCE.make_comprehension(
+						CSCE.make_comprehension(
 							self.loc,
 							elem_expr,
 							tail_qualifiers
@@ -98,7 +98,7 @@ class Guard < Abstract
 
 
 	def desugar(elem_expr, tail_qualifiers, env)
-		ASSERT.kind_of elem_expr,		SCCE::Abstract
+		ASSERT.kind_of elem_expr,		CSCE::Abstract
 		ASSERT.kind_of tail_qualifiers,	::Array
 		ASSERT.kind_of env,				E::Entry
 
@@ -109,7 +109,7 @@ class Guard < Abstract
 				SACE.make_rule(
 					elem_expr.loc,
 					self.expr.desugar(env),
-					SCCE.make_comprehension(
+					CSCE.make_comprehension(
 						self.loc,
 						elem_expr,
 						tail_qualifiers
@@ -132,7 +132,7 @@ class Entry < Container::Abstract
 
 
 	def initialize(loc, expr, qualifiers)
-		ASSERT.kind_of expr,		SCCE::Abstract
+		ASSERT.kind_of expr,		CSCE::Abstract
 		ASSERT.kind_of qualifiers,	::Array
 
 		super(loc, qualifiers)
@@ -181,8 +181,8 @@ module_function
 
 	def make_generator(loc, pat, expr)
 		ASSERT.kind_of loc,		L::Location
-		ASSERT.kind_of pat,		SCCP::Abstract
-		ASSERT.kind_of expr,	SCCE::Abstract
+		ASSERT.kind_of pat,		CSCP::Abstract
+		ASSERT.kind_of expr,	CSCE::Abstract
 
 		Unary::Container::Comprehension::Qualifier::Generator.new(
 			loc, pat, expr
@@ -192,7 +192,7 @@ module_function
 
 	def make_guard(loc, expr)
 		ASSERT.kind_of loc,		L::Location
-		ASSERT.kind_of expr,	SCCE::Abstract
+		ASSERT.kind_of expr,	CSCE::Abstract
 
 		Unary::Container::Comprehension::Qualifier::Guard.new(
 			loc, expr
@@ -202,7 +202,7 @@ module_function
 
 	def make_comprehension(loc, expr, qualifiers)
 		ASSERT.kind_of loc,			L::Location
-		ASSERT.kind_of expr,		SCCE::Abstract
+		ASSERT.kind_of expr,		CSCE::Abstract
 		ASSERT.kind_of qualifiers,	::Array
 
 		Unary::Container::Comprehension::Entry.new(

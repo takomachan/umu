@@ -15,8 +15,8 @@ class Assert < Declaration::Abstract
 
 
 	def initialize(loc, test_expr, else_expr)
-		ASSERT.kind_of test_expr,	SCCE::Abstract
-		ASSERT.kind_of else_expr,	SCCE::Abstract
+		ASSERT.kind_of test_expr,	CSCE::Abstract
+		ASSERT.kind_of else_expr,	CSCE::Abstract
 
 		super(loc)
 
@@ -76,8 +76,8 @@ module_function
 
 	def make_assert(loc, test_expr, else_expr)
 		ASSERT.kind_of loc,			L::Location
-		ASSERT.kind_of test_expr,	SCCE::Abstract
-		ASSERT.kind_of else_expr,	SCCE::Abstract
+		ASSERT.kind_of test_expr,	CSCE::Abstract
+		ASSERT.kind_of else_expr,	CSCE::Abstract
 
 		Assert.new(loc, test_expr, else_expr).freeze
 	end

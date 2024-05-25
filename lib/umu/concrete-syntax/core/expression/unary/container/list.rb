@@ -20,7 +20,7 @@ class List < Container::Abstract
 
 	def initialize(loc, exprs, opt_last_expr)
 		ASSERT.kind_of		exprs,			::Array
-		ASSERT.opt_kind_of	opt_last_expr,	SCCE::Abstract
+		ASSERT.opt_kind_of	opt_last_expr,	CSCE::Abstract
 		ASSERT.assert (
 			if exprs.empty? then opt_last_expr.nil? else true end
 		)
@@ -73,7 +73,7 @@ module_function
 	def make_list(loc, exprs, opt_last_expr)
 		ASSERT.kind_of		loc,			L::Location
 		ASSERT.kind_of		exprs,			::Array
-		ASSERT.opt_kind_of	opt_last_expr,	SCCE::Abstract
+		ASSERT.opt_kind_of	opt_last_expr,	CSCE::Abstract
 
 		Unary::Container::List.new(loc, exprs.freeze, opt_last_expr).freeze
 	end

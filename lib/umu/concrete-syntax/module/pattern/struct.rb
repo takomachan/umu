@@ -29,7 +29,7 @@ class Field < Abstraction::LabelValuePair
 						self.label
 					end
 
-		SCCP.make_variable self.loc, var_sym
+		CSCP.make_variable self.loc, var_sym
 	end
 
 private
@@ -62,7 +62,7 @@ class Entry < Pattern::Abstract
 			ASSERT.kind_of field,		Field
 
 			vpat = field.pat
-			ASSERT.kind_of vpat, SCCP::Variable
+			ASSERT.kind_of vpat, CSCP::Variable
 
 			[
 				lab_hash.merge(field.label => true) { |key, _, _|
@@ -109,7 +109,7 @@ class Entry < Pattern::Abstract
 	def exported_vars
 		self.map(&:pat).reject(&:wildcard?).inject([]) { |array, vpat|
 			ASSERT.kind_of array,	::Array
-			ASSERT.kind_of vpat,	SCCP::Variable
+			ASSERT.kind_of vpat,	CSCP::Variable
 
 			array + vpat.exported_vars
 		}.freeze
@@ -141,7 +141,7 @@ private
 			ASSERT.kind_of field, Field
 
 			vpat = field.pat
-			ASSERT.kind_of vpat, SCCP::Variable
+			ASSERT.kind_of vpat, CSCP::Variable
 
 			loc = field.loc
 			expr = SACE.make_send(

@@ -21,7 +21,7 @@ class If < Expression::Abstract
 	def initialize(loc, if_rule, elsif_rules, else_expr)
 		ASSERT.kind_of if_rule,		Nary::Rule::If
 		ASSERT.kind_of elsif_rules,	::Array
-		ASSERT.kind_of else_expr,	SCCE::Abstract
+		ASSERT.kind_of else_expr,	CSCE::Abstract
 
 		super(loc)
 
@@ -82,7 +82,7 @@ module_function
 		ASSERT.kind_of loc,			L::Location
 		ASSERT.kind_of if_rule,		Nary::Rule::If
 		ASSERT.kind_of elsif_rules,	::Array
-		ASSERT.kind_of else_expr,	SCCE::Abstract
+		ASSERT.kind_of else_expr,	CSCE::Abstract
 
 		Nary::If.new(loc, if_rule, elsif_rules, else_expr).freeze
 	end

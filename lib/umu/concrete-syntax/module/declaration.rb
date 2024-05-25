@@ -26,8 +26,8 @@ class Structure < Abstract
 
 
 	def initialize(loc, pat, expr)
-		ASSERT.kind_of pat,		SCMP::Abstract
-		ASSERT.kind_of expr,	SCME::Abstract
+		ASSERT.kind_of pat,		CSMP::Abstract
+		ASSERT.kind_of expr,	CSME::Abstract
 
 		super(loc)
 
@@ -62,7 +62,7 @@ class Core < Abstract
 
 
 	def initialize(loc, core_decl)
-		ASSERT.kind_of core_decl, SCCD::Abstract
+		ASSERT.kind_of core_decl, CSCD::Abstract
 
 		super(loc)
 
@@ -92,15 +92,15 @@ end
 module_function
 
 	def make_structure(loc, pat, expr)
-		ASSERT.kind_of pat,		SCMP::Abstract
-		ASSERT.kind_of expr,	SCME::Abstract
+		ASSERT.kind_of pat,		CSMP::Abstract
+		ASSERT.kind_of expr,	CSME::Abstract
 
 		Structure.new(loc, pat, expr).freeze
 	end
 
 
 	def make_core(loc, core_decl)
-		ASSERT.kind_of core_decl, SCCD::Abstract
+		ASSERT.kind_of core_decl, CSCD::Abstract
 
 		Core.new(loc, core_decl).freeze
 	end

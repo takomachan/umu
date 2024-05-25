@@ -30,7 +30,7 @@ private
 
 
 	def __desugar_lambda__(_seq_num, _env, _event)
-		SCCP.make_result(
+		CSCP.make_result(
 			SACE.make_identifier(self.loc, WILDCARD),
 			[],
 			:Unit

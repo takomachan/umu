@@ -20,7 +20,7 @@ class Abstract < Expression::Abstract
 
 	def initialize(loc, pats, expr, decls)
 		ASSERT.kind_of pats,	::Array
-		ASSERT.kind_of expr,	SCCE::Abstract
+		ASSERT.kind_of expr,	CSCE::Abstract
 		ASSERT.kind_of decls,	::Array
 
 		super(loc)
@@ -52,11 +52,11 @@ private
 			|(params,	decls),			(pat, index)|
 			ASSERT.kind_of params,	::Array
 			ASSERT.kind_of decls,	::Array
-			ASSERT.kind_of pat,		SCCP::Abstract
+			ASSERT.kind_of pat,		CSCP::Abstract
 			ASSERT.kind_of index,	::Integer
 
 			result = pat.desugar_lambda index + 1, new_env
-			ASSERT.kind_of result, SCCP::Result
+			ASSERT.kind_of result, CSCP::Result
 			param = SACE.make_parameter(
 						result.ident.loc, result.ident, result.opt_type_sym
 					)
@@ -86,7 +86,7 @@ class Named < Abstract
 
 	def initialize(loc, pats, expr, decls, sym)
 		ASSERT.kind_of pats,	::Array
-		ASSERT.kind_of expr,	SCCE::Abstract
+		ASSERT.kind_of expr,	CSCE::Abstract
 		ASSERT.kind_of decls,	::Array
 		ASSERT.kind_of sym,		::Symbol
 
@@ -151,7 +151,7 @@ module_function
 	def make_lambda(loc, pats, expr, decls = [])
 		ASSERT.kind_of loc,		L::Location
 		ASSERT.kind_of pats,	::Array
-		ASSERT.kind_of expr,	SCCE::Abstract
+		ASSERT.kind_of expr,	CSCE::Abstract
 		ASSERT.kind_of decls,	::Array
 
 		Nary::Lambda::Anonymous.new(loc, pats, expr, decls.freeze).freeze
@@ -161,7 +161,7 @@ module_function
 	def make_named_lambda(loc, pats, expr, decls, sym)
 		ASSERT.kind_of loc,		L::Location
 		ASSERT.kind_of pats,	::Array
-		ASSERT.kind_of expr,	SCCE::Abstract
+		ASSERT.kind_of expr,	CSCE::Abstract
 		ASSERT.kind_of decls,	::Array
 		ASSERT.kind_of sym,		::Symbol
 

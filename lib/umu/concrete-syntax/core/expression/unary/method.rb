@@ -19,8 +19,8 @@ class Method < Abstract
 
 
 	def initialize(loc, method_ident, opt_recv_class_ident)
-		ASSERT.kind_of		method_ident,			SCCEU::Identifier::Short
-		ASSERT.opt_kind_of	opt_recv_class_ident,	SCCEU::Identifier::Short
+		ASSERT.kind_of		method_ident,			CSCEU::Identifier::Short
+		ASSERT.opt_kind_of	opt_recv_class_ident,	CSCEU::Identifier::Short
 
 		super(loc, method_ident)
 
@@ -88,8 +88,8 @@ module_function
 		loc, method_ident, opt_recv_class_ident = nil
 	)
 		ASSERT.kind_of		loc,					L::Location
-		ASSERT.kind_of		method_ident,			SCCEU::Identifier::Short
-		ASSERT.opt_kind_of	opt_recv_class_ident,	SCCEU::Identifier::Short
+		ASSERT.kind_of		method_ident,			CSCEU::Identifier::Short
+		ASSERT.opt_kind_of	opt_recv_class_ident,	CSCEU::Identifier::Short
 
 		Unary::Method.new(loc, method_ident, opt_recv_class_ident).freeze
 	end

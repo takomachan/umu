@@ -15,8 +15,8 @@ class Value < Declaration::Abstract
 
 
 	def initialize(loc, pat, expr, decls)
-		ASSERT.kind_of pat,		SCCP::Abstract
-		ASSERT.kind_of expr,	SCCE::Abstract
+		ASSERT.kind_of pat,		CSCP::Abstract
+		ASSERT.kind_of expr,	CSCE::Abstract
 		ASSERT.kind_of decls,	::Array
 
 		super(loc)
@@ -59,7 +59,7 @@ private
 				if self.decls.empty?
 					self.expr
 				else
-					SCCE.make_let(self.loc, self.decls, self.expr)
+					CSCE.make_let(self.loc, self.decls, self.expr)
 				end
 			).desugar(new_env),
 
@@ -74,8 +74,8 @@ module_function
 
 	def make_value(loc, pat, expr, decls)
 		ASSERT.kind_of loc,		L::Location
-		ASSERT.kind_of pat,		SCCP::Abstract
-		ASSERT.kind_of expr,	SCCE::Abstract
+		ASSERT.kind_of pat,		CSCP::Abstract
+		ASSERT.kind_of expr,	CSCE::Abstract
 		ASSERT.kind_of decls,	::Array
 
 		Value.new(loc, pat, expr, decls).freeze

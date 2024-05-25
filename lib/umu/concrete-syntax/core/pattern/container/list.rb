@@ -88,13 +88,13 @@ private
 		var_sym = __gen_sym__ seq_num
 
 		if self.pats.empty?
-			SCCP.make_result(
+			CSCP.make_result(
 				SACE.make_identifier(self.loc, WILDCARD),
 				[],
 				:Nil
 			)
 		else
-			SCCP.make_result(
+			CSCP.make_result(
 				SACE.make_identifier(self.loc, var_sym),
 				__desugar__(SACE.make_identifier(self.loc, var_sym), env),
 				:Cons

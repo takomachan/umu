@@ -23,11 +23,11 @@ class Abstract < Expression::Abstract
 	def initialize(
 		loc, expr, fst_rule, snd_rules, opt_else_expr, else_decls
 	)
-		ASSERT.kind_of		expr,			SCCE::Abstract
+		ASSERT.kind_of		expr,			CSCE::Abstract
 		ASSERT.kind_of		fst_rule,
-							SCCEN::Rule::Abstraction::WithDeclaration
+							CSCEN::Rule::Abstraction::WithDeclaration
 		ASSERT.kind_of		snd_rules,		::Array
-		ASSERT.opt_kind_of	opt_else_expr,	SCCE::Abstract
+		ASSERT.opt_kind_of	opt_else_expr,	CSCE::Abstract
 		ASSERT.kind_of		else_decls,		::Array
 
 		super(loc)

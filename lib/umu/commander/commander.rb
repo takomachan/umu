@@ -40,7 +40,7 @@ end
 
 	STDIN_FILE_NAME = '<stdin>'
 
-	PARSER = SC::Parser.new
+	PARSER = CS::Parser.new
 
 
 	def main(args)
@@ -340,7 +340,7 @@ end
 
 		final_env = csyn_stmts.inject(init_env) { |env, csyn_stmt|
 			ASSERT.kind_of env,			E::Entry
-			ASSERT.kind_of csyn_stmt,	SC::Abstract
+			ASSERT.kind_of csyn_stmt,	CS::Abstract
 
 			result = execute(csyn_stmt, env)
 			ASSERT.kind_of result, SAR::Abstract
@@ -365,7 +365,7 @@ end
 
 	def execute(csyn, env)
 		ASSERT.kind_of env,		E::Entry
-		ASSERT.kind_of csyn,	SC::Abstract
+		ASSERT.kind_of csyn,	CS::Abstract
 
 		print_trace_of_con_syntax csyn, env.pref
 
@@ -380,7 +380,7 @@ end
 
 
 	def print_trace_of_con_syntax(csyn, pref)
-		ASSERT.kind_of csyn,	SC::Abstract
+		ASSERT.kind_of csyn,	CS::Abstract
 
 		return unless pref.trace_mode?
 

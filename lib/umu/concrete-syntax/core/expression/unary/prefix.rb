@@ -19,7 +19,7 @@ class Prefix < Unary::Abstract
 
 	def initialize(loc, sym, rhs_expr)
 		ASSERT.kind_of sym,			::Symbol
-		ASSERT.kind_of rhs_expr,	SCCE::Abstract
+		ASSERT.kind_of rhs_expr,	CSCE::Abstract
 
 		super(loc, sym)
 
@@ -66,7 +66,7 @@ module_function
 	def make_prefix(loc, sym, rhs_expr)
 		ASSERT.kind_of loc,			L::Location
 		ASSERT.kind_of sym, 		::Symbol
-		ASSERT.kind_of rhs_expr,	SCCE::Abstract
+		ASSERT.kind_of rhs_expr,	CSCE::Abstract
 
 		Unary::Prefix.new(loc, sym, rhs_expr).freeze
 	end

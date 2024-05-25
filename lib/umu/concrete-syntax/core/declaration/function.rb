@@ -17,7 +17,7 @@ class Abstract < Declaration::Abstract
 
 
 	def initialize(loc, lam_expr)
-		ASSERT.kind_of lam_expr, SCCEN::Lambda::Named
+		ASSERT.kind_of lam_expr, CSCEN::Lambda::Named
 
 		super(loc)
 
@@ -31,7 +31,7 @@ class Abstract < Declaration::Abstract
 
 
 	def exported_vars
-		[SCCP.make_variable(self.loc, self.lam_expr.sym)].freeze
+		[CSCP.make_variable(self.loc, self.lam_expr.sym)].freeze
 	end
 
 
@@ -69,14 +69,14 @@ end	# Umu::ConcreteSyntax::Core::Declaration::Function
 module_function
 
 	def make_function(loc, lam_expr)
-		ASSERT.kind_of lam_expr, SCCEN::Lambda::Named
+		ASSERT.kind_of lam_expr, CSCEN::Lambda::Named
 
 		Function::Simple.new(loc, lam_expr).freeze
 	end
 
 
 	def make_recursive_function(loc, lam_expr)
-		ASSERT.kind_of lam_expr, SCCEN::Lambda::Named
+		ASSERT.kind_of lam_expr, CSCEN::Lambda::Named
 
 		Function::Recursive.new(loc, lam_expr).freeze
 	end

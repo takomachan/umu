@@ -97,7 +97,7 @@ class Entry < Binary::Abstract
 
 
 	def initialize(loc, lhs_expr, rhs_head_message, rhs_tail_messages)
-		ASSERT.kind_of lhs_expr,			SCCE::Abstract
+		ASSERT.kind_of lhs_expr,			CSCE::Abstract
 		ASSERT.kind_of rhs_head_message,	Message::Abstract
 		ASSERT.kind_of rhs_tail_messages,	::Array
 
@@ -164,7 +164,7 @@ module_function
 
 	def make_send(loc, lhs_expr, rhs_head_message, rhs_tail_messages = [])
 		ASSERT.kind_of loc,					L::Location
-		ASSERT.kind_of lhs_expr,			SCCE::Abstract
+		ASSERT.kind_of lhs_expr,			CSCE::Abstract
 		ASSERT.kind_of rhs_head_message,	Binary::Send::Message::Abstract
 		ASSERT.kind_of rhs_tail_messages,	::Array
 

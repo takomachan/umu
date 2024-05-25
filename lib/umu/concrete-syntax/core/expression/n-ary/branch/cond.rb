@@ -76,10 +76,10 @@ module_function
 
 	def make_cond(loc, expr, fst_rule, snd_rules, opt_else_expr, else_decls)
 		ASSERT.kind_of		loc,			L::Location
-		ASSERT.kind_of		expr,			SCCE::Abstract
-		ASSERT.kind_of		fst_rule,		SCCEN::Rule::Cond
+		ASSERT.kind_of		expr,			CSCE::Abstract
+		ASSERT.kind_of		fst_rule,		CSCEN::Rule::Cond
 		ASSERT.kind_of		snd_rules,		::Array
-		ASSERT.opt_kind_of	opt_else_expr,	SCCE::Abstract
+		ASSERT.opt_kind_of	opt_else_expr,	CSCE::Abstract
 		ASSERT.kind_of		else_decls,		::Array
 
 		Nary::Branch::Cond.new(

@@ -19,8 +19,8 @@ class Apply < Binary::Abstract
 
 
 	def initialize(loc, opr_expr, opnd_head_expr, opnd_tail_exprs)
-		ASSERT.kind_of opr_expr,		SCCE::Abstract
-		ASSERT.kind_of opnd_head_expr,	SCCE::Abstract
+		ASSERT.kind_of opr_expr,		CSCE::Abstract
+		ASSERT.kind_of opnd_head_expr,	CSCE::Abstract
 		ASSERT.kind_of opnd_tail_exprs,	::Array
 
 		super(loc, opr_expr, opnd_head_expr)
@@ -52,7 +52,7 @@ private
 			self.opr_expr.desugar(new_env),
 			self.opnd_head_expr.desugar(new_env),
 			self.opnd_tail_exprs.map { |expr|
-				ASSERT.kind_of expr, SCCE::Abstract
+				ASSERT.kind_of expr, CSCE::Abstract
 
 				expr.desugar new_env
 			}
@@ -67,8 +67,8 @@ module_function
 
 	def make_apply(loc, opr_expr, opnd_head_expr, opnd_tail_exprs = [])
 		ASSERT.kind_of loc,				L::Location
-		ASSERT.kind_of opr_expr,		SCCE::Abstract
-		ASSERT.kind_of opnd_head_expr,	SCCE::Abstract
+		ASSERT.kind_of opr_expr,		CSCE::Abstract
+		ASSERT.kind_of opnd_head_expr,	CSCE::Abstract
 		ASSERT.kind_of opnd_tail_exprs,	::Array
 
 		Binary::Apply.new(

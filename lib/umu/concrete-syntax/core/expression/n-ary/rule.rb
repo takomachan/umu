@@ -22,7 +22,7 @@ class Abstract < Umu::Abstraction::Model
 
 	def initialize(loc, head, body_expr)
 		ASSERT.kind_of head,		Umu::Abstraction::Model
-		ASSERT.kind_of body_expr,	SCCE::Abstract
+		ASSERT.kind_of body_expr,	CSCE::Abstract
 
 		super(loc)
 
@@ -39,7 +39,7 @@ class WithDeclaration < Abstract
 
 	def initialize(loc, head, body_expr, decls)
 		ASSERT.kind_of head,		Umu::Abstraction::Model
-		ASSERT.kind_of body_expr,	SCCE::Abstract
+		ASSERT.kind_of body_expr,	CSCE::Abstract
 		ASSERT.kind_of decls,		::Array
 
 		super(loc, head, body_expr)
@@ -71,7 +71,7 @@ class If < Abstraction::Abstract
 	alias head_expr head
 
 	def initialize(loc, head_expr, body_expr)
-		ASSERT.kind_of head_expr, SCCE::Abstract
+		ASSERT.kind_of head_expr, CSCE::Abstract
 
 		super
 	end
@@ -88,7 +88,7 @@ class Cond < Abstraction::WithDeclaration
 	alias head_expr head
 
 	def initialize(loc, head_expr, body_expr, decls)
-		ASSERT.kind_of head_expr, SCCE::Abstract
+		ASSERT.kind_of head_expr, CSCE::Abstract
 
 		super
 	end
@@ -150,7 +150,7 @@ class Datum < Abstract
 
 	def initialize(loc, tag_sym, opt_contents_pat)
 		ASSERT.kind_of		tag_sym,			::Symbol
-		ASSERT.opt_kind_of	opt_contents_pat,	SCCP::Abstract
+		ASSERT.opt_kind_of	opt_contents_pat,	CSCP::Abstract
 
 		super(loc, tag_sym)
 
@@ -184,8 +184,8 @@ class Class < Abstract
 
 
 	def initialize(loc, class_ident, opt_contents_pat)
-		ASSERT.kind_of		class_ident,		SCCEU::Identifier::Short
-		ASSERT.opt_kind_of	opt_contents_pat,	SCCP::Abstract
+		ASSERT.kind_of		class_ident,		CSCEU::Identifier::Short
+		ASSERT.opt_kind_of	opt_contents_pat,	CSCP::Abstract
 
 		super(loc, class_ident)
 
@@ -227,8 +227,8 @@ module_function
 
 	def make_if_rule(loc, head_expr, body_expr)
 		ASSERT.kind_of loc,			L::Location
-		ASSERT.kind_of head_expr,	SCCE::Abstract
-		ASSERT.kind_of body_expr,	SCCE::Abstract
+		ASSERT.kind_of head_expr,	CSCE::Abstract
+		ASSERT.kind_of body_expr,	CSCE::Abstract
 
 		Nary::Rule::If.new(
 			loc, head_expr, body_expr
@@ -238,8 +238,8 @@ module_function
 
 	def make_cond_rule(loc, head_expr, body_expr, decls)
 		ASSERT.kind_of loc,			L::Location
-		ASSERT.kind_of head_expr,	SCCE::Abstract
-		ASSERT.kind_of body_expr,	SCCE::Abstract
+		ASSERT.kind_of head_expr,	CSCE::Abstract
+		ASSERT.kind_of body_expr,	CSCE::Abstract
 		ASSERT.kind_of decls,		::Array
 
 		Nary::Rule::Cond.new(
@@ -250,8 +250,8 @@ module_function
 
 	def make_case_rule(loc, head, body_expr, decls)
 		ASSERT.kind_of loc,			L::Location
-		ASSERT.kind_of head,		SCCEN::Rule::Case::Head::Abstract
-		ASSERT.kind_of body_expr,	SCCE::Abstract
+		ASSERT.kind_of head,		CSCEN::Rule::Case::Head::Abstract
+		ASSERT.kind_of body_expr,	CSCE::Abstract
 		ASSERT.kind_of decls,		::Array
 
 		Nary::Rule::Case::Entry.new(
@@ -273,7 +273,7 @@ module_function
 	def make_case_rule_datum(loc, tag_sym, opt_contents_pat)
 		ASSERT.kind_of		loc,				L::Location
 		ASSERT.kind_of		tag_sym,			::Symbol
-		ASSERT.opt_kind_of	opt_contents_pat,	SCCP::Abstract
+		ASSERT.opt_kind_of	opt_contents_pat,	CSCP::Abstract
 
 		Nary::Rule::Case::Head::Datum.new(
 			loc, tag_sym, opt_contents_pat
@@ -283,8 +283,8 @@ module_function
 
 	def make_case_rule_class(loc, class_ident, opt_contents_pat)
 		ASSERT.kind_of		loc,				L::Location
-		ASSERT.kind_of		class_ident,		SCCEU::Identifier::Short
-		ASSERT.opt_kind_of	opt_contents_pat,	SCCP::Abstract
+		ASSERT.kind_of		class_ident,		CSCEU::Identifier::Short
+		ASSERT.opt_kind_of	opt_contents_pat,	CSCP::Abstract
 
 		Nary::Rule::Case::Head::Class.new(
 			loc, class_ident, opt_contents_pat

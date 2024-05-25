@@ -39,7 +39,7 @@ private
 			self.loc,
 
 			not_last_exprs.map { |expr|
-				ASSERT.kind_of expr, SCCE::Abstract
+				ASSERT.kind_of expr, CSCE::Abstract
 
 				SACD.make_value expr.loc, WILDCARD, expr.desugar(new_env)
 			},

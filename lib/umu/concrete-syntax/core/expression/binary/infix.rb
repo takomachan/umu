@@ -49,9 +49,9 @@ end
 
 class Simple < Abstract
 	def initialize(loc, lhs_opnd, opr_sym, rhs_opnd)
-		ASSERT.kind_of lhs_opnd,	SCCE::Abstract
+		ASSERT.kind_of lhs_opnd,	CSCE::Abstract
 		ASSERT.kind_of opr_sym,		::Symbol
-		ASSERT.kind_of rhs_opnd,	SCCE::Abstract
+		ASSERT.kind_of rhs_opnd,	CSCE::Abstract
 
 		super
 	end
@@ -83,9 +83,9 @@ class KindOf < Abstraction::Abstract
 	alias rhs_ident rhs_opnd
 
 	def initialize(loc, lhs_opnd, opr_sym, rhs_ident)
-		ASSERT.kind_of lhs_opnd,	SCCE::Abstract
+		ASSERT.kind_of lhs_opnd,	CSCE::Abstract
 		ASSERT.kind_of opr_sym,		::Symbol
-		ASSERT.kind_of rhs_ident,	SCCEU::Identifier::Short
+		ASSERT.kind_of rhs_ident,	CSCEU::Identifier::Short
 
 		super
 	end
@@ -159,9 +159,9 @@ module_function
 
 	def make_infix(loc, lhs_opnd, opr_sym, rhs_opnd)
 		ASSERT.kind_of loc,			L::Location
-		ASSERT.kind_of lhs_opnd,	SCCE::Abstract
+		ASSERT.kind_of lhs_opnd,	CSCE::Abstract
 		ASSERT.kind_of opr_sym,		::Symbol
-		ASSERT.kind_of rhs_opnd,	SCCE::Abstract
+		ASSERT.kind_of rhs_opnd,	CSCE::Abstract
 
 		Binary::Infix::Redefinable.new(
 			loc, lhs_opnd, opr_sym, rhs_opnd
@@ -171,9 +171,9 @@ module_function
 
 	def make_kindof(loc, lhs_opnd, opr_sym, rhs_ident)
 		ASSERT.kind_of loc,			L::Location
-		ASSERT.kind_of lhs_opnd,	SCCE::Abstract
+		ASSERT.kind_of lhs_opnd,	CSCE::Abstract
 		ASSERT.kind_of opr_sym,		::Symbol
-		ASSERT.kind_of rhs_ident,	SCCEU::Identifier::Short
+		ASSERT.kind_of rhs_ident,	CSCEU::Identifier::Short
 
 		Binary::Infix::KindOf.new(
 			loc, lhs_opnd, opr_sym, rhs_ident
@@ -183,9 +183,9 @@ module_function
 
 	def make_andalso(loc, lhs_opnd, opr_sym, rhs_opnd)
 		ASSERT.kind_of loc,			L::Location
-		ASSERT.kind_of lhs_opnd,	SCCE::Abstract
+		ASSERT.kind_of lhs_opnd,	CSCE::Abstract
 		ASSERT.kind_of opr_sym,		::Symbol
-		ASSERT.kind_of rhs_opnd,	SCCE::Abstract
+		ASSERT.kind_of rhs_opnd,	CSCE::Abstract
 
 		Binary::Infix::AndAlso.new(
 			loc, lhs_opnd, opr_sym, rhs_opnd
@@ -195,9 +195,9 @@ module_function
 
 	def make_orelse(loc, lhs_opnd, opr_sym, rhs_opnd)
 		ASSERT.kind_of loc,			L::Location
-		ASSERT.kind_of lhs_opnd,	SCCE::Abstract
+		ASSERT.kind_of lhs_opnd,	CSCE::Abstract
 		ASSERT.kind_of opr_sym,		::Symbol
-		ASSERT.kind_of rhs_opnd,	SCCE::Abstract
+		ASSERT.kind_of rhs_opnd,	CSCE::Abstract
 
 		Binary::Infix::OrElse.new(
 			loc, lhs_opnd, opr_sym, rhs_opnd

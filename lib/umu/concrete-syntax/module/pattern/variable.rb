@@ -28,7 +28,7 @@ class Variable < Abstract
 
 
 	def exported_vars
-		[SCCP.make_variable(self.loc, self.var_sym)].freeze
+		[CSCP.make_variable(self.loc, self.var_sym)].freeze
 	end
 
 

@@ -71,7 +71,7 @@ private
 
 		var_sym = __gen_sym__ seq_num
 
-		SCCP.make_result(
+		CSCP.make_result(
 			SACE.make_identifier(self.loc, var_sym),
 			__desugar__(var_sym, env),
 			:Tuple
