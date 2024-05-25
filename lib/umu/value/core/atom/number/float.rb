@@ -88,9 +88,9 @@ class Float < Abstract
 			:floor,				VCAN::Integer],
 		[:meth_ldexp,			self,
 			:ldexp,				VCAN::Integer],
-		[:meth_frexp,			VCP::Tuple,
+		[:meth_frexp,			VCLP::Tuple,
 			:frexp],
-		[:meth_divmod,			VCP::Tuple,
+		[:meth_divmod,			VCLP::Tuple,
 			:divmod,			self],
 
 		# I/O

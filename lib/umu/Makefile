@@ -136,17 +136,19 @@ SRCS	= commander.rb \
 			value/core/atom/string.rb \
 			value/core/atom/symbol.rb \
 			value/core/io.rb \
-			value/core/product.rb \
-			value/core/product/abstract.rb \
-			value/core/product/tuple.rb \
-			value/core/morph.rb \
-			value/core/morph/abstract.rb \
-			value/core/morph/list.rb \
-			value/core/union.rb \
-			value/core/union/abstract.rb \
-			value/core/union/datum.rb \
-			value/core/union/option.rb \
 			value/core/function.rb \
+			value/core/lsm.rb \
+			value/core/lsm/abstract.rb \
+			value/core/lsm/product.rb \
+			value/core/lsm/product/abstract.rb \
+			value/core/lsm/product/tuple.rb \
+			value/core/lsm/union.rb \
+			value/core/lsm/union/abstract.rb \
+			value/core/lsm/union/datum.rb \
+			value/core/lsm/union/option.rb \
+			value/core/lsm/morph.rb \
+			value/core/lsm/morph/abstract.rb \
+			value/core/lsm/morph/list.rb \
 			value/core/struct.rb \
 			environment.rb \
 			environment/preference.rb \

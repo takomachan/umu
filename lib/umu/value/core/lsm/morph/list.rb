@@ -8,6 +8,8 @@ module Value
 
 module Core
 
+module LSM
+
 module Morph
 
 module List
@@ -25,9 +27,9 @@ class Abstract < Morph::Abstract
 			:empty?],
 		[ :meth_cons,			self,
 			:cons,				VC::Top],
-		[ :meth_des!,			VCP::Tuple,
+		[ :meth_des!,			VCLP::Tuple,
 			:des!],
-		[ :meth_des,			VCU::Option::Abstract,
+		[ :meth_des,			VCLU::Option::Abstract,
 			:des],
 		[ :meth_foldr,			VC::Top,
 			:foldr,				VC::Top, VC::Function],
@@ -45,9 +47,9 @@ class Abstract < Morph::Abstract
 			:'concat-with',		VC::Function],
 		[ :meth_zip,			self,
 			:zip,				self],
-		[ :meth_unzip,			VCP::Tuple,
+		[ :meth_unzip,			VCLP::Tuple,
 			:unzip],
-		[ :meth_partition,		VCP::Tuple,
+		[ :meth_partition,		VCLP::Tuple,
 			:partition,			VC::Function],
 		[ :meth_sort,			self,
 			:sort]
@@ -282,7 +284,7 @@ class Abstract < Morph::Abstract
 		) { |ys_zs, y_z|
 			ASSERT.kind_of y_z, VC::Top
 
-			unless y_z.kind_of? VCP::Tuple
+			unless y_z.kind_of? VCLP::Tuple
 				raise X::TypeError.new(
 					loc,
 					env,
@@ -307,7 +309,7 @@ class Abstract < Morph::Abstract
 			)
 		}
 
-		ASSERT.kind_of result_value, VCP::Tuple
+		ASSERT.kind_of result_value, VCLP::Tuple
 	end
 
 
@@ -381,7 +383,7 @@ NIL = Nil.new.freeze
 
 class Cons < Abstract
 	INSTANCE_METHOD_INFOS = [
-		[:meth_contents,	VCP::Tuple,
+		[:meth_contents,	VCLP::Tuple,
 			:contents]
 	]
 
@@ -413,29 +415,31 @@ class Cons < Abstract
 	alias meth_contents meth_des!
 end
 
-end	# Umu::Value::Core::Morph::List
+end	# Umu::Value::Core::LSM::Morph::List
 
-end	# Umu::Value::Core::Morph
+end	# Umu::Value::Core::LSM::Morph
+
+end	# Umu::Value::Core::LSM
 
 
 module_function
 
 	def make_nil
-		Morph::List::NIL
+		LSM::Morph::List::NIL
 	end
 
 
 	def make_cons(head, tail)
 		ASSERT.kind_of head,	VC::Top
-		ASSERT.kind_of tail,	Morph::List::Abstract
+		ASSERT.kind_of tail,	LSM::Morph::List::Abstract
 
-		Morph::List::Cons.new(head, tail).freeze
+		LSM::Morph::List::Cons.new(head, tail).freeze
 	end
 
 
 	def make_list(xs, tail = VC.make_nil)
 		ASSERT.kind_of xs,		::Array
-		ASSERT.kind_of tail,	Morph::List::Abstract
+		ASSERT.kind_of tail,	LSM::Morph::List::Abstract
 
 		xs.reverse_each.inject(tail) { |ys, x|
 			VC.make_cons x, ys

@@ -63,7 +63,7 @@ class ByNumber < Abstraction::Selector
 		ASSERT.kind_of tup_value,	VC::Top
 		ASSERT.kind_of env,			E::Entry
 
-		unless tup_value.kind_of? VCP::Tuple
+		unless tup_value.kind_of? VCLP::Tuple
 			raise X::TypeError.new(
 				self.loc,
 				env,

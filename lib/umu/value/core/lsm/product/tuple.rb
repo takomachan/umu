@@ -8,6 +8,8 @@ module Value
 
 module Core
 
+module LSM
+
 module Product
 
 class Tuple < Abstract
@@ -81,7 +83,7 @@ class Tuple < Abstract
 
 
 	def meth_less_than(loc, env, event, other)
-		ASSERT.kind_of other, VCP::Tuple
+		ASSERT.kind_of other, VCLP::Tuple
 
 		VC.make_bool(
 			self.values.zip(other.values).each_with_index.any? {
@@ -108,7 +110,9 @@ class Tuple < Abstract
 	end
 end
 
-end	# Umu::Value::Core::Product
+end	# Umu::Value::Core::LSM::Product
+
+end	# Umu::Value::Core::LSM
 
 
 module_function
@@ -116,7 +120,7 @@ module_function
 	def make_tuple(values)
 		ASSERT.kind_of values, ::Array
 
-		Product::Tuple.new(values.freeze).freeze
+		LSM::Product::Tuple.new(values.freeze).freeze
 	end
 
 end	# Umu::Value::Core

@@ -7,6 +7,8 @@ module Value
 
 module Core
 
+module LSM
+
 module Union
 
 module Option
@@ -90,22 +92,24 @@ class Some < Abstract
 	end
 end
 
-end	# Umu::Core::Union::Option
+end	# Umu::Core::LSM::Union::Option
 
-end	# Umu::Core::Union
+end	# Umu::Core::LSM::Union
+
+end	# Umu::Core::LSM
 
 
 module_function
 
 	def make_none
-		Union::Option::NONE
+		LSM::Union::Option::NONE
 	end
 
 
 	def make_some(contents)
 		ASSERT.kind_of contents, VC::Top
 
-		Union::Option::Some.new(contents).freeze
+		LSM::Union::Option::Some.new(contents).freeze
 	end
 
 end	# Umu::Core

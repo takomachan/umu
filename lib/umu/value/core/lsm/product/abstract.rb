@@ -8,9 +8,11 @@ module Value
 
 module Core
 
+module LSM
+
 module Product
 
-class Abstract < Top
+class Abstract < LSM::Abstract
 	include Enumerable
 
 	attr_reader	:objs
@@ -42,7 +44,9 @@ class Abstract < Top
 	end
 end
 
-end	# Umu::Value::Core::Product
+end	# Umu::Value::Core::LSM::Product
+
+end	# Umu::Value::Core::LSM
 
 end	# Umu::Value::Core
 

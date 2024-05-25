@@ -7,9 +7,11 @@ module Value
 
 module Core
 
-module Union
+module LSM
 
-class Abstract < Top
+module Morph
+
+class Abstract < LSM::Abstract
 	INSTANCE_METHOD_INFOS = [
 		[:meth_contents,	VC::Top,
 			:contents]
@@ -45,9 +47,11 @@ class Abstract < Top
 	end
 end
 
-end	# Umu::Core::Union
+end	# Umu::Value::Core::LSM::Morph
 
-end	# Umu::Core
+end	# Umu::Value::Core::LSM
+
+end	# Umu::Value::Core
 
 end	# Umu::Value
 
