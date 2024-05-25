@@ -60,12 +60,18 @@ class Entry < Product::Abstract
 	def to_s
 		format("%%STRUCT {%s}",
 				self.map { |field|
-					case field.value
-					when Entry
-						format "%%STRUCTURE %s", field.label
-					else
-						field.to_s
-					end
+					format("%%%s %s",
+						case field.value
+						when Entry
+							'STRUCTURE'
+						when Function
+							'FUN'
+						else
+							'VAL'
+						end,
+
+						field.label
+					)
 				}.join(' ')
 		)
 	end
