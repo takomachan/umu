@@ -41,7 +41,7 @@ class Selector < Abstract
 private
 
 	def __desugar__(_env, _event)
-		SACE.make_number_selector self.loc, self.sel_num
+		ASCE.make_number_selector self.loc, self.sel_num
 	end
 end
 
@@ -78,7 +78,7 @@ private
 	def __desugar__(env, event)
 		new_env = env.enter event
 
-		SACE.make_method(
+		ASCE.make_method(
 			self.loc,
 			self.sym,
 			self.exprs.map { |expr| expr.desugar(new_env) },
@@ -125,7 +125,7 @@ private
 	def __desugar__(env, event)
 		new_env = env.enter event
 
-		SACE.make_send(
+		ASCE.make_send(
 			self.loc,
 			self.lhs_expr.desugar(new_env),
 			self.rhs_head_message.desugar(new_env),

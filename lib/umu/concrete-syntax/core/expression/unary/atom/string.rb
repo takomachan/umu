@@ -31,7 +31,7 @@ class String < Atom::Abstract
 private
 
 	def __desugar__(_env, _event)
-		SACE.make_string self.loc, self.obj
+		ASCE.make_string self.loc, self.obj
 	end
 end
 

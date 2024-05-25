@@ -55,13 +55,13 @@ private
 	def __desugar__(env, event)
 		new_env = env.enter event
 
-		SACE.make_if(
+		ASCE.make_if(
 			self.loc,
 
 			([self.if_rule] + self.elsif_rules).map { |rule|
 				ASSERT.kind_of rule, Nary::Rule::If
 
-				SACE.make_rule(
+				ASCE.make_rule(
 					rule.loc,
 					rule.head_expr.desugar(new_env),
 					rule.body_expr.desugar(new_env)

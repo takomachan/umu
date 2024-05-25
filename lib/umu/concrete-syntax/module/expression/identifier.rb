@@ -40,7 +40,7 @@ class Short < Abstract
 private
 
 	def __desugar__(_env, _event)
-		SACE.make_identifier self.loc, self.sym
+		ASCE.make_identifier self.loc, self.sym
 	end
 end
 
@@ -78,7 +78,7 @@ private
 	def __desugar__(env, event)
 		new_env = env.enter event
 
-		SACE.make_long_identifier(
+		ASCE.make_long_identifier(
 			loc,
 			self.head_id.desugar(new_env),
 			self.tail_ids.map { |id| id.desugar new_env }

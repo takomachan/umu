@@ -44,22 +44,22 @@ class Method < Abstract
 private
 
 	def __desugar__(_env, _event)
-		SACE.make_lambda(
+		ASCE.make_lambda(
 			self.loc,
 
 			[
-				SACE.make_parameter(
+				ASCE.make_parameter(
 					self.loc,
-					SACE.make_identifier(self.loc, :'%x')
+					ASCE.make_identifier(self.loc, :'%x')
 				)
 			],
 
-			SACE.make_send(
+			ASCE.make_send(
 				loc,
 
-				SACE.make_identifier(self.loc, :'%x'),
+				ASCE.make_identifier(self.loc, :'%x'),
 
-				SACE.make_method(
+				ASCE.make_method(
 					self.method_ident.loc,
 					self.method_ident.sym
 				),

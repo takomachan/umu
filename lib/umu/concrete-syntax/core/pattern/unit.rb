@@ -23,15 +23,15 @@ class Unit < Abstract
 private
 
 	def __desugar_value__(expr, _env, _event)
-		ASSERT.kind_of expr, SACE::Abstract
+		ASSERT.kind_of expr, ASCE::Abstract
 
-		SACD.make_value self.loc, WILDCARD, expr, :Unit
+		ASCD.make_value self.loc, WILDCARD, expr, :Unit
 	end
 
 
 	def __desugar_lambda__(_seq_num, _env, _event)
 		CSCP.make_result(
-			SACE.make_identifier(self.loc, WILDCARD),
+			ASCE.make_identifier(self.loc, WILDCARD),
 			[],
 			:Unit
 		)

@@ -28,7 +28,7 @@ class Abstract < AbstractSyntax::Abstract
 			after_env.leave
 		}
 
-		SAR.make_environment new_env
+		ASR.make_environment new_env
 	end
 
 

@@ -17,10 +17,10 @@ class Switch < Expression::Abstract
 
 
 	def initialize(loc, source_expr, souce_type_sym, leafs, else_expr)
-		ASSERT.kind_of source_expr,		SACE::Abstract
+		ASSERT.kind_of source_expr,		ASCE::Abstract
 		ASSERT.kind_of souce_type_sym,	::Symbol
 		ASSERT.kind_of leafs,			::Hash
-		ASSERT.kind_of else_expr,		SACE::Abstract
+		ASSERT.kind_of else_expr,		ASCE::Abstract
 
 		super(loc)
 
@@ -53,7 +53,7 @@ class Switch < Expression::Abstract
 		new_env = env.enter event
 
 		source_result = self.source_expr.evaluate new_env
-		ASSERT.kind_of source_result, SAR::Value
+		ASSERT.kind_of source_result, ASR::Value
 		source_value = source_result.value
 
 		source_spec = new_env.ty_lookup self.souce_type_sym, self.loc
@@ -71,7 +71,7 @@ class Switch < Expression::Abstract
 		end
 
 		opt_leaf_expr = self.leafs[source_value.val]
-		ASSERT.opt_kind_of opt_leaf_expr, SACE::Abstract
+		ASSERT.opt_kind_of opt_leaf_expr, ASCE::Abstract
 
 		result = (
 			if opt_leaf_expr
@@ -80,7 +80,7 @@ class Switch < Expression::Abstract
 				self.else_expr
 			end
 		).evaluate new_env
-		ASSERT.kind_of result, SAR::Value
+		ASSERT.kind_of result, ASR::Value
 
 		result.value
 	end
@@ -93,10 +93,10 @@ module_function
 
 	def make_switch(loc, source_expr, souce_type_sym, leafs, else_expr)
 		ASSERT.kind_of loc,				L::Location
-		ASSERT.kind_of source_expr,		SACE::Abstract
+		ASSERT.kind_of source_expr,		ASCE::Abstract
 		ASSERT.kind_of souce_type_sym,	::Symbol
 		ASSERT.kind_of leafs,			::Hash
-		ASSERT.kind_of else_expr,		SACE::Abstract
+		ASSERT.kind_of else_expr,		ASCE::Abstract
 
 		Nary::Switch.new(
 			loc, source_expr, souce_type_sym, leafs, else_expr

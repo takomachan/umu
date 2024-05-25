@@ -35,9 +35,9 @@ class Variable < Abstract
 private
 
 	def __desugar_value__(expr, _env, _event)
-		ASSERT.kind_of expr, SACE::Abstract
+		ASSERT.kind_of expr, ASCE::Abstract
 
-		SACD.make_value self.loc, self.var_sym, expr
+		ASCD.make_value self.loc, self.var_sym, expr
 	end
 end
 

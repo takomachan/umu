@@ -13,7 +13,7 @@ class Function < Top
 
 
 	def initialize(lam, va_context)
-		ASSERT.kind_of lam,			SACEN::Lambda::Entry
+		ASSERT.kind_of lam,			ASCEN::Lambda::Entry
 		ASSERT.kind_of va_context,	ECV::Abstract
 
 		super()
@@ -94,7 +94,7 @@ private
 
 				new_env	= final_env.enter event
 				result	= self.lam.expr.evaluate new_env
-				ASSERT.kind_of result, SAR::Value
+				ASSERT.kind_of result, ASR::Value
 
 				result.value
 			elsif init_params_num < init_values_num
@@ -107,7 +107,7 @@ private
 
 				new_env	= final_env.enter event
 				result	= self.lam.expr.evaluate new_env
-				ASSERT.kind_of result, SAR::Value
+				ASSERT.kind_of result, ASR::Value
 
 				result.value.apply(
 					final_head_value, final_tail_values, loc, new_env
@@ -120,7 +120,7 @@ private
 				ASSERT.assert final_values.empty?
 
 				VC.make_function(
-					SACE.make_lambda(
+					ASCE.make_lambda(
 						loc, final_params, lam.expr, lam.opt_name
 					),
 					final_env.va_context
@@ -149,7 +149,7 @@ private
 
 			head_param, *tail_params	= params
 			head_value, *tail_values	= values
-			ASSERT.kind_of head_param,	SACEN::Lambda::Parameter
+			ASSERT.kind_of head_param,	ASCEN::Lambda::Parameter
 			ASSERT.kind_of tail_params,	::Array
 			ASSERT.kind_of head_value,	VC::Top
 			ASSERT.kind_of tail_values,	::Array
@@ -190,7 +190,7 @@ end
 module_function
 
 	def make_function(lam, va_context)
-		ASSERT.kind_of lam,			SACEN::Lambda::Entry
+		ASSERT.kind_of lam,			ASCEN::Lambda::Entry
 		ASSERT.kind_of va_context,	ECV::Abstract
 
 		Function.new(lam, va_context).freeze

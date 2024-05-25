@@ -29,21 +29,21 @@ private
 		new_env = env.enter event
 
 		opnd_expr = self.expr.desugar(new_env)
-		ASSERT.kind_of opnd_expr, SACE::Abstract
+		ASSERT.kind_of opnd_expr, ASCE::Abstract
 		if opnd_expr.simple? || self.rules.size <= 1
 			rules = __desugar_rules__(env) { |_| opnd_expr }
 
-			SACE.make_if self.loc, rules, __desugar_else_expr__(new_env)
+			ASCE.make_if self.loc, rules, __desugar_else_expr__(new_env)
 		else
-			SACE.make_let(
+			ASCE.make_let(
 				self.loc,
 
-				[SACD.make_value(opnd_expr.loc, :'%x', opnd_expr)],
+				[ASCD.make_value(opnd_expr.loc, :'%x', opnd_expr)],
 
-				SACE.make_if(
+				ASCE.make_if(
 					self.loc,
 					__desugar_rules__(env) { |loc|
-						SACE.make_identifier loc, :'%x'
+						ASCE.make_identifier loc, :'%x'
 					},
 					__desugar_else_expr__(new_env)
 				)
@@ -57,12 +57,12 @@ private
 			ASSERT.kind_of rule, Rule::Cond
 
 			opr_expr	= rule.head_expr.desugar env
-			head_expr	= SACE.make_apply(
+			head_expr	= ASCE.make_apply(
 								rule.loc, opr_expr, fn.call(rule.loc)
 							)
 			body_expr	= __desugar_body_expr__ env, rule
 
-			SACE.make_rule rule.loc, head_expr, body_expr
+			ASCE.make_rule rule.loc, head_expr, body_expr
 		}
 	end
 end

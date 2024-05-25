@@ -18,7 +18,7 @@ class Let < Expression::Abstract
 
 	def initialize(loc, decls, expr)
 		ASSERT.kind_of decls,	::Array
-		ASSERT.kind_of expr,	SACE::Abstract
+		ASSERT.kind_of expr,	ASCE::Abstract
 
 		super(loc)
 
@@ -42,16 +42,16 @@ class Let < Expression::Abstract
 
 		new_env = self.decls.inject(init_env.enter(event)) { |env, decl|
 			ASSERT.kind_of env,		E::Entry
-			ASSERT.kind_of decl,	SACD::Abstract
+			ASSERT.kind_of decl,	ASCD::Abstract
 
 			result = decl.evaluate env
-			ASSERT.kind_of result, SAR::Environment
+			ASSERT.kind_of result, ASR::Environment
 
 			result.env
 		}
 
 		final_result = self.expr.evaluate new_env
-		ASSERT.kind_of final_result, SAR::Value
+		ASSERT.kind_of final_result, ASR::Value
 
 		final_result.value
 	end
@@ -65,7 +65,7 @@ module_function
 	def make_let(loc, decls, expr)
 		ASSERT.kind_of loc,		L::Location
 		ASSERT.kind_of decls,	::Array
-		ASSERT.kind_of expr,	SACE::Abstract
+		ASSERT.kind_of expr,	ASCE::Abstract
 
 		Nary::Let.new(loc, decls.freeze, expr).freeze
 	end

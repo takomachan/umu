@@ -153,15 +153,15 @@ module_function
 		[['ConcreteSyntax',	'Core',	'Pattern'],					'CSCP'],
 
 		# AbstractSyntax
-		[['AbstractSyntax'],									'SA'],
-		[['AbstractSyntax',	'Core'],							'SAC'],
-		[['AbstractSyntax',	'Core',	'Declaration'],				'SACD'],
-		[['AbstractSyntax',	'Core',	'Expression'],				'SACE'],
-		[['AbstractSyntax',	'Core',	'Expression',	'Unary'],	'SACEU'],
+		[['AbstractSyntax'],									'AS'],
+		[['AbstractSyntax',	'Core'],							'ASC'],
+		[['AbstractSyntax',	'Core',	'Declaration'],				'ASCD'],
+		[['AbstractSyntax',	'Core',	'Expression'],				'ASCE'],
+		[['AbstractSyntax',	'Core',	'Expression',	'Unary'],	'ASCEU'],
 		[['AbstractSyntax',	'Core',	'Expression',	'Unary', 'Atom'],
-																'SACEUA'],
-		[['AbstractSyntax',	'Core',	'Expression',	'Binary'],	'SACEB'],
-		[['AbstractSyntax',	'Core',	'Expression',	'Nary'],	'SACEN'],
+																'ASCEUA'],
+		[['AbstractSyntax',	'Core',	'Expression',	'Binary'],	'ASCEB'],
+		[['AbstractSyntax',	'Core',	'Expression',	'Nary'],	'ASCEN'],
 
 		# Value
 		[['Value'],												'V'],

@@ -49,7 +49,7 @@ private
 	def __desugar__(env, event)
 		new_env = env.enter event
 
-		SACE.make_list(
+		ASCE.make_list(
 			self.loc,
 
 			self.map { |elem| elem.desugar(new_env) },

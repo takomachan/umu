@@ -35,20 +35,20 @@ class Prefix < Unary::Abstract
 private
 
 	def __desugar__(env, event)
-		SACE.make_lambda(
+		ASCE.make_lambda(
 			self.loc,
 
 			[
-				SACE.make_parameter(
+				ASCE.make_parameter(
 					self.loc,
-					SACE.make_identifier(self.loc, :'%x')
+					ASCE.make_identifier(self.loc, :'%x')
 				)
 			],
 
-			SACE.make_apply(
+			ASCE.make_apply(
 				self.loc,
-				SACE.make_identifier(self.loc, self.sym),
-				SACE.make_identifier(self.loc, :'%x'),
+				ASCE.make_identifier(self.loc, self.sym),
+				ASCE.make_identifier(self.loc, :'%x'),
 				[self.rhs_expr.desugar(env.enter(event))]
 			),
 

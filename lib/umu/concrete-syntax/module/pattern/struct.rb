@@ -120,12 +120,12 @@ private
 
 
 	def __desugar_value__(expr, env, _event)
-		ASSERT.kind_of expr, SACE::Abstract
+		ASSERT.kind_of expr, ASCE::Abstract
 
-		SACD.make_declarations(
+		ASCD.make_declarations(
 			self.loc,
 			[
-				SACD.make_value(self.loc, :'%r', expr)
+				ASCD.make_value(self.loc, :'%r', expr)
 			] + (
 				__desugar__(env)
 			)
@@ -144,13 +144,13 @@ private
 			ASSERT.kind_of vpat, CSCP::Variable
 
 			loc = field.loc
-			expr = SACE.make_send(
+			expr = ASCE.make_send(
 						loc,
-						SACE.make_identifier(loc, :'%r'),
-						SACE.make_label_selector(loc, field.label)
+						ASCE.make_identifier(loc, :'%r'),
+						ASCE.make_label_selector(loc, field.label)
 					)
 
-			SACD.make_value vpat.loc, vpat.var_sym, expr
+			ASCD.make_value vpat.loc, vpat.var_sym, expr
 		}
 	end
 end

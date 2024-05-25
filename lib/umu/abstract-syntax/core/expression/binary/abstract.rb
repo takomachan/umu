@@ -17,7 +17,7 @@ class Abstract < Expression::Abstract
 
 
 	def initialize(loc, lhs_expr, rhs)
-		ASSERT.kind_of lhs_expr,	SACE::Abstract
+		ASSERT.kind_of lhs_expr,	ASCE::Abstract
 		ASSERT.kind_of rhs,			::Object
 
 		super(loc)

@@ -40,9 +40,9 @@ class Entry < Abstraction::HashBased
 	def each
 		for (label, expr) in self.expr_by_label do
 			ASSERT.kind_of label,	::Symbol
-			ASSERT.kind_of expr,	SACE::Abstract
+			ASSERT.kind_of expr,	ASCE::Abstract
 
-			yield SACE.make_struct_field self.loc, label, expr
+			yield ASCE.make_struct_field self.loc, label, expr
 		end
 	end
 
@@ -64,7 +64,7 @@ private
 		VC.make_struct(
 			self.expr_by_label.inject({}) { |hash, (label, expr)|
 				ASSERT.kind_of label,	::Symbol
-				ASSERT.kind_of expr,	SACE::Abstract
+				ASSERT.kind_of expr,	ASCE::Abstract
 
 				hash.merge(label => expr.evaluate(new_env).value) {
 					|lab, _, _|
@@ -88,7 +88,7 @@ module_function
 	def make_struct_field(loc, label, expr)
 		ASSERT.kind_of loc,		L::Location
 		ASSERT.kind_of label,	::Symbol
-		ASSERT.kind_of expr,	SACE::Abstract
+		ASSERT.kind_of expr,	ASCE::Abstract
 
 		Unary::Container::Struct::Field.new(loc, label, expr).freeze
 	end

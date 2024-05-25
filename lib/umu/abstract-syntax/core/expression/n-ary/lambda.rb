@@ -19,7 +19,7 @@ class Parameter < Abstraction::Model
 
 
 	def initialize(loc, ident, opt_type_sym)
-		ASSERT.kind_of		ident,			SACEU::Identifier::Short
+		ASSERT.kind_of		ident,			ASCEU::Identifier::Short
 		ASSERT.opt_kind_of	opt_type_sym,	::Symbol
 
 		super(loc)
@@ -50,7 +50,7 @@ class Entry < Expression::Abstract
 
 	def initialize(loc, params, expr, opt_name)
 		ASSERT.kind_of		params,		::Array
-		ASSERT.kind_of		expr,		SACE::Abstract
+		ASSERT.kind_of		expr,		ASCE::Abstract
 		ASSERT.opt_kind_of	opt_name,	::Symbol
 
 		super(loc)
@@ -86,7 +86,7 @@ module_function
 
 	def make_parameter(loc, ident, opt_type_sym = nil)
 		ASSERT.kind_of		loc,			L::Location
-		ASSERT.kind_of		ident,			SACEU::Identifier::Short
+		ASSERT.kind_of		ident,			ASCEU::Identifier::Short
 		ASSERT.opt_kind_of	opt_type_sym,	::Symbol
 
 		Nary::Lambda::Parameter.new(loc, ident, opt_type_sym).freeze
@@ -96,7 +96,7 @@ module_function
 	def make_lambda(loc, params, expr, opt_name = nil)
 		ASSERT.kind_of		loc,			L::Location
 		ASSERT.kind_of		params,			::Array
-		ASSERT.kind_of		expr,			SACE::Abstract
+		ASSERT.kind_of		expr,			ASCE::Abstract
 		ASSERT.opt_kind_of	opt_name,		::Symbol
 
 		Nary::Lambda::Entry.new(loc, params, expr, opt_name).freeze

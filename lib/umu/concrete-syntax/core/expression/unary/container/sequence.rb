@@ -35,13 +35,13 @@ private
 
 		*not_last_exprs, last_expr = self.exprs
 
-		SACE.make_let(
+		ASCE.make_let(
 			self.loc,
 
 			not_last_exprs.map { |expr|
 				ASSERT.kind_of expr, CSCE::Abstract
 
-				SACD.make_value expr.loc, WILDCARD, expr.desugar(new_env)
+				ASCD.make_value expr.loc, WILDCARD, expr.desugar(new_env)
 			},
 
 			last_expr.desugar(new_env)

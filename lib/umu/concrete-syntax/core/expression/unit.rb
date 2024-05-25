@@ -19,7 +19,7 @@ class Unit < Expression::Abstract
 private
 
 	def __desugar__(_env, _event)
-		SACE.make_unit self.loc
+		ASCE.make_unit self.loc
 	end
 end
 

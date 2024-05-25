@@ -14,11 +14,11 @@ class Result
 
 
 	def initialize(ident, decls, opt_type_sym)
-		ASSERT.kind_of		ident,			SACEU::Identifier::Short
+		ASSERT.kind_of		ident,			ASCEU::Identifier::Short
 		ASSERT.kind_of		decls,			::Array
 		ASSERT.opt_kind_of	opt_type_sym,	::Symbol
 		ASSERT.assert decls.all? { |decl|
-			decl.kind_of? SACD::Simple::Value
+			decl.kind_of? ASCD::Simple::Value
 		}
 
 		@ident			= ident
@@ -46,7 +46,7 @@ end
 module_function
 
 	def make_result(ident, decls, opt_type_sym = nil)
-		ASSERT.kind_of		ident,			SACEU::Identifier::Short
+		ASSERT.kind_of		ident,			ASCEU::Identifier::Short
 		ASSERT.kind_of		decls,			::Array
 		ASSERT.opt_kind_of	opt_type_sym,	::Symbol
 

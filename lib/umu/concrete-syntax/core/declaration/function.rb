@@ -38,7 +38,7 @@ class Abstract < Declaration::Abstract
 private
 
 	def __desugar__(env, event)
-		SACD.make_value(
+		ASCD.make_value(
 			self.loc,
 			self.lam_expr.sym,
 			self.lam_expr.desugar(env.enter(event))

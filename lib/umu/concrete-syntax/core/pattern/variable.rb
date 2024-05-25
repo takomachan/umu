@@ -56,15 +56,15 @@ class Variable < Abstract
 private
 
 	def __desugar_value__(expr, _env, _event)
-		ASSERT.kind_of expr, SACE::Abstract
+		ASSERT.kind_of expr, ASCE::Abstract
 
-		SACD.make_value self.loc, self.var_sym, expr, self.opt_type_sym
+		ASCD.make_value self.loc, self.var_sym, expr, self.opt_type_sym
 	end
 
 
 	def __desugar_lambda__(_seq_num, _env, _event)
 		CSCP.make_result(
-			SACE.make_identifier(self.loc, self.var_sym),
+			ASCE.make_identifier(self.loc, self.var_sym),
 			[],
 			self.opt_type_sym
 		)

@@ -33,7 +33,7 @@ class Value < Abstract
 
 
 	def initialize(loc, sym, expr, opt_type_sym)
-		ASSERT.kind_of		expr,			SACE::Abstract
+		ASSERT.kind_of		expr,			ASCE::Abstract
 		ASSERT.opt_kind_of	opt_type_sym,	::Symbol
 
 		super(loc, sym)
@@ -64,7 +64,7 @@ private
 		ASSERT.kind_of env, E::Entry
 
 		result	= self.expr.evaluate env
-		ASSERT.kind_of result, SAR::Value
+		ASSERT.kind_of result, ASR::Value
 		value	= result.value
 
 		if self.opt_type_sym
@@ -95,7 +95,7 @@ class Recursive < Abstract
 
 
 	def initialize(loc, sym, lam_expr)
-		ASSERT.kind_of lam_expr, SACEN::Lambda::Entry
+		ASSERT.kind_of lam_expr, ASCEN::Lambda::Entry
 
 		super(loc, sym)
 
@@ -126,7 +126,7 @@ module_function
 	def make_value(loc, sym, expr, opt_type_sym = nil)
 		ASSERT.kind_of		loc,			L::Location
 		ASSERT.kind_of		sym,			::Symbol
-		ASSERT.kind_of		expr,			SACE::Abstract
+		ASSERT.kind_of		expr,			ASCE::Abstract
 		ASSERT.opt_kind_of	opt_type_sym,	::Symbol
 
 		Simple::Value.new(loc, sym, expr, opt_type_sym).freeze
@@ -136,7 +136,7 @@ module_function
 	def make_recursive(loc, sym, lam_expr)
 		ASSERT.kind_of loc,			L::Location
 		ASSERT.kind_of sym,			::Symbol
-		ASSERT.kind_of lam_expr,	SACEN::Lambda::Entry
+		ASSERT.kind_of lam_expr,	ASCEN::Lambda::Entry
 
 		Simple::Recursive.new(loc, sym, lam_expr).freeze
 	end

@@ -57,7 +57,7 @@ private
 
 			result = pat.desugar_lambda index + 1, new_env
 			ASSERT.kind_of result, CSCP::Result
-			param = SACE.make_parameter(
+			param = ASCE.make_parameter(
 						result.ident.loc, result.ident, result.opt_type_sym
 					)
 
@@ -71,10 +71,10 @@ private
 		lamb_expr = if local_decls.empty?
 						body_expr
 					else
-						SACE.make_let self.loc, local_decls, body_expr
+						ASCE.make_let self.loc, local_decls, body_expr
 					end
 
-		SACE.make_lambda self.loc, lamb_params, lamb_expr, __name_sym__
+		ASCE.make_lambda self.loc, lamb_params, lamb_expr, __name_sym__
 	end
 end
 

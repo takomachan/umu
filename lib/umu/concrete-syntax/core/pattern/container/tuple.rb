@@ -53,12 +53,12 @@ class Tuple < Abstraction::Abstract
 private
 
 	def __desugar_value__(expr, env, _event)
-		ASSERT.kind_of expr, SACE::Abstract
+		ASSERT.kind_of expr, ASCE::Abstract
 
-		SACD.make_declarations(
+		ASCD.make_declarations(
 			self.loc,
 			[
-				SACD.make_value(self.loc, :'%t', expr, :Tuple)
+				ASCD.make_value(self.loc, :'%t', expr, :Tuple)
 			] + (
 				__desugar__(:'%t', env)
 			)
@@ -72,7 +72,7 @@ private
 		var_sym = __gen_sym__ seq_num
 
 		CSCP.make_result(
-			SACE.make_identifier(self.loc, var_sym),
+			ASCE.make_identifier(self.loc, var_sym),
 			__desugar__(var_sym, env),
 			:Tuple
 		)
@@ -88,13 +88,13 @@ private
 			ASSERT.kind_of vpat,	Variable
 			ASSERT.kind_of index,	::Integer
 
-			expr = SACE.make_send(
+			expr = ASCE.make_send(
 						vpat.loc,
-						SACE.make_identifier(vpat.loc, var_sym),
-						SACE.make_number_selector(vpat.loc, index + 1)
+						ASCE.make_identifier(vpat.loc, var_sym),
+						ASCE.make_number_selector(vpat.loc, index + 1)
 					)
 
-			SACD.make_value vpat.loc, vpat.var_sym, expr, vpat.opt_type_sym
+			ASCD.make_value vpat.loc, vpat.var_sym, expr, vpat.opt_type_sym
 		}
 	end
 end

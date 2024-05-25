@@ -19,8 +19,8 @@ class Rule < Abstraction::Model
 
 
 	def initialize(loc, head_expr, body_expr)
-		ASSERT.kind_of head_expr,	SACE::Abstract
-		ASSERT.kind_of body_expr,	SACE::Abstract
+		ASSERT.kind_of head_expr,	ASCE::Abstract
+		ASSERT.kind_of body_expr,	ASCE::Abstract
 
 		super(loc)
 
@@ -42,7 +42,7 @@ class Entry < Expression::Abstract
 
 	def initialize(loc, rules, else_expr)
 		ASSERT.kind_of rules,		::Array
-		ASSERT.kind_of else_expr,	SACE::Abstract
+		ASSERT.kind_of else_expr,	ASCE::Abstract
 
 		super(loc)
 
@@ -83,11 +83,11 @@ class Entry < Expression::Abstract
 		new_env = env.enter event
 
 		result = self.rules.inject(self.else_expr) { |expr, rule|
-			ASSERT.kind_of expr,	SACE::Abstract
+			ASSERT.kind_of expr,	ASCE::Abstract
 			ASSERT.kind_of rule,	Rule
 
 			head_result = rule.head_expr.evaluate new_env
-			ASSERT.kind_of head_result, SAR::Value
+			ASSERT.kind_of head_result, ASR::Value
 
 			head_value = head_result.value
 			unless head_value.kind_of? VCA::Bool
@@ -107,7 +107,7 @@ class Entry < Expression::Abstract
 
 			expr
 		}.evaluate new_env
-		ASSERT.kind_of result, SAR::Value
+		ASSERT.kind_of result, ASR::Value
 
 		result.value
 	end
@@ -122,8 +122,8 @@ module_function
 
 	def make_rule(loc, head_expr, body_expr)
 		ASSERT.kind_of loc,			L::Location
-		ASSERT.kind_of head_expr,	SACE::Abstract
-		ASSERT.kind_of body_expr,	SACE::Abstract
+		ASSERT.kind_of head_expr,	ASCE::Abstract
+		ASSERT.kind_of body_expr,	ASCE::Abstract
 
 		Nary::If::Rule.new(loc, head_expr, body_expr).freeze
 	end
@@ -132,7 +132,7 @@ module_function
 	def make_if(loc, rules, else_expr)
 		ASSERT.kind_of loc,			L::Location
 		ASSERT.kind_of rules,		::Array
-		ASSERT.kind_of else_expr,	SACE::Abstract
+		ASSERT.kind_of else_expr,	ASCE::Abstract
 
 		Nary::If::Entry.new(loc, rules, else_expr).freeze
 	end

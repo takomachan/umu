@@ -41,7 +41,7 @@ class Int < Abstract
 private
 
 	def __desugar__(_env, _event)
-		SACE.make_integer self.loc, self.obj
+		ASCE.make_integer self.loc, self.obj
 	end
 end
 
@@ -57,7 +57,7 @@ class Real < Abstract
 private
 
 	def __desugar__(_env, _event)
-		SACE.make_real self.loc, self.obj
+		ASCE.make_real self.loc, self.obj
 	end
 end
 

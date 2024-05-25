@@ -32,7 +32,7 @@ class Class < Abstract
 private
 
 	def __desugar__(_env, _event)
-		SACE.make_class self.loc, self.class_sym
+		ASCE.make_class self.loc, self.class_sym
 	end
 end
 

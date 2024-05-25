@@ -31,7 +31,7 @@ class Symbol < Atom::Abstract
 private
 
 	def __desugar__(_env, _event)
-		SACE.make_symbol self.loc, self.obj
+		ASCE.make_symbol self.loc, self.obj
 	end
 end
 

@@ -19,8 +19,8 @@ class KindOf < Binary::Abstract
 
 
 	def initialize(loc, expr, class_id, opt_type_sym)
-		ASSERT.kind_of		expr,			SACE::Abstract
-		ASSERT.kind_of		class_id,		SACEU::Identifier::Short
+		ASSERT.kind_of		expr,			ASCE::Abstract
+		ASSERT.kind_of		class_id,		ASCEU::Identifier::Short
 		ASSERT.opt_kind_of	opt_type_sym,	::Symbol
 
 		super(loc, expr, class_id)
@@ -82,8 +82,8 @@ module_function
 
 	def make_test_kind_of(loc, expr, class_id, opt_type_sym = nil)
 		ASSERT.kind_of		loc,			L::Location
-		ASSERT.kind_of		expr,			SACE::Abstract
-		ASSERT.kind_of		class_id,		SACEU::Identifier::Short
+		ASSERT.kind_of		expr,			ASCE::Abstract
+		ASSERT.kind_of		class_id,		ASCEU::Identifier::Short
 		ASSERT.opt_kind_of	opt_type_sym,	::Symbol
 
 		Binary::KindOf.new(loc, expr, class_id, opt_type_sym).freeze

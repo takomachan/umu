@@ -36,10 +36,10 @@ private
 
 		new_env = self.decls.inject(old_env) { |env, decl|
 			ASSERT.kind_of env,		E::Entry
-			ASSERT.kind_of decl,	SACD::Abstract
+			ASSERT.kind_of decl,	ASCD::Abstract
 
 			result = decl.evaluate env
-			ASSERT.kind_of result, SAR::Environment
+			ASSERT.kind_of result, ASR::Environment
 
 			result.env
 		}

@@ -68,9 +68,9 @@ private
 	def __desugar__(env, event)
 		new_env = env.enter event
 
-		SACE.make_apply(
+		ASCE.make_apply(
 			self.loc,
-			SACE.make_identifier(loc, self.opr_sym),
+			ASCE.make_identifier(loc, self.opr_sym),
 			self.lhs_opnd.desugar(new_env),
 			[self.rhs_opnd.desugar(new_env)]
 		)
@@ -96,7 +96,7 @@ private
 	def __desugar__(env, event)
 		new_env = env.enter event
 
-		SACE.make_test_kind_of(
+		ASCE.make_test_kind_of(
 			self.loc,
 			self.lhs_opnd.desugar(new_env),
 			self.rhs_ident.desugar(new_env)
@@ -113,16 +113,16 @@ private
 	def __desugar__(env, event)
 		new_env = env.enter event
 
-		SACE.make_if(
+		ASCE.make_if(
 			self.loc,
 			[
-				SACE.make_rule(
+				ASCE.make_rule(
 					self.loc,
 					self.lhs_opnd.desugar(new_env),
 					self.rhs_opnd.desugar(new_env)
 				)
 			],
-			SACE.make_bool(self.loc, false)
+			ASCE.make_bool(self.loc, false)
 		)
 	end
 end
@@ -136,13 +136,13 @@ private
 	def __desugar__(env, event)
 		new_env = env.enter event
 
-		SACE.make_if(
+		ASCE.make_if(
 			self.loc,
 			[
-				SACE.make_rule(
+				ASCE.make_rule(
 					self.loc,
 					self.lhs_opnd.desugar(new_env),
-					SACE.make_bool(loc, true)
+					ASCE.make_bool(loc, true)
 				)
 			],
 			self.rhs_opnd.desugar(new_env)

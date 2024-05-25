@@ -343,16 +343,16 @@ end
 			ASSERT.kind_of csyn_stmt,	CS::Abstract
 
 			result = execute(csyn_stmt, env)
-			ASSERT.kind_of result, SAR::Abstract
+			ASSERT.kind_of result, ASR::Abstract
 
 			case result
-			when SAR::Value
+			when ASR::Value
 				value = result.value
 
 				yield value if block_given?
 
 				env.va_extend_value :it, value
-			when SAR::Environment
+			when ASR::Environment
 				result.env
 			else
 				ASSERT.abort result.inspect
@@ -375,7 +375,7 @@ end
 
 		result = asyn.evaluate env
 
-		ASSERT.kind_of result, SAR::Abstract
+		ASSERT.kind_of result, ASR::Abstract
 	end
 
 
@@ -396,7 +396,7 @@ end
 
 
 	def print_trace_of_abs_syntax(asyn, pref)
-		ASSERT.kind_of asyn,	SA::Abstract
+		ASSERT.kind_of asyn,	AS::Abstract
 
 		return unless pref.trace_mode?
 

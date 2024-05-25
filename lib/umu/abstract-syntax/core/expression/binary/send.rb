@@ -145,7 +145,7 @@ class Method < Abstraction::Abstract
 		method_sym	= self.sym
 		arg_values	= self.exprs.map { |expr|
 			result = expr.evaluate env
-			ASSERT.kind_of result, SAR::Value
+			ASSERT.kind_of result, ASR::Value
 
 			result.value
 		}
@@ -208,7 +208,7 @@ class Method < Abstraction::Abstract
 				free_idents, bound_idents = (0 .. param_num - 1).inject(
 							 [[],        []]
 						) { |(fr_idents, bo_idents), i|
-					ident = SACE.make_identifier(
+					ident = ASCE.make_identifier(
 								loc, format("%%x_%d", i + 1).to_sym
 							)
 
@@ -230,26 +230,26 @@ class Method < Abstraction::Abstract
 						env.va_extend_value :'%r', receiver
 					) { |e, (ident, v)|
 					ASSERT.kind_of e,		E::Entry
-					ASSERT.kind_of ident,	SACEU::Identifier::Short
+					ASSERT.kind_of ident,	ASCEU::Identifier::Short
 					ASSERT.kind_of v,		VC::Top
 
 					e.va_extend_value ident.sym, v
 				}
 
 				lamb_params = bound_idents.map { |ident|
-					ASSERT.kind_of ident, SACEU::Identifier::Short
+					ASSERT.kind_of ident, ASCEU::Identifier::Short
 
-					SACE.make_parameter ident.loc, ident
+					ASCE.make_parameter ident.loc, ident
 				}
 
 				VC.make_function(
-					SACE.make_lambda(
+					ASCE.make_lambda(
 						loc,
 						lamb_params,
-						SACE.make_send(
+						ASCE.make_send(
 							loc,
-							SACE.make_identifier(loc, :'%r'),
-							SACE.make_method(
+							ASCE.make_identifier(loc, :'%r'),
+							ASCE.make_method(
 								loc,
 								method_spec.symbol,
 								free_idents + bound_idents
@@ -312,7 +312,7 @@ class Entry < Binary::Abstract
 		rhs_head_message, rhs_tail_messages,
 		opt_receiver_type_sym
 	)
-		ASSERT.kind_of		lhs_expr,				SACE::Abstract
+		ASSERT.kind_of		lhs_expr,				ASCE::Abstract
 		ASSERT.kind_of		rhs_head_message,
 								Binary::Send::Message::Abstraction::Abstract
 		ASSERT.kind_of		rhs_tail_messages,		::Array
@@ -352,7 +352,7 @@ class Entry < Binary::Abstract
 		new_env = env.enter event
 
 		lhs_result = self.lhs_expr.evaluate new_env
-		ASSERT.kind_of lhs_result, SAR::Value
+		ASSERT.kind_of lhs_result, ASR::Value
 		init_receiver = lhs_result.value
 
 		if self.opt_receiver_type_sym
@@ -421,7 +421,7 @@ module_function
 		opt_receiver_type_sym = nil
 	)
 		ASSERT.kind_of		loc,					L::Location
-		ASSERT.kind_of		lhs_expr,				SACE::Abstract
+		ASSERT.kind_of		lhs_expr,				ASCE::Abstract
 		ASSERT.kind_of		rhs_head_message,
 								Binary::Send::Message::Abstraction::Abstract
 		ASSERT.kind_of		rhs_tail_messages,		::Array

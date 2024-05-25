@@ -52,7 +52,7 @@ private
 			function = self.functions[0]
 			ASSERT.kind_of function, Function::Abstract
 
-			SACD.make_recursive(
+			ASCD.make_recursive(
 				function.loc,
 				function.lam_expr.sym,
 				function.lam_expr.desugar(new_env)
@@ -76,7 +76,7 @@ private
 				}
 			}
 
-			SACD.make_mutual_recursive self.loc, functions
+			ASCD.make_mutual_recursive self.loc, functions
 		end
 	end
 end

@@ -43,7 +43,7 @@ private
 		if self.decls.empty?
 			self.expr.desugar(new_env)
 		else
-			SACE.make_let(
+			ASCE.make_let(
 				self.loc,
 				self.decls.map { |decl|
 					ASSERT.kind_of decl, CSCD::Abstract

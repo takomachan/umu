@@ -47,7 +47,7 @@ private
 	def __desugar__(env, event)
 		new_env = env.enter event
 
-		SACE.make_apply(
+		ASCE.make_apply(
 			self.loc,
 			self.opr_expr.desugar(new_env),
 			self.opnd_head_expr.desugar(new_env),

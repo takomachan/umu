@@ -72,12 +72,12 @@ class List < Abstraction::Abstract
 private
 
 	def __desugar_value__(expr, env, _event)
-		ASSERT.kind_of expr, SACE::Abstract
+		ASSERT.kind_of expr, ASCE::Abstract
 
 		if self.pats.empty?
-			SACD.make_value self.loc, WILDCARD, expr, :Nil
+			ASCD.make_value self.loc, WILDCARD, expr, :Nil
 		else
-			SACD.make_declarations self.loc, __desugar__(expr, env)
+			ASCD.make_declarations self.loc, __desugar__(expr, env)
 		end
 	end
 
@@ -89,14 +89,14 @@ private
 
 		if self.pats.empty?
 			CSCP.make_result(
-				SACE.make_identifier(self.loc, WILDCARD),
+				ASCE.make_identifier(self.loc, WILDCARD),
 				[],
 				:Nil
 			)
 		else
 			CSCP.make_result(
-				SACE.make_identifier(self.loc, var_sym),
-				__desugar__(SACE.make_identifier(self.loc, var_sym), env),
+				ASCE.make_identifier(self.loc, var_sym),
+				__desugar__(ASCE.make_identifier(self.loc, var_sym), env),
 				:Cons
 			)
 		end
@@ -104,7 +104,7 @@ private
 
 
 	def __desugar__(expr, _env)
-		ASSERT.kind_of expr, SACE::Abstract
+		ASSERT.kind_of expr, ASCE::Abstract
 
 		head_vpat, *tail_pats = self.pats
 		ASSERT.kind_of head_vpat, Variable
@@ -116,13 +116,13 @@ private
 		init_pair_sym = __gen_pair_sym__ init_seq_num
 
 		init_decls = [
-			SACD.make_value(
+			ASCD.make_value(
 				init_loc,
 				init_pair_sym,
 				__make_send_des__(init_loc, expr)
 			),
 
-			SACD.make_value(
+			ASCD.make_value(
 				init_loc,
 				head_vpat.var_sym,
 				__make_select_head__(init_loc, init_pair_sym),
@@ -149,26 +149,26 @@ private
 				) + (
 					if vpat.wildcard?
 						[
-							SACD.make_value(
+							ASCD.make_value(
 								loc,
 								next_pair_sym,
-								SACE.make_send(
+								ASCE.make_send(
 									loc,
 									__make_send_des__(loc, tail_list_expr),
-									SACE.make_number_selector(loc, 2)
+									ASCE.make_number_selector(loc, 2)
 								),
 								vpat.opt_type_sym
 							)
 						]
 					else
 						[
-							SACD.make_value(
+							ASCD.make_value(
 								loc,
 								next_pair_sym,
 								__make_send_des__(loc, tail_list_expr)
 							),
 
-							SACD.make_value(
+							ASCD.make_value(
 								loc,
 								vpat.var_sym,
 								__make_select_head__(loc, next_pair_sym),
@@ -189,7 +189,7 @@ private
 				last_pat = self.opt_last_pat
 
 				[
-					SACD.make_value(
+					ASCD.make_value(
 						last_pat.loc,
 						last_pat.var_sym,
 						__make_select_tail__(last_pat.loc, final_pair_sym)
@@ -197,7 +197,7 @@ private
 				]
 			else
 				[
-					SACD.make_value(
+					ASCD.make_value(
 						loc,
 						WILDCARD,
 						__make_select_tail__(loc, final_pair_sym),
@@ -218,10 +218,10 @@ private
 
 	def __make_send_des__(loc, expr)
 		ASSERT.kind_of loc,		L::Location
-		ASSERT.kind_of expr, SACE::Abstract
+		ASSERT.kind_of expr,	ASCE::Abstract
 
-		SACE.make_send(
-			loc, expr, SACE.make_method(loc, :des!), [], :List
+		ASCE.make_send(
+			loc, expr, ASCE.make_method(loc, :des!), [], :List
 		)
 	end
 
@@ -231,10 +231,10 @@ private
 		ASSERT.kind_of var_sym,	::Symbol
 		ASSERT.kind_of sel_num,	::Integer
 
-		SACE.make_send(
+		ASCE.make_send(
 			loc,
-			SACE.make_identifier(loc, var_sym),
-			SACE.make_number_selector(loc, sel_num)
+			ASCE.make_identifier(loc, var_sym),
+			ASCE.make_number_selector(loc, sel_num)
 		)
 	end
 

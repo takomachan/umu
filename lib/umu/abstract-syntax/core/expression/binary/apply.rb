@@ -19,8 +19,8 @@ class Apply < Binary::Abstract
 
 
 	def initialize(loc, opr_expr, opnd_head_expr, opnd_tail_exprs)
-		ASSERT.kind_of opr_expr,		SACE::Abstract
-		ASSERT.kind_of opnd_head_expr,	SACE::Abstract
+		ASSERT.kind_of opr_expr,		ASCE::Abstract
+		ASSERT.kind_of opnd_head_expr,	ASCE::Abstract
 		ASSERT.kind_of opnd_tail_exprs,	::Array
 
 		super(loc, opr_expr, opnd_head_expr)
@@ -49,16 +49,16 @@ class Apply < Binary::Abstract
 		new_env = env.enter event
 
 		opr_result = self.opr_expr.evaluate new_env
-		ASSERT.kind_of opr_result, SAR::Value
+		ASSERT.kind_of opr_result, ASR::Value
 
 		opnd_head_result = self.opnd_head_expr.evaluate new_env
-		ASSERT.kind_of opnd_head_result, SAR::Value
+		ASSERT.kind_of opnd_head_result, ASR::Value
 
 		opnd_tail_values = self.opnd_tail_exprs.map { |expr|
-			ASSERT.kind_of expr, SACE::Abstract
+			ASSERT.kind_of expr, ASCE::Abstract
 
 			result = expr.evaluate new_env
-			ASSERT.kind_of result, SAR::Value
+			ASSERT.kind_of result, ASR::Value
 
 			result.value
 		}
@@ -78,8 +78,8 @@ module_function
 
 	def make_apply(loc, opr_expr, opnd_head_expr, opnd_tail_exprs = [])
 		ASSERT.kind_of loc,				L::Location
-		ASSERT.kind_of opr_expr,		SACE::Abstract
-		ASSERT.kind_of opnd_head_expr,	SACE::Abstract
+		ASSERT.kind_of opr_expr,		ASCE::Abstract
+		ASSERT.kind_of opnd_head_expr,	ASCE::Abstract
 		ASSERT.kind_of opnd_tail_exprs,	::Array
 
 		Binary::Apply.new(

@@ -62,7 +62,7 @@ private
 				ASSERT.kind_of vpat,	CSCP::Variable
 
 				label = vpat.var_sym
-				expr  = SACE.make_identifier(vpat.loc, vpat.var_sym)
+				expr  = ASCE.make_identifier(vpat.loc, vpat.var_sym)
 
 				hash.merge(label => expr) { |_lab, _old_expr, new_expr|
 					new_expr
@@ -70,7 +70,7 @@ private
 			}
 		)
 
-		struct_expr	= SACE.make_struct self.loc, expr_by_label
+		struct_expr	= ASCE.make_struct self.loc, expr_by_label
 		decls		= self.local_decls + self.body_decls
 
 		if decls.empty?
@@ -78,7 +78,7 @@ private
 		else
 			new_env = env.enter event
 
-			SACE.make_let(
+			ASCE.make_let(
 				self.loc,
 				decls.map { |decl| decl.desugar new_env },
 				struct_expr

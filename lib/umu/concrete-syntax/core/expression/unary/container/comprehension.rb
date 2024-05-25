@@ -57,12 +57,12 @@ class Generator < Abstract
 		ASSERT.kind_of tail_qualifiers,	::Array
 		ASSERT.kind_of env,				E::Entry
 
-		SACE.make_send(
+		ASCE.make_send(
 			self.loc,
 
 			self.expr.desugar(env),
 
-			SACE.make_method(
+			ASCE.make_method(
 				self.loc,
 
 				:'concat-with',
@@ -102,11 +102,11 @@ class Guard < Abstract
 		ASSERT.kind_of tail_qualifiers,	::Array
 		ASSERT.kind_of env,				E::Entry
 
-		SACE.make_if(
+		ASCE.make_if(
 			self.loc,
 
 			[
-				SACE.make_rule(
+				ASCE.make_rule(
 					elem_expr.loc,
 					self.expr.desugar(env),
 					CSCE.make_comprehension(
@@ -117,7 +117,7 @@ class Guard < Abstract
 				)
 			],
 
-			SACE.make_list(self.loc, [])
+			ASCE.make_list(self.loc, [])
 		)
 	end
 end
@@ -160,7 +160,7 @@ private
 		new_env = env.enter event
 
 		if self.qualifiers.empty?
-			SACE.make_list self.loc, [self.expr.desugar(new_env)]
+			ASCE.make_list self.loc, [self.expr.desugar(new_env)]
 		else
 			hd_qualifier, *tl_qualifiers = qualifiers
 			ASSERT.kind_of hd_qualifier, Qualifier::Abstract

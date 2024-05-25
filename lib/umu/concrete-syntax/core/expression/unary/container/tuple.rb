@@ -33,7 +33,7 @@ private
 	def __desugar__(env, event)
 		new_env = env.enter event
 
-		SACE.make_tuple(self.loc, self.map { |elem| elem.desugar(new_env) })
+		ASCE.make_tuple(self.loc, self.map { |elem| elem.desugar(new_env) })
 	end
 end
 

@@ -20,7 +20,7 @@ class LabelValuePair < Umu::Abstraction::LabelValuePair
 
 
 	def initialize(loc, label, expr)
-		ASSERT.kind_of expr, SACE::Abstract
+		ASSERT.kind_of expr, ASCE::Abstract
 
 		super
 	end
@@ -34,7 +34,7 @@ class Abstract < Unary::Abstract
 
 	def each
 		self.array.each do |expr|
-			ASSERT.kind_of expr, SACE::Abstract
+			ASSERT.kind_of expr, ASCE::Abstract
 
 			yield expr
 		end

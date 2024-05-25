@@ -43,26 +43,26 @@ private
 	def __desugar__(env, event)
 		new_env = env.enter event
 
-		SACD.make_value(
+		ASCD.make_value(
 			self.loc,
 
 			WILDCARD,
 
-			SACE.make_if(
+			ASCE.make_if(
 				self.loc,
 
 				[
-					SACE.make_rule(
+					ASCE.make_rule(
 						self.test_expr.loc,
 						self.test_expr.desugar(new_env),
-						SACE.make_unit(self.test_expr.loc)
+						ASCE.make_unit(self.test_expr.loc)
 					)
 				],
 
-				SACE.make_send(
+				ASCE.make_send(
 					self.else_expr.loc,
 					self.else_expr.desugar(new_env),
-					SACE.make_method(self.else_expr.loc, :abort)
+					ASCE.make_method(self.else_expr.loc, :abort)
 				)
 
 			)

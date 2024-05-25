@@ -86,7 +86,7 @@ private
 
 		body_expr_	= rule.body_expr.desugar(env)
 		body_expr	= unless rule.decls.empty?
-							SACE.make_let(
+							ASCE.make_let(
 								rule.loc,
 								rule.decls.map { |decl| decl.desugar env },
 								body_expr_
@@ -95,7 +95,7 @@ private
 							body_expr_
 						end
 
-		ASSERT.kind_of body_expr, SACE::Abstract
+		ASSERT.kind_of body_expr, ASCE::Abstract
 	end
 
 
@@ -104,7 +104,7 @@ private
 						else_expr_ = self.opt_else_expr.desugar(env)
 
 						unless self.else_decls.empty?
-							SACE.make_let(
+							ASCE.make_let(
 								else_expr_.loc,
 								self.else_decls.map { |decl|
 									decl.desugar env
@@ -115,7 +115,7 @@ private
 							else_expr_
 						end
 					else
-						SACE.make_raise(
+						ASCE.make_raise(
 							self.loc,
 							X::UnmatchError,
 							format("No rules matched in %s-expression",
@@ -124,7 +124,7 @@ private
 						)
 					end
 
-		ASSERT.kind_of else_expr, SACE::Abstract
+		ASSERT.kind_of else_expr, ASCE::Abstract
 	end
 end
 
