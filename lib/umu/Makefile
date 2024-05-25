@@ -140,9 +140,9 @@ SRCS	= commander.rb \
 			value/core/product/abstract.rb \
 			value/core/product/tuple.rb \
 			value/core/product/struct.rb \
-			value/core/object.rb \
-			value/core/object/abstract.rb \
-			value/core/object/list.rb \
+			value/core/morph.rb \
+			value/core/morph/abstract.rb \
+			value/core/morph/list.rb \
 			value/core/union.rb \
 			value/core/union/abstract.rb \
 			value/core/union/datum.rb \

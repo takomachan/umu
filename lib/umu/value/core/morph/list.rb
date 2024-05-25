@@ -8,11 +8,11 @@ module Value
 
 module Core
 
-module Object
+module Morph
 
 module List
 
-class Abstract < Object::Abstract
+class Abstract < Morph::Abstract
 	CLASS_METHOD_INFOS = [
 		[:meth_make_empty,		self,
 			:'make-empty'],
@@ -413,29 +413,29 @@ class Cons < Abstract
 	alias meth_contents meth_des!
 end
 
-end	# Umu::Value::Core::Object::List
+end	# Umu::Value::Core::Morph::List
 
-end	# Umu::Value::Core::Object
+end	# Umu::Value::Core::Morph
 
 
 module_function
 
 	def make_nil
-		Object::List::NIL
+		Morph::List::NIL
 	end
 
 
 	def make_cons(head, tail)
 		ASSERT.kind_of head,	VC::Top
-		ASSERT.kind_of tail,	Object::List::Abstract
+		ASSERT.kind_of tail,	Morph::List::Abstract
 
-		Object::List::Cons.new(head, tail).freeze
+		Morph::List::Cons.new(head, tail).freeze
 	end
 
 
 	def make_list(xs, tail = VC.make_nil)
 		ASSERT.kind_of xs,		::Array
-		ASSERT.kind_of tail,	Object::List::Abstract
+		ASSERT.kind_of tail,	Morph::List::Abstract
 
 		xs.reverse_each.inject(tail) { |ys, x|
 			VC.make_cons x, ys

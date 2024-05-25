@@ -7,7 +7,7 @@ module Value
 
 module Core
 
-module Object
+module Morph
 
 class Abstract < Top
 	INSTANCE_METHOD_INFOS = [
@@ -45,7 +45,7 @@ class Abstract < Top
 	end
 end
 
-end	# Umu::Core::Object
+end	# Umu::Core::Morph
 
 end	# Umu::Core
 

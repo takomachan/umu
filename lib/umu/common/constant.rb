@@ -60,10 +60,10 @@ module Umu
 					class Abstract < Union::Abstract; end
 				end
 			end
-			module Object
+			module Morph
 				class Abstract < Top; end
 				module List
-					class Abstract < Object::Abstract; end
+					class Abstract < Morph::Abstract; end
 				end
 			end
 			class Function < Top; end
@@ -113,7 +113,7 @@ module Umu
 	VCAN	= Value::Core::Atom::Number
 	VCP		= Value::Core::Product
 	VCU		= Value::Core::Union
-	VCO		= Value::Core::Object
+	VCM		= Value::Core::Morph
 	E		= Environment
 	EC		= Environment::Context
 	ECT		= Environment::Context::Type

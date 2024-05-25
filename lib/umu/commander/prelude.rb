@@ -541,9 +541,9 @@ structure Umu = struct {
 		fun snd = (_, s) -> s
 
 
-		#### Object ####
+		#### Union ####
 
-		# val-of : Object 'a -> Top
+		# val-of : Union 'a -> Top
 		fun val-of = x : Union -> x.contents
 
 
@@ -852,7 +852,7 @@ structure struct {
 	## Tuple
 	val ((,), fst, snd)
 
-	#### Object ####
+	#### Union ####
 	val val-of
 
 	#### Datum ####

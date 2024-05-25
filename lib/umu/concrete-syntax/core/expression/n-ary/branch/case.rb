@@ -255,7 +255,7 @@ private
 								head.loc,
 								fn.call(head.loc),
 								head.class_ident.desugar(env),
-								:Object
+								:Morph
 							)
 			body_expr = if head.opt_contents_pat
 					contents_decl = head.opt_contents_pat.desugar_value(
