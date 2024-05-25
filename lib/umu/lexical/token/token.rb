@@ -106,7 +106,7 @@ end
 
 
 
-class Float < Abstraction::Abstract
+class Real < Abstraction::Abstract
 	def initialize(loc, val)
 		ASSERT.kind_of val, ::Float
 
@@ -176,11 +176,11 @@ module_function
 	end
 
 
-	def make_float(loc, val)
+	def make_real(loc, val)
 		ASSERT.kind_of loc, L::Location
 		ASSERT.kind_of val, ::Float
 
-		Float.new(loc, val).freeze
+		Real.new(loc, val).freeze
 	end
 
 end # Umu::Lexical::Token

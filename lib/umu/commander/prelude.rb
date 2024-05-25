@@ -50,90 +50,90 @@ structure Umu = struct {
 	#### Math ####
 
 	structure Math = struct {
-		# NAN 			: Float
-		val NAN = &{Float}.make-nan
+		# NAN 			: Real
+		val NAN = &{Real}.make-nan
 
-		# INFINITY	 	: Float
-		val INFINITY = &{Float}.make-infinity
+		# INFINITY	 	: Real
+		val INFINITY = &{Real}.make-infinity
 
-		# PI 			: Float
-		val PI = &{Float}.make-pi
+		# PI 			: Real
+		val PI = &{Real}.make-pi
 
-		# E 			: Float
-		val E = &{Float}.make-e
+		# E 			: Real
+		val E = &{Real}.make-e
 
-		# nan?			: Float -> Bool
-		val nan? = &(Float$nan?)
+		# nan?			: Real -> Bool
+		val nan? = &(Real$nan?)
 
-		# infinite?		: Float -> Bool
-		val infinite? = &(Float$infinite?)
+		# infinite?		: Real -> Bool
+		val infinite? = &(Real$infinite?)
 
-		# equal?		: Float -> Float -> Integer -> Bool
-		fun equal? = (x : Float) (y : Float) (n : Integer) ->
+		# equal?		: Real -> Real -> Integer -> Bool
+		fun equal? = (x : Real) (y : Real) (n : Integer) ->
 			x.truncate n.== (y.truncate n)
 
-		# finite?		: Float -> Bool
-		val finite? = &(Float$finite?)
+		# finite?		: Real -> Bool
+		val finite? = &(Real$finite?)
 
-		# sin			: Float -> Float
-		val sin = &(Float$sin)
+		# sin			: Real -> Real
+		val sin = &(Real$sin)
 
-		# cos			: Float -> Float
-		val cos = &(Float$cos)
+		# cos			: Real -> Real
+		val cos = &(Real$cos)
 
-		# tan			: Float -> Float
-		val tan = &(Float$tan)
+		# tan			: Real -> Real
+		val tan = &(Real$tan)
 
-		# asin			: Float -> Float
+		# asin			: Real -> Real
 		val asin = &(loat$asin)
 
-		# acos			: Float -> Float
-		val acos = &(Float$acos)
+		# acos			: Real -> Real
+		val acos = &(Real$acos)
 
-		# atan			: Float -> Float
-		val atan = &(Float$atan)
+		# atan			: Real -> Real
+		val atan = &(Real$atan)
 
-		# atan2			: Float -> Float -> Float
-		val atan2 = &(Float$atan2)
+		# atan2			: Real -> Real -> Real
+		val atan2 = &(Real$atan2)
 
-		# sinh			: Float -> Float
-		val sinh = &(Float$sinh)
+		# sinh			: Real -> Real
+		val sinh = &(Real$sinh)
 
-		# cosh			: Float -> Float
-		val cosh = &(Float$cosh)
+		# cosh			: Real -> Real
+		val cosh = &(Real$cosh)
 
-		# tanh			: Float -> Float
-		val tanh = &(Float$tanh)
+		# tanh			: Real -> Real
+		val tanh = &(Real$tanh)
 
-		# exp			: Float -> Float
-		val exp = &(Float$exp)
+		# exp			: Real -> Real
+		val exp = &(Real$exp)
 
-		# log			: Float -> Float
-		val log = &(Float$log)
+		# log			: Real -> Real
+		val log = &(Real$log)
 
-		# log10			: Float -> Float
-		val log10 = &(Float$log10)
+		# log10			: Real -> Real
+		val log10 = &(Real$log10)
 
-		# sqrt			: Float -> Float
-		val sqrt = &(Float$sqrt)
+		# sqrt			: Real -> Real
+		val sqrt = &(Real$sqrt)
 
-		# truncate		: Float -> Integer -> Float
-		fun truncate = (x : Float) (n : Integer) -> x.truncate n
+		# truncate		: Real -> Integer -> Real
+		fun truncate = (x : Real) (n : Integer) -> x.truncate n
 
-		# ceil			: Float -> Integer -> Float
-		fun ceil = (x : Float) (n : Integer) -> x.ceil n
+		# ceil			: Real -> Integer -> Real
+		fun ceil = (x : Real) (n : Integer) -> x.ceil n
 
-		# floor			: Float -> Integer -> Float
-		fun floor = (x : Float) (n : Integer) -> x.floor n
+		# floor			: Real -> Integer -> Real
+		fun floor = (x : Real) (n : Integer) -> x.floor n
 
-		# ldexp			: Float -> Integer -> Float
-		fun ldexp = (x : Float) (y : Integer) -> x.ldexp y
+		# ldexp			: Real -> Integer -> Real
+		fun ldexp = (x : Real) (y : Integer) -> x.ldexp y
 
-		# frexp			: Float -> (Float, Float)
-		fun frexp = (x : Float) (y : Integer) -> x.frexp y
+		# frexp			: Real -> (Real, Real)
+		fun frexp = (x : Real) (y : Integer) -> x.frexp y
 
-		# divmod		: Float -> Float -> (Float, Float)
-		fun divmod = (x : Float) (y : Integer) -> x.divmod y
+		# divmod		: Real -> Real -> (Real, Real)
+		fun divmod = (x : Real) (y : Integer) -> x.divmod y
 	}
 
 
@@ -453,7 +453,7 @@ structure Umu = struct {
 		# to-i			: Number -> Integer
 		val to-i = &(Number$to-i)
 
-		# to-f			: Number -> Float
+		# to-f			: Number -> Real
 		val to-f = &(Number$to-f)
 
 		# (+)			: 'a -> 'a -> 'a		where { 'a <- Number }
@@ -477,19 +477,19 @@ structure Umu = struct {
 
 		#### Math ####
 
-		# NAN		: Float
+		# NAN		: Real
 		val NAN = Math::NAN
 
-		# INFINITY	: Float
+		# INFINITY	: Real
 		val INFINITY = Math::INFINITY
 
-		# nan?		: Float -> Bool
+		# nan?		: Real -> Bool
 		val nan? = Math::nan?
 
-		# infinite?	: Float -> Bool
+		# infinite?	: Real -> Bool
 		val infinite? = Math::infinite?
 
-		# finite?	: Float -> Bool
+		# finite?	: Real -> Bool
 		val finite? = Math::finite?
 
 
@@ -763,13 +763,13 @@ structure Umu = struct {
 		}
 
 
-		# float : 'a -> Float -> Integer -> Float
-		fun float =
+		# real : 'a -> Real -> Integer -> Real
+		fun real =
 				actual
-				(expect	: Float)
+				(expect	: Real)
 				(n		: Integer)
 		-> let {
-			assert (actual kind-of? Float)			"Float"
+			assert (actual kind-of? Real)			"Real"
 			assert (Math::equal? actual expect n)	(msg expect actual)
 		in
 			actual
