@@ -79,10 +79,10 @@ private
 		ASSERT.kind_of env, E::Entry
 
 		init_value = env.va_lookup self.head_id.sym, self.head_id.loc
-		ASSERT.kind_of init_value, VCP::Struct::Entry
+		ASSERT.kind_of init_value, VC::Struct::Entry
 
 		final_value = self.tail_ids.inject(init_value) { |value, id|
-			ASSERT.kind_of value,	VCP::Struct::Entry
+			ASSERT.kind_of value,	VC::Struct::Entry
 			ASSERT.kind_of id,		Short
 
 			value.select id.sym, id.loc, env

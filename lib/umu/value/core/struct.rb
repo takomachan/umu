@@ -8,8 +8,6 @@ module Value
 
 module Core
 
-module Product
-
 module Struct
 
 class Field < ::Object
@@ -34,16 +32,23 @@ end
 
 
 
-class Entry < Product::Abstract
+class Entry < Top
 	TYPE_SYM = :Struct
 
-	alias value_by_label objs
+	include Enumerable
+
+	attr_reader	:value_by_label
 
 
 	def initialize(value_by_label)
 		ASSERT.kind_of value_by_label, ::Hash
 
-		super
+		@value_by_label = value_by_label
+	end
+
+
+	def arity
+		self.objs.size
 	end
 
 
@@ -136,9 +141,7 @@ class Entry < Product::Abstract
 	end
 end
 
-end	# Umu::Value::Core::Product::Struct
-
-end	# Umu::Value::Core::Product
+end	# Umu::Value::Core::Struct
 
 
 module_function
@@ -147,14 +150,14 @@ module_function
 		ASSERT.kind_of label,	::Symbol
 		ASSERT.kind_of value,	VC::Top
 
-		Product::Struct::Field.new(label, value).freeze
+		Struct::Field.new(label, value).freeze
 	end
 
 
 	def make_struct(value_by_label)
 		ASSERT.kind_of value_by_label, ::Hash
 
-		Product::Struct::Entry.new(value_by_label.freeze).freeze
+		Struct::Entry.new(value_by_label.freeze).freeze
 	end
 
 end	# Umu::Value::Core

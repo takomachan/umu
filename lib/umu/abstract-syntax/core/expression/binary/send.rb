@@ -94,7 +94,7 @@ class ByLabel < Abstraction::Selector
 		ASSERT.kind_of rec_value,	VC::Top
 		ASSERT.kind_of env,			E::Entry
 
-		unless rec_value.kind_of? VCP::Struct::Entry
+		unless rec_value.kind_of? VC::Struct::Entry
 			raise X::TypeError.new(
 				self.loc,
 				env,
