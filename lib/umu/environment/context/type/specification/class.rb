@@ -231,7 +231,7 @@ class Base < Abstract
 			printf "%sCLASS METHODS:\n", indent_0
 
 			self.each_class_method(env).sort.each do |meth_spec|
-				printf("%s%s.%s : %s\n",
+				printf("%s&{%s}.%s : %s\n",
 					indent_1,
 
 					self.symbol,
@@ -250,7 +250,7 @@ class Base < Abstract
 			printf "%sINSTANCE METHODS:\n", indent_0
 
 			self.each_instance_method(env).sort.each do |meth_spec|
-				printf("%s%s$%s : %s\n",
+				printf("%s%s#%s : %s\n",
 					indent_1,
 
 					self.symbol,

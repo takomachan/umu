@@ -39,10 +39,10 @@ structure Umu = struct {
 		#### Classifier ####
 
 		# Some? : Option 'a -> Bool
-		val Some? = &(Option$some?)
+		val Some? = &(Option.some?)
 
 		# None? : Option 'a -> Bool
-		val None? = &(Option$none?)
+		val None? = &(Option.none?)
 	}
 
 
@@ -63,59 +63,59 @@ structure Umu = struct {
 		val E = &{Real}.make-e
 
 		# nan?			: Real -> Bool
-		val nan? = &(Real$nan?)
+		val nan? = &(Real.nan?)
 
 		# infinite?		: Real -> Bool
-		val infinite? = &(Real$infinite?)
+		val infinite? = &(Real.infinite?)
 
 		# equal?		: Real -> Real -> Int -> Bool
 		fun equal? = (x : Real) (y : Real) (n : Int) ->
 			x.truncate n.== (y.truncate n)
 
 		# finite?		: Real -> Bool
-		val finite? = &(Real$finite?)
+		val finite? = &(Real.finite?)
 
 		# sin			: Real -> Real
-		val sin = &(Real$sin)
+		val sin = &(Real.sin)
 
 		# cos			: Real -> Real
-		val cos = &(Real$cos)
+		val cos = &(Real.cos)
 
 		# tan			: Real -> Real
-		val tan = &(Real$tan)
+		val tan = &(Real.tan)
 
 		# asin			: Real -> Real
-		val asin = &(loat$asin)
+		val asin = &(loat.asin)
 
 		# acos			: Real -> Real
-		val acos = &(Real$acos)
+		val acos = &(Real.acos)
 
 		# atan			: Real -> Real
-		val atan = &(Real$atan)
+		val atan = &(Real.atan)
 
 		# atan2			: Real -> Real -> Real
-		val atan2 = &(Real$atan2)
+		val atan2 = &(Real.atan2)
 
 		# sinh			: Real -> Real
-		val sinh = &(Real$sinh)
+		val sinh = &(Real.sinh)
 
 		# cosh			: Real -> Real
-		val cosh = &(Real$cosh)
+		val cosh = &(Real.cosh)
 
 		# tanh			: Real -> Real
-		val tanh = &(Real$tanh)
+		val tanh = &(Real.tanh)
 
 		# exp			: Real -> Real
-		val exp = &(Real$exp)
+		val exp = &(Real.exp)
 
 		# log			: Real -> Real
-		val log = &(Real$log)
+		val log = &(Real.log)
 
 		# log10			: Real -> Real
-		val log10 = &(Real$log10)
+		val log10 = &(Real.log10)
 
 		# sqrt			: Real -> Real
-		val sqrt = &(Real$sqrt)
+		val sqrt = &(Real.sqrt)
 
 		# truncate		: Real -> Int -> Real
 		fun truncate = (x : Real) (n : Int) -> x.truncate n
@@ -192,19 +192,19 @@ structure Umu = struct {
 
 
 		# empty? : ['a] -> Bool
-		val empty? = &(List$empty?)
+		val empty? = &(List.empty?)
 
 
 		# des : ['a] -> Option ('a, ['a])
-		val des = &(List$des)
+		val des = &(List.des)
 
 
 		# head : ['a] -> 'a
-		fun head = xs : List -> xs.des!.1
+		fun head = xs : List -> xs.des!$1
 
 
 		# tail : ['a] -> ['a]
-		fun tail = xs : List -> xs.des!.2
+		fun tail = xs : List -> xs.des!$2
 
 
 		# equal-with? : ('a -> 'b -> Bool) -> ['a] -> ['b] -> Bool
@@ -305,7 +305,7 @@ structure Umu = struct {
 
 		# concat : [['a]] -> ['a]
 		# val concat = foldl [] { xs xss -> append xss xs }
-		val concat = &(List$concat)
+		val concat = &(List.concat)
 
 
 		# concat-with : ('a -> ['b]) -> ['a] -> ['b]
@@ -331,7 +331,7 @@ structure Umu = struct {
 
 		# unzip : [('a, 'b)] -> (['a], ['b])
 		# val unzip = foldr ([], []) { (y, z) (ys, zs) -> ([y|ys], [z|zs]) }
-		val unzip = &(List$unzip)
+		val unzip = &(List.unzip)
 
 
 		# partition : ('a -> Bool) -> ['a] -> (['a], ['a])
@@ -357,7 +357,7 @@ structure Umu = struct {
 			where val (littles, bigs) = partition (< pivot) xs'
 		}
 		#)
-		val sort = &(List$sort)
+		val sort = &(List.sort)
 	}
 
 
@@ -366,7 +366,7 @@ structure Umu = struct {
 
 	structure String = struct {
 		# abort : String -> ()
-		val abort = &(String$abort)
+		val abort = &(String.abort)
 
 
 		# join : String -> [String] -> String
@@ -424,37 +424,37 @@ structure Umu = struct {
 		val FALSE = FALSE
 
 		# not		: Bool -> Bool
-		val not = &(Bool$not)
+		val not = &(Bool.not)
 
 
 		#### Number ####
 
 		# 	positive?	: Number -> Bool
-		val positive? = &(Number$positive?)
+		val positive? = &(Number.positive?)
 
 		# 	negative?	: Number -> Bool
-		val negative? = &(Number$negative?)
+		val negative? = &(Number.negative?)
 
 		# 	zero?		: Number -> Bool
-		val zero? = &(Number$zero?)
+		val zero? = &(Number.zero?)
 
 		# 	odd?		: Int -> Bool
-		val odd? = &(Int$odd?)
+		val odd? = &(Int.odd?)
 
 		# 	even?		: Int -> Bool
-		val even? = &(Int$even?)
+		val even? = &(Int.even?)
 
 		# abs			: 'a -> 'a	where { 'a <- Number }
-		val abs = &(Number$abs)
+		val abs = &(Number.abs)
 
 		# negate		: 'a -> 'a	where { 'a <- Number }
-		val negate = &(Number$negate)
+		val negate = &(Number.negate)
 
 		# to-i			: Number -> Int
-		val to-i = &(Number$to-i)
+		val to-i = &(Number.to-i)
 
 		# to-f			: Number -> Real
-		val to-f = &(Number$to-f)
+		val to-f = &(Number.to-f)
 
 		# (+)			: 'a -> 'a -> 'a		where { 'a <- Number }
 		fun (+) = (x : Number) (y : Number) -> x.+ y
@@ -554,7 +554,7 @@ structure Umu = struct {
 		fun Datum = (t : Symbol) x -> &{Datum}.make t x
 
 		# tag-of : Datum 'a -> Symbol
-		val tag-of = &(Datum$tag)
+		val tag-of = &(Datum.tag)
 
 
 		#### Option ####

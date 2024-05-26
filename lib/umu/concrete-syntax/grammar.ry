@@ -428,20 +428,20 @@ messages:
 | _messages				{ result = val[0] }
 
 _messages:
-  '.' message			{ result = [val[1]] }
-| '.' message _messages	{ result = [val[1]] + val[2] }
+  message			{ result = [val[0]] }
+| message _messages	{ result = [val[0]] + val[1] }
 
 message:
-  INTEGER {
+  '$' INTEGER {
 	result = CSCE.make_selector(
-						val[0].loc, val[0].val
+						val[1].loc, val[1].val
 					)
 }
-| mess_ident atom_exprs {
-	result = CSCE.make_method val[0].loc, val[0].sym, val[1]
+| '.' meth_ident atom_exprs {
+	result = CSCE.make_method val[1].loc, val[1].sym, val[2]
 }
 
-mess_ident: ID | norm_infix_opr
+meth_ident: ID | norm_infix_opr
 
 
 # Apply expression
@@ -499,13 +499,13 @@ atom_expr:
 | '(' expr ';' expr sem_exprs ')' {
 	result = CSCE.make_sequence val[0].loc, [val[1], val[3]] + val[4]
 }
-| '&(' mess_ident ')' {
+| '&(' meth_ident ')' {
 	result = CSCE.make_functionalized_method(
 					val[0].loc,
 					CSCE.make_identifier(val[1].loc, val[1].sym)
 				)
 }
-| '&(' ID '$'  mess_ident ')' {
+| '&(' ID '.'  meth_ident ')' {
 	result = CSCE.make_functionalized_method(
 					val[0].loc,
 					CSCE.make_identifier(val[3].loc, val[3].sym),

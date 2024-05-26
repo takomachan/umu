@@ -933,17 +933,17 @@ fun make-sum = a1 a2 -> (@"+", a1, a2)
 
 fun make-product = a1 a2 -> (@"*", a1, a2)
 
-fun sum? = x -> x kind-of? Tuple && x.1 == @"+"
+fun sum? = x -> x kind-of? Tuple && x$1 == @"+"
 
-fun addend = s -> s.2
+fun addend = s -> s$2
 
-fun augend = s -> s.3
+fun augend = s -> s$3
 
-fun product? = x -> x kind-of? Tuple && x.1 == @"*"
+fun product? = x -> x kind-of? Tuple && x$1 == @"*"
 
-fun multiplier = s -> s.2
+fun multiplier = s -> s$2
 
-fun multiplicand = s -> s.3
+fun multiplicand = s -> s$3
 
 
 fun rec deriv = exp var -> cond exp {
@@ -1096,11 +1096,11 @@ fun rec intersection-set' = set1 set2 -> (
 
 #### BINARY TREES
 
-fun entry = tree -> tree.1
+fun entry = tree -> tree$1
 
-fun left-branch = tree -> tree.2
+fun left-branch = tree -> tree$2
 
-fun right-branch = tree -> tree.3
+fun right-branch = tree -> tree$3
 
 fun make-tree = entry left right -> (entry, left, right)
 
@@ -1216,25 +1216,25 @@ fun lookup = given-key set-of-records -> case set-of-records {
 
 fun make-leaf = symbol weight -> (@leaf, symbol, weight)
 
-fun leaf? = object -> object kind-of? Tuple && object.1 == @leaf
+fun leaf? = object -> object kind-of? Tuple && object$1 == @leaf
 
-fun symbol-leaf = x -> x.2
+fun symbol-leaf = x -> x$2
 
-fun weight-leaf = x -> x.3
+fun weight-leaf = x -> x$3
 
 
 fun symbols = tree -> (
 	if (leaf? tree)
 		[symbol-leaf tree]
 	else
-		tree.3
+		tree$3
 )
 
 fun weight = tree -> (
 	if (leaf? tree)
 		weight-leaf tree
 	else
-		tree.4
+		tree$4
 )
 
 fun make-code-tree = left right -> (
@@ -1244,9 +1244,9 @@ fun make-code-tree = left right -> (
 	weight left  +  weight right
 )
 
-fun left-branch = tree -> tree.1
+fun left-branch = tree -> tree$1
 
-fun right-branch = tree -> tree.2
+fun right-branch = tree -> tree$2
 
 
 #### decoding ####
@@ -1417,9 +1417,9 @@ fun make-from-mag-ang = r a -> (r * cos a, r * sin a)
 #### Alyssa (polar) ####
 
 (#
-fun magnitude = z -> z.1
+fun magnitude = z -> z$1
 
-fun angle = z -> z.2
+fun angle = z -> z$2
 
 fun real-part = z -> magnitude z * cos (angle z)
 
@@ -1478,9 +1478,9 @@ fun make-from-mag-ang-rectanglar = r a -> (
 
 #### Alyssa (polar) ####
 
-fun magnitude-polar = z -> z.1
+fun magnitude-polar = z -> z$1
 
-fun angle-polar = z -> z.2
+fun angle-polar = z -> z$2
 
 fun real-part-polar = z -> magnitude-polar z * cos (angle-polar z)
 
