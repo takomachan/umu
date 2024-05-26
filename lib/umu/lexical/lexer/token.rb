@@ -14,12 +14,7 @@ module Lexer
 
 class Token < Abstract
 
-HEAD_WORD		= '[a-zA-Z][a-zA-Z0-9]*'
-TAIL_WORD		= '[a-zA-Z0-9]*'
-WORD_PATTERN	= Regexp.new(
-						"(@)?(_*#{HEAD_WORD}(\\-#{TAIL_WORD})*_*\[\?!]?'*)"
-					)
-
+WORD_PATTERN = Regexp.new '(@)?(_*[a-zA-Z]\w*(\-\w*)*_*[\?!]?\'*)'
 
 RESERVED_WORDS = [
 	'__FILE__',		'__LINE__',
@@ -36,7 +31,6 @@ RESERVED_WORDS = [
 	'val',
 	'where',
 
-
 	# Not used, but reserved for future
 
 	# For pattern matching
@@ -51,12 +45,12 @@ RESERVED_WORDS = [
 	# For data type declaration
 	'datum', 'type',
 
-	# For object type
-	'abstract', 'alias', 'class', 'def', 'extend',
-	'isa', 'new', 'self', 'super',
+	# For object type (OOP)
+	'abstract', 'alias', 'class', 'def',
+	'is-a', 'protocol', 'self', 'super', 'with',
 
 	# For infix operator declaration
-	'infix', 'infixr', 'nofix',
+	'infix', 'infixr',
 
 	# For continuation
 	'callcc', 'throw',
@@ -71,10 +65,7 @@ RESERVED_WORDS = [
 	'none', 'or',
 
 	# For monad
-	'for', 'do',
-
-	# For general purpose
-	'with'
+	'do'
 ].inject({}) { |hash, word|
 	hash.merge(word => true) { |key, _, _|
 		ASSERT.abort format("Duplicated reserved-word: '%s'", key)
@@ -82,19 +73,19 @@ RESERVED_WORDS = [
 }
 
 RESERVED_SYMBOLS = [
-	'+',	'-',	'*',	'/',
-	'==',	'<>',	'<',	'<=',	'>',	'>=',
-	'<<',	'>>',	'<|',	'|>',
-	'^',	'++',   '&&',   '||',
-	'=',	'&',	'$',	'|',	'_',
+	'&&',   '||',
+	'=',	'$',	'|',	'_',
 	'.',	',',	':',	';',
 	'->',	'<-',	'::',	';;',
 
+	# Redefinable symbols
+	'+',	'-',	'*',	'/',	'^',
+	'==',	'<>',	'<',	'>',	'<=',	'>=',
+	'++',	'<<',	'>>',	'<|',	'|>',
 
 	# Not used, but reserved for future
-
-	# For general purpose
-	'..'
+	'..',	# Interval (Morph)
+	'&'		# Instance creation (OOP)
 ].inject({}) { |hash, x|
 	hash.merge(x => true) { |key, _, _|
 		ASSERT.abort format("Duplicated reserved-symbol: '%s'", key)
@@ -121,7 +112,7 @@ BRAKET_PAIRS = [
 
 	# Not used, but reserved for future
 
-	['%s[',	']'],	# Seq
+	['%[',	']'],	# Morph (Polymorphism)
 	['%q[',	']'],	# Queue
 	['%v[',	']'],	# Vector
 	['%a[',	']'],	# Array
