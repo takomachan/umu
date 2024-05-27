@@ -14,7 +14,10 @@ module Lexer
 
 class Token < Abstract
 
-WORD_PATTERN = Regexp.new '(@)?(_*[a-zA-Z]\w*(\-\w*)*_*[\?!]?\'*)'
+IDENT_WORD = '(_*[[:alpha:]][[:alnum:]]*(\-[[:alnum:]]+)*_*[\?!]?\'*)'
+# See -> https://qiita.com/Takayuki_Nakano/items/8d38beaddb84b488d683
+
+WORD_PATTERN = Regexp.new '(@)?' + IDENT_WORD
 
 RESERVED_WORDS = [
 	'__FILE__',		'__LINE__',
