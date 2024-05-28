@@ -74,20 +74,24 @@ modu_where_decls:
 
 # Identifier (Module Language)
 
-modu_ident: modu_short_ident modu_short_idents {
-	result = if val[1].empty?
-				val[0]
+modu_ident: modu_idents ID {
+	last_id = CSME.make_identifier val[1].loc, val[1].sym
+
+	result = if val[0].empty?
+				last_id
 			else
-				CSME.make_long_identifier val[0].loc, val[0], val[1]
+				head_id, *tail_ids = val[0]
+
+				CSME.make_long_identifier(
+							head_id.loc, head_id, tail_ids + [last_id]
+						)
 			end
 }
 
-modu_short_idents:
-  /* empty */								{ result = [] }
-| '::' modu_short_ident modu_short_idents	{ result = [val[1]] + val[2] }
-
-modu_short_ident: ID {
-	result = CSME.make_identifier(val[0].loc, val[0].sym)
+modu_idents:
+  /* empty */				{ result = [] }
+| MODULE_DIR modu_idents	{
+	result = [CSME.make_identifier(val[0].loc, val[0].sym)] + val[1]
 }
 
 
@@ -490,6 +494,9 @@ atom_expr:
 | '(' expr ')' {
 	result = val[1]
 }
+| '(' infix_opr ')'	{
+	result = CSCE.make_identifier val[1].loc, val[1].sym
+}
 | '(' infix_opr expr ')' {
 	result = CSCE.make_prefix val[1].loc, val[1].sym, val[2]
 }
@@ -541,24 +548,27 @@ atom_expr:
 
 # Identifier
 
-ident: short_ident short_idents {
-	result = if val[1].empty?
-				val[0]
+ident: short_idents short_ident {
+	result = if val[0].empty?
+				val[1]
 			else
-				CSCE.make_long_identifier val[0].loc, val[0], val[1]
+				head_id, *tail_ids = val[0]
+
+				CSCE.make_long_identifier(
+							head_id.loc, head_id, tail_ids + [val[1]]
+						)
 			end
 }
 
 short_idents:
-  /* empty */					{ result = [] }
-| '::' short_ident short_idents	{ result = [val[1]] + val[2] }
+  /* empty */				{ result = [] }
+| MODULE_DIR short_idents	{
+	result = [CSCE.make_identifier(val[0].loc, val[0].sym)] + val[1]
+}
 
 short_ident:
-  ID						{
+  ID {
   	result = CSCE.make_identifier val[0].loc, val[0].sym
-}
-| '(' infix_opr ')'	{
-	result = CSCE.make_identifier val[1].loc, val[1].sym
 }
 
 

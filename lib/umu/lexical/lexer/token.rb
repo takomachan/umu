@@ -17,7 +17,8 @@ class Token < Abstract
 IDENT_WORD = '(_*[[:alpha:]][[:alnum:]]*(\-[[:alnum:]]+)*_*[\?!]?\'*)'
 # See -> https://qiita.com/Takayuki_Nakano/items/8d38beaddb84b488d683
 
-WORD_PATTERN = Regexp.new '(@)?' + IDENT_WORD
+MODULE_DIRECTORY_PATTERN	= Regexp.new IDENT_WORD + '::'
+IDENT_PATTERN				= Regexp.new '(@)?' + IDENT_WORD
 
 RESERVED_WORDS = [
 	'__FILE__',		'__LINE__',
@@ -200,8 +201,23 @@ SYMBOL_PATTERNS = [
 			]
 
 
+		# Module identifier word
+		when scanner.scan(MODULE_DIRECTORY_PATTERN)
+			body_matched = scanner[1]
+
+			[
+				:Word,
+
+				scanner.matched,
+
+				LT.make_module_directory(self.loc, body_matched),
+
+				__make_separator__
+			]
+
+
 		# Symbol, Reserved-word or Identifier-word
-		when scanner.scan(WORD_PATTERN)
+		when scanner.scan(IDENT_PATTERN)
 			head_matched = scanner[1]
 			body_matched = scanner[2]
 

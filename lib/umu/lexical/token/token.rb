@@ -53,6 +53,19 @@ end
 
 
 
+class ModuleDirectory < Abstraction::Symbol
+	def to_s
+		format "DIR(%s::)", self.sym
+	end
+
+
+	def to_racc_token
+		:MODULE_DIR
+	end
+end
+
+
+
 class Identifier < Abstraction::Symbol
 	def to_s
 		format "ID(%s)", self.sym
@@ -149,6 +162,14 @@ module_function
 		ASSERT.kind_of val, ::String
 
 		Symbol.new(loc, val.freeze).freeze
+	end
+
+
+	def make_module_directory(loc, val)
+		ASSERT.kind_of loc, L::Location
+		ASSERT.kind_of val, ::String
+
+		ModuleDirectory.new(loc, val.freeze).freeze
 	end
 
 
