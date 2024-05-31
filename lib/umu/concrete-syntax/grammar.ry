@@ -62,19 +62,7 @@ modu_expr:
   STRUCT '{' modu_decls '}' modu_where_decls {
 	result = CSME.make_struct val[0].loc, val[2], val[4]
 }
-| modu_ident
-
-
-# WHERE declaration (Module Language)
-
-modu_where_decls:
-  /* empty */				{ result = [] }
-| WHERE '{' modu_decls '}'	{ result = val[2] }
-
-
-# Identifier (Module Language)
-
-modu_ident: modu_idents ID {
+| modu_path ID {
 	last_id = CSME.make_identifier val[1].loc, val[1].sym
 
 	result = if val[0].empty?
@@ -88,9 +76,19 @@ modu_ident: modu_idents ID {
 			end
 }
 
-modu_idents:
+
+# WHERE declaration (Module Language)
+
+modu_where_decls:
   /* empty */				{ result = [] }
-| MODULE_DIR modu_idents	{
+| WHERE '{' modu_decls '}'	{ result = val[2] }
+
+
+# Module path (Module Language)
+
+modu_path:
+  /* empty */			{ result = [] }
+| MODULE_DIR modu_path	{
 	result = [CSME.make_identifier(val[0].loc, val[0].sym)] + val[1]
 }
 
@@ -469,7 +467,28 @@ atom_exprs:
 
 atom_expr:
 # Identifier
-  ident
+  ID {
+  	result = CSCE.make_identifier val[0].loc, val[0].sym
+}
+| '(' infix_opr ')'	{
+	result = CSCE.make_identifier val[1].loc, val[1].sym
+}
+| MODULE_DIR path ID {
+  	head_id = CSCE.make_identifier val[0].loc, val[0].sym
+  	last_id = CSCE.make_identifier val[2].loc, val[2].sym
+
+  	result = CSCE.make_long_identifier(
+						val[0].loc, head_id, val[1] + [last_id]
+					)
+}
+| MODULE_DIR path '(' infix_opr ')' {
+  	head_id = CSCE.make_identifier val[0].loc, val[0].sym
+  	last_id = CSCE.make_identifier val[3].loc, val[3].sym
+
+  	result = CSCE.make_long_identifier(
+						val[0].loc, head_id, val[1] + [last_id]
+					)
+}
 
 # Constant
 | INTEGER	{ result = CSCE.make_integer	val[0].loc, val[0].val }
@@ -493,9 +512,6 @@ atom_expr:
 }
 | '(' expr ')' {
 	result = val[1]
-}
-| '(' infix_opr ')'	{
-	result = CSCE.make_identifier val[1].loc, val[1].sym
 }
 | '(' infix_opr expr ')' {
 	result = CSCE.make_prefix val[1].loc, val[1].sym, val[2]
@@ -546,29 +562,12 @@ atom_expr:
 }
 
 
-# Identifier
+# Module path (Core Language)
 
-ident: short_idents short_ident {
-	result = if val[0].empty?
-				val[1]
-			else
-				head_id, *tail_ids = val[0]
-
-				CSCE.make_long_identifier(
-							head_id.loc, head_id, tail_ids + [val[1]]
-						)
-			end
-}
-
-short_idents:
+path:
   /* empty */				{ result = [] }
-| MODULE_DIR short_idents	{
+| MODULE_DIR path	{
 	result = [CSCE.make_identifier(val[0].loc, val[0].sym)] + val[1]
-}
-
-short_ident:
-  ID {
-  	result = CSCE.make_identifier val[0].loc, val[0].sym
 }
 
 
