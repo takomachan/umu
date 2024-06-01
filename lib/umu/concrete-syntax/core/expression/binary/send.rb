@@ -34,7 +34,7 @@ class Selector < Abstract
 
 
 	def to_s
-		self.sel_num.to_s
+		'$' + self.sel_num.to_s
 	end
 
 
@@ -63,7 +63,9 @@ class Method < Abstract
 
 
 	def to_s
-		self.sym.to_s + (
+		format(".%s%s",
+			self.sym.to_s,
+
 			if self.exprs.empty?
 				''
 			else
@@ -108,9 +110,9 @@ class Entry < Binary::Abstract
 
 
 	def to_s
-		format("(%s).%s",
+		format("(%s)%s",
 				self.lhs_expr.to_s,
-				self.rhs_messages.map(&:to_s).join('.')
+				self.rhs_messages.map(&:to_s).join
 		)
 	end
 
