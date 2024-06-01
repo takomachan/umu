@@ -1,4 +1,4 @@
-require 'umu/value/core/lsm/abstract'
-require 'umu/value/core/lsm/product'
-require 'umu/value/core/lsm/union'
-require 'umu/value/core/lsm/morph'
+require_relative 'lsm/abstract'
+require_relative 'lsm/product'
+require_relative 'lsm/union'
+require_relative 'lsm/morph'

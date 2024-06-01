@@ -1,2 +1,2 @@
-require 'umu/value/core/lsm/product/abstract'
-require 'umu/value/core/lsm/product/tuple'
+require_relative 'product/abstract'
+require_relative 'product/tuple'

@@ -1,2 +1,2 @@
-require 'umu/concrete-syntax/module/expression/struct'
-require 'umu/concrete-syntax/module/expression/identifier'
+require_relative 'expression/struct'
+require_relative 'expression/identifier'

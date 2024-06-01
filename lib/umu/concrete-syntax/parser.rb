@@ -1,7 +1,8 @@
 require 'umu/common'
 require 'umu/lexical/lexer'
 require 'umu/concrete-syntax'
-require 'umu/concrete-syntax/grammar.tab'
+
+require_relative 'grammar.tab'
 
 
 

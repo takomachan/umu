@@ -1,2 +1,2 @@
-require 'umu/abstract-syntax/core/declaration'
-require 'umu/abstract-syntax/core/expression'
+require_relative 'core/declaration'
+require_relative 'core/expression'

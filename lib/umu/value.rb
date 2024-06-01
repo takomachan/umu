@@ -1,1 +1,1 @@
-require 'umu/value/core'
+require_relative 'value/core'

@@ -1,4 +1,4 @@
-require 'umu/abstract-syntax/core/expression/binary/abstract'
-require 'umu/abstract-syntax/core/expression/binary/kind-of'
-require 'umu/abstract-syntax/core/expression/binary/apply'
-require 'umu/abstract-syntax/core/expression/binary/send'
+require_relative 'binary/abstract'
+require_relative 'binary/kind-of'
+require_relative 'binary/apply'
+require_relative 'binary/send'

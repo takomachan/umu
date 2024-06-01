@@ -1,9 +1,9 @@
-require 'umu/lexical/lexer/abstract'
-require 'umu/lexical/lexer/separator'
-require 'umu/lexical/lexer/comment'
-require 'umu/lexical/lexer/token'
-require 'umu/lexical/lexer/string'
-require 'umu/lexical/lexer/lexer'
+require_relative 'lexer/abstract'
+require_relative 'lexer/separator'
+require_relative 'lexer/comment'
+require_relative 'lexer/token'
+require_relative 'lexer/string'
+require_relative 'lexer/lexer'
 
 
 

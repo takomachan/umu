@@ -1,4 +1,4 @@
-require 'umu/abstract-syntax/core/declaration/abstract'
-require 'umu/abstract-syntax/core/declaration/simple'
-require 'umu/abstract-syntax/core/declaration/mutual-recursive'
-require 'umu/abstract-syntax/core/declaration/declarations'
+require_relative 'declaration/abstract'
+require_relative 'declaration/simple'
+require_relative 'declaration/mutual-recursive'
+require_relative 'declaration/declarations'

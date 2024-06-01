@@ -1,13 +1,13 @@
 require 'pp'
 
-require 'umu/concrete-syntax'
-require 'umu/concrete-syntax/parser'
-require 'umu/abstract-syntax'
-require 'umu/value'
-require 'umu/environment'
+require_relative 'concrete-syntax'
+require_relative 'concrete-syntax/parser'
+require_relative 'abstract-syntax'
+require_relative 'value'
+require_relative 'environment'
 
-require 'umu/commander/option'
-require 'umu/commander/subcommand'
-require 'umu/commander/prelude'
+require_relative 'commander/option'
+require_relative 'commander/subcommand'
+require_relative 'commander/prelude'
 
-require 'umu/commander/commander'
+require_relative 'commander/commander'

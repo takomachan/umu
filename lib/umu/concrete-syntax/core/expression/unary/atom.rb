@@ -1,4 +1,4 @@
-require 'umu/concrete-syntax/core/expression/unary/atom/abstract'
-require 'umu/concrete-syntax/core/expression/unary/atom/number'
-require 'umu/concrete-syntax/core/expression/unary/atom/string'
-require 'umu/concrete-syntax/core/expression/unary/atom/symbol'
+require_relative 'atom/abstract'
+require_relative 'atom/number'
+require_relative 'atom/string'
+require_relative 'atom/symbol'

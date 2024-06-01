@@ -1,7 +1,7 @@
 require 'umu/common'
 require 'umu/lexical/location'
 
-require 'umu/concrete-syntax/module/abstract'
+require_relative 'abstract'
 
 
 

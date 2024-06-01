@@ -1,3 +1,3 @@
-require 'umu/lexical/token/abstraction'
-require 'umu/lexical/token/separator'
-require 'umu/lexical/token/token'
+require_relative 'token/abstraction'
+require_relative 'token/separator'
+require_relative 'token/token'

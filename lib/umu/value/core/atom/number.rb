@@ -1,3 +1,3 @@
-require 'umu/value/core/atom/number/abstract'
-require 'umu/value/core/atom/number/int'
-require 'umu/value/core/atom/number/real'
+require_relative 'number/abstract'
+require_relative 'number/int'
+require_relative 'number/real'

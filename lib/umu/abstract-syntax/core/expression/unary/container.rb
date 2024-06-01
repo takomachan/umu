@@ -1,4 +1,4 @@
-require 'umu/abstract-syntax/core/expression/unary/container/abstraction'
-require 'umu/abstract-syntax/core/expression/unary/container/tuple'
-require 'umu/abstract-syntax/core/expression/unary/container/struct'
-require 'umu/abstract-syntax/core/expression/unary/container/list'
+require_relative 'container/abstraction'
+require_relative 'container/tuple'
+require_relative 'container/struct'
+require_relative 'container/list'

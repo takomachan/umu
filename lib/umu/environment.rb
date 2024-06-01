@@ -1,4 +1,4 @@
-require 'umu/environment/preference'
-require 'umu/environment/tracer/stack'
-require 'umu/environment/context'
-require 'umu/environment/entry'
+require_relative 'environment/preference'
+require_relative 'environment/tracer/stack'
+require_relative 'environment/context'
+require_relative 'environment/entry'

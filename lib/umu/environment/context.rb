@@ -1,2 +1,2 @@
-require 'umu/environment/context/type'
-require 'umu/environment/context/value'
+require_relative 'context/type'
+require_relative 'context/value'

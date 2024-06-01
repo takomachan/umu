@@ -1,3 +1,3 @@
-require 'umu/value/core/lsm/union/abstract'
-require 'umu/value/core/lsm/union/datum'
-require 'umu/value/core/lsm/union/option'
+require_relative 'union/abstract'
+require_relative 'union/datum'
+require_relative 'union/option'

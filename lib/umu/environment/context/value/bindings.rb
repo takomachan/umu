@@ -1,2 +1,2 @@
-require 'umu/environment/context/value/bindings/target'
-require 'umu/environment/context/value/bindings/entry'
+require_relative 'bindings/target'
+require_relative 'bindings/entry'

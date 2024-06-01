@@ -1,5 +1,5 @@
-require 'umu/common'
-require 'umu/lexical/location'
+require_relative 'common'
+require_relative 'lexical/location'
 
 
 module Umu

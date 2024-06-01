@@ -1,3 +1,3 @@
-require 'umu/concrete-syntax/abstract'
-require 'umu/concrete-syntax/module'
-require 'umu/concrete-syntax/core'
+require_relative 'concrete-syntax/abstract'
+require_relative 'concrete-syntax/module'
+require_relative 'concrete-syntax/core'

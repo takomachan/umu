@@ -1,3 +1,3 @@
-require 'umu/concrete-syntax/module/declaration'
-require 'umu/concrete-syntax/module/expression'
-require 'umu/concrete-syntax/module/pattern'
+require_relative 'module/declaration'
+require_relative 'module/expression'
+require_relative 'module/pattern'

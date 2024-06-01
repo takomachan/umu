@@ -1,6 +1,5 @@
 require 'umu/common'
 require 'umu/lexical/location'
-
 require 'umu/concrete-syntax/core/expression/n-ary/rule'
 
 

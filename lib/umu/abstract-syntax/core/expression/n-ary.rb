@@ -1,4 +1,4 @@
-require 'umu/abstract-syntax/core/expression/n-ary/if'
-require 'umu/abstract-syntax/core/expression/n-ary/switch'
-require 'umu/abstract-syntax/core/expression/n-ary/lambda'
-require 'umu/abstract-syntax/core/expression/n-ary/let'
+require_relative 'n-ary/if'
+require_relative 'n-ary/switch'
+require_relative 'n-ary/lambda'
+require_relative 'n-ary/let'

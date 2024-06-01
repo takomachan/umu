@@ -1,3 +1,3 @@
-require 'umu/environment/context/value/abstract'
-require 'umu/environment/context/value/initial'
-require 'umu/environment/context/value/bindings'
+require_relative 'value/abstract'
+require_relative 'value/initial'
+require_relative 'value/bindings'

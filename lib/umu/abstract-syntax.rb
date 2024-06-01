@@ -1,3 +1,3 @@
-require 'umu/abstract-syntax/result'
-require 'umu/abstract-syntax/abstract'
-require 'umu/abstract-syntax/core'
+require_relative 'abstract-syntax/result'
+require_relative 'abstract-syntax/abstract'
+require_relative 'abstract-syntax/core'

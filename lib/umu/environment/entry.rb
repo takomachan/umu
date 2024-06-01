@@ -1,9 +1,10 @@
 require 'umu/common'
 require 'umu/lexical/location'
-require 'umu/environment/preference'
-require 'umu/environment/tracer/stack'
-require 'umu/environment/context'
 require 'umu/abstract-syntax/core/expression'
+
+require_relative 'preference'
+require_relative 'tracer/stack'
+require_relative 'context'
 
 
 module Umu

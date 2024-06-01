@@ -1,3 +1,3 @@
-require 'umu/concrete-syntax/core/expression/n-ary/branch/abstract'
-require 'umu/concrete-syntax/core/expression/n-ary/branch/cond'
-require 'umu/concrete-syntax/core/expression/n-ary/branch/case'
+require_relative 'branch/abstract'
+require_relative 'branch/cond'
+require_relative 'branch/case'

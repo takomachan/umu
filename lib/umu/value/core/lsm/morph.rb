@@ -1,2 +1,2 @@
-require 'umu/value/core/lsm/morph/abstract'
-require 'umu/value/core/lsm/morph/list'
+require_relative 'morph/abstract'
+require_relative 'morph/list'

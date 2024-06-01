@@ -1,3 +1,3 @@
-require 'umu/concrete-syntax/core/pattern/container/abstraction'
-require 'umu/concrete-syntax/core/pattern/container/tuple'
-require 'umu/concrete-syntax/core/pattern/container/list'
+require_relative 'container/abstraction'
+require_relative 'container/tuple'
+require_relative 'container/list'

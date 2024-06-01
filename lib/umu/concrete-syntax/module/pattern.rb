@@ -1,3 +1,3 @@
-require 'umu/concrete-syntax/module/pattern/abstract'
-require 'umu/concrete-syntax/module/pattern/variable'
-require 'umu/concrete-syntax/module/pattern/struct'
+require_relative 'pattern/abstract'
+require_relative 'pattern/variable'
+require_relative 'pattern/struct'

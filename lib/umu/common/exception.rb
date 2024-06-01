@@ -1,4 +1,4 @@
-require 'umu/common/assertion'
+require_relative 'assertion'
 
 
 

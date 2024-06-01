@@ -1,3 +1,3 @@
-require 'umu/common/constant'
-require 'umu/common/assertion'
-require 'umu/common/exception'
+require_relative 'common/constant'
+require_relative 'common/assertion'
+require_relative 'common/exception'
