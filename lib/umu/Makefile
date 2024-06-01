@@ -125,9 +125,9 @@ SRCS	= commander.rb \
 			value/core.rb \
 			value/core/top.rb \
 			value/core/class.rb \
-			value/core/unit.rb \
 			value/core/atom.rb \
 			value/core/atom/abstract.rb \
+			value/core/atom/unit.rb \
 			value/core/atom/bool.rb \
 			value/core/atom/number.rb \
 			value/core/atom/number/abstract.rb \

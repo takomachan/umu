@@ -15,7 +15,7 @@ class String < Abstract
 		[:meth_less_than,	VCA::Bool,
 			:'<',			self],
 
-		[:meth_abort,		VC::Unit,
+		[:meth_abort,		VCA::Unit,
 			:abort],
 		[:meth_append,		self,
 			:'^',			self]

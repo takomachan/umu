@@ -42,7 +42,7 @@ class None < Abstract
 	]
 
 	INSTANCE_METHOD_INFOS = [
-		[:meth_contents,	VC::Unit,
+		[:meth_contents,	VCA::Unit,
 			:contents]
 	]
 

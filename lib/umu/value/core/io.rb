@@ -22,7 +22,7 @@ class IO < Top
 	INSTANCE_METHOD_INFOS = [
 		[:meth_get_string,	VCLU::Option::Abstract,
 			:'gets'],
-		[:meth_put_string,	VC::Unit,
+		[:meth_put_string,	VCA::Unit,
 			:'puts',		VCA::String]
 	]
 
