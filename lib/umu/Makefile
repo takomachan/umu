@@ -180,7 +180,9 @@ EXAMPLES =	example/test.umu \
 			example/reynolds.umu \
 			example/sicp-ch1.umu \
 			example/sicp-ch2.umu \
-			example/sicp-ch3.umu
+			example/sicp-ch3.umu \
+			example/cjdate1975.umu
+
 
 TMDOCPROC		= tmdoc
 DBTOEPUB		= /opt/local/share/xsl/docbook-xsl/epub/bin/dbtoepub
