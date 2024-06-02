@@ -7,6 +7,8 @@ module Value
 
 module Core
 
+module Base
+
 module Atom
 
 module Number
@@ -30,7 +32,7 @@ class Real < Abstract
 			:abs],
 		[:meth_negate,			self,
 			:negate],
-		[:meth_less_than,		VCA::Bool,
+		[:meth_less_than,		VCBA::Bool,
 			:'<',				self],
 		[:meth_add,				self,
 			:'+',				self],
@@ -46,11 +48,11 @@ class Real < Abstract
 			:pow,				self],
 
 		# Math
-		[:meth_nan?,			VCA::Bool,
+		[:meth_nan?,			VCBA::Bool,
 			:nan?],
-		[:meth_infinite?,		VCA::Bool,
+		[:meth_infinite?,		VCBA::Bool,
 			:infinite?],
-		[:meth_finite?,			VCA::Bool,
+		[:meth_finite?,			VCBA::Bool,
 			:finite?],
 		[:meth_sin,				self,
 			:sin],
@@ -81,16 +83,16 @@ class Real < Abstract
 		[:meth_sqrt,			self,
 			:sqrt],
 		[:meth_truncate,		self,
-			:truncate,			VCAN::Int],
+			:truncate,			VCBAN::Int],
 		[:meth_ceil,			self,
-			:ceil,				VCAN::Int],
+			:ceil,				VCBAN::Int],
 		[:meth_floor,			self,
-			:floor,				VCAN::Int],
+			:floor,				VCBAN::Int],
 		[:meth_ldexp,			self,
-			:ldexp,				VCAN::Int],
-		[:meth_frexp,			VCLP::Tuple,
+			:ldexp,				VCBAN::Int],
+		[:meth_frexp,			VCBLP::Tuple,
 			:frexp],
-		[:meth_divmod,			VCLP::Tuple,
+		[:meth_divmod,			VCBLP::Tuple,
 			:divmod,			self],
 
 		# I/O
@@ -233,7 +235,7 @@ class Real < Abstract
 
 
 	def meth_truncate(loc, env, _event, ndigits)
-		ASSERT.kind_of ndigits, VCAN::Int
+		ASSERT.kind_of ndigits, VCBAN::Int
 
 		unless ndigits.val >= 0
 			raise X::ArgumentError.new(
@@ -249,7 +251,7 @@ class Real < Abstract
 
 
 	def meth_ceil(loc, env, _event, ndigits)
-		ASSERT.kind_of ndigits, VCAN::Int
+		ASSERT.kind_of ndigits, VCBAN::Int
 
 		unless ndigits.val >= 0
 			raise X::ArgumentError.new(
@@ -265,7 +267,7 @@ class Real < Abstract
 
 
 	def meth_floor(loc, env, _event, ndigits)
-		ASSERT.kind_of ndigits, VCAN::Int
+		ASSERT.kind_of ndigits, VCBAN::Int
 
 		unless ndigits.val >= 0
 			raise X::ArgumentError.new(
@@ -281,7 +283,7 @@ class Real < Abstract
 
 
 	def meth_ldexp(_loc, _env, _event, other)
-		ASSERT.kind_of other, VCAN::Int
+		ASSERT.kind_of other, VCBAN::Int
 
 		VC.make_real Math.ldexp(self.val, other.val)
 	end
@@ -300,7 +302,7 @@ class Real < Abstract
 
 
 	def meth_divmod(_loc, _env, _event, other)
-		ASSERT.kind_of other, VCAN::Real
+		ASSERT.kind_of other, VCBAN::Real
 
 		fract, integ = self.val.divmod other.val
 
@@ -321,7 +323,9 @@ end
 NAN			= Atom::Number::Real.new(::Float::NAN).freeze
 INFINITY	= Atom::Number::Real.new(::Float::INFINITY).freeze
 
-end # Umu::Value::Core::Atom::Number
+end # Umu::Value::Core::Atom::Base::Number
+
+end # Umu::Value::Core::Atom::Base
 
 end # Umu::Value::Core::Atom
 
@@ -331,17 +335,17 @@ module_function
 	def make_real(val)
 		ASSERT.kind_of val, ::Float
 
-		Atom::Number::Real.new(val).freeze
+		Base::Atom::Number::Real.new(val).freeze
 	end
 
 
 	def make_nan
-		Atom::Number::NAN
+		Base::Atom::Number::NAN
 	end
 
 
 	def make_infinity
-		Atom::Number::INFINITY
+		Base::Atom::Number::INFINITY
 	end
 
 end	# Umu::Value::Core

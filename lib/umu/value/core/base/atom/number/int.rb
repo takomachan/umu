@@ -7,6 +7,8 @@ module Value
 
 module Core
 
+module Base
+
 module Atom
 
 module Number
@@ -14,15 +16,15 @@ module Number
 class Int < Abstract
 	INSTANCE_METHOD_INFOS = [
 		# Number
-		[:meth_odd?,			VCA::Bool,
+		[:meth_odd?,			VCBA::Bool,
 			:odd?],
-		[:meth_even?,			VCA::Bool,
+		[:meth_even?,			VCBA::Bool,
 			:even?],
 		[:meth_absolute,		self,
 			:abs],
 		[:meth_negate,			self,
 			:negate],
-		[:meth_less_than,		VCA::Bool,
+		[:meth_less_than,		VCBA::Bool,
 			:'<',				self],
 		[:meth_add,	self,
 			:'+',				self],
@@ -65,7 +67,9 @@ class Int < Abstract
 	end
 end
 
-end # Umu::Value::Core::Atom::Number
+end # Umu::Value::Core::Atom::Base::Number
+
+end # Umu::Value::Core::Atom::Base
 
 end # Umu::Value::Core::Atom
 
@@ -75,7 +79,7 @@ module_function
 	def make_integer(val)
 		ASSERT.kind_of val, ::Integer
 
-		Atom::Number::Int.new(val).freeze
+		Base::Atom::Number::Int.new(val).freeze
 	end
 
 end # Umu::Value::Core

@@ -20,10 +20,10 @@ class IO < Top
 
 
 	INSTANCE_METHOD_INFOS = [
-		[:meth_get_string,	VCLU::Option::Abstract,
+		[:meth_get_string,	VCBLU::Option::Abstract,
 			:'gets'],
-		[:meth_put_string,	VCA::Unit,
-			:'puts',		VCA::String]
+		[:meth_put_string,	VCBA::Unit,
+			:'puts',		VCBA::String]
 	]
 
 
@@ -71,7 +71,7 @@ class IO < Top
 
 
 	def meth_put_string(_loc, _env, event, value)
-		ASSERT.kind_of value, VCA::String
+		ASSERT.kind_of value, VCBA::String
 
 		self.io.print value.val
 

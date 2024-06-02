@@ -7,11 +7,13 @@ module Value
 
 module Core
 
+module Base
+
 module Atom
 
-class Abstract < Top
+class Abstract < Base::Abstract
 	INSTANCE_METHOD_INFOS = [
-		[:meth_less_than,	VCA::Bool,
+		[:meth_less_than,	VCBA::Bool,
 			:'<',			self]
 	]
 
@@ -44,7 +46,9 @@ class Abstract < Top
 	end
 end
 
-end # Umu::Value::Core::Atom
+end # Umu::Value::Core::Base::Atom
+
+end # Umu::Value::Core::Base
 
 end # Umu::Value::Core
 

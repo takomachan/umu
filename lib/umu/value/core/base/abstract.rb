@@ -7,11 +7,11 @@ module Value
 
 module Core
 
-module LSM	# Logical Space Model
+module Base
 
 class Abstract < Top; end
 
-end # Umu::Value::Core::LSM
+end # Umu::Value::Core::Base
 
 end # Umu::Value::Core
 

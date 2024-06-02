@@ -40,32 +40,35 @@ module Umu
 	module Value
 		module Core
 			class Top < ::Object; end
-			module Atom
+			module Base
 				class Abstract < Top; end
-				class Bool < Abstract; end
-				module Number
-					class Abstract < Atom::Abstract; end
-					class Int < Abstract; end
-					class Real < Abstract; end
-				end
-				class String < Abstract; end
-			end
-			module LSM
-				class Abstract < Top; end
-				module Product
-					class Abstract < LSM::Abstract; end
-					class Tuple < Abstract; end
-				end
-				module Union
-					class Abstract < LSM::Abstract; end
-					module Option
-						class Abstract < Union::Abstract; end
+				module Atom
+					class Abstract < Base::Abstract; end
+					class Bool < Abstract; end
+					module Number
+						class Abstract < Atom::Abstract; end
+						class Int < Abstract; end
+						class Real < Abstract; end
 					end
+					class String < Abstract; end
 				end
-				module Morph
-					class Abstract < LSM::Abstract; end
-					module List
-						class Abstract < Morph::Abstract; end
+				module LSM
+					class Abstract < Base::Abstract; end
+					module Product
+						class Abstract < LSM::Abstract; end
+						class Tuple < Abstract; end
+					end
+					module Union
+						class Abstract < LSM::Abstract; end
+						module Option
+							class Abstract < Union::Abstract; end
+						end
+					end
+					module Morph
+						class Abstract < LSM::Abstract; end
+						module List
+							class Abstract < Morph::Abstract; end
+						end
 					end
 				end
 			end
@@ -112,12 +115,13 @@ module Umu
 	ASCEN	= AbstractSyntax::Core::Expression::Nary
 	V		= Value
 	VC		= Value::Core
-	VCA		= Value::Core::Atom
-	VCAN	= Value::Core::Atom::Number
-	VCL		= Value::Core::LSM
-	VCLP	= Value::Core::LSM::Product
-	VCLU	= Value::Core::LSM::Union
-	VCLM	= Value::Core::LSM::Morph
+	VCB		= Value::Core::Base
+	VCBA	= Value::Core::Base::Atom
+	VCBAN	= Value::Core::Base::Atom::Number
+	VCBL	= Value::Core::Base::LSM
+	VCBLP	= Value::Core::Base::LSM::Product
+	VCBLU	= Value::Core::Base::LSM::Union
+	VCBLM	= Value::Core::Base::LSM::Morph
 	E		= Environment
 	EC		= Environment::Context
 	ECT		= Environment::Context::Type

@@ -8,6 +8,8 @@ module Value
 
 module Core
 
+module Base
+
 module LSM
 
 module Morph
@@ -23,13 +25,13 @@ class Abstract < Morph::Abstract
 	]
 
 	INSTANCE_METHOD_INFOS = [
-		[ :meth_empty?,			VCA::Bool,
+		[ :meth_empty?,			VCBA::Bool,
 			:empty?],
 		[ :meth_cons,			self,
 			:cons,				VC::Top],
-		[ :meth_des!,			VCLP::Tuple,
+		[ :meth_des!,			VCBLP::Tuple,
 			:des!],
-		[ :meth_des,			VCLU::Option::Abstract,
+		[ :meth_des,			VCBLU::Option::Abstract,
 			:des],
 		[ :meth_foldr,			VC::Top,
 			:foldr,				VC::Top, VC::Function],
@@ -47,9 +49,9 @@ class Abstract < Morph::Abstract
 			:'concat-with',		VC::Function],
 		[ :meth_zip,			self,
 			:zip,				self],
-		[ :meth_unzip,			VCLP::Tuple,
+		[ :meth_unzip,			VCBLP::Tuple,
 			:unzip],
-		[ :meth_partition,		VCLP::Tuple,
+		[ :meth_partition,		VCBLP::Tuple,
 			:partition,			VC::Function],
 		[ :meth_sort,			self,
 			:sort]
@@ -185,7 +187,7 @@ class Abstract < Morph::Abstract
 			value = func.apply x, [], loc, new_env
 			ASSERT.kind_of value, VC::Top
 
-			unless value.kind_of? VCA::Bool
+			unless value.kind_of? VCBA::Bool
 				raise X::TypeError.new(
 					loc,
 					env,
@@ -284,7 +286,7 @@ class Abstract < Morph::Abstract
 		) { |ys_zs, y_z|
 			ASSERT.kind_of y_z, VC::Top
 
-			unless y_z.kind_of? VCLP::Tuple
+			unless y_z.kind_of? VCBLP::Tuple
 				raise X::TypeError.new(
 					loc,
 					env,
@@ -309,7 +311,7 @@ class Abstract < Morph::Abstract
 			)
 		}
 
-		ASSERT.kind_of result_value, VCLP::Tuple
+		ASSERT.kind_of result_value, VCBLP::Tuple
 	end
 
 
@@ -322,7 +324,7 @@ class Abstract < Morph::Abstract
 			value = func.apply(x, [], loc, new_env)
 			ASSERT.kind_of value, VC::Top
 
-			unless value.kind_of? VCA::Bool
+			unless value.kind_of? VCBA::Bool
 				raise X::TypeError.new(
 					loc,
 					env,
@@ -358,7 +360,7 @@ end
 
 class Nil < Abstract
 	INSTANCE_METHOD_INFOS = [
-		[:meth_contents,	VCA::Unit,
+		[:meth_contents,	VCBA::Unit,
 			:contents]
 	]
 
@@ -383,7 +385,7 @@ NIL = Nil.new.freeze
 
 class Cons < Abstract
 	INSTANCE_METHOD_INFOS = [
-		[:meth_contents,	VCLP::Tuple,
+		[:meth_contents,	VCBLP::Tuple,
 			:contents]
 	]
 
@@ -415,9 +417,11 @@ class Cons < Abstract
 	alias meth_contents meth_des!
 end
 
-end	# Umu::Value::Core::LSM::Morph::List
+end	# Umu::Value::Core::LSM::Base::Morph::List
 
-end	# Umu::Value::Core::LSM::Morph
+end	# Umu::Value::Core::LSM::Base::Morph
+
+end	# Umu::Value::Core::LSM::Base
 
 end	# Umu::Value::Core::LSM
 
@@ -425,21 +429,21 @@ end	# Umu::Value::Core::LSM
 module_function
 
 	def make_nil
-		LSM::Morph::List::NIL
+		Base::LSM::Morph::List::NIL
 	end
 
 
 	def make_cons(head, tail)
 		ASSERT.kind_of head,	VC::Top
-		ASSERT.kind_of tail,	LSM::Morph::List::Abstract
+		ASSERT.kind_of tail,	Base::LSM::Morph::List::Abstract
 
-		LSM::Morph::List::Cons.new(head, tail).freeze
+		Base::LSM::Morph::List::Cons.new(head, tail).freeze
 	end
 
 
 	def make_list(xs, tail = VC.make_nil)
 		ASSERT.kind_of xs,		::Array
-		ASSERT.kind_of tail,	LSM::Morph::List::Abstract
+		ASSERT.kind_of tail,	Base::LSM::Morph::List::Abstract
 
 		xs.reverse_each.inject(tail) { |ys, x|
 			VC.make_cons x, ys

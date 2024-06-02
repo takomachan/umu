@@ -7,6 +7,8 @@ module Value
 
 module Core
 
+module Base
+
 module LSM
 
 module Union
@@ -15,9 +17,9 @@ module Option
 
 class Abstract < Union::Abstract
 	INSTANCE_METHOD_INFOS = [
-		[:meth_none?,		VCA::Bool,
+		[:meth_none?,		VCBA::Bool,
 			:none?],
-		[:meth_some?,		VCA::Bool,
+		[:meth_some?,		VCBA::Bool,
 			:some?]
 	]
 
@@ -42,7 +44,7 @@ class None < Abstract
 	]
 
 	INSTANCE_METHOD_INFOS = [
-		[:meth_contents,	VCA::Unit,
+		[:meth_contents,	VCBA::Unit,
 			:contents]
 	]
 
@@ -92,24 +94,26 @@ class Some < Abstract
 	end
 end
 
-end	# Umu::Core::LSM::Union::Option
+end	# Umu::Core::Base::LSM::Union::Option
 
-end	# Umu::Core::LSM::Union
+end	# Umu::Core::Base::LSM::Union
 
-end	# Umu::Core::LSM
+end	# Umu::Core::Base::LSM
+
+end	# Umu::Core::Base
 
 
 module_function
 
 	def make_none
-		LSM::Union::Option::NONE
+		Base::LSM::Union::Option::NONE
 	end
 
 
 	def make_some(contents)
 		ASSERT.kind_of contents, VC::Top
 
-		LSM::Union::Option::Some.new(contents).freeze
+		Base::LSM::Union::Option::Some.new(contents).freeze
 	end
 
 end	# Umu::Core

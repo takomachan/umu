@@ -7,6 +7,8 @@ module Value
 
 module Core
 
+module Base
+
 module Atom
 
 class Unit < Abstract
@@ -24,13 +26,15 @@ end
 
 UNIT = Unit.new(nil).freeze
 
-end	# Umu::Core::Atom
+end	# Umu::Core::Base::Atom
+
+end	# Umu::Core::Base
 
 
 module_function
 
 	def make_unit
-		Atom::UNIT
+		Base::Atom::UNIT
 	end
 
 end	# Umu::Core

@@ -60,7 +60,7 @@ private
 
 		tail = if self.opt_last_expr
 					t = self.opt_last_expr.evaluate(new_env).value
-					unless t.kind_of? VCLM::List::Abstract
+					unless t.kind_of? VCBLM::List::Abstract
 						raise X::TypeError.new(
 							opt_last_expr.loc,
 							env,

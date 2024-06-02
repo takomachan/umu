@@ -7,6 +7,8 @@ module Value
 
 module Core
 
+module Base
+
 module LSM
 
 module Union
@@ -47,11 +49,13 @@ class Abstract < LSM::Abstract
 	end
 end
 
-end	# Umu::Value::Core::LSM::Union
+end	# Umu::Value::Core::Base::LSM::Union
 
-end	# Umu::Value::Core::LSM
+end	# Umu::Value::Core::Base::LSM
 
-end	# Umu::Core
+end	# Umu::Value::Core::Base
+
+end	# Umu::Value::Core
 
 end	# Umu::Value
 

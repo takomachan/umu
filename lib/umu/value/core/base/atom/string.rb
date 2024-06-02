@@ -8,14 +8,16 @@ module Value
 
 module Core
 
+module Base
+
 module Atom
 
 class String < Abstract
 	INSTANCE_METHOD_INFOS = [
-		[:meth_less_than,	VCA::Bool,
+		[:meth_less_than,	VCBA::Bool,
 			:'<',			self],
 
-		[:meth_abort,		VCA::Unit,
+		[:meth_abort,		VCBA::Unit,
 			:abort],
 		[:meth_append,		self,
 			:'^',			self]
@@ -59,7 +61,9 @@ class String < Abstract
 end
 
 
-end # Umu::Value::Core::Atom
+end # Umu::Value::Core::Base::Atom
+
+end # Umu::Value::Core::Base
 
 
 module_function
@@ -67,7 +71,7 @@ module_function
 	def make_string(val)
 		ASSERT.kind_of val, ::String
 
-		Atom::String.new(val.freeze).freeze
+		Base::Atom::String.new(val.freeze).freeze
 	end
 
 end	# Umu::Value::Core

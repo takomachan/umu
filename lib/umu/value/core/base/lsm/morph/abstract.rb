@@ -7,6 +7,8 @@ module Value
 
 module Core
 
+module Base
+
 module LSM
 
 module Morph
@@ -47,7 +49,9 @@ class Abstract < LSM::Abstract
 	end
 end
 
-end	# Umu::Value::Core::LSM::Morph
+end	# Umu::Value::Core::LSM::Base::Morph
+
+end	# Umu::Value::Core::LSM::Base
 
 end	# Umu::Value::Core::LSM
 

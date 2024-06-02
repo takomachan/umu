@@ -67,7 +67,7 @@ private
 			end
 
 			head_value	= head.atom_value
-			ASSERT.kind_of head_value, VCA::Abstract
+			ASSERT.kind_of head_value, VCBA::Abstract
 			unless head_value.class == fst_head_value.class
 				raise X::SyntaxError.new(
 					rule.loc,

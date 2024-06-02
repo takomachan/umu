@@ -124,31 +124,32 @@ SRCS	= commander.rb \
 			value.rb \
 			value/core.rb \
 			value/core/top.rb \
+			value/core/base.rb \
+			value/core/base/atom.rb \
+			value/core/base/atom/abstract.rb \
+			value/core/base/atom/unit.rb \
+			value/core/base/atom/bool.rb \
+			value/core/base/atom/number.rb \
+			value/core/base/atom/number/abstract.rb \
+			value/core/base/atom/number/int.rb \
+			value/core/base/atom/number/real.rb \
+			value/core/base/atom/string.rb \
+			value/core/base/atom/symbol.rb \
+			value/core/base/lsm.rb \
+			value/core/base/lsm/abstract.rb \
+			value/core/base/lsm/product.rb \
+			value/core/base/lsm/product/abstract.rb \
+			value/core/base/lsm/product/tuple.rb \
+			value/core/base/lsm/union.rb \
+			value/core/base/lsm/union/abstract.rb \
+			value/core/base/lsm/union/datum.rb \
+			value/core/base/lsm/union/option.rb \
+			value/core/base/lsm/morph.rb \
+			value/core/base/lsm/morph/abstract.rb \
+			value/core/base/lsm/morph/list.rb \
 			value/core/class.rb \
-			value/core/atom.rb \
-			value/core/atom/abstract.rb \
-			value/core/atom/unit.rb \
-			value/core/atom/bool.rb \
-			value/core/atom/number.rb \
-			value/core/atom/number/abstract.rb \
-			value/core/atom/number/int.rb \
-			value/core/atom/number/real.rb \
-			value/core/atom/string.rb \
-			value/core/atom/symbol.rb \
-			value/core/io.rb \
 			value/core/function.rb \
-			value/core/lsm.rb \
-			value/core/lsm/abstract.rb \
-			value/core/lsm/product.rb \
-			value/core/lsm/product/abstract.rb \
-			value/core/lsm/product/tuple.rb \
-			value/core/lsm/union.rb \
-			value/core/lsm/union/abstract.rb \
-			value/core/lsm/union/datum.rb \
-			value/core/lsm/union/option.rb \
-			value/core/lsm/morph.rb \
-			value/core/lsm/morph/abstract.rb \
-			value/core/lsm/morph/list.rb \
+			value/core/io.rb \
 			value/core/struct.rb \
 			environment.rb \
 			environment/preference.rb \
