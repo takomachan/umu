@@ -202,7 +202,7 @@ fun abs = x -> cond x {
   positive?	-> x
 | zero?		-> 0.0
 | negative?	-> negate x
-  else		-> abort "abs"
+  else		-> panic "abs"
 } ;;
 
 ### abs' : Real -> Real
@@ -493,7 +493,7 @@ fun first-denomination = kinds-of-coins -> case kinds-of-coins {
 | 3		-> 10
 | 4		-> 25
 | 5		-> 50
-  else	-> abort "first-denomination"
+  else	-> panic "first-denomination"
 }
 
 ###		cc : Int -> Int -> Int
@@ -949,7 +949,7 @@ in
 	elsif (negative? b-value && positive? a-value)
 		search f b a
 	else
-		abort <| "Values are not of opposite sign: " ^
+		panic <| "Values are not of opposite sign: " ^
 					to-s a ^ " " ^ to-s b
 } ;;
 

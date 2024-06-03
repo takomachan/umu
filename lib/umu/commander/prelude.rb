@@ -365,8 +365,8 @@ structure Umu = struct {
 	######## String ########
 
 	structure String = struct {
-		# abort : String -> ()
-		val abort = &(String.abort)
+		# panic : String -> ()
+		val panic = &(String.panic)
 
 
 		# join : String -> [String] -> String
@@ -495,8 +495,8 @@ structure Umu = struct {
 
 		#### String ####
 
-		# abort		: String -> ()
-		val abort = String::abort
+		# panic		: String -> ()
+		val panic = String::panic
 
 		# (^)		: String -> String -> String
 		fun (^) = (x : String) (y : String) -> x.^ y
@@ -844,7 +844,7 @@ structure struct {
 	)
 
 	#### String ####
-	val (abort, (^), join)
+	val (panic, (^), join)
 
 	#### I/O ####
 	val (gets, puts, display, tab, nl, print, p)

@@ -17,8 +17,8 @@ class String < Abstract
 		[:meth_less_than,	VCBA::Bool,
 			:'<',			self],
 
-		[:meth_abort,		VCBA::Unit,
-			:abort],
+		[:meth_panic,		VCBA::Unit,
+			:panic],
 		[:meth_append,		self,
 			:'^',			self]
 	]
@@ -46,10 +46,10 @@ class String < Abstract
 	end
 
 
-	def meth_abort(loc, env, _event)
+	def meth_panic(loc, env, _event)
 		msg = self.val.gsub /%/, '%%'
 
-		raise X::Abort.new(loc, env, msg)
+		raise X::Panic.new(loc, env, msg)
 	end
 
 

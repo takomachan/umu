@@ -62,7 +62,7 @@ private
 				ASCE.make_send(
 					self.else_expr.loc,
 					self.else_expr.desugar(new_env),
-					ASCE.make_method(self.else_expr.loc, :abort)
+					ASCE.make_method(self.else_expr.loc, :panic)
 				)
 
 			)
