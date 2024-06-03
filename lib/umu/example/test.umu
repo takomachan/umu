@@ -1,3 +1,5 @@
+# vim: set nu ai sw=4 ts=4 :
+
 ## Curried function - add
 fun add       = (x, y)  -> x + y
 fun curry-add = x y		-> x + y

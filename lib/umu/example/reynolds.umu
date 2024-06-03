@@ -1,3 +1,7 @@
+# vim: set nu ai sw=4 ts=4 :
+# coding: utf-8
+# frozen_string_literal: true
+
 (#
  Implementation of REYNOLDS's Definional Interpretor
  1971年に公開されたレイノルズ氏による意味定義用インタプリタをUmuで実装してみた

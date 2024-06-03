@@ -1,3 +1,5 @@
+# vim: set nu ai sw=4 ts=4 :
+
 structure SetBasedOnList = struct {
 	# empty : () -> %('a)
 	fun empty = () -> wrap []

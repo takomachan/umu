@@ -1,3 +1,7 @@
+# vim: set nu ai sw=4 ts=4 :
+# coding: utf-8
+# frozen_string_literal: true
+
 require 'umu/common'
 require 'umu/environment/tracer/tracer'
 

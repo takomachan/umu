@@ -1,3 +1,5 @@
+# vim: set nu ai sw=4 ts=4 :
+
 structure List = struct {
 	# head : ['a] -> 'a
 	fun head = [x|_] -> x
