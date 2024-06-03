@@ -59,7 +59,7 @@ class Abstract < Atom::Abstract
 	def to_s
 		val = self.val
 
-		if val.negative?
+		if val < 0
 			format "-%s", val.abs.inspect
 		else
 			val.inspect
@@ -68,12 +68,12 @@ class Abstract < Atom::Abstract
 
 
 	def meth_positive?(_loc, _env, _event)
-		VC.make_bool self.val.positive?
+		VC.make_bool(self.val > 0)
 	end
 
 
 	def meth_negative?(_loc, _env, _event)
-		VC.make_bool self.val.negative?
+		VC.make_bool(self.val < 0)
 	end
 
 
@@ -179,7 +179,7 @@ class Abstract < Atom::Abstract
 
 
 	def meth_random(loc, env, _event)
-		value = if self.val.positive?
+		value = if self.val > 0
 				begin
 					VC.make_number self.class, ::Random.rand(self.val)
 				rescue Errno::EDOM
@@ -191,7 +191,7 @@ class Abstract < Atom::Abstract
 								self.type_sym.to_s
 					)
 				end
-			elsif self.val.negative?
+			elsif self.val < 0
 				raise X::ArgumentError.new(
 					loc,
 					env,

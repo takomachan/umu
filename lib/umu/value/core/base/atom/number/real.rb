@@ -113,7 +113,7 @@ class Real < Abstract
 			'NAN'
 		elsif self.val.infinite?
 			format("%sINFINITY",
-					if self.val.negative?
+					if self.val < 0
 						'-'
 					else
 						''
