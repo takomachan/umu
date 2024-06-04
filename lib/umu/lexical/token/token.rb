@@ -83,6 +83,19 @@ end
 
 
 
+class Label < Abstraction::Symbol
+	def to_s
+		format "LABEL(%s:)", self.sym
+	end
+
+
+	def to_racc_token
+		:LABEL
+	end
+end
+
+
+
 class String < Abstraction::String
 	def initialize(loc, val)
 		ASSERT.kind_of val, ::String
@@ -182,6 +195,14 @@ module_function
 		ASSERT.kind_of val, ::String
 
 		Identifier.new(loc, val.freeze).freeze
+	end
+
+
+	def make_label(loc, val)
+		ASSERT.kind_of loc, L::Location
+		ASSERT.kind_of val, ::String
+
+		Label.new(loc, val.freeze).freeze
 	end
 
 

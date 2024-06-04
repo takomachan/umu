@@ -22,7 +22,7 @@ IDENT_WORD = '(_*[[:alpha:]][[:alnum:]]*(\-[[:alnum:]]+)*_*[\?!]?\'*)'
 # See -> https://qiita.com/Takayuki_Nakano/items/8d38beaddb84b488d683
 
 MODULE_DIRECTORY_PATTERN	= Regexp.new IDENT_WORD + '::'
-IDENT_PATTERN				= Regexp.new '(@)?' + IDENT_WORD
+IDENT_PATTERN				= Regexp.new '(@)?' + IDENT_WORD + '(:)?'
 
 RESERVED_WORDS = [
 	'__FILE__',		'__LINE__',
@@ -224,6 +224,7 @@ SYMBOL_PATTERNS = [
 		when scanner.scan(IDENT_PATTERN)
 			head_matched = scanner[1]
 			body_matched = scanner[2]
+			tail_matched = scanner[4]
 
 			[
 				:Word,
@@ -231,13 +232,25 @@ SYMBOL_PATTERNS = [
 				scanner.matched,
 
 				if head_matched
+                    if tail_matched
+                        raise X::LexicalError.new(
+                            self.loc,
+                            "Invalid character: ':' in Symbol: '%s'",
+                                scanner.matched
+                        )
+                    end
+
 					LT.make_symbol self.loc, body_matched
 				else
-					if RESERVED_WORDS[body_matched]
-						LT.make_reserved_word self.loc, body_matched
-					else
-						LT.make_identifier self.loc, body_matched
-					end
+                    if tail_matched
+                        LT.make_label self.loc, body_matched
+                    else
+                        if RESERVED_WORDS[body_matched]
+                            LT.make_reserved_word self.loc, body_matched
+                        else
+                            LT.make_identifier self.loc, body_matched
+                        end
+                    end
 				end,
 
 				__make_separator__

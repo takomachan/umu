@@ -371,7 +371,7 @@ where {
 	######## Evaluator ########
 
 	# eval : (<EXP>, <ENV>) -> <VAL>
-	fun rec eval = (r: Datum, e : Function) -> case r {
+	fun rec eval = (r : Datum, e : Function) -> case r {
 
 	#### CONST ####
 	  Const -> evcon r
