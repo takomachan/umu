@@ -1,3 +1,5 @@
+# vim: set nu ai sw=4 ts=4 :
+#
 MAIN	= umu
 
 SRCS	= commander.rb \
@@ -57,6 +59,7 @@ SRCS	= commander.rb \
 			concrete-syntax/core/expression/unary/container.rb \
 			concrete-syntax/core/expression/unary/container/abstract.rb \
 			concrete-syntax/core/expression/unary/container/tuple.rb \
+			concrete-syntax/core/expression/unary/container/named-tuple.rb \
 			concrete-syntax/core/expression/unary/container/list.rb \
 			concrete-syntax/core/expression/unary/container/comprehension.rb \
 			concrete-syntax/core/expression/unary/container/sequence.rb \
@@ -108,6 +111,7 @@ SRCS	= commander.rb \
 			abstract-syntax/core/expression/unary/container.rb \
 			abstract-syntax/core/expression/unary/container/abstraction.rb \
 			abstract-syntax/core/expression/unary/container/tuple.rb \
+			abstract-syntax/core/expression/unary/container/named-tuple.rb \
 			abstract-syntax/core/expression/unary/container/struct.rb \
 			abstract-syntax/core/expression/unary/container/list.rb \
 			abstract-syntax/core/expression/unary/raise.rb \
@@ -140,6 +144,7 @@ SRCS	= commander.rb \
 			value/core/base/lsm/product.rb \
 			value/core/base/lsm/product/abstract.rb \
 			value/core/base/lsm/product/tuple.rb \
+			value/core/base/lsm/product/named-tuple.rb \
 			value/core/base/lsm/union.rb \
 			value/core/base/lsm/union/abstract.rb \
 			value/core/base/lsm/union/datum.rb \
