@@ -124,30 +124,84 @@ class Named < Abstract
 
 
 	def meth_less_than(loc, env, event, other)
-		ASSERT.kind_of other, VCBLP::Tuple
+		ASSERT.kind_of other, VCBLP::Named
 
-		VC.make_bool(
-			self.values.zip(other.values).each_with_index.any? {
-				|(self_value, other_value), index|
+		unless other.kind_of?(self.class) && self.arity == other.arity
+			raise X::TypeError.new(
+				loc,
+				env,
+				"Expected a named tuple of %d element, but %d: %s",
+					self.arity, other.arity, other.to_s
+			)
+		end
 
-				unless other_value.kind_of?(self_value.class)
-					raise X::TypeError.new(
-						loc,
-						env,
-						"In %d's element of tuple, " +
-								"expected a %s, but %s : %s",
-							index + 1,
-							self_value.type_sym,
-							other_value.to_s,
-							other_value.type_sym
-					)
-				end
-
-				self_value.meth_less_than(
-					loc, env, event, other_value
-				).true?
+		result, _index = self.index_by_label.map { |label, index|
+			[label, self.values[index]]
+		}.zip(
+			other.index_by_label.map { |label, index|
+				[label, other.values[index]]
 			}
-		)
+		).inject([VC.make_false, 0]) {
+			|
+				(res, index),
+				((self_label, self_value), (other_label, other_value))
+			|
+			ASSERT.kind_of res,			VCBA::Bool
+			ASSERT.kind_of index,		::Integer
+			ASSERT.kind_of self_label,	::Symbol
+			ASSERT.kind_of self_value,	VC::Top
+			ASSERT.kind_of other_value,	VC::Top
+			ASSERT.kind_of other_label,	::Symbol
+
+=begin
+			pp({index: index,
+				self_label: self_label, self_value: self_value,
+				other_label: other_label, other_value: other_value
+			})
+=end
+
+			unless self_label == other_label
+				raise X::TypeError.new(
+					loc,
+					env,
+					"Expected '%s:' " +
+							"as label for #%d named tuple element, " +
+							"but '%s:'",
+						self_label.to_s, index + 1, other_label
+				)
+			end
+
+			unless other_value.kind_of?(self_value.class)
+				raise X::TypeError.new(
+					loc,
+					env,
+					"In %d's element of tuple, " +
+							"expected a %s, but %s : %s",
+						index + 1,
+						self_value.type_sym,
+						other_value.to_s,
+						other_value.type_sym
+				)
+			end
+
+			if self_value.meth_less_than(		# self < other
+				loc, env, event, other_value
+			).true?
+				break VC.make_true
+			elsif self_value.meth_equal(		# self = other
+				loc, env, event, other_value
+			).true?
+				[res, index + 1]
+			elsif other_value.meth_less_than(	# self > other
+				loc, env, event, self_value
+			).true?
+				break VC.make_false
+			else
+				ASSERT.abort 'No case'
+			end
+		}
+
+		ASSERT.kind_of result, VCBA::Bool
 	end
 end
 
