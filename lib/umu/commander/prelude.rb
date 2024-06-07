@@ -457,8 +457,8 @@ structure Umu = struct {
 		# to-i			: Number -> Int
 		val to-i = &(Number.to-i)
 
-		# to-f			: Number -> Real
-		val to-f = &(Number.to-f)
+		# to-r			: Number -> Real
+		val to-r = &(Number.to-r)
 
 		# (+)			: 'a -> 'a -> 'a		where { 'a <- Number }
 		fun (+) = (x : Number) (y : Number) -> x.+ y
@@ -837,7 +837,7 @@ structure struct {
 	#### Number ####
 	val (
 		positive?, negative?, zero?, odd?, even?,
-		negate, abs, to-i, to-f,
+		negate, abs, to-i, to-r,
 		(+), (-), (*), (/), (mod), (pow)
 	)
 

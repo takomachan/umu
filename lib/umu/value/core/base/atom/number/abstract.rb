@@ -33,7 +33,7 @@ class Abstract < Atom::Abstract
 		[:meth_to_int,		VCBAN::Int,
 			:'to-i'],
 		[:meth_to_real,		VCBAN::Real,
-			:'to-f'],
+			:'to-r'],
 		[:meth_add,			self,
 			:'+',			self],
 		[:meth_sub,			self,
