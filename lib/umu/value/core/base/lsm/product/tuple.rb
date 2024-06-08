@@ -41,24 +41,6 @@ class Tuple < Abstract
 	end
 
 
-	def select(sel_num, loc, env)
-		ASSERT.kind_of sel_num,		::Integer
-		ASSERT.kind_of loc,			L::Location
-
-		unless 1 <= sel_num && sel_num <= self.arity
-			raise X::SelectionError.new(
-				loc,
-				env,
-				"Selector expected 1..%d, but %d",
-					self.arity, sel_num
-			)
-		end
-		value = self.values[sel_num - 1]
-
-		ASSERT.kind_of value, VC::Top
-	end
-
-
 	def meth_to_string(loc, env, event)
 		VC.make_string(
 			format("(%s)",

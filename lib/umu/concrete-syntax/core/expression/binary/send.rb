@@ -24,7 +24,7 @@ class Abstract < Expression::Abstract; end
 
 
 
-class Selector < Abstract
+class NumberSelector < Abstract
 	attr_reader :sel_num
 
 
@@ -46,6 +46,33 @@ private
 
 	def __desugar__(_env, _event)
 		ASCE.make_number_selector self.loc, self.sel_num
+	end
+end
+
+
+
+class LabelSelector < Abstract
+	attr_reader :sel_sym
+
+
+	def initialize(loc, sel_sym)
+		ASSERT.kind_of sel_sym, ::Symbol
+
+		super(loc)
+
+		@sel_sym = sel_sym
+	end
+
+
+	def to_s
+		'$' + self.sel_sym.to_s
+	end
+
+
+private
+
+	def __desugar__(_env, _event)
+		ASCE.make_label_selector self.loc, self.sel_sym
 	end
 end
 
@@ -151,11 +178,19 @@ end	# Umu::ConcreteSyntax::Core::Expression::Binary
 
 module_function
 
-	def make_selector(loc, sel_num)
+	def make_number_selector(loc, sel_num)
 		ASSERT.kind_of loc,		L::Location
 		ASSERT.kind_of sel_num,	::Integer
 
-		Binary::Send::Message::Selector.new(loc, sel_num).freeze
+		Binary::Send::Message::NumberSelector.new(loc, sel_num).freeze
+	end
+
+
+	def make_label_selector(loc, sel_sym)
+		ASSERT.kind_of loc,		L::Location
+		ASSERT.kind_of sel_sym,	::Symbol
+
+		Binary::Send::Message::LabelSelector.new(loc, sel_sym).freeze
 	end
 
 

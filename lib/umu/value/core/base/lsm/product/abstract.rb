@@ -45,8 +45,21 @@ class Abstract < LSM::Abstract
 	end
 
 
-	def select(sel, loc, env)
-		raise X::SubclassResponsibility
+	def select_by_number(sel_num, loc, env)
+		ASSERT.kind_of sel_num,		::Integer
+		ASSERT.kind_of loc,			L::Location
+
+		unless 1 <= sel_num && sel_num <= self.arity
+			raise X::SelectionError.new(
+				loc,
+				env,
+				"Selector expected 1..%d, but %d",
+					self.arity, sel_num
+			)
+		end
+		value = self.values[sel_num - 1]
+
+		ASSERT.kind_of value, VC::Top
 	end
 end
 

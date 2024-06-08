@@ -439,9 +439,10 @@ _messages:
 
 message:
   '$' INTEGER {
-	result = CSCE.make_selector(
-						val[1].loc, val[1].val
-					)
+	result = CSCE.make_number_selector val[1].loc, val[1].val
+}
+| '$' ID {
+	result = CSCE.make_label_selector  val[1].loc, val[1].sym
 }
 | '.' meth_ident atom_exprs {
 	result = CSCE.make_method val[1].loc, val[1].sym, val[2]

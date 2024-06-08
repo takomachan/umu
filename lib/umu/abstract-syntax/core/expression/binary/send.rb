@@ -41,11 +41,6 @@ class Selector < Abstract
 
 		@sel = sel
 	end
-
-
-	def to_s
-		self.sel.to_s
-	end
 end
 
 end	# Umu::AbstractSyntax::Core::Expression::Binary::Send::Message::Abstraction
@@ -63,22 +58,27 @@ class ByNumber < Abstraction::Selector
 	end
 
 
-	def evaluate_for(tup_value, env, _event)
-		ASSERT.kind_of tup_value,	VC::Top
-		ASSERT.kind_of env,			E::Entry
+	def to_s
+		'$' + self.sel_num.to_s
+	end
 
-		unless tup_value.kind_of? VCBLP::Tuple
+
+	def evaluate_for(value, env, _event)
+		ASSERT.kind_of value,	VC::Top
+		ASSERT.kind_of env,		E::Entry
+
+		unless value.kind_of? VCBLP::Abstract
 			raise X::TypeError.new(
 				self.loc,
 				env,
-				"Selection operator '.' require a Tuple, but %s : %s",
-					tup_value.to_s,
-					tup_value.type_sym.to_s
+				"Selection operator '$' require a Product, but %s : %s",
+					value.to_s,
+					value.type_sym.to_s
 			)
 		end
 
-		value = tup_value.select self.sel_num, self.loc, env
-		ASSERT.kind_of value, VC::Top
+		result = value.select_by_number self.sel_num, self.loc, env
+		ASSERT.kind_of result, VC::Top
 	end
 end
 
@@ -94,22 +94,27 @@ class ByLabel < Abstraction::Selector
 	end
 
 
-	def evaluate_for(rec_value, env, _event)
-		ASSERT.kind_of rec_value,	VC::Top
+	def to_s
+		'$' + self.sel_sym.to_s
+	end
+
+
+	def evaluate_for(value, env, _event)
+		ASSERT.kind_of value,	VC::Top
 		ASSERT.kind_of env,			E::Entry
 
-		unless rec_value.kind_of? VC::Struct::Entry
+		unless value.kind_of? VCBLP::Named
 			raise X::TypeError.new(
 				self.loc,
 				env,
-				"Selection operator '.' require a Struct, but %s : %s",
-					rec_value.to_s,
-					rec_value.type_sym.to_s
+				"Selection operator '$' require a Named, but %s : %s",
+					value.to_s,
+					value.type_sym.to_s
 			)
 		end
 
-		value = rec_value.select self.sel_sym, self.loc, env
-		ASSERT.kind_of value, VC::Top
+		result = value.select_by_label self.sel_sym, self.loc, env
+		ASSERT.kind_of result, VC::Top
 	end
 end
 
@@ -131,7 +136,9 @@ class Method < Abstraction::Abstract
 
 
 	def to_s
-		self.sym.to_s + (
+		format(".%s%s",
+			self.sym.to_s,
+
 			if self.exprs.empty?
 				''
 			else
@@ -330,7 +337,7 @@ class Entry < Binary::Abstract
 
 
 	def to_s
-		format("(%s%s).%s",
+		format("(%s%s)%s",
 			self.lhs_expr.to_s,
 
 			if self.opt_receiver_type_sym
@@ -339,7 +346,7 @@ class Entry < Binary::Abstract
 				''
 			end,
 
-			self.rhs_messages.map(&:to_s).join('.')
+			self.rhs_messages.map(&:to_s).join
 		)
 	end
 

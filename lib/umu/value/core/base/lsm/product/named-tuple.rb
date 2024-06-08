@@ -54,7 +54,7 @@ class Named < Abstract
 	end
 
 
-	def select(sel_lab, loc, env)
+	def select_by_label(sel_lab, loc, env)
 		ASSERT.kind_of sel_lab,		::Symbol
 		ASSERT.kind_of loc,			L::Location
 
