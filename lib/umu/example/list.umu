@@ -63,7 +63,7 @@ structure List = struct {
 	}
 
 
-	# length : ['a] -> INTEGER
+	# length : ['a] -> INT
 	fun rec length = xs -> case xs {
 	  []	  -> 0
 	| [x|xs'] -> length xs' + 1
@@ -72,7 +72,7 @@ structure List = struct {
 	val length' = fold 0 { _ len -> len + 1 }
 
 
-	# sum : [INTEGER] -> INTEGER
+	# sum : [INT] -> INT
 	fun rec sum = xs -> case xs {
 	  []	  -> 0
 	| [x|xs'] -> x + sum xs'

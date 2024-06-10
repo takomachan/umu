@@ -304,11 +304,11 @@ case_rule: case_rule_head '->' expr inner_where_decls {
 }
 
 case_rule_head:
-  INTEGER	{ result = CSCE.make_case_rule_atom(
+  INT		{ result = CSCE.make_case_rule_atom(
 								val[0].loc, VC.make_integer(val[0].val)
 							)
 }
-| FLOAT		{ result = CSCE.make_case_rule_atom(
+| REAL		{ result = CSCE.make_case_rule_atom(
 								val[0].loc, VC.make_real(val[0].val)
 							)
 }
@@ -433,7 +433,7 @@ _messages:
 | message _messages	{ result = [val[0]] + val[1] }
 
 message:
-  '$' INTEGER {
+  '$' INT {
 	result = CSCE.make_number_selector val[1].loc, val[1].val
 }
 | '$' ID {
@@ -491,8 +491,8 @@ atom_expr:
 }
 
 # Constant
-| INTEGER	{ result = CSCE.make_integer	val[0].loc, val[0].val }
-| FLOAT		{ result = CSCE.make_real		val[0].loc, val[0].val }
+| INT		{ result = CSCE.make_integer	val[0].loc, val[0].val }
+| REAL		{ result = CSCE.make_real		val[0].loc, val[0].val }
 | STRING	{ result = CSCE.make_string		val[0].loc, val[0].val }
 | SYMBOL	{ result = CSCE.make_symbol		val[0].loc, val[0].sym }
 | __FILE__ {

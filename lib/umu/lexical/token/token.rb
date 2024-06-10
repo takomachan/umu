@@ -125,12 +125,12 @@ class Int < Abstraction::Abstract
 
 
 	def to_s
-		format "INTEGER(%s)", self.val.to_s
+		format "INT(%s)", self.val.to_s
 	end
 
 
 	def to_racc_token
-		:INTEGER
+		:INT
 	end
 end
 
@@ -145,12 +145,12 @@ class Real < Abstraction::Abstract
 
 
 	def to_s
-		format "FLOAT(%s)", self.val.to_s
+		format "REAL(%s)", self.val.to_s
 	end
 
 
 	def to_racc_token
-		:FLOAT
+		:REAL
 	end
 end
 
