@@ -34,7 +34,6 @@ SRCS	= commander.rb \
 			concrete-syntax/module/pattern.rb \
 			concrete-syntax/module/pattern/abstract.rb \
 			concrete-syntax/module/pattern/variable.rb \
-			concrete-syntax/module/pattern/struct.rb \
 			concrete-syntax/core.rb \
 			concrete-syntax/core/declaration.rb \
 			concrete-syntax/core/declaration/abstract.rb \
