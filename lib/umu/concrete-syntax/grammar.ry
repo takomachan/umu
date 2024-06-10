@@ -49,12 +49,62 @@ modu_decls:
 
 
 modu_decl:
-  STRUCTURE modu_pat '=' modu_expr {
-	result = CSMD.make_structure val[0].loc, val[1], val[3]
+  STRUCTURE ID '=' modu_expr {
+	var_pat = CSMP.make_variable val[1].loc, val[1].sym
+
+	result = CSMD.make_structure val[0].loc, var_pat, val[3]
+}
+| IMPORT modu_long_id '{' import_flds '}' {
+	result = CSMD.make_import val[0].loc, val[1], val[3]
 }
 | core_decl {
 	result = CSMD.make_core val[0].loc, val[0]
 }
+
+
+# Seq of import field
+
+import_flds:
+  /* empty */				{ result = [] }
+| import_fld import_flds	{ result = val[0] + val[1] }
+
+
+# Import field
+
+import_fld: VAL _import_fld	{ result = val[1] }
+
+_import_fld:
+	atom_import_fld {
+	result = [val[0]]
+}
+|	'(' atom_import_fld com_import_flds ')' {
+	result = [val[1]] + val[2]
+}
+
+
+# Comma separated seq of import field pattern
+
+com_import_flds:
+  /* empty */		{ result = [] }
+| _com_import_flds	{ result = val[0] }
+
+_com_import_flds:
+  ',' atom_import_fld					{ result = [val[1]] }
+| ',' atom_import_fld _com_import_flds	{ result = [val[1]] + val[2] }
+
+
+# Atomic import field pattern
+
+atom_import_fld: var_pat opt_import_var {
+	result = [
+		CSME.make_identifier(val[0].loc, val[0].var_sym),
+		val[1]
+	]
+}
+
+opt_import_var:
+  /* empty */	{ result = nil }
+| '=' var_pat	{ result = CSME.make_identifier val[1].loc, val[1].var_sym }
 
 
 
@@ -66,7 +116,19 @@ modu_expr:
   STRUCT '{' modu_decls '}' modu_where_decls {
 	result = CSME.make_struct val[0].loc, val[2], val[4]
 }
-| modu_path ID {
+| modu_long_id { result = val[0] }
+
+
+# WHERE declaration (Module Language)
+
+modu_where_decls:
+  /* empty */				{ result = [] }
+| WHERE '{' modu_decls '}'	{ result = val[2] }
+
+
+# Module long identifire
+
+modu_long_id: modu_path ID {
 	last_id = CSME.make_identifier val[1].loc, val[1].sym
 
 	result = if val[0].empty?
@@ -80,78 +142,11 @@ modu_expr:
 			end
 }
 
-
-# WHERE declaration (Module Language)
-
-modu_where_decls:
-  /* empty */				{ result = [] }
-| WHERE '{' modu_decls '}'	{ result = val[2] }
-
-
-# Module path (Module Language)
-
 modu_path:
   /* empty */			{ result = [] }
 | MODULE_DIR modu_path	{
 	result = [CSME.make_identifier(val[0].loc, val[0].sym)] + val[1]
 }
-
-
-
-#####################################
-####  Pattern (Module Language)  ####
-#####################################
-
-modu_pat:
-# Variable
-  ID { result = CSMP.make_variable val[0].loc, val[0].sym }
-
-# Structure
-| STRUCT '{' stru_flds_pats '}' {
-	result = CSMP.make_struct val[0].loc, val[2]
-}
-
-
-# Seq of structure fields pattern
-
-stru_flds_pats:
-  /* empty */		 			{ result = [] }
-| stru_flds_pat stru_flds_pats	{ result = val[0] + val[1] }
-
-
-# Structure fields pattern
-
-stru_flds_pat: VAL _stru_flds_pat	{ result = val[1] }
-
-_stru_flds_pat:
-	atom_stru_fld_pat {
-	result = [val[0]]
-}
-|	'(' atom_stru_fld_pat com_stru_fld_pats ')' {
-	result = [val[1]] + val[2]
-}
-
-
-# Comma separated seq of structure field pattern
-
-com_stru_fld_pats:
-  /* empty */			{ result = [] }
-| _com_stru_fld_pats	{ result = val[0] }
-
-_com_stru_fld_pats:
-  ',' atom_stru_fld_pat						{ result = [val[1]] }
-| ',' atom_stru_fld_pat _com_stru_fld_pats	{ result = [val[1]] + val[2] }
-
-
-# Atomic structure field pattern
-
-atom_stru_fld_pat: var_pat opt_stru_var_pat {
-	result = CSMP.make_struct_field val[0].loc, val[0].var_sym, val[1]
-}
-
-opt_stru_var_pat:
-  /* empty */	{ result = nil }
-| '->' var_pat	{ result = val[1].var_sym }
 
 
 

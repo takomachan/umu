@@ -198,9 +198,7 @@ structure List = struct {
 									partition { x -> lt? x pivot } xs'
 	}
 } where {
-	structure struct {
-		val Cons -> cons
-	} = Umu::List
+	import Umu::List { val cons = Cons }
 }
 
 ;;

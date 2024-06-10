@@ -821,7 +821,7 @@ structure Umu = struct {
 ######## Toplevel definiation ########
 ######################################
 
-structure struct {
+import Umu::Prelude {
 	#### Top ####
 	val (
 		inspect, to-s,
@@ -894,7 +894,7 @@ structure struct {
 		swap, flip,
 		pair, cross
 	)
-} = Umu::Prelude
+}
 ___EOS___
 
 end # Umu::Commander::Prelude

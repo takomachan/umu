@@ -19,7 +19,38 @@ module Expression
 
 module Identifier
 
-class Abstract < Expression::Abstract; end
+class Abstract < Expression::Abstract
+	def cons(id)
+		ASSERT.kind_of id, Abstract
+
+		CSME.make_long_identifier(
+				id.loc,
+				id.head,
+				id.tail + [self.head] + self.tail
+			)
+	end
+
+
+	def enque(id)
+		ASSERT.kind_of id, Abstract
+
+		CSME.make_long_identifier(
+				self.loc,
+				self.head,
+				self.tail + [id.head] + id.tail
+			)
+	end
+
+
+	def head
+		raise X::SubclassResponsibility
+	end
+
+
+	def tail
+		raise X::SubclassResponsibility
+	end
+end
 
 
 
@@ -41,6 +72,16 @@ class Short < Abstract
 	end
 
 
+	def head
+		self
+	end
+
+
+	def tail
+		[].freeze
+	end
+
+
 private
 
 	def __desugar__(_env, _event)
@@ -51,27 +92,27 @@ end
 
 
 class Long < Abstract
-	attr_reader :head_id, :tail_ids
+	attr_reader :head, :tail
 
 
-	def initialize(loc, head_id, tail_ids)
-		ASSERT.kind_of head_id,		Short
-		ASSERT.kind_of tail_ids,	::Array
+	def initialize(loc, head, tail)
+		ASSERT.kind_of head, Short
+		ASSERT.kind_of tail, ::Array
 
 		super(loc)
 
-		@head_id	= head_id
-		@tail_ids	= tail_ids
+		@head = head
+		@tail = tail
 	end
 
 
 	def to_s
-		if tail_ids.empty?
-			self.head_id.to_s
+		if tail.empty?
+			self.head.to_s
 		else
 			format("%s::%s",
-				self.head_id.to_s,
-				self.tail_ids.map(&:to_s).join('::')
+				self.head.to_s,
+				self.tail.map(&:to_s).join('::')
 			)
 		end
 	end
@@ -84,8 +125,8 @@ private
 
 		ASCE.make_long_identifier(
 			loc,
-			self.head_id.desugar(new_env),
-			self.tail_ids.map { |id| id.desugar new_env }
+			self.head.desugar(new_env),
+			self.tail.map { |id| id.desugar new_env }
 		)
 	end
 end
@@ -103,11 +144,11 @@ module_function
 	end
 
 
-	def make_long_identifier(loc, head_id, tail_ids)
-		ASSERT.kind_of head_id,		Identifier::Short
-		ASSERT.kind_of tail_ids,	::Array
+	def make_long_identifier(loc, head, tail)
+		ASSERT.kind_of head, Identifier::Short
+		ASSERT.kind_of tail, ::Array
 
-		Identifier::Long.new(loc, head_id, tail_ids.freeze).freeze
+		Identifier::Long.new(loc, head, tail.freeze).freeze
 	end
 
 end	# Umu::ConcreteSyntax::Module::Expression

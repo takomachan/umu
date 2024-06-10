@@ -61,6 +61,66 @@ end
 
 
 
+class Import < Abstract
+	attr_reader :id, :fields
+
+
+	def initialize(loc, id, fields)
+		ASSERT.kind_of id,		CSME::Identifier::Abstract
+		ASSERT.kind_of fields,	::Array
+
+		super(loc)
+
+		@id		= id
+		@fields	= fields
+	end
+
+
+	def to_s
+		format("%%IMPORT %s { %s }",
+				self.id.to_s,
+				self.fields.map(&:map)
+		)
+	end
+
+
+	def exported_vars
+		[CSCP.make_variable(self.loc, self.id.sym)].freeze
+	end
+
+
+private
+
+	def __desugar__(env, event)
+		new_env = env.enter event
+
+		ASCD.make_declarations(
+			self.loc,
+
+			self.fields.map { |decl_id, opt_member_id|
+				ASSERT.kind_of     decl_id,	CSME::Identifier::Abstract
+				ASSERT.opt_kind_of opt_member_id, CSME::Identifier::Abstract
+
+				expr = ASCE.make_long_identifier(
+					self.loc,
+
+					self.id.head.desugar(env),
+
+					(
+						self.id.tail + [
+							opt_member_id ? opt_member_id : decl_id
+						]
+					).map { |id| id.desugar(env) }
+				)
+
+				ASCD.make_value self.loc, decl_id.sym, expr
+			}
+		)
+	end
+end
+
+
+
 class Core < Abstract
 	attr_reader :core_decl
 
@@ -100,6 +160,14 @@ module_function
 		ASSERT.kind_of expr,	CSME::Abstract
 
 		Structure.new(loc, pat, expr).freeze
+	end
+
+
+	def make_import(loc, id, fields)
+		ASSERT.kind_of id,		CSME::Identifier::Abstract
+		ASSERT.kind_of fields,	::Array
+
+		Import.new(loc, id, fields).freeze
 	end
 
 
