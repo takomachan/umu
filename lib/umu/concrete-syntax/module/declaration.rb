@@ -78,8 +78,21 @@ class Import < Abstract
 
 	def to_s
 		format("%%IMPORT %s { %s }",
-				self.id.to_s,
-				self.fields.map(&:map)
+			self.id.to_s,
+			self.fields.map { |decl_id, opt_member_id|
+				ASSERT.kind_of     decl_id,		  CSME::Identifier::Abstract
+				ASSERT.opt_kind_of opt_member_id, CSME::Identifier::Abstract
+
+				format("%%VAL %s%s",
+						decl_id.to_s,
+
+						if opt_member_id
+							format " = %s", opt_member_id
+						else
+							''
+						end
+				)
+			}.join(' ')
 		)
 	end
 
@@ -104,13 +117,13 @@ private
 				expr = ASCE.make_long_identifier(
 					self.loc,
 
-					self.id.head.desugar(env),
+					self.id.head.desugar(new_env),
 
 					(
-						self.id.tail + [
+						self.id.tail + (
 							opt_member_id ? opt_member_id : decl_id
-						]
-					).map { |id| id.desugar(env) }
+						).to_a
+					).map { |id| id.desugar(new_env) }
 				)
 
 				ASCD.make_value self.loc, decl_id.sym, expr

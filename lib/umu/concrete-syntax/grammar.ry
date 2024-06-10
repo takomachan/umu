@@ -103,8 +103,8 @@ atom_import_fld: var_pat opt_import_var {
 }
 
 opt_import_var:
-  /* empty */	{ result = nil }
-| '=' var_pat	{ result = CSME.make_identifier val[1].loc, val[1].var_sym }
+  /* empty */		{ result = nil }
+| '=' modu_long_id	{ result = val[1] }
 
 
 

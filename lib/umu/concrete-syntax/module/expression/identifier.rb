@@ -20,25 +20,8 @@ module Expression
 module Identifier
 
 class Abstract < Expression::Abstract
-	def cons(id)
-		ASSERT.kind_of id, Abstract
-
-		CSME.make_long_identifier(
-				id.loc,
-				id.head,
-				id.tail + [self.head] + self.tail
-			)
-	end
-
-
-	def enque(id)
-		ASSERT.kind_of id, Abstract
-
-		CSME.make_long_identifier(
-				self.loc,
-				self.head,
-				self.tail + [id.head] + id.tail
-			)
+	def to_a
+		([self.head] + self.tail).freeze
 	end
 
 
