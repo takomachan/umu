@@ -93,6 +93,7 @@ SRCS	= commander.rb \
 			abstract-syntax/core/declaration/abstract.rb \
 			abstract-syntax/core/declaration/simple.rb \
 			abstract-syntax/core/declaration/mutual-recursive.rb \
+			abstract-syntax/core/declaration/import.rb \
 			abstract-syntax/core/declaration/declarations.rb \
 			abstract-syntax/core/expression.rb \
 			abstract-syntax/core/expression/abstract.rb \

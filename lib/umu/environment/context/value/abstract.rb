@@ -65,7 +65,7 @@ class Abstract < Abstraction::Collection
 	end
 
 
-	def extend_mutual(bindings)
+	def extend_bindings(bindings)
 		ASSERT.kind_of bindings, ::Hash
 
 		ECV.make_bindings bindings, self

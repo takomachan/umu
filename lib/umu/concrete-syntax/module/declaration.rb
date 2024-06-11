@@ -62,38 +62,47 @@ end
 
 
 class Import < Abstract
-	attr_reader :id, :fields
+	attr_reader :id, :opt_fields
 
 
-	def initialize(loc, id, fields)
-		ASSERT.kind_of id,		CSME::Identifier::Abstract
-		ASSERT.kind_of fields,	::Array
+	def initialize(loc, id, opt_fields)
+		ASSERT.kind_of		id,			CSME::Identifier::Abstract
+		ASSERT.opt_kind_of	opt_fields,	::Array
 
 		super(loc)
 
-		@id		= id
-		@fields	= fields
+		@id			= id
+		@opt_fields	= opt_fields
 	end
 
 
 	def to_s
-		format("%%IMPORT %s { %s }",
-			self.id.to_s,
-			self.fields.map { |decl_id, opt_member_id|
-				ASSERT.kind_of     decl_id,		  CSME::Identifier::Abstract
-				ASSERT.opt_kind_of opt_member_id, CSME::Identifier::Abstract
+		body = if self.opt_fields
+			fields = self.opt_fields
 
-				format("%%VAL %s%s",
-						decl_id.to_s,
+			format(" { %s }",
+				fields.map { |target_id, opt_source_id|
+					ASSERT.kind_of     target_id,
+										CSME::Identifier::Short
+					ASSERT.opt_kind_of opt_source_id,
+										CSME::Identifier::Abstract
 
-						if opt_member_id
-							format " = %s", opt_member_id
-						else
-							''
-						end
-				)
-			}.join(' ')
-		)
+					format("%%VAL %s%s",
+							target_id.to_s,
+
+							if opt_source_id
+								format " = %s", opt_source_id
+							else
+								''
+							end
+					)
+				}.join(' ')
+			)
+		else
+			''
+		end
+
+		format "%%IMPORT %s%s", self.id.to_s, body
 	end
 
 
@@ -107,12 +116,12 @@ private
 	def __desugar__(env, event)
 		new_env = env.enter event
 
-		ASCD.make_declarations(
-			self.loc,
+		result = if self.opt_fields
+			fields = self.opt_fields
 
-			self.fields.map { |decl_id, opt_member_id|
-				ASSERT.kind_of     decl_id,	CSME::Identifier::Abstract
-				ASSERT.opt_kind_of opt_member_id, CSME::Identifier::Abstract
+			decls = fields.map { |target_id, opt_source_id|
+				ASSERT.kind_of     target_id,     CSME::Identifier::Short
+				ASSERT.opt_kind_of opt_source_id, CSME::Identifier::Abstract
 
 				expr = ASCE.make_long_identifier(
 					self.loc,
@@ -121,14 +130,20 @@ private
 
 					(
 						self.id.tail + (
-							opt_member_id ? opt_member_id : decl_id
+							opt_source_id ? opt_source_id : target_id
 						).to_a
 					).map { |id| id.desugar(new_env) }
 				)
 
-				ASCD.make_value self.loc, decl_id.sym, expr
+				ASCD.make_value self.loc, target_id.sym, expr
 			}
-		)
+
+			ASCD.make_declarations self.loc, decls
+		else
+			ASCD.make_import self.loc, self.id.desugar(new_env)
+		end
+
+		ASSERT.kind_of result, ASCD::Abstract
 	end
 end
 
@@ -176,11 +191,11 @@ module_function
 	end
 
 
-	def make_import(loc, id, fields)
-		ASSERT.kind_of id,		CSME::Identifier::Abstract
-		ASSERT.kind_of fields,	::Array
+	def make_import(loc, id, opt_fields)
+		ASSERT.kind_of		id,			CSME::Identifier::Abstract
+		ASSERT.opt_kind_of	opt_fields,	::Array
 
-		Import.new(loc, id, fields).freeze
+		Import.new(loc, id, opt_fields.freeze).freeze
 	end
 
 

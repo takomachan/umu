@@ -117,12 +117,12 @@ class Entry < Abstraction::Record
 	end
 
 
-	def va_extend_mutual_recursive(bindings)
+	def va_extend_bindings(bindings)
 		ASSERT.kind_of bindings, ::Hash
 
 
 		self.update_va_context(
-			self.va_context.extend_mutual(bindings)
+			self.va_context.extend_bindings(bindings)
 		)
 	end
 

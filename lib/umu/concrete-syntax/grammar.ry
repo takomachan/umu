@@ -54,22 +54,26 @@ modu_decl:
 
 	result = CSMD.make_structure val[0].loc, var_pat, val[3]
 }
-| IMPORT modu_long_id '{' import_flds '}' {
-	result = CSMD.make_import val[0].loc, val[1], val[3]
+| IMPORT modu_long_id opt_import_body {
+	result = CSMD.make_import val[0].loc, val[1], val[2]
 }
 | core_decl {
 	result = CSMD.make_core val[0].loc, val[0]
 }
 
 
-# Seq of import field
+# Optional body of import declaration
+
+opt_import_body:
+  /* empty */			{ result = nil }
+| '{' import_flds '}'	{ result = val[1] }
+
+
+# Import field
 
 import_flds:
   /* empty */				{ result = [] }
 | import_fld import_flds	{ result = val[0] + val[1] }
-
-
-# Import field
 
 import_fld: VAL _import_fld	{ result = val[1] }
 
@@ -82,7 +86,7 @@ _import_fld:
 }
 
 
-# Comma separated seq of import field pattern
+# Comma separated seq of import field
 
 com_import_flds:
   /* empty */		{ result = [] }
@@ -93,7 +97,7 @@ _com_import_flds:
 | ',' atom_import_fld _com_import_flds	{ result = [val[1]] + val[2] }
 
 
-# Atomic import field pattern
+# Atomic import field
 
 atom_import_fld: var_pat opt_import_var {
 	result = [

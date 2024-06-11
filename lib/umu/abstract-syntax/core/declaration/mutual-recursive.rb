@@ -43,7 +43,7 @@ private
 	def __evaluate__(env)
 		ASSERT.kind_of env, E::Entry
 
-		env.va_extend_mutual_recursive self.bindings
+		env.va_extend_bindings self.bindings
 	end
 end
 
