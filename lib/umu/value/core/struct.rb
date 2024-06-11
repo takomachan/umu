@@ -30,7 +30,15 @@ class Field < ::Object
 
 
 	def to_s
-		format "%%VAL %s = %s", self.label, self.value
+		format "val %s = %s", self.label, self.value
+		case self.value
+		when Entry
+			format "structure %s", self.label.to_s
+		when Function
+			format "fun %s",	   self.label.to_s
+		else
+			format "val %s : %s",  self.label.to_s, self.value.type_sym.to_s
+		end
 	end
 end
 
@@ -67,22 +75,7 @@ class Entry < Top
 
 
 	def to_s
-		format("%%STRUCT {%s}",
-				self.map { |field|
-					format("%%%s %s",
-						case field.value
-						when Entry
-							'STRUCTURE'
-						when Function
-							'FUN'
-						else
-							'VAL'
-						end,
-
-						field.label
-					)
-				}.join(' ')
-		)
+		format "struct {%s}", self.map(&:to_s).join(' ')
 	end
 
 
