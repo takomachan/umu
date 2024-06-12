@@ -73,15 +73,24 @@ opt_import_body:
 
 import_flds:
   /* empty */				{ result = [] }
-| import_fld import_flds	{ result = val[0] + val[1] }
+| import_fld import_flds	{ result = [val[0]] + val[1] }
 
-import_fld: VAL _import_fld	{ result = val[1] }
+import_fld:
+  VAL _import_fld {
+	result = CSMD.make_value_field_of_import val[0].loc,  val[1]
+}
+| FUN _import_fld {
+	result = CSMD.make_function_field_of_import val[0].loc,  val[1]
+}
+| STRUCTURE _import_fld {
+	result = CSMD.make_structure_field_of_import val[0].loc,  val[1]
+}
 
 _import_fld:
-	atom_import_fld {
+  atom_import_fld {
 	result = [val[0]]
 }
-|	'(' atom_import_fld com_import_flds ')' {
+|  '(' atom_import_fld com_import_flds ')' {
 	result = [val[1]] + val[2]
 }
 
