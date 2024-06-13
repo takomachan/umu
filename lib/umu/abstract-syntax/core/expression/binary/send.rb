@@ -162,32 +162,32 @@ class Method < Abstraction::Abstract
 		}
 		arg_num		= arg_values.size
 
-		receiver_spec	= env.ty_class_spec_of receiver
-		ASSERT.kind_of receiver_spec, ECTSC::Abstract
-		method_spec		= receiver_spec.lookup_instance_method(
+		receiver_signat	= env.ty_class_signat_of receiver
+		ASSERT.kind_of receiver_signat, ECTSC::Abstract
+		method_signat	= receiver_signat.lookup_instance_method(
 										method_sym, self.loc, env
 									)
-		ASSERT.kind_of method_spec, ECTS::Method
+		ASSERT.kind_of method_signat, ECTS::Method
 
-		param_specs	= method_spec.param_class_specs
-		param_num	= method_spec.param_class_specs.size
+		param_signats	= method_signat.param_class_signats
+		param_num		= method_signat.param_class_signats.size
 
 		result_value =
 			if param_num == arg_num
 				__validate_type_of_args__(
-					param_num, arg_values, param_specs, loc, env
+					param_num, arg_values, param_signats, loc, env
 				)
 
 				next_receiver = receiver.invoke(
-					method_spec, self.loc, env, event, *arg_values
+					method_signat, self.loc, env, event, *arg_values
 				)
 				ASSERT.assert env.ty_kind_of?(
-					next_receiver, method_spec.ret_class_spec
+					next_receiver, method_signat.ret_class_signat
 				)
 				ASSERT.kind_of next_receiver, VC::Top
 			elsif param_num < arg_num
 				__validate_type_of_args__(
-					param_num, arg_values, param_specs, loc, env
+					param_num, arg_values, param_signats, loc, env
 				)
 
 				invoked_values = if param_num == 0
@@ -197,11 +197,11 @@ class Method < Abstraction::Abstract
 									end
 
 				value = receiver.invoke(
-					method_spec, loc, env.enter(event), event,
+					method_signat, loc, env.enter(event), event,
 					*invoked_values
 				)
 				ASSERT.assert env.ty_kind_of?(
-					value, method_spec.ret_class_spec
+					value, method_signat.ret_class_signat
 				)
 				ASSERT.kind_of value, VC::Top
 
@@ -262,7 +262,7 @@ class Method < Abstraction::Abstract
 							ASCE.make_identifier(loc, :'%r'),
 							ASCE.make_method(
 								loc,
-								method_spec.symbol,
+								method_signat.symbol,
 								free_idents + bound_idents
 							)
 						)
@@ -279,27 +279,27 @@ class Method < Abstraction::Abstract
 
 private
 
-	def __validate_type_of_args__(num, arg_values, param_specs, loc, env)
-		ASSERT.kind_of num,			::Integer
-		ASSERT.kind_of arg_values,	::Array
-		ASSERT.kind_of param_specs,	::Array
-		ASSERT.kind_of loc,			L::Location
-		ASSERT.kind_of env,			E::Entry
+	def __validate_type_of_args__(num, arg_values, param_signats, loc, env)
+		ASSERT.kind_of num,				::Integer
+		ASSERT.kind_of arg_values,		::Array
+		ASSERT.kind_of param_signats,	::Array
+		ASSERT.kind_of loc,				L::Location
+		ASSERT.kind_of env,				E::Entry
 
 		(0 .. num - 1).each do |i|
-			arg_value	= arg_values[i]
-			param_spec	= param_specs[i]
-			ASSERT.kind_of arg_value,	VC::Top
-			ASSERT.kind_of param_spec,	ECTSC::Base
+			arg_value		= arg_values[i]
+			param_signat	= param_signats[i]
+			ASSERT.kind_of arg_value,		VC::Top
+			ASSERT.kind_of param_signat,	ECTSC::Base
 
-			unless env.ty_kind_of?(arg_value, param_spec)
+			unless env.ty_kind_of?(arg_value, param_signat)
 				raise X::TypeError.new(
 					loc,
 					env,
 					"For '%s's #%d argument, expected a %s, but %s : %s",
 						self.sym.to_s,
 						i + 1,
-						param_spec.symbol,
+						param_signat.symbol,
 						arg_value.to_s,
 						arg_value.type_sym
 				)
@@ -369,9 +369,9 @@ class Entry < Binary::Abstract
 		if self.opt_receiver_type_sym
 			receiver_type_sym = opt_receiver_type_sym
 
-			receiver_spec = new_env.ty_lookup receiver_type_sym, self.loc
-			ASSERT.kind_of receiver_spec, ECTSC::Base
-			unless env.ty_kind_of?(init_receiver, receiver_spec)
+			receiver_signat = new_env.ty_lookup receiver_type_sym, self.loc
+			ASSERT.kind_of receiver_signat, ECTSC::Base
+			unless env.ty_kind_of?(init_receiver, receiver_signat)
 				raise X::TypeError.new(
 					self.loc,
 					env,

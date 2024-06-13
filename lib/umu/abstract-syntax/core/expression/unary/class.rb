@@ -32,10 +32,10 @@ class Class < Abstract
 
 
 	def __evaluate__(env, _event)
-		class_spec = env.ty_lookup self.class_sym, self.loc
-		ASSERT.kind_of class_spec, ECTSC::Base
+		class_signat = env.ty_lookup self.class_sym, self.loc
+		ASSERT.kind_of class_signat, ECTSC::Base
 
-		VC.make_class class_spec
+		VC.make_class class_signat
 	end
 end
 

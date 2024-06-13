@@ -13,21 +13,21 @@ module Context
 
 module Type
 
-module Specification
+module Signature
 
 class SetOfClass < Abstraction::Collection
 	attr_reader :hash
 
 
-	def initialize(specs)
-		ASSERT.kind_of specs, ::Array
+	def initialize(signats)
+		ASSERT.kind_of signats, ::Array
 
-		@hash = specs.inject({}) { |hash, spec|
-			ASSERT.kind_of spec, ECTSC::Base
+		@hash = signats.inject({}) { |hash, signat|
+			ASSERT.kind_of signat, ECTSC::Base
 
-			hash.merge(spec => true) {
+			hash.merge(signat => true) {
 				ASSERT.abort(
-					"Duplicated a class specification: %s", spec.inspect
+					"Duplicated a class signature: %s", signat.inspect
 				)
 			}
 		}.freeze
@@ -38,16 +38,16 @@ class SetOfClass < Abstraction::Collection
 	end
 
 
-	def member?(spec)
-		ASSERT.kind_of spec, ECTSC::Base
+	def member?(signat)
+		ASSERT.kind_of signat, ECTSC::Base
 
-		self.hash.has_key? spec
+		self.hash.has_key? signat
 	end
 
 
 	def each
-		self.hash.each_key do |spec|
-			yield spec
+		self.hash.each_key do |signat|
+			yield signat
 		end
 	end
 
@@ -56,9 +56,9 @@ class SetOfClass < Abstraction::Collection
 		ASSERT.kind_of other, SetOfClass
 
 		SetOfClass.new(
-			self.hash.merge(other.hash) { |spec, _, _|
+			self.hash.merge(other.hash) { |signat, _, _|
 				ASSERT.abort(
-					"Duplicated a class specification: %s", spec.inspect
+					"Duplicated a class signature: %s", signat.inspect
 				)
 			}.keys.freeze
 		).freeze
@@ -69,15 +69,15 @@ end
 
 module_function
 
-	def make_set(specs)
-		ASSERT.kind_of specs, ::Array
+	def make_set(signats)
+		ASSERT.kind_of signats, ::Array
 
-		SetOfClass.new(specs.freeze).freeze
+		SetOfClass.new(signats.freeze).freeze
 	end
 
 EMPTY_SET = make_set([])
 
-end	# Umu::Environment::Context::Type::Specification
+end	# Umu::Environment::Context::Type::Signature
 
 end	# Umu::Environment::Context::Type
 

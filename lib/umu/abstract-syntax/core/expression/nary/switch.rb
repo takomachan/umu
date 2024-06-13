@@ -60,9 +60,9 @@ class Switch < Expression::Abstract
 		ASSERT.kind_of source_result, ASR::Value
 		source_value = source_result.value
 
-		source_spec = new_env.ty_lookup self.souce_type_sym, self.loc
-		ASSERT.kind_of source_spec, ECTSC::Base
-		unless env.ty_kind_of?(source_value, source_spec)
+		source_signat = new_env.ty_lookup self.souce_type_sym, self.loc
+		ASSERT.kind_of source_signat, ECTSC::Base
+		unless env.ty_kind_of?(source_value, source_signat)
 			raise X::TypeError.new(
 				self.loc,
 				env,

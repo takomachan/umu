@@ -13,7 +13,7 @@ module Context
 
 module Type
 
-module Specification
+module Signature
 
 module Class
 
@@ -187,8 +187,8 @@ class Base < Abstract
 
 		printf "%s%s\n", '    ' * nest, self.to_sym
 
-		self.subclasses.sort.each do |subclass_spec|
-			subclass_spec.print_class_tree nest + 1
+		self.subclasses.sort.each do |subclass_signat|
+			subclass_signat.print_class_tree nest + 1
 		end
 	end
 
@@ -234,17 +234,17 @@ class Base < Abstract
 		unless self.num_of_class_methods == 0
 			printf "%sCLASS METHODS:\n", indent_0
 
-			self.each_class_method(env).sort.each do |meth_spec|
+			self.each_class_method(env).sort.each do |meth_signat|
 				printf("%s&{%s}.%s : %s\n",
 					indent_1,
 
 					self.symbol,
 
-					meth_spec.symbol,
+					meth_signat.symbol,
 
 					(
-						meth_spec.param_class_specs +
-						[meth_spec.ret_class_spec.symbol]
+						meth_signat.param_class_signats +
+						[meth_signat.ret_class_signat.symbol]
 					).map(&:to_sym).join(' -> ')
 				)
 			end
@@ -253,17 +253,17 @@ class Base < Abstract
 		unless self.num_of_instance_methods == 0
 			printf "%sINSTANCE METHODS:\n", indent_0
 
-			self.each_instance_method(env).sort.each do |meth_spec|
+			self.each_instance_method(env).sort.each do |meth_signat|
 				printf("%s%s#%s : %s\n",
 					indent_1,
 
 					self.symbol,
 
-					meth_spec.symbol,
+					meth_signat.symbol,
 
 					(
-						meth_spec.param_class_specs +
-						[meth_spec.ret_class_spec.symbol]
+						meth_signat.param_class_signats +
+						[meth_signat.ret_class_signat.symbol]
 					).map(&:to_sym).join(' -> ')
 				)
 			end
@@ -283,27 +283,27 @@ private
 		ASSERT.kind_of		method_sym,		::Symbol
 		ASSERT.kind_of		param_classes,	::Array
 
-		ret_spec		= env.ty_spec_of_class ret_class
-		param_specs		= param_classes.map { |klass|
+		ret_signat		= env.ty_signat_of_class ret_class
+		param_signats	= param_classes.map { |klass|
 			ASSERT.subclass_of klass, VC::Top
 
-			env.ty_spec_of_class klass
+			env.ty_signat_of_class klass
 		}
 
-		ECTS.make_method meth_sym, ret_spec, method_sym, param_specs
+		ECTS.make_method meth_sym, ret_signat, method_sym, param_signats
 	end
 end
 
 
 
 class Meta < Abstract
-	attr_reader :base_class_spec
+	attr_reader :base_class_signat
 
 
-	def initialize(base_class_spec)
-		ASSERT.kind_of base_class_spec, Base
+	def initialize(base_class_signat)
+		ASSERT.kind_of base_class_signat, Base
 
-		@base_class_spec = base_class_spec
+		@base_class_signat = base_class_signat
 	end
 
 
@@ -312,13 +312,13 @@ class Meta < Abstract
 		ASSERT.kind_of loc,	L::Location
 		ASSERT.kind_of env,	E::Entry
 
-		method = self.base_class_spec.lookup_class_method(sym, loc, env)
+		method = self.base_class_signat.lookup_class_method(sym, loc, env)
 
 		ASSERT.kind_of method, ECTS::Method
 	end
 end
 
-end	# Umu::Environment::Context::Type::Specification::Class
+end	# Umu::Environment::Context::Type::Signature::Class
 
 
 
@@ -344,13 +344,13 @@ module_function
 	end
 
 
-	def make_metaclass(base_class_spec)
-		ASSERT.kind_of base_class_spec, Class::Base
+	def make_metaclass(base_class_signat)
+		ASSERT.kind_of base_class_signat, Class::Base
 
-		Class::Meta.new(base_class_spec).freeze
+		Class::Meta.new(base_class_signat).freeze
 	end
 
-end	# Umu::Environment::Context::Type::Specification
+end	# Umu::Environment::Context::Type::Signature
 
 end	# Umu::Environment::Context::Type
 

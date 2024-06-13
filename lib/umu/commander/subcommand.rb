@@ -29,14 +29,14 @@ module_function
 		when ':class'
 				case args.size
 				when 0
-					env.ty_context.root_class_spec.print_class_tree
+					env.ty_context.root_class_signat.print_class_tree
 				when 1
-					class_spec = env.ty_lookup(
+					class_signat = env.ty_lookup(
 						args[0].to_sym,
 						L.make_location(STDIN_FILE_NAME, line_num)
 					)
 
-					class_spec.print_class env
+					class_signat.print_class env
 				else
 					raise X::CommandError.new "Syntax error"
 				end

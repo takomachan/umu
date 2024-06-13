@@ -52,17 +52,17 @@ class KindOf < Binary::Abstract
 		ASSERT.kind_of env,		E::Entry
 		ASSERT.kind_of event,	E::Tracer::Event
 
-		rhs_spec = env.ty_lookup self.class_id.sym, self.loc
-		ASSERT.kind_of rhs_spec, ECTSC::Base
+		rhs_signat = env.ty_lookup self.class_id.sym, self.loc
+		ASSERT.kind_of rhs_signat, ECTSC::Base
 
 		lhs_value = self.expr.evaluate(env.enter event).value
 		ASSERT.kind_of lhs_value, VC::Top
 
 		if self.opt_type_sym
-			type_spec = env.ty_lookup self.opt_type_sym, self.loc
-			ASSERT.kind_of type_spec, ECTSC::Base
+			type_signat = env.ty_lookup self.opt_type_sym, self.loc
+			ASSERT.kind_of type_signat, ECTSC::Base
 
-			unless env.ty_kind_of?(lhs_value, type_spec)
+			unless env.ty_kind_of?(lhs_value, type_signat)
 				raise X::TypeError.new(
 					self.loc,
 					env,
@@ -75,7 +75,7 @@ class KindOf < Binary::Abstract
 			end
 		end
 
-		VC.make_bool env.ty_kind_of?(lhs_value, rhs_spec)
+		VC.make_bool env.ty_kind_of?(lhs_value, rhs_signat)
 	end
 end
 

@@ -162,10 +162,10 @@ SRCS	= commander.rb \
 			environment/tracer/stack.rb \
 			environment/context.rb \
 			environment/context/type.rb \
-			environment/context/type/specification.rb \
-			environment/context/type/specification/class.rb \
-			environment/context/type/specification/set-of-class.rb \
-			environment/context/type/specification/method.rb \
+			environment/context/type/signature.rb \
+			environment/context/type/signature/class.rb \
+			environment/context/type/signature/set-of-class.rb \
+			environment/context/type/signature/method.rb \
 			environment/context/type/entry.rb \
 			environment/context/value.rb \
 			environment/context/value/abstract.rb \

@@ -54,17 +54,18 @@ class Entry < Abstraction::Record
 	end
 
 
-	def ty_class_spec_of(value)
+	def ty_class_signat_of(value)
 		ASSERT.kind_of value, VC::Top
 
-		ASSERT.kind_of self.ty_context.class_spec_of(value), ECTSC::Abstract
+		ASSERT.kind_of self.ty_context.class_signat_of(value),
+						ECTSC::Abstract
 	end
 
 
-	def ty_spec_of_class(klass)
+	def ty_signat_of_class(klass)
 		ASSERT.subclass_of klass, VC::Top
 
-		ASSERT.kind_of self.ty_context.spec_of_class(klass), ECTSC::Base
+		ASSERT.kind_of self.ty_context.signat_of_class(klass), ECTSC::Base
 	end
 
 
@@ -76,11 +77,11 @@ class Entry < Abstraction::Record
 	end
 
 
-	def ty_kind_of?(lhs_value, rhs_spec)
+	def ty_kind_of?(lhs_value, rhs_signat)
 		ASSERT.kind_of lhs_value,	VC::Top
-		ASSERT.kind_of rhs_spec,	ECTSC::Base
+		ASSERT.kind_of rhs_signat,	ECTSC::Base
 
-		ASSERT.bool self.ty_context.test_kind_of?(lhs_value, rhs_spec)
+		ASSERT.bool self.ty_context.test_kind_of?(lhs_value, rhs_signat)
 	end
 
 

@@ -161,9 +161,9 @@ private
 			if head_param.opt_type_sym
 				type_sym = head_param.opt_type_sym
 
-				spec = env.ty_lookup type_sym, head_param.loc
-				ASSERT.kind_of spec, ECTSC::Base
-				unless env.ty_kind_of?(head_value, spec)
+				signat = env.ty_lookup type_sym, head_param.loc
+				ASSERT.kind_of signat, ECTSC::Base
+				unless env.ty_kind_of?(head_value, signat)
 					raise X::TypeError.new(
 						head_param.loc,
 						env,

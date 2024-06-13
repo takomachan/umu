@@ -67,31 +67,31 @@ class Top < ::Object
 	end
 
 
-	def invoke(method_spec, loc, env, _event, *arg_values)
-		ASSERT.kind_of method_spec,	ECTS::Method
-		ASSERT.kind_of loc,			L::Location
-		ASSERT.kind_of env,			E::Entry
-		ASSERT.kind_of arg_values,	::Array
+	def invoke(method_signat, loc, env, _event, *arg_values)
+		ASSERT.kind_of method_signat,	ECTS::Method
+		ASSERT.kind_of loc,				L::Location
+		ASSERT.kind_of env,				E::Entry
+		ASSERT.kind_of arg_values,		::Array
 		ASSERT.assert arg_values.all? { |v| v.kind_of? VC::Top }
 
 		msg = format("(%s).%s%s -> %s",
 						self.to_s,
 
-						method_spec.meth_sym,
+						method_signat.meth_sym,
 
 						if arg_values.empty?
 							''
 						else
 							format("(%s)",
 								arg_values.zip(
-									method_spec.param_class_specs
-								).map{ |(value, spec)|
-									format "%s : %s", value, spec.to_sym
+									method_signat.param_class_signats
+								).map{ |(value, signat)|
+									format "%s : %s", value, signat.to_sym
 								}.join(', ')
 							)
 						end,
 
-						method_spec.ret_class_spec.to_sym
+						method_signat.ret_class_signat.to_sym
 					)
 
 		value = E::Tracer.trace(
@@ -103,7 +103,7 @@ class Top < ::Object
 							msg,
 						) { |event|
 							__invoke__(
-								method_spec.meth_sym,
+								method_signat.meth_sym,
 								loc,
 								env,
 								event,

@@ -78,7 +78,7 @@ module Umu
 	module Environment
 		module Context
 			module Type
-				module Specification
+				module Signature
 					module Class; end
 				end
 			end
@@ -125,8 +125,8 @@ module Umu
 	E		= Environment
 	EC		= Environment::Context
 	ECT		= Environment::Context::Type
-	ECTS	= Environment::Context::Type::Specification
-	ECTSC	= Environment::Context::Type::Specification::Class
+	ECTS	= Environment::Context::Type::Signature
+	ECTSC	= Environment::Context::Type::Signature::Class
 	ECV		= Environment::Context::Value
 
 	ASSERT	= Assertion

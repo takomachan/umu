@@ -151,9 +151,9 @@ CLASS_SPECS.freeze
 
 
 =begin
-CLASS_SPECS.each do |spec|
-	printf "==== %s : %s ====\n", spec.symbol, spec.klass
-	p spec
+CLASS_SPECS.each do |signat|
+	printf "==== %s : %s ====\n", signat.symbol, signat.klass
+	p signat
 	puts
 end
 exit
@@ -162,18 +162,18 @@ exit
 SPEC_OF_CLASS, SPEC_OF_SYMBOL = CLASS_SPECS.inject(
 	 [{},				{}]
 	) {
-	|(spec_of_class,	spec_of_symbol), spec|
-	ASSERT.kind_of spec_of_class,	::Hash
-	ASSERT.kind_of spec_of_symbol,	::Hash
-	ASSERT.kind_of spec,			ECTSC::Base
+	|(signat_of_class,	signat_of_symbol), signat|
+	ASSERT.kind_of signat_of_class,		::Hash
+	ASSERT.kind_of signat_of_symbol,	::Hash
+	ASSERT.kind_of signat,				ECTSC::Base
 
 	[
-		spec_of_class.merge(spec.klass => spec) {
-			ASSERT.abort "Duplicated a class: %s", spec.klass.to_s
+		signat_of_class.merge(signat.klass => signat) {
+			ASSERT.abort "Duplicated a class: %s", signat.klass.to_s
 		},
 
-		spec_of_symbol.merge(spec.symbol => spec) {
-			ASSERT.abort "Duplicated a symbol: %s", spec.symbol.to_s
+		signat_of_symbol.merge(signat.symbol => signat) {
+			ASSERT.abort "Duplicated a symbol: %s", signat.symbol.to_s
 		}
 	]
 }
@@ -182,39 +182,39 @@ SPEC_OF_SYMBOL.freeze
 
 
 SUPERCLASS_OF_SUBCLASS, SUBCLASSES_OF_SUPERCLASS = CLASSES.inject(
-	 [{},					{}]
+	 [{},						{}]
 ) {
-	|(supspec_of_subspec,	subspecs_of_supspec), subclass|
-	ASSERT.kind_of		supspec_of_subspec,		::Hash
-	ASSERT.kind_of		subspecs_of_supspec,	::Hash
-	ASSERT.subclass_of	subclass,				VC::Top
+	|(supsignat_of_subsignat,	subsignats_of_supsignat), subclass|
+	ASSERT.kind_of		supsignat_of_subsignat,		::Hash
+	ASSERT.kind_of		subsignats_of_supsignat,	::Hash
+	ASSERT.subclass_of	subclass,					VC::Top
 
 	if subclass < ROOT_CLASS
-		subspec = SPEC_OF_CLASS[subclass]
-		supspec = SPEC_OF_CLASS[subclass.superclass]
-		ASSERT.kind_of subspec, ECTSC::Base
-		ASSERT.kind_of supspec, ECTSC::Base
+		subsignat = SPEC_OF_CLASS[subclass]
+		supsignat = SPEC_OF_CLASS[subclass.superclass]
+		ASSERT.kind_of subsignat, ECTSC::Base
+		ASSERT.kind_of supsignat, ECTSC::Base
 
 		[
-			supspec_of_subspec.merge(subspec => supspec) {
-				|spec, _, _|
+			supsignat_of_subsignat.merge(subsignat => supsignat) {
+				|signat, _, _|
 
 				ASSERT.abort(
-					"Duplicated a class specification: %s", spec.inspect
+					"Duplicated a class signature: %s", signat.inspect
 				)
 			},
 			
-			subspecs_of_supspec.merge(supspec => ECTS.make_set([subspec])) {
-				|_, old_set_of_spec, new_set_of_spec|
+			subsignats_of_supsignat.merge(supsignat => ECTS.make_set([subsignat])) {
+				|_, old_set_of_signat, new_set_of_signat|
 
-				old_set_of_spec.union new_set_of_spec
+				old_set_of_signat.union new_set_of_signat
 			}
 		]
 	else
 		[
-			supspec_of_subspec,
+			supsignat_of_subsignat,
 
-			subspecs_of_supspec
+			subsignats_of_supsignat
 		]
 	end
 }.freeze
@@ -230,42 +230,42 @@ ANCESTORS_OF_DESCENDANT, DESCENDANTS_OF_ANCESTOR = CLASS_SPECS.inject(
 	ASSERT.kind_of descendants_of_ancestor,	::Hash
 	ASSERT.kind_of descendant,				ECTSC::Base
 
-	ancestors, _ = loop.inject([[], descendant]) { |(specs, spec), _|
-		ASSERT.kind_of specs,	::Array
-		ASSERT.kind_of spec,	ECTSC::Base
+	ancestors, _ = loop.inject([[], descendant]) { |(signats, signat), _|
+		ASSERT.kind_of signats,	::Array
+		ASSERT.kind_of signat,	ECTSC::Base
 
-		opt_supspec = SUPERCLASS_OF_SUBCLASS[spec]
-		ASSERT.opt_kind_of opt_supspec, ECTSC::Base
+		opt_supsignat = SUPERCLASS_OF_SUBCLASS[signat]
+		ASSERT.opt_kind_of opt_supsignat, ECTSC::Base
 
-		if opt_supspec
-			[specs + [opt_supspec], opt_supspec]
+		if opt_supsignat
+			[signats + [opt_supsignat], opt_supsignat]
 		else
-			break [specs, nil]
+			break [signats, nil]
 		end
 	}
 
 	[
 		ancestors_of_descendant.merge(
 			descendant => ECTS.make_set(ancestors)
-		) { |spec, _, _|
+		) { |signat, _, _|
 
 			ASSERT.abort(
-				"Duplicated a class specification: %s", spec.inspect
+				"Duplicated a class signature: %s", signat.inspect
 			)
 		},
 
 		descendants_of_ancestor.merge(
 			ancestors.inject({}) { |hash, ancestor|
 				hash.merge(ancestor => ECTS.make_set([descendant])) {
-					|spec, _, _|
+					|signat, _, _|
 
-					ASSERT.abort("Duplicated a class specification: %s",
-									spec.inspect
+					ASSERT.abort("Duplicated a class signature: %s",
+									signat.inspect
 					)
 				}
 			}
-		) { |_, old_set_of_spec, new_set_of_spec|
-			old_set_of_spec.union new_set_of_spec
+		) { |_, old_set_of_signat, new_set_of_signat|
+			old_set_of_signat.union new_set_of_signat
 		}
 	]
 }.freeze
@@ -280,33 +280,33 @@ class Entry
 	end
 
 
-	def class_specs
+	def class_signats
 		CLASS_SPECS
 	end
 
 
-	def class_spec_of(value)
+	def class_signat_of(value)
 		ASSERT.kind_of value, VC::Top
 
-		spec = if value.kind_of?(META_CLASS)
-					ECTS.make_metaclass value.class_spec
+		signat = if value.kind_of?(META_CLASS)
+					ECTS.make_metaclass value.class_signat
 				else
-					self.spec_of_class value.class
+					self.signat_of_class value.class
 				end
 
-		ASSERT.kind_of spec, ECTSC::Abstract
+		ASSERT.kind_of signat, ECTSC::Abstract
 	end
 
 
-	def spec_of_class(klass)
+	def signat_of_class(klass)
 		ASSERT.subclass_of klass, VC::Top
 
 		ASSERT.kind_of SPEC_OF_CLASS[klass], ECTSC::Base
 	end
 
 
-	def root_class_spec
-		ASSERT.kind_of self.spec_of_class(ROOT_CLASS), ECTSC::Base
+	def root_class_signat
+		ASSERT.kind_of self.signat_of_class(ROOT_CLASS), ECTSC::Base
 	end
 
 
@@ -315,9 +315,9 @@ class Entry
 		ASSERT.kind_of loc,	L::Location
 		ASSERT.kind_of env,	E::Entry
 
-		spec = SPEC_OF_SYMBOL[sym]
+		signat = SPEC_OF_SYMBOL[sym]
 
-		unless spec
+		unless signat
 			raise X::NameError.new(
 				loc,
 				env,
@@ -325,27 +325,27 @@ class Entry
 			)
 		end
 
-		ASSERT.kind_of spec, ECTSC::Base
+		ASSERT.kind_of signat, ECTSC::Base
 	end
 
 
-	def test_kind_of?(lhs_value, rhs_spec)
+	def test_kind_of?(lhs_value, rhs_signat)
 		ASSERT.kind_of lhs_value,	VC::Top
-		ASSERT.kind_of rhs_spec,	ECTSC::Base
+		ASSERT.kind_of rhs_signat,	ECTSC::Base
 
-		lhs_spec = self.class_spec_of lhs_value
-		ASSERT.kind_of lhs_spec, ECTSC::Abstract
+		lhs_signat = self.class_signat_of lhs_value
+		ASSERT.kind_of lhs_signat, ECTSC::Abstract
 
 		result = (
-					lhs_spec.kind_of? ECTSC::Base
+					lhs_signat.kind_of? ECTSC::Base
 				) && (
-					if lhs_spec == rhs_spec
+					if lhs_signat == rhs_signat
 						true
 					else
-						rhs_specs = self.descendants_of rhs_spec
-						ASSERT.kind_of rhs_specs, ECTS::SetOfClass
+						rhs_signats = self.descendants_of rhs_signat
+						ASSERT.kind_of rhs_signats, ECTS::SetOfClass
 
-						rhs_specs.member? lhs_spec
+						rhs_signats.member? lhs_signat
 					end
 				)
 		ASSERT.bool result
@@ -383,7 +383,7 @@ end
 
 BUILTIN = Entry.new.freeze
 
-# BUILTIN.root_class_spec.print_class_tree
+# BUILTIN.root_class_signat.print_class_tree
 
 
 

@@ -74,9 +74,9 @@ private
 		if self.opt_type_sym
 			type_sym = opt_type_sym
 
-			spec = env.ty_lookup type_sym, self.loc
-			ASSERT.kind_of spec, ECTSC::Base
-			unless env.ty_kind_of?(value, spec)
+			signat = env.ty_lookup type_sym, self.loc
+			ASSERT.kind_of signat, ECTSC::Base
+			unless env.ty_kind_of?(value, signat)
 				raise X::TypeError.new(
 					self.loc,
 					env,
