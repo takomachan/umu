@@ -63,7 +63,7 @@ end
 
 module Import
 
-module Field
+module Fields
 
 class Abstract < Abstraction::Model
 	attr_reader :fields
@@ -79,17 +79,24 @@ class Abstract < Abstraction::Model
 
 
 	def to_s
-		self.fields.map { |target_id, opt_source_id|
+		self.fields.map { |target_id, opt_type_sym, opt_source_id|
 			ASSERT.kind_of     target_id,		CSME::Identifier::Short
+			ASSERT.opt_kind_of opt_type_sym,	::Symbol
 			ASSERT.opt_kind_of opt_source_id,	CSME::Identifier::Abstract
 
-			format("%%%s %s%s",
+			format("%%%s %s%s%s",
 					__reserved_word__,
 
 					target_id.to_s,
 
+					if opt_type_sym
+						format " : %s", opt_type_sym.to_s
+					else
+						''
+					end,
+
 					if opt_source_id
-						format " = %s", opt_source_id
+						format " = %s", opt_source_id.to_s
 					else
 						''
 					end
@@ -101,9 +108,10 @@ class Abstract < Abstraction::Model
 	def desugar_field(env, souce_dir_id)
 		ASSERT.kind_of souce_dir_id, CSME::Identifier::Abstract
 
-		self.fields.map { |target_id, opt_source_id|
-			ASSERT.kind_of     target_id,     CSME::Identifier::Short
-			ASSERT.opt_kind_of opt_source_id, CSME::Identifier::Abstract
+		self.fields.map { |target_id, opt_type_sym, opt_source_id|
+			ASSERT.kind_of     target_id,		CSME::Identifier::Short
+			ASSERT.opt_kind_of opt_type_sym,	::Symbol
+			ASSERT.opt_kind_of opt_source_id,	CSME::Identifier::Abstract
 
 			expr = ASCE.make_long_identifier(
 				souce_dir_id.loc,
@@ -121,7 +129,7 @@ class Abstract < Abstraction::Model
 				target_id.loc,
 				target_id.sym,
 				expr,
-				__opt_type_sym__
+				__opt_type_sym__(opt_type_sym)
 			)
 		}
 	end
@@ -148,8 +156,8 @@ private
 		'VAL'
 	end
 
-	def __opt_type_sym__
-		nil
+	def __opt_type_sym__(opt_type_sym)
+		opt_type_sym
 	end
 end
 
@@ -163,8 +171,8 @@ private
 		'FUN'
 	end
 
-	def __opt_type_sym__
-		:Function
+	def __opt_type_sym__(opt_type_sym)
+		opt_type_sym || :Function
 	end
 end
 
@@ -178,12 +186,12 @@ private
 		'STRUCTURE'
 	end
 
-	def __opt_type_sym__
-		:Struct
+	def __opt_type_sym__(opt_type_sym)
+		opt_type_sym || :Struct
 	end
 end
 
-end	# Umu::ConcreteSyntax::Module::Declaration::Import::Field
+end	# Umu::ConcreteSyntax::Module::Declaration::Import::Fields
 
 class Entry < Declaration::Abstract
 	attr_reader :id, :opt_fields
@@ -227,7 +235,7 @@ private
 			fields = self.opt_fields
 
 			decls = fields.inject([]) { |array, field|
-				ASSERT.kind_of field, Field::Abstract
+				ASSERT.kind_of field, Fields::Abstract
 
 				array + field.desugar_field(new_env, self.id)
 			}
@@ -295,24 +303,24 @@ module_function
 	end
 
 
-	def make_value_field_of_import(loc, atomic_fields)
+	def make_value_fields_of_import(loc, atomic_fields)
 		ASSERT.kind_of atomic_fields, ::Array
 
-		Import::Field::Value.new(loc, atomic_fields.freeze).freeze
+		Import::Fields::Value.new(loc, atomic_fields.freeze).freeze
 	end
 
 
-	def make_function_field_of_import(loc, atomic_fields)
+	def make_function_fields_of_import(loc, atomic_fields)
 		ASSERT.kind_of atomic_fields, ::Array
 
-		Import::Field::Function.new(loc, atomic_fields.freeze).freeze
+		Import::Fields::Function.new(loc, atomic_fields.freeze).freeze
 	end
 
 
-	def make_structure_field_of_import(loc, atomic_fields)
+	def make_structure_fields_of_import(loc, atomic_fields)
 		ASSERT.kind_of atomic_fields, ::Array
 
-		Import::Field::Structure.new(loc, atomic_fields.freeze).freeze
+		Import::Fields::Structure.new(loc, atomic_fields.freeze).freeze
 	end
 
 

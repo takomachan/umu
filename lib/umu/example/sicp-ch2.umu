@@ -1,7 +1,8 @@
 # vim: set nu ai sw=4 ts=4 :
 
 import Umu::Math {
-	val (PI, sin, cos, atan = atan2, sqrt)
+	val PI : Real
+	fun (sin, cos, atan = atan2, sqrt)
 }
 
 
