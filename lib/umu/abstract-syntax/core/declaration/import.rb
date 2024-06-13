@@ -53,7 +53,7 @@ private
 
 		bindings = struct_value.inject({}) { |hash, field|
 			hash.merge(
-				field.label => ECV::Bindings.make_value(field.value)
+				field.label => ECV.make_value_target(field.value)
 			) { |label, old_value, new_value|
 				ASSERT.abort format("No case, label: %s", label)
 			}

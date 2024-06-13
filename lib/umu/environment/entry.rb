@@ -98,7 +98,7 @@ class Entry < Abstraction::Record
 
 
 		self.update_va_context(
-			self.va_context.extend(sym, ECV::Bindings.make_value(value))
+			self.va_context.extend(sym, ECV.make_value_target(value))
 		)
 	end
 
@@ -111,7 +111,7 @@ class Entry < Abstraction::Record
 		self.update_va_context(
 			self.va_context.extend(
 				sym,
-				ECV::Bindings.make_recursive(lam_expr)
+				ECV.make_recursive_target(lam_expr)
 			)
 		)
 	end

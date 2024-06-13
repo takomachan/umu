@@ -68,7 +68,7 @@ private
 				ASSERT.kind_of function,	Function::Abstract
 
 				hash.merge(
-					function.lam_expr.sym => ECV::Bindings.make_recursive(
+					function.lam_expr.sym => ECV.make_recursive_target(
 						function.lam_expr.desugar(new_env)
 					)
 				) {

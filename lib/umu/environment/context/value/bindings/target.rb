@@ -70,23 +70,23 @@ end
 
 end # Umu::Environment::Context::Value::Bindings::Target
 
+end # Umu::Environment::Context::Value::Bindings
+
 
 module_function
 
-	def make_value(value)
+	def make_value_target(value)
 		ASSERT.kind_of value, VC::Top
 
-		Target::Value.new(value).freeze
+		Bindings::Target::Value.new(value).freeze
 	end
 
 
-	def make_recursive(lam_expr)
+	def make_recursive_target(lam_expr)
 		ASSERT.kind_of lam_expr, ASCEN::Lambda::Entry
 
-		Target::Recursive.new(lam_expr).freeze
+		Bindings::Target::Recursive.new(lam_expr).freeze
 	end
-
-end # Umu::Environment::Context::Value::Bindings
 
 end	# Umu::Environment::Context::Value
 
