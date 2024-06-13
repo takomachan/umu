@@ -67,15 +67,15 @@ SRCS	= commander.rb \
 			concrete-syntax/core/expression/binary/infix.rb \
 			concrete-syntax/core/expression/binary/apply.rb \
 			concrete-syntax/core/expression/binary/send.rb \
-			concrete-syntax/core/expression/n-ary.rb \
-			concrete-syntax/core/expression/n-ary/rule.rb \
-			concrete-syntax/core/expression/n-ary/if.rb \
-			concrete-syntax/core/expression/n-ary/branch.rb \
-			concrete-syntax/core/expression/n-ary/branch/abstract.rb \
-			concrete-syntax/core/expression/n-ary/branch/cond.rb \
-			concrete-syntax/core/expression/n-ary/branch/case.rb \
-			concrete-syntax/core/expression/n-ary/lambda.rb \
-			concrete-syntax/core/expression/n-ary/let.rb \
+			concrete-syntax/core/expression/nary.rb \
+			concrete-syntax/core/expression/nary/rule.rb \
+			concrete-syntax/core/expression/nary/if.rb \
+			concrete-syntax/core/expression/nary/branch.rb \
+			concrete-syntax/core/expression/nary/branch/abstract.rb \
+			concrete-syntax/core/expression/nary/branch/cond.rb \
+			concrete-syntax/core/expression/nary/branch/case.rb \
+			concrete-syntax/core/expression/nary/lambda.rb \
+			concrete-syntax/core/expression/nary/let.rb \
 			concrete-syntax/core/pattern.rb \
 			concrete-syntax/core/pattern/result.rb \
 			concrete-syntax/core/pattern/abstract.rb \
@@ -120,11 +120,11 @@ SRCS	= commander.rb \
 			abstract-syntax/core/expression/binary/kind-of.rb \
 			abstract-syntax/core/expression/binary/apply.rb \
 			abstract-syntax/core/expression/binary/send.rb \
-			abstract-syntax/core/expression/n-ary.rb \
-			abstract-syntax/core/expression/n-ary/if.rb \
-			abstract-syntax/core/expression/n-ary/switch.rb \
-			abstract-syntax/core/expression/n-ary/lambda.rb \
-			abstract-syntax/core/expression/n-ary/let.rb \
+			abstract-syntax/core/expression/nary.rb \
+			abstract-syntax/core/expression/nary/if.rb \
+			abstract-syntax/core/expression/nary/switch.rb \
+			abstract-syntax/core/expression/nary/lambda.rb \
+			abstract-syntax/core/expression/nary/let.rb \
 			value.rb \
 			value/core.rb \
 			value/core/top.rb \
