@@ -453,6 +453,9 @@ message:
 | '$' ID {
 	result = CSCE.make_label_selector  val[1].loc, val[1].sym
 }
+| '$' '(' named_fld com_named_flds ')' {
+	result = CSCE.make_modifier val[0].loc, [val[2]] + val[3]
+}
 | '.' meth_ident atom_exprs {
 	result = CSCE.make_method val[1].loc, val[1].sym, val[2]
 }

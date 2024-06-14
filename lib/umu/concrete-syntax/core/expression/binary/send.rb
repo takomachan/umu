@@ -78,6 +78,55 @@ end
 
 
 
+class Modifier < Abstract
+	attr_reader :fields
+
+
+	def initialize(loc, fields)
+		ASSERT.kind_of fields, ::Array
+
+		super(loc)
+
+		@fields = fields
+	end
+
+
+	def to_s
+		format("$(%s)",
+			self.fields.map { |label, expr|
+				format "%s %s", label.to_s, expr.to_s
+			}.join(', ')
+		)
+	end
+
+
+private
+
+	def __desugar__(env, event)
+		expr_by_label = self.fields.inject({}) { |hash, (label, expr)|
+			ASSERT.kind_of label,	CSCEU::Container::Named::Label
+			ASSERT.kind_of expr,	CSCE::Abstract
+
+			new_env = env.enter event
+			hash.merge(label.desugar(new_env) => expr.desugar(new_env)) {
+				|lab, _, _|
+
+				raise X::SyntaxError.new(
+					label.loc,
+					format("In modifier of named tuple, " +
+												"duplicated label: '%s'",
+							label.to_s
+					)
+				)
+			}
+		}.freeze
+
+		ASCE.make_modifier self.loc, expr_by_label
+	end
+end
+
+
+
 class Method < Abstract
 	attr_reader :sym, :exprs
 
@@ -191,6 +240,14 @@ module_function
 		ASSERT.kind_of sel_sym,	::Symbol
 
 		Binary::Send::Message::LabelSelector.new(loc, sel_sym).freeze
+	end
+
+
+	def make_modifier(loc, fields)
+		ASSERT.kind_of loc,		L::Location
+		ASSERT.kind_of fields,	::Array
+
+		Binary::Send::Message::Modifier.new(loc, fields.freeze).freeze
 	end
 
 

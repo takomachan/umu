@@ -96,28 +96,6 @@ class Entry < Top
 	end
 
 
-	def modify(other, loc, env)
-		ASSERT.kind_of other,	Struct::Entry
-		ASSERT.kind_of loc,		L::Location
-
-		other.value_by_label.each_key do |label|
-			unless self.value_by_label.key? label
-				raise X::SelectionError.new(
-					loc,
-					env,
-					"Unknown modifier label: '%s'", label.to_s
-				)
-			end
-		end
-
-		VC.make_struct(
-			self.loc,
-
-			self.value_by_label.merge(other.value_by_label)
-		)
-	end
-
-
 	def meth_equal(loc, env, event, other)
 		ASSERT.kind_of other, VC::Top
 

@@ -63,7 +63,7 @@ class Named < Abstract
 			raise X::SelectionError.new(
 				loc,
 				env,
-				"Unknown selector label: '%s'", sel_lab
+				"Unknown selector label: '%s'", sel_lab.to_s
 			)
 		end
 		index = opt_index
@@ -72,14 +72,14 @@ class Named < Abstract
 	end
 
 
-	def modify(other, loc, env)
-		ASSERT.kind_of other,	Named
-		ASSERT.kind_of loc,		L::Location
+	def modify(value_by_label, loc, env)
+		ASSERT.kind_of value_by_label,	::Hash
+		ASSERT.kind_of loc,				L::Location
 
-		mut_self_values = self.value.dup
-		other.index_by_label.each_key do |label, other_index|
-			self_index = self.index_by_label[label]
-			unless self_index
+		mut_values = self.values.dup
+		value_by_label.each_key do |label, expr|
+			index = self.index_by_label[label]
+			unless index
 				raise X::SelectionError.new(
 					loc,
 					env,
@@ -87,10 +87,10 @@ class Named < Abstract
 				)
 			end
 
-			mut_self_values[self_index] = other.values[other_index]
+			mut_values[index] = value_by_label[label]
 		end
 
-		VC.make_named_tuple self.loc, mut_self_values, self.index_by_label
+		VC.make_named_tuple mut_values, self.index_by_label
 	end
 
 

@@ -120,6 +120,60 @@ end
 
 
 
+class Modifier < Abstraction::Selector
+	alias expr_by_label sel
+
+	def initialize(loc, expr_by_label)
+		ASSERT.kind_of expr_by_label, ::Hash
+
+		super
+	end
+
+
+	def to_s
+		format("$(%s)",
+			self.expr_by_label.map { |label, expr|
+				format "%s %s", label.to_s, expr.to_s
+			}.join(', ')
+		)
+	end
+
+
+	def evaluate_for(value, env, event)
+		ASSERT.kind_of value, VC::Top
+
+		unless value.kind_of? VCBLP::Named
+			raise X::TypeError.new(
+				self.loc,
+				env,
+				"Modifier operator '$(..)' require a Named, but %s : %s",
+					value.to_s,
+					value.type_sym.to_s
+			)
+		end
+
+		new_env = env.enter event
+		value_by_label = self.expr_by_label.inject({}) {
+			|hash, (label, expr)|
+			ASSERT.kind_of hash,	::Hash
+			ASSERT.kind_of label,	ASCEU::Container::Named::Label
+			ASSERT.kind_of expr,	ASCE::Abstract
+
+			result = expr.evaluate new_env
+			ASSERT.kind_of result, ASR::Value
+
+			hash.merge(label.sym => result.value) { |lab, _, _|
+				ASSERT.abort "No case - label: $s", lab.to_s
+			}
+		}
+
+		result = value.modify value_by_label, self.loc, env
+		ASSERT.kind_of result, VC::Top
+	end
+end
+
+
+
 class Method < Abstraction::Abstract
 	attr_reader	:sym, :exprs
 
@@ -413,6 +467,14 @@ module_function
 		ASSERT.kind_of sel_sym,	::Symbol
 
 		Binary::Send::Message::ByLabel.new(loc, sel_sym).freeze
+	end
+
+
+	def make_modifier(loc, expr_by_label)
+		ASSERT.kind_of loc,				L::Location
+		ASSERT.kind_of expr_by_label,	::Hash
+
+		Binary::Send::Message::Modifier.new(loc, expr_by_label).freeze
 	end
 
 
