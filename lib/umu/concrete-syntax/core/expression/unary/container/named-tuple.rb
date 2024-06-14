@@ -67,11 +67,15 @@ class Entry < Abstract
 			|(hash, array), (pair, index)|
 			ASSERT.kind_of	hash,	::Hash
 			ASSERT.kind_of	array,	::Array
-			ASSERT.tuple_of	pair,[Label, CSCE::Abstract]
+			ASSERT.kind_of	pair,	::Array
 			ASSERT.kind_of	index,	::Integer
 
+			label, opt_expr = pair
+			ASSERT.kind_of     label,    Label
+			ASSERT.opt_kind_of opt_expr, CSCE::Abstract
+
 			[
-				hash.merge(pair[0] => index) { |label, _, _|
+				hash.merge(label => index) { |label, _, _|
 					raise X::SyntaxError.new(
 						label.loc,
 						format("Duplicated label in named tuple: '%s'",
@@ -80,7 +84,7 @@ class Entry < Abstract
 					)
 				},
 
-				array + [pair[1]]
+				array + [opt_expr]
 			]
 		}
 
@@ -93,7 +97,12 @@ class Entry < Abstract
 	def to_s
 		format("(%s)",
 			self.index_by_label.map { |label, index|
-				format "%s %s", label.to_s, self.exprs[index].to_s
+				opt_expr = self.exprs[index]
+
+				format("%s%s",
+						label.to_s,
+						opt_expr ? (' ' + opt_expr.to_s) : ''
+				)
 			}.join(', ')
 		)
 	end
@@ -104,15 +113,25 @@ private
 	def __desugar__(env, event)
 		new_env = env.enter event
 
-		ASCE.make_named_tuple(
-			self.loc,
+		exprs = self.index_by_label.inject([]) { |array, (label, index)|
+			opt_expr = self.exprs[index]
 
-			self.map { |expr| expr.desugar(new_env) },
+			array + [
+				if opt_expr
+					opt_expr.desugar(new_env)
+				else
+					ASCE.make_identifier label.loc, label.sym
+				end
+			]
+		}
 
-			self.index_by_label.inject({}) { |hash, (label, index)|
-				hash.merge(label.desugar(new_env) => index)
-			}
-		)
+		index_by_label = self.index_by_label.inject({}) {
+			|hash, (label, index)|
+
+			hash.merge(label.desugar(new_env) => index)
+		}
+
+		ASCE.make_named_tuple self.loc, exprs, index_by_label
 	end
 end
 

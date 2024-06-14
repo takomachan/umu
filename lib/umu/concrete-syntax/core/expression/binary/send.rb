@@ -93,8 +93,16 @@ class Modifier < Abstract
 
 	def to_s
 		format("$(%s)",
-			self.fields.map { |label, expr|
-				format "%s %s", label.to_s, expr.to_s
+			self.fields.map { |label, opt_expr|
+				format("%s%s",
+						label.to_s,
+
+						if opt_expr
+							' ' + opt_expr.to_s
+						else
+							''
+						end
+				)
 			}.join(', ')
 		)
 	end
@@ -103,9 +111,15 @@ class Modifier < Abstract
 private
 
 	def __desugar__(env, event)
-		expr_by_label = self.fields.inject({}) { |hash, (label, expr)|
-			ASSERT.kind_of label,	CSCEU::Container::Named::Label
-			ASSERT.kind_of expr,	CSCE::Abstract
+		expr_by_label = self.fields.inject({}) { |hash, (label, opt_expr)|
+			ASSERT.kind_of     label,    CSCEU::Container::Named::Label
+			ASSERT.opt_kind_of opt_expr, CSCE::Abstract
+
+			expr = if opt_expr
+						opt_expr
+					else
+						CSCE.make_identifier label.loc, label.sym
+					end
 
 			new_env = env.enter event
 			hash.merge(label.desugar(new_env) => expr.desugar(new_env)) {

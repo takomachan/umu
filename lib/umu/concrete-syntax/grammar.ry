@@ -245,6 +245,10 @@ inner_where_decls:
 ####  Expression (Core Language)  ####
 ######################################
 
+opt_expr:
+  /* empty */	{ result = nil }
+| expr			{ result = val[0] }
+
 expr:
   resrv_infix_expr
 | IF if_rule elsif_rules ELSE expr {
@@ -630,7 +634,7 @@ _com_named_flds:
   ',' named_fld					{ result = [val[1]] }
 | ',' named_fld _com_named_flds	{ result = [val[1]] + val[2] }
 
-named_fld: LABEL expr {
+named_fld: LABEL opt_expr {
   	result = [
 		CSCE.make_named_tuple_label(val[0].loc, val[0].sym),
 		val[1]
