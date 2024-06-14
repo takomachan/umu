@@ -62,7 +62,7 @@ private
 		ASCD.make_declarations(
 			self.loc,
 			[
-				ASCD.make_value(self.loc, :'%t', expr, :Tuple)
+				ASCD.make_value(self.loc, :'%t', expr, :Product)
 			] + (
 				__desugar__(:'%t', env)
 			)
@@ -78,7 +78,7 @@ private
 		CSCP.make_result(
 			ASCE.make_identifier(self.loc, var_sym),
 			__desugar__(var_sym, env),
-			:Tuple
+			:Product
 		)
 	end
 
