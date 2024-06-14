@@ -576,6 +576,11 @@ atom_expr:
 
 	result = CSCE.make_comprehension val[0].loc, expr, val[5]
 }
+| '[' '|' named_fld ',' named_fld com_named_flds '|' qualifiers  ']' {
+	expr = CSCE.make_named_tuple val[0].loc, [val[2], val[4]] + val[5]
+
+	result = CSCE.make_comprehension val[0].loc, expr, val[7]
+}
 
 # Braket: { ... }
 | '{' pat pats '->' expr inner_where_decls '}' {
