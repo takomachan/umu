@@ -655,12 +655,16 @@ qualifiers:
 | qualifier _qualifiers	{ result = [val[0]] + val[1] }
 
 _qualifiers:
-  ',' qualifier				{ result = [val[1]] }
-| ',' qualifier _qualifiers	{ result = [val[1]] + val[2] }
+  qualifier				{ result = [val[0]] }
+| qualifier _qualifiers	{ result = [val[0]] + val[1] }
 
 qualifier:
-  pat '<-' expr	{ result = CSCE.make_generator val[0].loc, val[0], val[2] }
-| IF expr		{ result = CSCE.make_guard     val[0].loc, val[1] }
+  VAL pat '<-' expr {
+  	result = CSCE.make_generator val[0].loc, val[1], val[3]
+}
+| IF expr {
+	result = CSCE.make_guard val[0].loc, val[1]
+}
 
 
 

@@ -21,19 +21,19 @@ structure SUPPLIERS = struct {
 	fun status = row : Product -> row$3
 	fun city   = row : Product -> row$4
 
-	val rows = [
-	#	 S#    SNAME   STATUS CITY
-	#------------------------------------
-		(@S1, "Smith", 20,   "London"),
-		(@S2, "Jones", 10,   "Paris"),
-		(@S3, "Blake", 30,   "Paris")
-	] |> map { row -> (
+	val rows = map { row -> (
 			sno:    sno row,
 			sname:  sname row,
 			status: status row,
 			city:   city row
 		)
-	}
+	} [
+	#	  S#   SNAME   STATUS CITY
+	#------------------------------------
+		(@S1, "Smith", 20,   "London"),
+		(@S2, "Jones", 10,   "Paris"),
+		(@S3, "Blake", 30,   "Paris")
+	]
 }
 
 
@@ -44,21 +44,21 @@ structure PARTS = struct {
 	fun weight = row : Product -> row$4
 	fun city   = row : Product -> row$5
 
-	val rows = [
-	#    P#    PNAME    COLOR   WEIGHT CITY
-	#---------------------------------------------
-		(@P1, "Nut",   "Red",   12,   "London"),
-		(@P2, "Bolt",  "Green", 17,   "Paris"),
-		(@P3, "Screw", "Blue",  17,   "Rome"),
-		(@P4, "Screw", "Red",   14,   "London")
-	] |> map { row -> (
+	val rows = map { row -> (
 			pno:    pno row,
 			pname:  pname row,
 			color:  color row,
 			weight: weight row,
 			city:   city row
 		)
-	}
+	} [
+	#     P#   PNAME    COLOR   WEIGHT CITY
+	#---------------------------------------------
+		(@P1, "Nut",   "Red",   12,   "London"),
+		(@P2, "Bolt",  "Green", 17,   "Paris"),
+		(@P3, "Screw", "Blue",  17,   "Rome"),
+		(@P4, "Screw", "Red",   14,   "London")
+	]
 }
 
 
@@ -67,8 +67,13 @@ structure SHIPMENTS = struct {
 	fun pno	= row : Tuple -> row$2
 	fun qty	= row : Tuple -> row$3
 
-	val rows = [
-	#	 S#   P#   QTY
+	val rows = map { row -> (
+			sno: sno row,
+			pno: pno row,
+			qty: qty row
+		)
+	} [
+	#	  S#   P#  QTY
 	#---------------------
 		(@S1, @P1, 300),
 		(@S1, @P2, 200),
@@ -76,12 +81,7 @@ structure SHIPMENTS = struct {
 		(@S2, @P1, 300),
 		(@S2, @P2, 400),
 		(@S2, @P2, 200)
-	] |> map { row -> (
-			sno: sno row,
-			pno: pno row,
-			qty: qty row
-		)
-	}
+	]
 }
 
 
@@ -101,7 +101,7 @@ structure SP = SHIPMENTS
 
 print "#### 3.5.1 ####" ;;
 [|city|
-	(sno, _, _, city) <- S::rows, if sno == @S1
+	val (sno, _, _, city) <- S::rows if sno == @S1
 ] |> p ;;
 # --> ["London"]
 nl () ;;
@@ -112,7 +112,7 @@ nl () ;;
 
 print "#### 3.5.2 ####" ;;
 [|sno:, status:|
-	(sno, _, status, city) <- S::rows, if city == "Paris"
+	val (sno, _, status, city) <- S::rows if city == "Paris"
 ] |> map p ;;
 # --> (sno: @S2, status: 10)
 #     (sno: @S3, status: 30)
@@ -124,8 +124,8 @@ nl () ;;
 
 print "#### 3.5.3 ####" ;;
 [|pname|
-	(sno, sp-pno, _)        <- SP::rows, if sno == @S1,
-	(p-pno, pname, _, _, _) <- P::rows,  if p-pno == sp-pno
+	val (sno, sp-pno, _)        <- SP::rows if sno == @S1
+	val (p-pno, pname, _, _, _) <- P::rows  if p-pno == sp-pno
 ] |> p ;;
 # --> ["Nut", "Bolt", "Screw"]
 nl () ;;
@@ -138,8 +138,10 @@ nl () ;;
 
 print "#### 3.5.4 ####" ;;
 [|pno:, city:|
-	(sp-sno, pno, _)    <- SP::rows,
-	(s-sno, _, _, city) <- S::rows,  if s-sno == sp-sno
+	val (sp-sno, pno, _)    <- SP::rows
+	val (s-sno, _, _, city) <- S::rows
+
+	if s-sno == sp-sno
 ] |> map p ;;
 # --> (@P1, "London")
 #     (@P2, "London")
@@ -163,21 +165,21 @@ structure SUPPLIERS = struct {
 	fun status = row : Tuple -> row$3
 	fun city   = row : Tuple -> row$4
 
-	val rows = [
-	#	 S#		SNAME   	STATUS	CITY
-	#-----------------------------------------
-		(@S1,	"Smith",	20,		"London"),
-		(@S2,	"Jones",	10,		"Paris"),
-		(@S3,	"Blake",	30,		"Paris"),
-		(@S4,	"Clark",	20,		"London"),
-		(@S5,	"Adams",	30,		"Athens")
-	] |> map { row -> (
+	val rows = map { row -> (
 			sno:    sno row,
 			sname:  sname row,
 			status: status row,
 			city:   city row
 		)
-	}
+	} [
+	#	 S#    SNAME   STATUS CITY
+	#------------------------------------
+		(@S1, "Smith", 20,   "London"),
+		(@S2, "Jones", 10,   "Paris"),
+		(@S3, "Blake", 30,   "Paris"),
+		(@S4, "Clark", 20,   "London"),
+		(@S5, "Adams", 30,   "Athens")
+	]
 }
 
 
@@ -188,23 +190,23 @@ structure PARTS = struct {
 	fun weight = row : Tuple -> row$4
 	fun city   = row : Tuple -> row$5
 
-	val rows = [
-	#	 P#		PNAME  		COLOR		WEIGHT	CITY
-	#-----------------------------------------------------
-		(@P1,	"Nut",		"Red",		12,		"London"),
-		(@P2,	"Bolt",		"Green",	17,		"Paris"),
-		(@P3,	"Screw",	"Blue",		17,		"Rome"),
-		(@P4,	"Screw",	"Red",		14,		"London"),
-		(@P5,	"Cam",		"Blue",		12,		"Paris"),
-		(@P6,	"Cog",		"Red",		19,		"London")
-	] |> map { row -> (
+	val rows = map { row -> (
 			pno:    pno row,
 			pname:  pname row,
 			color:  color row,
 			weight: weight row,
 			city:   city row
 		)
-	}
+	} [
+	#     P#   PNAME    COLOR   WEIGHT CITY
+	#---------------------------------------------
+		(@P1, "Nut",   "Red",   12,   "London"),
+		(@P2, "Bolt",  "Green", 17,   "Paris"),
+		(@P3, "Screw", "Blue",  17,   "Rome"),
+		(@P4, "Screw", "Red",   14,   "London"),
+		(@P5, "Cam",   "Blue",  12,   "Paris"),
+		(@P6, "Cog",   "Red",   19,   "London")
+	]
 }
 
 
@@ -213,27 +215,27 @@ structure SHIPMENTS = struct {
 	fun pno	= row : Tuple -> row$2
 	fun qty	= row : Tuple -> row$3
 
-	val rows = [
-	#	 S#		P#		QTY
-	#-------------------------
-		(@S1,	@P1,	300),
-		(@S1,	@P2,	200),
-		(@S1,	@P3,	400),
-		(@S1,	@P4,	200),
-		(@S1,	@P5,	100),
-		(@S1,	@P6,	100),
-		(@S2,	@P1,	300),
-		(@S2,	@P2,	400),
-		(@S3,	@P2,	200),
-		(@S4,	@P2,	200),
-		(@S4,	@P4,	300),
-		(@S4,	@P5,	400)
-	] |> map { row -> (
+	val rows = map { row -> (
 			sno: sno row,
 			pno: pno row,
 			qty: qty row
 		)
-	}
+	} [
+	#     S#   P#  QTY
+	#---------------------
+		(@S1, @P1, 300),
+		(@S1, @P2, 200),
+		(@S1, @P3, 400),
+		(@S1, @P4, 200),
+		(@S1, @P5, 100),
+		(@S1, @P6, 100),
+		(@S2, @P1, 300),
+		(@S2, @P2, 400),
+		(@S3, @P2, 200),
+		(@S4, @P2, 200),
+		(@S4, @P4, 300),
+		(@S4, @P5, 400)
+	]
 }
 
 
@@ -261,7 +263,7 @@ structure SP = SHIPMENTS
 
 print "#### 7.2 ####" ;;
 [|sno:, status:|
-	(sno, _, status, city) <- S::rows, if city == "Paris"
+	val (sno, _, status, city) <- S::rows if city == "Paris"
 ] |> map p ;;
 # --> (sno: @S2, status: 10)
 #     (sno: @S3, status: 30)
@@ -276,7 +278,7 @@ nl () ;;
 #)
 
 print "#### 7.2.1 ####" ;;
-[|pno| (_, pno, _) <- SP::rows] |> p ;;
+[|pno| val (_, pno, _) <- SP::rows] |> p ;;
 # --> [@P1, @P2, @P3, @P4, @P5, @P6, @P1, @P2, @P2, @P2, @P4, @P5]
 nl () ;;
 
@@ -289,7 +291,7 @@ nl () ;;
 #)
 
 print "#### 7.2.2 ####" ;;
-[|sp| sp <- SP::rows] |> map p ;;
+[|sp| val sp <- SP::rows] |> map p ;;
 # --> [(sno: @S1, pno: @P1, qty: 300)
 #      (sno: @S1, pno: @P2, qty: 200)
 #      (sno: @S1, pno: @P3, qty: 400)
@@ -318,8 +320,9 @@ nl () ;;
 
 print "#### 7.2.3 ####" ;;
 [|sno|
-	(sno, _, status, city) <- S::rows,
-		if city == "Paris" && status > 20
+	val (sno, _, status, city) <- S::rows
+
+	if city == "Paris" && status > 20
 ] |> p ;;
 # --> [@S3]
 nl () ;;
