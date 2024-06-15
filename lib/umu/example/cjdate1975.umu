@@ -16,54 +16,72 @@ structure UAS = Umu::Assert
 # 3.2 関係型の方法 -- p66
 
 structure SUPPLIERS = struct {
-	val rows = [
-	#	 S#		SNAME   	STATUS	CITY
-	#-----------------------------------------
-		(@S1,	"Smith",	20,		"London"),
-		(@S2,	"Jones",	10,		"Paris"),
-		(@S3,	"Blake",	30,		"Paris")
-	]
+	fun sno    = row : Product -> row$1
+	fun sname  = row : Product -> row$2
+	fun status = row : Product -> row$3
+	fun city   = row : Product -> row$4
 
-	fun sno		= r : Tuple -> r$1
-	fun sname	= r : Tuple -> r$2
-	fun status	= r : Tuple -> r$3
-	fun city	= r : Tuple -> r$4
+	val rows = [
+	#	 S#    SNAME   STATUS CITY
+	#------------------------------------
+		(@S1, "Smith", 20,   "London"),
+		(@S2, "Jones", 10,   "Paris"),
+		(@S3, "Blake", 30,   "Paris")
+	] |> map { row -> (
+			sno:    sno row,
+			sname:  sname row,
+			status: status row,
+			city:   city row
+		)
+	}
 }
 
 
 structure PARTS = struct {
-	val rows = [
-	#	 P#		PNAME  		COLOR		WEIGHT	CITY
-	#-----------------------------------------------------
-		(@P1,	"Nut",		"Red",		12,		"London"),
-		(@P2,	"Bolt",		"Green",	17,		"Paris"),
-		(@P3,	"Screw",	"Blue",		17,		"Rome"),
-		(@P4,	"Screw",	"Red",		14,		"London")
-	]
+	fun pno    = row : Product -> row$1
+	fun pname  = row : Product -> row$2
+	fun color  = row : Product -> row$3
+	fun weight = row : Product -> row$4
+	fun city   = row : Product -> row$5
 
-	fun pno		= r : Tuple -> r$1
-	fun pname	= r : Tuple -> r$2
-	fun color	= r : Tuple -> r$3
-	fun weight	= r : Tuple -> r$4
-	fun city	= r : Tuple -> r$5
+	val rows = [
+	#    P#    PNAME    COLOR   WEIGHT CITY
+	#---------------------------------------------
+		(@P1, "Nut",   "Red",   12,   "London"),
+		(@P2, "Bolt",  "Green", 17,   "Paris"),
+		(@P3, "Screw", "Blue",  17,   "Rome"),
+		(@P4, "Screw", "Red",   14,   "London")
+	] |> map { row -> (
+			pno:    pno row,
+			pname:  pname row,
+			color:  color row,
+			weight: weight row,
+			city:   city row
+		)
+	}
 }
 
 
 structure SHIPMENTS = struct {
-	val rows = [
-	#	 S#		P#		QTY
-	#-------------------------
-		(@S1,	@P1,	300),
-		(@S1,	@P2,	200),
-		(@S1,	@P3,	400),
-		(@S2,	@P1,	300),
-		(@S2,	@P2,	400),
-		(@S2,	@P2,	200)
-	]
+	fun sno	= row : Tuple -> row$1
+	fun pno	= row : Tuple -> row$2
+	fun qty	= row : Tuple -> row$3
 
-	fun sno	= r : Tuple -> r$1
-	fun pno	= r : Tuple -> r$2
-	fun qty	= r : Tuple -> r$3
+	val rows = [
+	#	 S#   P#   QTY
+	#---------------------
+		(@S1, @P1, 300),
+		(@S1, @P2, 200),
+		(@S1, @P3, 400),
+		(@S2, @P1, 300),
+		(@S2, @P2, 400),
+		(@S2, @P2, 200)
+	] |> map { row -> (
+			sno: sno row,
+			pno: pno row,
+			qty: qty row
+		)
+	}
 }
 
 
@@ -81,29 +99,36 @@ structure SP = SHIPMENTS
 # 3.5.1 Find CITY for supplier S1.
 # 3.5.1 納入業者 S1 に対して CITY を見つけること。
 
-[|S::city s|
-	s <- S::rows, if S::sno s == @S1
-] ;;
+print "#### 3.5.1 ####" ;;
+[|city|
+	(sno, _, _, city) <- S::rows, if sno == @S1
+] |> p ;;
 # --> ["London"]
+nl () ;;
 
 
 # 3.5.2 Find S# and STATUS for suppliers in Paris.
 # 3.5.2 Paris にある納入業者に対して S# と STATUS を見つけること。
 
-[|S::sno s, S::status s|
-	s <- S::rows, if S::city s == "Paris"
-] ;;
-# --> [(@S2, 10), (@S3, 30)]
+print "#### 3.5.2 ####" ;;
+[|sno:, status:|
+	(sno, _, status, city) <- S::rows, if city == "Paris"
+] |> map p ;;
+# --> (sno: @S2, status: 10)
+#     (sno: @S3, status: 30)
+nl () ;;
 
 
 # 3.5.3 Find PNAME for parts supplied by suppliers S1.
 # 3.5.3 納入業者 S1 から納入される部品に対して PNAME を見つけること。
 
-[|P::pname p|
-	sp <- SP::rows, if SP::sno sp == @S1,
-	p  <- P::rows,  if P::pno p == SP::pno sp
-] ;;
+print "#### 3.5.3 ####" ;;
+[|pname|
+	(sno, sp-pno, _)        <- SP::rows, if sno == @S1,
+	(p-pno, pname, _, _, _) <- P::rows,  if p-pno == sp-pno
+] |> p ;;
 # --> ["Nut", "Bolt", "Screw"]
+nl () ;;
 
 
 # 3.5.4 For each part supplied, find P# and names of all cities supplying
@@ -111,12 +136,18 @@ structure SP = SHIPMENTS
 # 3.5.4 納入される各部品に対して、P# およびその部品を納入しているすべての
 #		都市の名前を見つけること。
 
-[|SP::pno sp, S::city s|
-	sp <- SP::rows,
-	s  <- S::rows,  if S::sno s == SP::sno sp
-] ;;
-# --> [(@P1, "London"), (@P2, "London"), (@P3, "London"),
-#	   (@P1, "Paris"),  (@P2, "Paris"),  (@P2, "Paris")]
+print "#### 3.5.4 ####" ;;
+[|pno:, city:|
+	(sp-sno, pno, _)    <- SP::rows,
+	(s-sno, _, _, city) <- S::rows,  if s-sno == sp-sno
+] |> map p ;;
+# --> (@P1, "London")
+#     (@P2, "London")
+#     (@P3, "London")
+#	  (@P1, "Paris")
+#     (@P2, "Paris")
+#     (@P2, "Paris")
+nl () ;;
 
 
 
@@ -127,6 +158,11 @@ structure SP = SHIPMENTS
 # 4.5 要約 -- p96
 
 structure SUPPLIERS = struct {
+	fun sno    = row : Tuple -> row$1
+	fun sname  = row : Tuple -> row$2
+	fun status = row : Tuple -> row$3
+	fun city   = row : Tuple -> row$4
+
 	val rows = [
 	#	 S#		SNAME   	STATUS	CITY
 	#-----------------------------------------
@@ -135,16 +171,23 @@ structure SUPPLIERS = struct {
 		(@S3,	"Blake",	30,		"Paris"),
 		(@S4,	"Clark",	20,		"London"),
 		(@S5,	"Adams",	30,		"Athens")
-	]
-
-	fun sno		= r : Tuple -> r$1
-	fun sname	= r : Tuple -> r$2
-	fun status	= r : Tuple -> r$3
-	fun city	= r : Tuple -> r$4
+	] |> map { row -> (
+			sno:    sno row,
+			sname:  sname row,
+			status: status row,
+			city:   city row
+		)
+	}
 }
 
 
 structure PARTS = struct {
+	fun pno    = row : Tuple -> row$1
+	fun pname  = row : Tuple -> row$2
+	fun color  = row : Tuple -> row$3
+	fun weight = row : Tuple -> row$4
+	fun city   = row : Tuple -> row$5
+
 	val rows = [
 	#	 P#		PNAME  		COLOR		WEIGHT	CITY
 	#-----------------------------------------------------
@@ -154,17 +197,22 @@ structure PARTS = struct {
 		(@P4,	"Screw",	"Red",		14,		"London"),
 		(@P5,	"Cam",		"Blue",		12,		"Paris"),
 		(@P6,	"Cog",		"Red",		19,		"London")
-	]
-
-	fun pno		= r : Tuple -> r$1
-	fun pname	= r : Tuple -> r$2
-	fun color	= r : Tuple -> r$3
-	fun weight	= r : Tuple -> r$4
-	fun city	= r : Tuple -> r$5
+	] |> map { row -> (
+			pno:    pno row,
+			pname:  pname row,
+			color:  color row,
+			weight: weight row,
+			city:   city row
+		)
+	}
 }
 
 
 structure SHIPMENTS = struct {
+	fun sno	= row : Tuple -> row$1
+	fun pno	= row : Tuple -> row$2
+	fun qty	= row : Tuple -> row$3
+
 	val rows = [
 	#	 S#		P#		QTY
 	#-------------------------
@@ -180,11 +228,12 @@ structure SHIPMENTS = struct {
 		(@S4,	@P2,	200),
 		(@S4,	@P4,	300),
 		(@S4,	@P5,	400)
-	]
-
-	fun sno	= r : Tuple -> r$1
-	fun pno	= r : Tuple -> r$2
-	fun qty	= r : Tuple -> r$3
+	] |> map { row -> (
+			sno: sno row,
+			pno: pno row,
+			qty: qty row
+		)
+	}
 }
 
 
@@ -210,10 +259,13 @@ structure SP = SHIPMENTS
 	WHERE  CITY = 'PARIS'
 #)
 
-[|S::sno s, S::status s|
-	s <- S::rows, if S::city s == "Paris"
-] ;;
-# --> [(@S2, 10), (@S3, 30)]
+print "#### 7.2 ####" ;;
+[|sno:, status:|
+	(sno, _, status, city) <- S::rows, if city == "Paris"
+] |> map p ;;
+# --> (sno: @S2, status: 10)
+#     (sno: @S3, status: 30)
+nl () ;;
 
 
 # 7.2.1 Simple retrieval: Get part numbers for all parts supplied.
@@ -223,8 +275,10 @@ structure SP = SHIPMENTS
 	FROM   SP
 #)
 
-[|SP::pno sp| sp <- SP::rows] ;;
+print "#### 7.2.1 ####" ;;
+[|pno| (_, pno, _) <- SP::rows] |> p ;;
 # --> [@P1, @P2, @P3, @P4, @P5, @P6, @P1, @P2, @P2, @P2, @P4, @P5]
+nl () ;;
 
 
 # 7.2.2 Simple retrieval: Get full details of all suppliers.
@@ -234,12 +288,21 @@ structure SP = SHIPMENTS
 	FROM   S
 #)
 
-[|sp| sp <- SP::rows] ;;
-# --> [(@S1, @P1, 300), (@S1, @P2, 200), (@S1, @P3, 400),
-#	   (@S1, @P4, 200), (@S1, @P5, 100), (@S1, @P6, 100),
-#	   (@S2, @P1, 300), (@S2, @P2, 400),
-#	   (@S3, @P2, 200),
-#	   (@S4, @P2, 200), (@S4, @P4, 300), (@S4, @P5, 400)]
+print "#### 7.2.2 ####" ;;
+[|sp| sp <- SP::rows] |> map p ;;
+# --> [(sno: @S1, pno: @P1, qty: 300)
+#      (sno: @S1, pno: @P2, qty: 200)
+#      (sno: @S1, pno: @P3, qty: 400)
+#	   (sno: @S1, pno: @P4, qty: 200)
+#      (sno: @S1, pno: @P5, qty: 100)
+#      (sno: @S1, pno: @P6, qty: 100)
+#	   (sno: @S2, pno: @P1, qty: 300)
+#      (sno: @S2, pno: @P2, qty: 400)
+#	   (sno: @S3, pno: @P2, qty: 200)
+#	   (sno: @S4, pno: @P2, qty: 200)
+#      (sno: @S4, pno: @P4, qty: 300)
+#      (sno: @S4, pno: @P5, qty: 400)
+nl () ;;
 
 
 # 7.2.3 Qualified retrieval: Get supplier numbers for suppliers in Paris
@@ -253,10 +316,13 @@ structure SP = SHIPMENTS
 	AND    STATUS > 20
 #)
 
-[|S::sno s|
-	s <- S::rows, if S::city s == "Paris" && S::status s > 20
-] ;;
+print "#### 7.2.3 ####" ;;
+[|sno|
+	(sno, _, status, city) <- S::rows,
+		if city == "Paris" && status > 20
+] |> p ;;
 # --> [@S3]
+nl () ;;
 
 
 # 7.2.4 Retrieval with ordring: Get supplier numbers and status for
@@ -280,8 +346,3 @@ structure SP = SHIPMENTS
     FROM   SP, S
     WHERE  SP.S# = S.S#
 #)
-
-[|SP::pno sp, S::city s|
-	sp <- SP::rows, s <- S::rows, if SP::sno sp == S::sno s
-]
-# --> [@S3]
