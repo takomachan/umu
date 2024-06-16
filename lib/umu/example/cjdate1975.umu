@@ -1,8 +1,6 @@
-# vim: set nu ai sw=4 ts=4 :
-
 (#
-	An Introduction to Database Systems Vol.1 Third Edition. 1075, C.J.Date
-	データベース・システム概論 第三販, 1984, C.J.Date
+    An Introduction to Database Systems Vol.1 Third Edition. 1075, C.J.Date
+    データベース・システム概論 第三販, 1984, C.J.Date
 #)
 
 
@@ -16,72 +14,72 @@ structure UAS = Umu::Assert
 # 3.2 関係型の方法 -- p66
 
 structure SUPPLIERS = struct {
-	fun sno    = row : Product -> row$1
-	fun sname  = row : Product -> row$2
-	fun status = row : Product -> row$3
-	fun city   = row : Product -> row$4
+    fun sno    = row : Product -> row$1
+    fun sname  = row : Product -> row$2
+    fun status = row : Product -> row$3
+    fun city   = row : Product -> row$4
 
-	val rows = map { row -> (
-			sno:    sno row,
-			sname:  sname row,
-			status: status row,
-			city:   city row
-		)
-	} [
-	#	  S#   SNAME   STATUS CITY
-	#------------------------------------
-		(@S1, "Smith", 20,   "London"),
-		(@S2, "Jones", 10,   "Paris"),
-		(@S3, "Blake", 30,   "Paris")
-	]
+    val rows = map { row -> (
+            sno:    sno row,
+            sname:  sname row,
+            status: status row,
+            city:   city row
+        )
+    } [
+    #     S#   SNAME   STATUS CITY
+    #------------------------------------
+        (@S1, "Smith", 20,   "London"),
+        (@S2, "Jones", 10,   "Paris"),
+        (@S3, "Blake", 30,   "Paris")
+    ]
 }
 
 
 structure PARTS = struct {
-	fun pno    = row : Product -> row$1
-	fun pname  = row : Product -> row$2
-	fun color  = row : Product -> row$3
-	fun weight = row : Product -> row$4
-	fun city   = row : Product -> row$5
+    fun pno    = row : Product -> row$1
+    fun pname  = row : Product -> row$2
+    fun color  = row : Product -> row$3
+    fun weight = row : Product -> row$4
+    fun city   = row : Product -> row$5
 
-	val rows = map { row -> (
-			pno:    pno row,
-			pname:  pname row,
-			color:  color row,
-			weight: weight row,
-			city:   city row
-		)
-	} [
-	#     P#   PNAME    COLOR   WEIGHT CITY
-	#---------------------------------------------
-		(@P1, "Nut",   "Red",   12,   "London"),
-		(@P2, "Bolt",  "Green", 17,   "Paris"),
-		(@P3, "Screw", "Blue",  17,   "Rome"),
-		(@P4, "Screw", "Red",   14,   "London")
-	]
+    val rows = map { row -> (
+            pno:    pno row,
+            pname:  pname row,
+            color:  color row,
+            weight: weight row,
+            city:   city row
+        )
+    } [
+    #     P#   PNAME    COLOR   WEIGHT CITY
+    #---------------------------------------------
+        (@P1, "Nut",   "Red",   12,   "London"),
+        (@P2, "Bolt",  "Green", 17,   "Paris"),
+        (@P3, "Screw", "Blue",  17,   "Rome"),
+        (@P4, "Screw", "Red",   14,   "London")
+    ]
 }
 
 
 structure SHIPMENTS = struct {
-	fun sno	= row : Tuple -> row$1
-	fun pno	= row : Tuple -> row$2
-	fun qty	= row : Tuple -> row$3
+    fun sno = row : Tuple -> row$1
+    fun pno = row : Tuple -> row$2
+    fun qty = row : Tuple -> row$3
 
-	val rows = map { row -> (
-			sno: sno row,
-			pno: pno row,
-			qty: qty row
-		)
-	} [
-	#	  S#   P#  QTY
-	#---------------------
-		(@S1, @P1, 300),
-		(@S1, @P2, 200),
-		(@S1, @P3, 400),
-		(@S2, @P1, 300),
-		(@S2, @P2, 400),
-		(@S2, @P2, 200)
-	]
+    val rows = map { row -> (
+            sno: sno row,
+            pno: pno row,
+            qty: qty row
+        )
+    } [
+    #     S#   P#  QTY
+    #---------------------
+        (@S1, @P1, 300),
+        (@S1, @P2, 200),
+        (@S1, @P3, 400),
+        (@S2, @P1, 300),
+        (@S2, @P2, 400),
+        (@S2, @P2, 200)
+    ]
 }
 
 
@@ -101,7 +99,7 @@ structure SP = SHIPMENTS
 
 print "#### 3.5.1 ####" ;;
 [|city|
-	val (sno, _, _, city) <- S::rows if sno == @S1
+    val (sno, _, _, city) <- S::rows if sno == @S1
 ] |> p ;;
 # --> ["London"]
 nl () ;;
@@ -112,7 +110,7 @@ nl () ;;
 
 print "#### 3.5.2 ####" ;;
 [|sno:, status:|
-	val (sno, _, status, city) <- S::rows if city == "Paris"
+    val (sno, _, status, city) <- S::rows if city == "Paris"
 ] |> map p ;;
 # --> (sno: @S2, status: 10)
 #     (sno: @S3, status: 30)
@@ -124,29 +122,29 @@ nl () ;;
 
 print "#### 3.5.3 ####" ;;
 [|pname|
-	val (sno, sp-pno, _)        <- SP::rows if sno == @S1
-	val (p-pno, pname, _, _, _) <- P::rows  if p-pno == sp-pno
+    val (sno, sp-pno, _)        <- SP::rows if sno == @S1
+    val (p-pno, pname, _, _, _) <- P::rows  if p-pno == sp-pno
 ] |> p ;;
 # --> ["Nut", "Bolt", "Screw"]
 nl () ;;
 
 
 # 3.5.4 For each part supplied, find P# and names of all cities supplying
-#		the parts.
+#       the parts.
 # 3.5.4 納入される各部品に対して、P# およびその部品を納入しているすべての
-#		都市の名前を見つけること。
+#       都市の名前を見つけること。
 
 print "#### 3.5.4 ####" ;;
 [|pno:, city:|
-	val (sp-sno, pno, _)    <- SP::rows
-	val (s-sno, _, _, city) <- S::rows
+    val (sp-sno, pno, _)    <- SP::rows
+    val (s-sno, _, _, city) <- S::rows
 
-	if s-sno == sp-sno
+    if s-sno == sp-sno
 ] |> map p ;;
 # --> (@P1, "London")
 #     (@P2, "London")
 #     (@P3, "London")
-#	  (@P1, "Paris")
+#     (@P1, "Paris")
 #     (@P2, "Paris")
 #     (@P2, "Paris")
 nl () ;;
@@ -160,82 +158,82 @@ nl () ;;
 # 4.5 要約 -- p96
 
 structure SUPPLIERS = struct {
-	fun sno    = row : Tuple -> row$1
-	fun sname  = row : Tuple -> row$2
-	fun status = row : Tuple -> row$3
-	fun city   = row : Tuple -> row$4
+    fun sno    = row : Tuple -> row$1
+    fun sname  = row : Tuple -> row$2
+    fun status = row : Tuple -> row$3
+    fun city   = row : Tuple -> row$4
 
-	val rows = map { row -> (
-			sno:    sno row,
-			sname:  sname row,
-			status: status row,
-			city:   city row
-		)
-	} [
-	#	 S#    SNAME   STATUS CITY
-	#------------------------------------
-		(@S1, "Smith", 20,   "London"),
-		(@S2, "Jones", 10,   "Paris"),
-		(@S3, "Blake", 30,   "Paris"),
-		(@S4, "Clark", 20,   "London"),
-		(@S5, "Adams", 30,   "Athens")
-	]
+    val rows = map { row -> (
+            sno:    sno row,
+            sname:  sname row,
+            status: status row,
+            city:   city row
+        )
+    } [
+    #    S#    SNAME   STATUS CITY
+    #------------------------------------
+        (@S1, "Smith", 20,   "London"),
+        (@S2, "Jones", 10,   "Paris"),
+        (@S3, "Blake", 30,   "Paris"),
+        (@S4, "Clark", 20,   "London"),
+        (@S5, "Adams", 30,   "Athens")
+    ]
 }
 
 
 structure PARTS = struct {
-	fun pno    = row : Tuple -> row$1
-	fun pname  = row : Tuple -> row$2
-	fun color  = row : Tuple -> row$3
-	fun weight = row : Tuple -> row$4
-	fun city   = row : Tuple -> row$5
+    fun pno    = row : Tuple -> row$1
+    fun pname  = row : Tuple -> row$2
+    fun color  = row : Tuple -> row$3
+    fun weight = row : Tuple -> row$4
+    fun city   = row : Tuple -> row$5
 
-	val rows = map { row -> (
-			pno:    pno row,
-			pname:  pname row,
-			color:  color row,
-			weight: weight row,
-			city:   city row
-		)
-	} [
-	#     P#   PNAME    COLOR   WEIGHT CITY
-	#---------------------------------------------
-		(@P1, "Nut",   "Red",   12,   "London"),
-		(@P2, "Bolt",  "Green", 17,   "Paris"),
-		(@P3, "Screw", "Blue",  17,   "Rome"),
-		(@P4, "Screw", "Red",   14,   "London"),
-		(@P5, "Cam",   "Blue",  12,   "Paris"),
-		(@P6, "Cog",   "Red",   19,   "London")
-	]
+    val rows = map { row -> (
+            pno:    pno row,
+            pname:  pname row,
+            color:  color row,
+            weight: weight row,
+            city:   city row
+        )
+    } [
+    #     P#   PNAME    COLOR   WEIGHT CITY
+    #---------------------------------------------
+        (@P1, "Nut",   "Red",   12,   "London"),
+        (@P2, "Bolt",  "Green", 17,   "Paris"),
+        (@P3, "Screw", "Blue",  17,   "Rome"),
+        (@P4, "Screw", "Red",   14,   "London"),
+        (@P5, "Cam",   "Blue",  12,   "Paris"),
+        (@P6, "Cog",   "Red",   19,   "London")
+    ]
 }
 
 
 structure SHIPMENTS = struct {
-	fun sno	= row : Tuple -> row$1
-	fun pno	= row : Tuple -> row$2
-	fun qty	= row : Tuple -> row$3
+    fun sno = row : Tuple -> row$1
+    fun pno = row : Tuple -> row$2
+    fun qty = row : Tuple -> row$3
 
-	val rows = map { row -> (
-			sno: sno row,
-			pno: pno row,
-			qty: qty row
-		)
-	} [
-	#     S#   P#  QTY
-	#---------------------
-		(@S1, @P1, 300),
-		(@S1, @P2, 200),
-		(@S1, @P3, 400),
-		(@S1, @P4, 200),
-		(@S1, @P5, 100),
-		(@S1, @P6, 100),
-		(@S2, @P1, 300),
-		(@S2, @P2, 400),
-		(@S3, @P2, 200),
-		(@S4, @P2, 200),
-		(@S4, @P4, 300),
-		(@S4, @P5, 400)
-	]
+    val rows = map { row -> (
+            sno: sno row,
+            pno: pno row,
+            qty: qty row
+        )
+    } [
+    #     S#   P#  QTY
+    #---------------------
+        (@S1, @P1, 300),
+        (@S1, @P2, 200),
+        (@S1, @P3, 400),
+        (@S1, @P4, 200),
+        (@S1, @P5, 100),
+        (@S1, @P6, 100),
+        (@S2, @P1, 300),
+        (@S2, @P2, 400),
+        (@S3, @P2, 200),
+        (@S4, @P2, 200),
+        (@S4, @P4, 300),
+        (@S4, @P5, 400)
+    ]
 }
 
 
@@ -256,14 +254,14 @@ structure SP = SHIPMENTS
 # Get supplier numbers and status for suppliers in Paris
 # Paris の納入業者について納入業者番号と状態を求めよ
 (#
-	SELECT S#, STATUS
-	FROM   S
-	WHERE  CITY = 'PARIS'
+    SELECT S#, STATUS
+    FROM   S
+    WHERE  CITY = 'PARIS'
 #)
 
 print "#### 7.2 ####" ;;
 [|sno:, status:|
-	val (sno, _, status, city) <- S::rows if city == "Paris"
+    val (sno, _, status, city) <- S::rows if city == "Paris"
 ] |> map p ;;
 # --> (sno: @S2, status: 10)
 #     (sno: @S3, status: 30)
@@ -273,8 +271,8 @@ nl () ;;
 # 7.2.1 Simple retrieval: Get part numbers for all parts supplied.
 # 7.2.1 単純検索: 納入されたすべての部品に対して部品番号を求める。
 (#
-	SELECT P#
-	FROM   SP
+    SELECT P#
+    FROM   SP
 #)
 
 print "#### 7.2.1 ####" ;;
@@ -286,8 +284,8 @@ nl () ;;
 # 7.2.2 Simple retrieval: Get full details of all suppliers.
 # 7.2.2 単純検索: すべての納入業者の完全な記述を求める。
 (#
-	SELECT *
-	FROM   S
+    SELECT *
+    FROM   S
 #)
 
 print "#### 7.2.2 ####" ;;
@@ -295,48 +293,48 @@ print "#### 7.2.2 ####" ;;
 # --> [(sno: @S1, pno: @P1, qty: 300)
 #      (sno: @S1, pno: @P2, qty: 200)
 #      (sno: @S1, pno: @P3, qty: 400)
-#	   (sno: @S1, pno: @P4, qty: 200)
+#      (sno: @S1, pno: @P4, qty: 200)
 #      (sno: @S1, pno: @P5, qty: 100)
 #      (sno: @S1, pno: @P6, qty: 100)
-#	   (sno: @S2, pno: @P1, qty: 300)
+#      (sno: @S2, pno: @P1, qty: 300)
 #      (sno: @S2, pno: @P2, qty: 400)
-#	   (sno: @S3, pno: @P2, qty: 200)
-#	   (sno: @S4, pno: @P2, qty: 200)
+#      (sno: @S3, pno: @P2, qty: 200)
+#      (sno: @S4, pno: @P2, qty: 200)
 #      (sno: @S4, pno: @P4, qty: 300)
 #      (sno: @S4, pno: @P5, qty: 400)
 nl () ;;
 
 
 # 7.2.3 Qualified retrieval: Get supplier numbers for suppliers in Paris
-#		with status > 20.
+#       with status > 20.
 # 7.2.3 限定検索: 状態 >20 なる Paris の納入業者に対する納入業者番号を
-#		求める。
+#       求める。
 (#
-	SELECT S#
-	FROM   S
-	WHERE  CITY = 'PARIS'
-	AND    STATUS > 20
+    SELECT S#
+    FROM   S
+    WHERE  CITY = 'PARIS'
+    AND    STATUS > 20
 #)
 
 print "#### 7.2.3 ####" ;;
 [|sno|
-	val (sno, _, status, city) <- S::rows
+    val (sno, _, status, city) <- S::rows
 
-	if city == "Paris" && status > 20
+    if city == "Paris" && status > 20
 ] |> p ;;
 # --> [@S3]
 nl () ;;
 
 
 # 7.2.4 Retrieval with ordring: Get supplier numbers and status for
-#		suppliers in Paris, in descending order of status.
+#       suppliers in Paris, in descending order of status.
 # 7.2.4 順序付けを伴う検索: Paris の納入業者に対する納入業者番号と状態を
-#		状態の降順で求める。
+#       状態の降順で求める。
 (#
-	SELECT S#, STATUS
-	FROM   S
-	WHERE  CITY = 'PARIS'
-	ORDER  BY STATUS DESC
+    SELECT S#, STATUS
+    FROM   S
+    WHERE  CITY = 'PARIS'
+    ORDER  BY STATUS DESC
 #)
 
 

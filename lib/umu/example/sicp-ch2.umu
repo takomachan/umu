@@ -1,8 +1,6 @@
-# vim: set nu ai sw=4 ts=4 :
-
 import Umu::Math {
-	val PI : Real
-	fun (sin, cos, atan = atan2, sqrt)
+    val PI : Real
+    fun (sin, cos, atan = atan2, sqrt)
 }
 
 
@@ -19,20 +17,20 @@ fun square = x -> x * x
 
 #### From SECTION 1.2.2
 
-###		fib : Int -> Int
+###     fib : Int -> Int
 fun rec fib = n -> case n {
-  0		-> 0
-| 1		-> 1
-  else	-> fib (n - 1) + fib (n - 2)
+  0     -> 0
+| 1     -> 1
+  else  -> fib (n - 1) + fib (n - 2)
 }
 
 
 #### From SECTION 1.2.5
 
-###		gcd : Int -> Int -> Int
+###     gcd : Int -> Int -> Int
 fun rec gcd = a b -> (
-	if (b == 0)	a
-	else		gcd b (a mod b)
+    if (b == 0) a
+    else        gcd b (a mod b)
 )
 
 
@@ -40,17 +38,17 @@ fun rec gcd = a b -> (
 
 ### prime? : Int -> Bool
 fun prime? = n -> (
-	n == smallest-divisor n
+    n == smallest-divisor n
 ) where {
-	fun divides? = a b -> b mod a == 0
+    fun divides? = a b -> b mod a == 0
 
-	fun rec find-divisor = n test-divisor -> (
-		if    (square test-divisor > n)	n
-		elsif (divides? test-divisor n)	test-divisor
-		else							find-divisor n (test-divisor + 1)
-	)
+    fun rec find-divisor = n test-divisor -> (
+        if    (square test-divisor > n) n
+        elsif (divides? test-divisor n) test-divisor
+        else                            find-divisor n (test-divisor + 1)
+    )
 
-	fun smallest-divisor = n -> find-divisor n 2
+    fun smallest-divisor = n -> find-divisor n 2
 }
 
 
@@ -72,14 +70,14 @@ fun prime? = n -> (
 ;;
 
 fun linear-combination = a b x y -> (
-	a * x + b * y
+    a * x + b * y
 )
 
 fun linear-combination' = a b x y -> (
-	add (mul a x) (mul b y)
+    add (mul a x) (mul b y)
 ) where {
-	val add = (+)
-	val mul = (*)
+    val add = (+)
+    val mul = (*)
 }
 
 
@@ -124,35 +122,35 @@ fun denom = x -> snd x
 
 ### print-rat : ('a, 'b) -> ()
 fun print-rat = x -> (
-	nl () ;
-	display (numer x) ;
-	display "/" ;
-	display (denom x)
+    nl () ;
+    display (numer x) ;
+    display "/" ;
+    display (denom x)
 )
 
 
 ### add-rat : ('a, 'a) -> ('a, 'a) -> ('a, 'a)    where 'a <- Number
 fun add-rat = x y -> (
-	make-rat (numer x * denom y + numer y * denom x)
-			 (denom x * denom y)
+    make-rat (numer x * denom y + numer y * denom x)
+             (denom x * denom y)
 )
 
 ### sub-rat : ('a, 'a) -> ('a, 'a) -> ('a, 'a)    where 'a <- Number
 fun sub-rat = x y -> (
-	make-rat (numer x * denom y - numer y * denom x)
-			 (denom x * denom y)
+    make-rat (numer x * denom y - numer y * denom x)
+             (denom x * denom y)
 )
 
 ### mul-rat : ('a, 'a) -> ('a, 'a) -> ('a, 'a)    where 'a <- Number
 fun mul-rat = x y -> (
-	make-rat (numer x * numer y)
-			 (denom x * denom y)
+    make-rat (numer x * numer y)
+             (denom x * denom y)
 )
 
 ### div-rat : ('a, 'a) -> ('a, 'a) -> ('a, 'a)    where 'a <- Number
 fun div-rat = x y -> (
-	make-rat (numer x * denom y)
-			 (denom x * numer y)
+    make-rat (numer x * denom y)
+             (denom x * numer y)
 )
 
 
@@ -190,14 +188,14 @@ val one-third = make-rat 1 3
 
 
 fun add-rat' = x y -> (
-	make-rat (numer x * denom y + numer y * denom x)
-			 (denom x * denom y)
+    make-rat (numer x * denom y + numer y * denom x)
+             (denom x * denom y)
 ) where {
-	fun make-rat = n d -> let {
-		val g = gcd n d
-	in
-		(n / g, d / g)
-	}
+    fun make-rat = n d -> let {
+        val g = gcd n d
+    in
+        (n / g, d / g)
+    }
 }
 
 ;; print-rat (add-rat' one-third one-third)
@@ -231,24 +229,24 @@ fun make-rat'' = n d -> (n, d)
 
 ### numer'' : ('a, 'b) -> 'a
 fun numer'' = x -> let {
-	val g = gcd (fst x) (snd x)
+    val g = gcd (fst x) (snd x)
 in
-	fst x / g
+    fst x / g
 }
 
 ### denom'' : ('a, 'b) -> 'a
 fun denom'' = x -> let {
-	val g = gcd (fst x) (snd x)
+    val g = gcd (fst x) (snd x)
 in
-	snd x / g
+    snd x / g
 }
 
 
 fun add-rat'' = x y -> (
-	make-rat (numer'' x * denom'' y + numer'' y * denom'' x)
-			 (denom'' x * denom'' y)
+    make-rat (numer'' x * denom'' y + numer'' y * denom'' x)
+             (denom'' x * denom'' y)
 ) where {
-	fun make-rat = n d -> (n, d)
+    fun make-rat = n d -> (n, d)
 }
 
 
@@ -261,11 +259,11 @@ fun add-rat'' = x y -> (
 
 
 fun dispa-cons = x y -> dispatch where {
-	fun dispatch = m -> case m {
-	  0		-> x
-	| 1		-> y
-	  else	-> panic ("Argument not 0 or 1 -- CONS: " ^ (to-s m))
-	}
+    fun dispatch = m -> case m {
+      0     -> x
+    | 1     -> y
+      else  -> panic ("Argument not 0 or 1 -- CONS: " ^ (to-s m))
+    }
 }
 
 fun dispa-car = z -> z 0
@@ -311,29 +309,29 @@ fun upper-bound = x -> snd x
 
 
 fun add-interval = x y -> (
-	make-interval
-		(lower-bound x + lower-bound y)
-		(upper-bound x + upper-bound y)
+    make-interval
+        (lower-bound x + lower-bound y)
+        (upper-bound x + upper-bound y)
 )
 
 fun mul-interval = x y -> let {
-	val p1 = lower-bound x * lower-bound y
-	val p2 = lower-bound x * upper-bound y
-	val p3 = upper-bound x * lower-bound y
-	val p4 = upper-bound x * upper-bound y
+    val p1 = lower-bound x * lower-bound y
+    val p2 = lower-bound x * upper-bound y
+    val p3 = upper-bound x * lower-bound y
+    val p4 = upper-bound x * upper-bound y
 in
-	make-interval
-		(min [p1, p2, p3, p4])
-		(max [p1, p2, p3, p4])
+    make-interval
+        (min [p1, p2, p3, p4])
+        (max [p1, p2, p3, p4])
 }
 
 fun div-interval = x y -> (
-	mul-interval
-		x
-		(make-interval
-			(1.0 / upper-bound y)
-			(1.0 / lower-bound y)
-		)
+    mul-interval
+        x
+        (make-interval
+            (1.0 / upper-bound y)
+            (1.0 / lower-bound y)
+        )
 )
 
 
@@ -370,8 +368,8 @@ val one-through-four = [1, 2, 3, 4]
 
 
 fun rec list-ref = items n -> (
-	if (n == 0)	head items
-	else		list-ref (tail items) (n - 1)
+    if (n == 0) head items
+    else        list-ref (tail items) (n - 1)
 )
 
 val squares = [1, 4, 9, 16, 25]
@@ -394,12 +392,12 @@ val odds = [1, 3, 5, 7]
 
 
 fun length' = items -> (
-	length-iter items 0
+    length-iter items 0
 ) where {
-	fun rec length-iter = a count -> case a {
-	    []   -> count
-	    else -> length-iter (tail a) (1 + count)
-	}
+    fun rec length-iter = a count -> case a {
+        []   -> count
+        else -> length-iter (tail a) (1 + count)
+    }
 }
 
 ;; length' odds
@@ -408,7 +406,7 @@ fun length' = items -> (
 
 
 fun rec append = list1 list2 -> case list1 {
-  []	   -> list2
+  []       -> list2
 | [x1|xs1] -> [x1 | append xs1 list2]
 }
 
@@ -424,7 +422,7 @@ fun rec append = list1 list2 -> case list1 {
 #### Mapping over lists ####
 
 fun rec scale-list = items factor -> case items {
-  []	 -> []
+  []     -> []
 | [x|xs] -> [x * factor | scale-list xs factor]
 }
 
@@ -434,7 +432,7 @@ fun rec scale-list = items factor -> case items {
 
 
 fun map = proc items -> case items {
-  []	 -> []
+  []     -> []
 | [x|xs] -> [proc x | map proc xs]
 }
 
@@ -467,13 +465,13 @@ fun scale-list' = items factor -> map { x -> x * factor } items
 
 
 fun rec count-leaves = xs -> (
-	if (xs kind-of? List)
-		case xs {
-		  []	  -> 0
-		| [x|xs'] -> count-leaves x + count-leaves xs'
-		}
-	else
-		1
+    if (xs kind-of? List)
+        case xs {
+          []      -> 0
+        | [x|xs'] -> count-leaves x + count-leaves xs'
+        }
+    else
+        1
 )
 
 
@@ -499,13 +497,13 @@ val x = [[1, 2] | [3, 4]]
 #### Mapping over trees ####
 
 fun rec scale-tree = tree factor -> (
-	if (tree kind-of? List)
-		case tree {
-		  []	 -> []
-		| [x|xs] -> [scale-tree x factor | scale-tree xs factor]
-		}
-	else
-		tree * factor
+    if (tree kind-of? List)
+        case tree {
+          []     -> []
+        | [x|xs] -> [scale-tree x factor | scale-tree xs factor]
+        }
+    else
+        tree * factor
 )
 
 ;; scale-tree [1, [2, [3, 4], 5], [6, 7]] 10
@@ -514,8 +512,8 @@ fun rec scale-tree = tree factor -> (
 
 
 fun rec scale-tree' = tree factor -> map { sub-tree ->
-	if (sub-tree kind-of? List)	scale-tree' sub-tree factor
-	else						sub-tree * factor
+    if (sub-tree kind-of? List) scale-tree' sub-tree factor
+    else                        sub-tree * factor
 } tree
 
 ;; scale-tree' [1, [2, [3, 4], 5], [6, 7]] 10
@@ -533,31 +531,31 @@ fun rec scale-tree' = tree factor -> map { sub-tree ->
 
 ###     sum-odd-squares : [Int] -> Int
 fun rec sum-odd-squares = tree -> (
-	if (tree kind-of? List)
-		case tree {
-		  []	 -> 0
-		| [x|xs] -> sum-odd-squares x + sum-odd-squares xs
-		}
-	else
-		cond tree {
-		  odd?	-> square tree
-		  else	-> 0
-		}
+    if (tree kind-of? List)
+        case tree {
+          []     -> 0
+        | [x|xs] -> sum-odd-squares x + sum-odd-squares xs
+        }
+    else
+        cond tree {
+          odd?  -> square tree
+          else  -> 0
+        }
 )
 
 ### even-fibs : Int -> [Int]
 fun even-fibs = n -> (
-	next 0
+    next 0
 ) where {
-	fun rec next = k -> cond k {
-	  (> n)	-> []
-	  else	-> let {
-					val f = fib k
-				in
-					if (even? f)	[f | next (k + 1)]
-					else			next (k + 1)
-				}
-	}
+    fun rec next = k -> cond k {
+      (> n) -> []
+      else  -> let {
+                    val f = fib k
+                in
+                    if (even? f)    [f | next (k + 1)]
+                    else            next (k + 1)
+                }
+    }
 }
 
 
@@ -579,9 +577,9 @@ fun even-fibs = n -> (
 
 ###     filter : ('a -> Bool) -> ['a] -> ['a]    where 'a <- Top
 fun rec filter = predicate sequence -> case sequence {
-  []	 -> []
-| [x|xs] -> if (predicate x)	[x | filter predicate xs]
-			else				filter predicate xs
+  []     -> []
+| [x|xs] -> if (predicate x)    [x | filter predicate xs]
+            else                filter predicate xs
 }
 
 ;; filter odd? [1, 2, 3, 4, 5]
@@ -591,7 +589,7 @@ fun rec filter = predicate sequence -> case sequence {
 
 ###     accumulate : ('a -> 'b -> 'b) -> ['a] -> 'b   where ('a, 'b) <- Top
 fun rec accumulate = op initial sequence -> case sequence {
-  []	 -> initial
+  []     -> initial
 | [x|xs] -> op x (accumulate op initial xs)
 }
 
@@ -607,8 +605,8 @@ fun rec accumulate = op initial sequence -> case sequence {
 
 
 fun rec enumerate-interval = low high -> (
-	if (low > high)	[]
-	else			[low | enumerate-interval (low + 1) high]
+    if (low > high) []
+    else            [low | enumerate-interval (low + 1) high]
 )
 
 ;; enumerate-interval 2 7
@@ -617,13 +615,13 @@ fun rec enumerate-interval = low high -> (
 
 
 fun rec enumerate-tree = tree -> (
-	if (tree kind-of? List)
-		case tree {
-		  []	 -> []
-		| [x|xs] -> enumerate-tree x ++ enumerate-tree xs
-		}
-	else
-		[tree]
+    if (tree kind-of? List)
+        case tree {
+          []     -> []
+        | [x|xs] -> enumerate-tree x ++ enumerate-tree xs
+        }
+    else
+        [tree]
 )
 
 ;; enumerate-tree [1, [2, [3, 4]], 5]
@@ -633,13 +631,13 @@ fun rec enumerate-tree = tree -> (
 
 ### sum-odd-squares' : [Int] -> Int
 fun sum-odd-squares' = tree -> (
-	accumulate (+) 0 (
-		map square (
-			filter odd? (
-				enumerate-tree tree
-			)
-		)
-	)
+    accumulate (+) 0 (
+        map square (
+            filter odd? (
+                enumerate-tree tree
+            )
+        )
+    )
 )
 
 ;; sum-odd-squares' [1, [2, [3, 4], 5], [6, 7]]
@@ -649,11 +647,11 @@ fun sum-odd-squares' = tree -> (
 
 ### sum-odd-squares'' : [Int] -> Int
 fun sum-odd-squares'' = tree -> (
-	tree
-	|> enumerate-tree
-	|> filter odd?
-	|> map square
-	|> accumulate (+) 0
+    tree
+    |> enumerate-tree
+    |> filter odd?
+    |> map square
+    |> accumulate (+) 0
 )
 
 ;; sum-odd-squares'' [1, [2, [3, 4], 5], [6, 7]]
@@ -663,10 +661,10 @@ fun sum-odd-squares'' = tree -> (
 
 ### sum-odd-squares''' : [Int] -> Int
 val sum-odd-squares''' = (
-	enumerate-tree
->>	filter odd?
->>	map	square
->>	accumulate (+) 0
+    enumerate-tree
+>>  filter odd?
+>>  map square
+>>  accumulate (+) 0
 )
 
 ;; sum-odd-squares''' [1, [2, [3, 4], 5], [6, 7]]
@@ -676,13 +674,13 @@ val sum-odd-squares''' = (
 
 ### even-fibs' : Int -> [Int]
 fun even-fibs' = n -> (
-	accumulate (|) [] (
-		filter even? (
-			map fib (
-				enumerate-interval 0 n
-			)
-		)
-	)
+    accumulate (|) [] (
+        filter even? (
+            map fib (
+                enumerate-interval 0 n
+            )
+        )
+    )
 )
 
 ;; even-fibs' 10
@@ -692,11 +690,11 @@ fun even-fibs' = n -> (
 
 ### even-fibs'' : Int -> [Int]
 fun even-fibs'' = n -> (
-	n
-	|> enumerate-interval 0
-	|> map fib
-	|> filter even?
-	|> accumulate (|) []
+    n
+    |> enumerate-interval 0
+    |> map fib
+    |> filter even?
+    |> accumulate (|) []
 )
 
 ;; even-fibs'' 10
@@ -706,10 +704,10 @@ fun even-fibs'' = n -> (
 
 ### even-fibs''' : Int -> [Int]
 val even-fibs''' = (
-	enumerate-interval 0
->>	map fib
->>	filter even?
->>	accumulate (|) []
+    enumerate-interval 0
+>>  map fib
+>>  filter even?
+>>  accumulate (|) []
 )
 
 ;; even-fibs''' 10
@@ -719,13 +717,13 @@ val even-fibs''' = (
 
 ### list-fib-squares : Int -> [Int]
 fun list-fib-squares = n -> (
-	accumulate (|) [] (
-		map square (
-			map fib (
-				enumerate-interval 0 n
-			)
-		)
-	)
+    accumulate (|) [] (
+        map square (
+            map fib (
+                enumerate-interval 0 n
+            )
+        )
+    )
 )
 
 ;; list-fib-squares 10
@@ -735,11 +733,11 @@ fun list-fib-squares = n -> (
 
 ### product-of-squares-of-odd-elements : [Int] -> Int
 fun product-of-squares-of-odd-elements = sequence -> (
-	accumulate (*) 1 (
-		map square (
-			filter odd? sequence
-		)
-	)
+    accumulate (*) 1 (
+        map square (
+            filter odd? sequence
+        )
+    )
 )
 
 ;; product-of-squares-of-odd-elements [1, 2, 3, 4, 5] ;;
@@ -749,19 +747,19 @@ fun product-of-squares-of-odd-elements = sequence -> (
 
 (#
 fun salary-of-highest-paid-programmer = records -> (
-	accumulate { x y -> max [x, y] } 0 (
-		map salary (
-			filter programmer? records
-		)
-	)
+    accumulate { x y -> max [x, y] } 0 (
+        map salary (
+            filter programmer? records
+        )
+    )
 )
 
 fun salary-of-highest-paid-programmer' = records -> (
-	max (
-		map salary (
-			filter programmer? records
-		)
-	)
+    max (
+        map salary (
+            filter programmer? records
+        )
+    )
 )
 #)
 
@@ -769,15 +767,15 @@ fun salary-of-highest-paid-programmer' = records -> (
 #### Nested mappings ####
 
 fun enumerate-pair = n -> (
-	accumulate (++) [] (
-		map { i ->
-			map { j -> (i, j) } (
-				enumerate-interval 1 (i - 1)
-			)
-		} (
-			enumerate-interval 1 n
-		)
-	)
+    accumulate (++) [] (
+        map { i ->
+            map { j -> (i, j) } (
+                enumerate-interval 1 (i - 1)
+            )
+        } (
+            enumerate-interval 1 n
+        )
+    )
 )
 
 ;; enumerate-pair 4
@@ -788,21 +786,21 @@ fun enumerate-pair = n -> (
 fun flatmap = proc seq -> accumulate (++) [] (map proc seq)
 
 fun prime-sum-pairs = n -> (
-	map make-pair-sum (
-		filter prime-sum? (
-			flatmap { i ->
-				map { j -> (i, j) } (
-					enumerate-interval 1 (i - 1)
-				)
-			} (
-				enumerate-interval 1 n
-			)
-		)
-	)
+    map make-pair-sum (
+        filter prime-sum? (
+            flatmap { i ->
+                map { j -> (i, j) } (
+                    enumerate-interval 1 (i - 1)
+                )
+            } (
+                enumerate-interval 1 n
+            )
+        )
+    )
 ) where {
-	fun make-pair-sum = (i, j) -> (i, j, i + j)
+    fun make-pair-sum = (i, j) -> (i, j, i + j)
 
-	fun prime-sum? = (i, j) -> prime? (i + j)
+    fun prime-sum? = (i, j) -> prime? (i + j)
 }
 
 ;; prime-sum-pairs 6
@@ -811,12 +809,12 @@ fun prime-sum-pairs = n -> (
 
 
 fun rec permutations = s -> case s {
-  []   -> [[]]		## IF empty set? THEN sequence containing empty set
+  []   -> [[]]      ## IF empty set? THEN sequence containing empty set
   else -> flatmap { x ->
-				map { p -> [x|p] } (permutations (remove x s))
-			} s
+                map { p -> [x|p] } (permutations (remove x s))
+            } s
 } where {
-	fun remove = item sequence -> filter { x -> x <> item } sequence
+    fun remove = item sequence -> filter { x -> x <> item } sequence
 }
 
 ;; permutations []
@@ -899,9 +897,9 @@ val b = 2
 
 
 fun rec memq = item sequence -> case sequence {
-  []	 -> NONE
-| [x|xs] -> if (item == x)	Some sequence
-			else			memq item xs
+  []     -> NONE
+| [x|xs] -> if (item == x)  Some sequence
+            else            memq item xs
 }
 
 ;; memq @apple [@pear, @banana, @prune]
@@ -927,9 +925,9 @@ fun number? = x -> x kind-of? Int
 fun variable? = x -> x kind-of? Symbol
 
 fun same-variable? = v1 v2 -> (
-	variable? v1 &&
-	variable? v2 &&
-	v1 == v2
+    variable? v1 &&
+    variable? v2 &&
+    v1 == v2
 )
 
 fun make-sum = a1 a2 -> (@"+", a1, a2)
@@ -950,20 +948,20 @@ fun multiplicand = s -> s$3
 
 
 fun rec deriv = exp var -> cond exp {
-  number?	-> 0
-| variable?	-> if (same-variable? exp var) 1 else 0
-| sum?		-> make-sum
-					(deriv (addend exp) var)
-					(deriv (augend exp) var)
-| product?	-> make-sum
-					(make-product
-						(multiplier exp)
-						(deriv (multiplicand exp) var)
-					) (make-product
-						(deriv (multiplier exp) var)
-						(multiplicand exp)
-					)
-  else		-> panic ("unknown expression type -- DERIV: " ^ inspect exp)
+  number?   -> 0
+| variable? -> if (same-variable? exp var) 1 else 0
+| sum?      -> make-sum
+                    (deriv (addend exp) var)
+                    (deriv (augend exp) var)
+| product?  -> make-sum
+                    (make-product
+                        (multiplier exp)
+                        (deriv (multiplicand exp) var)
+                    ) (make-product
+                        (deriv (multiplier exp) var)
+                        (multiplicand exp)
+                    )
+  else      -> panic ("unknown expression type -- DERIV: " ^ inspect exp)
 }
 
 ;; deriv (@"+", @x, 3) @x
@@ -984,35 +982,35 @@ fun rec deriv = exp var -> cond exp {
 fun eq-number? = exp num -> number? exp && exp == num
 
 fun make-sum' = a1 a2 -> (
-	if    (eq-number? a1 0) a2
-	elsif (eq-number? a2 0) a1
-	elsif (number? a1 && number? a2) a1 + a2
-	else  (@"+", a1, a2)
+    if    (eq-number? a1 0) a2
+    elsif (eq-number? a2 0) a1
+    elsif (number? a1 && number? a2) a1 + a2
+    else  (@"+", a1, a2)
 )
 
 fun make-product' = m1 m2 -> (
-	if    (eq-number? m1 0 || eq-number? m2 0) 0
-	elsif (eq-number? m1 1) m2
-	elsif (eq-number? m2 1) m1
-	elsif (number? m1 && number? m2) m1 * m2
-	else  (@"*", m1, m2)
+    if    (eq-number? m1 0 || eq-number? m2 0) 0
+    elsif (eq-number? m1 1) m2
+    elsif (eq-number? m2 1) m1
+    elsif (number? m1 && number? m2) m1 * m2
+    else  (@"*", m1, m2)
 )
 
 fun rec deriv' = exp var -> cond exp {
-  number?	-> 0
-| variable?	-> if (same-variable? exp var) 1 else 0
-| sum?		-> make-sum'
-					(deriv' (addend exp) var)
-					(deriv' (augend exp) var)
-| product?	-> make-sum'
-					(make-product'
-						(multiplier exp)
-						(deriv' (multiplicand exp) var)
-					) (make-product'
-						(deriv' (multiplier exp) var)
-						(multiplicand exp)
-					)
-  else		-> panic ("unknown expression type -- DERIV: " ^ inspect exp)
+  number?   -> 0
+| variable? -> if (same-variable? exp var) 1 else 0
+| sum?      -> make-sum'
+                    (deriv' (addend exp) var)
+                    (deriv' (augend exp) var)
+| product?  -> make-sum'
+                    (make-product'
+                        (multiplier exp)
+                        (deriv' (multiplicand exp) var)
+                    ) (make-product'
+                        (deriv' (multiplier exp) var)
+                        (multiplicand exp)
+                    )
+  else      -> panic ("unknown expression type -- DERIV: " ^ inspect exp)
 }
 
 ;; deriv' (@"+", @x, 3) @x
@@ -1037,27 +1035,27 @@ fun rec deriv' = exp var -> cond exp {
 #### UNORDERED
 
 fun rec element-of-set? = e set -> case set {
-  []	 -> FALSE
-| [x|xs] -> if (e == x)	TRUE
-			else		element-of-set? e xs
+  []     -> FALSE
+| [x|xs] -> if (e == x) TRUE
+            else        element-of-set? e xs
 }
 
 fun adjoin-set = e set -> (
-	if (element-of-set? e set)	set
-	else						[e|set]
+    if (element-of-set? e set)  set
+    else                        [e|set]
 )
 
 fun rec intersection-set = set1 set2 -> (
-	if (empty? set1 || empty? set2)
-		[]
-	else let {
-		val [x1|xs1] = set1
-	in
-		if (element-of-set? x1 set2)
-			[x1 | intersection-set xs1 set2]
-		else
-			intersection-set xs1 set2
-	}
+    if (empty? set1 || empty? set2)
+        []
+    else let {
+        val [x1|xs1] = set1
+    in
+        if (element-of-set? x1 set2)
+            [x1 | intersection-set xs1 set2]
+        else
+            intersection-set xs1 set2
+    }
 )
 
 ;; intersection-set [1, 3, 5, 2] [4, 7, 3, 1]
@@ -1068,28 +1066,28 @@ fun rec intersection-set = set1 set2 -> (
 #### ORDERED
 
 fun rec element-of-set?' = e set -> case set {
-  []	 -> FALSE
+  []     -> FALSE
 | [x|xs] -> cond e {
-			  (== x) -> TRUE
-			| (<  x) -> FALSE
-			  else	 -> element-of-set?' e xs
-			}
+              (== x) -> TRUE
+            | (<  x) -> FALSE
+              else   -> element-of-set?' e xs
+            }
 }
 
 fun rec intersection-set' = set1 set2 -> (
-	if (empty? set1 || empty? set2)
-		[]
-	else let {
-		val [x1|xs1] = set1
-		val [x2|xs2] = set2
-	in
-		cond x1 {
-		  (== x2) -> [x1 | intersection-set' xs1  xs2]
-		| (<  x2) -> 	   intersection-set' xs1  set2
-		| (>  x2) -> 	   intersection-set' set1 xs2
-		  else	  -> panic "ABORT"
-		}
-	}
+    if (empty? set1 || empty? set2)
+        []
+    else let {
+        val [x1|xs1] = set1
+        val [x2|xs2] = set2
+    in
+        cond x1 {
+          (== x2) -> [x1 | intersection-set' xs1  xs2]
+        | (<  x2) ->       intersection-set' xs1  set2
+        | (>  x2) ->       intersection-set' set1 xs2
+          else    -> panic "ABORT"
+        }
+    }
 )
 
 ;; intersection-set' [1, 2, 3, 5] [1, 3, 4, 7]
@@ -1108,91 +1106,91 @@ fun right-branch = tree -> tree$3
 fun make-tree = entry left right -> (entry, left, right)
 
 fun rec element-of-set? = e set -> (
-	if (set kind-of? List && empty? set)
-		FALSE
-	else let {
-		val x = entry set
-	in
-		cond e {
-		  (== x)	-> TRUE
-		| (<  x)	-> element-of-set? e (left-branch set)
-		| (>  x)	-> element-of-set? e (right-branch set)
-		  else		-> panic "ABORT"
-		}
-	}
+    if (set kind-of? List && empty? set)
+        FALSE
+    else let {
+        val x = entry set
+    in
+        cond e {
+          (== x)    -> TRUE
+        | (<  x)    -> element-of-set? e (left-branch set)
+        | (>  x)    -> element-of-set? e (right-branch set)
+          else      -> panic "ABORT"
+        }
+    }
 )
 
 fun rec adjoin-set = e set -> (
-	if (set kind-of? List && empty? set)
-		make-tree x [] []
-	else let {
-		val x = entry set
-	in
-		cond e {
-		  (== x)	-> set
-		| (<  x)	-> make-tree
-						x
-						(adjoin-set e (left-branch set))
-						(right-branch set)
-		| (>  x)	-> make-tree
-						x
-						(left-branch set)
-						(adjoin-set e (right-branch set))
-		  else		-> panic "ABORT"
-		}
-	}
+    if (set kind-of? List && empty? set)
+        make-tree x [] []
+    else let {
+        val x = entry set
+    in
+        cond e {
+          (== x)    -> set
+        | (<  x)    -> make-tree
+                        x
+                        (adjoin-set e (left-branch set))
+                        (right-branch set)
+        | (>  x)    -> make-tree
+                        x
+                        (left-branch set)
+                        (adjoin-set e (right-branch set))
+          else      -> panic "ABORT"
+        }
+    }
 )
 
 val s = (7, (3, (1, [], []), (5, [], [])), (9, [], (11, [], [])))
 (#
-	7 --+-- 3 --+-- 1
-		|		+-- 5
-		|
-		+-- 9 --+-- none
-				+-- 11
+    7 --+-- 3 --+-- 1
+        |       +-- 5
+        |
+        +-- 9 --+-- none
+                +-- 11
 #)
 
 ;; adjoin-set 4 s
 # -> (7, (3, (1, [], []), (5, (4, [], []), [])), (9, [], (11, [], [])))
 (#
-	7 --+-- 3 --+-- 1
-		|		+-- 5 --+-- 4
-		|				+-- none
-		|
-		+-- 9 --+-- none
-				+-- 11
+    7 --+-- 3 --+-- 1
+        |       +-- 5 --+-- 4
+        |               +-- none
+        |
+        +-- 9 --+-- none
+                +-- 11
 #)
 
 ;; adjoin-set 6 s
 # -> (7, (3, (1, [], []), (5, [], (6, [], []))), (9, [], (11, [], [])))
 (#
-	7 --+-- 3 --+-- 1
-		|		+-- 5 --+-- none
-		|				+-- 6
-		|
-		+-- 9 --+-- none
-				+-- 11
+    7 --+-- 3 --+-- 1
+        |       +-- 5 --+-- none
+        |               +-- 6
+        |
+        +-- 9 --+-- none
+                +-- 11
 #)
 
 ;; adjoin-set 8 s
 # -> (7, (3, (1, [], []), (5, [], [])), (9, (8, [], []), (11, [], [])))
 (#
-	7 --+-- 3 --+-- 1
-		|		+-- 5
-		|
-		+-- 9 --+-- 8
-				+-- 11
+    7 --+-- 3 --+-- 1
+        |       +-- 5
+        |
+        +-- 9 --+-- 8
+                +-- 11
 #)
 
 ;; adjoin-set 12 s
 # -> (7, (3, (1, [], []), (5, [], [])), (9, [], (11, [], (12, [], []))))
 (#
-	7 --+-- 3 --+-- 1
-		|		+-- 5
-		|
-		+-- 9 --+-- none
-				+-- 11 --+-- none
-						 +-- 12
+    7 --+-- 3 --+-- 1
+        |       +-- 5
+        |
+        +-- 9 --+-- none
+                +-- 11 --+-- none
+                         +-- 12
 #)
 ;;
 
@@ -1201,7 +1199,7 @@ val s = (7, (3, (1, [], []), (5, [], [])), (9, [], (11, [], [])))
 
 (#
 fun lookup = given-key set-of-records -> case set-of-records {
-  []	 -> FALSE
+  []     -> FALSE
 | [x|xs] -> if (given-key == key x) x else lookup given-key xs
 }
 #)
@@ -1227,24 +1225,24 @@ fun weight-leaf = x -> x$3
 
 
 fun symbols = tree -> (
-	if (leaf? tree)
-		[symbol-leaf tree]
-	else
-		tree$3
+    if (leaf? tree)
+        [symbol-leaf tree]
+    else
+        tree$3
 )
 
 fun weight = tree -> (
-	if (leaf? tree)
-		weight-leaf tree
-	else
-		tree$4
+    if (leaf? tree)
+        weight-leaf tree
+    else
+        tree$4
 )
 
 fun make-code-tree = left right -> (
-	left,
-	right,
-	symbols left ++ symbols right,
-	weight left  +  weight right
+    left,
+    right,
+    symbols left ++ symbols right,
+    weight left  +  weight right
 )
 
 fun left-branch = tree -> tree$1
@@ -1255,89 +1253,89 @@ fun right-branch = tree -> tree$2
 #### decoding ####
 
 fun decode = bits tree -> (
-	decode1 bits tree
+    decode1 bits tree
 ) where {
-	fun choose-branch = bit branch -> case bit {
-	  0		-> left-branch branch
-	| 1		-> right-branch branch
-	  else	-> panic ("bad bit -- CHOOSE-BRANCH: " ^ inspect bit)
-	}
+    fun choose-branch = bit branch -> case bit {
+      0     -> left-branch branch
+    | 1     -> right-branch branch
+      else  -> panic ("bad bit -- CHOOSE-BRANCH: " ^ inspect bit)
+    }
 
-	fun rec decode1 = bits current-branch -> case bits {
-	  []	 -> []
-	| [x|xs] -> if (leaf? next-branch)
-						[symbol-leaf next-branch | decode1 xs tree]
-					else
-						decode1 xs next-branch
+    fun rec decode1 = bits current-branch -> case bits {
+      []     -> []
+    | [x|xs] -> if (leaf? next-branch)
+                        [symbol-leaf next-branch | decode1 xs tree]
+                    else
+                        decode1 xs next-branch
 
-				where val next-branch = choose-branch x current-branch
-	}
+                where val next-branch = choose-branch x current-branch
+    }
 }
 
 
 val tree = (make-code-tree
-	(make-leaf @A 8)
-	(make-code-tree
-		(make-code-tree
-			(make-leaf @B 3)
-			(make-code-tree
-				(make-leaf @C 1)
-				(make-leaf @D 1)
-			)
-		)
-		(make-code-tree
-			(make-code-tree
-				(make-leaf @E 1)
-				(make-leaf @F 1)
-			)
-			(make-code-tree
-				(make-leaf @G 1)
-				(make-leaf @H 1)
-			)
-		)
-	)
+    (make-leaf @A 8)
+    (make-code-tree
+        (make-code-tree
+            (make-leaf @B 3)
+            (make-code-tree
+                (make-leaf @C 1)
+                (make-leaf @D 1)
+            )
+        )
+        (make-code-tree
+            (make-code-tree
+                (make-leaf @E 1)
+                (make-leaf @F 1)
+            )
+            (make-code-tree
+                (make-leaf @G 1)
+                (make-leaf @H 1)
+            )
+        )
+    )
 )
 
 ;; tree
 (# -> (
-	(@leaf, @A, 8),
-	(
-		(
-			(@leaf, @B, 3),
-			(
-				(@leaf, @C, 1),
-				(@leaf, @D, 1),
-				[@C, @D],
-				2
-			),
-			[@B, @C, @D], 5
-		),
-		(
-			(
-				(@leaf, @E, 1),
-				(@leaf, @F, 1),
-				[@E, @F], 2
-			),
-			(
-				(@leaf, @G, 1),
-				(@leaf, @H, 1),
-				[@G, @H], 2
-			),
-			[@E, @F, @G, @H], 4
-		),
-		[@B, @C, @D, @E, @F, @G, @H], 9
-	),
-	[@A, @B, @C, @D, @E, @F, @G, @H], 17
+    (@leaf, @A, 8),
+    (
+        (
+            (@leaf, @B, 3),
+            (
+                (@leaf, @C, 1),
+                (@leaf, @D, 1),
+                [@C, @D],
+                2
+            ),
+            [@B, @C, @D], 5
+        ),
+        (
+            (
+                (@leaf, @E, 1),
+                (@leaf, @F, 1),
+                [@E, @F], 2
+            ),
+            (
+                (@leaf, @G, 1),
+                (@leaf, @H, 1),
+                [@G, @H], 2
+            ),
+            [@E, @F, @G, @H], 4
+        ),
+        [@B, @C, @D, @E, @F, @G, @H], 9
+    ),
+    [@A, @B, @C, @D, @E, @F, @G, @H], 17
 )
 #)
 ;;
 
 val bits = [
-	1, 0, 0, 0, 1, 0, 1, 0, 0, 1,
-	0, 1, 1, 0, 1, 1, 0, 0, 0, 1,
-	1, 0, 1, 0, 1, 0, 0, 1, 0, 0,
-	0, 0, 0, 1, 1, 1, 0, 0, 1, 1,
-	1, 1
+    1, 0, 0, 0, 1, 0, 1, 0, 0, 1,
+    0, 1, 1, 0, 1, 1, 0, 0, 0, 1,
+    1, 0, 1, 0, 1, 0, 0, 1, 0, 0,
+    0, 0, 0, 1, 1, 1, 0, 0, 1, 1,
+    1, 1
 ]
 
 ;; decode bits tree
@@ -1375,23 +1373,23 @@ val bits = [
 
 (#
 fun add-complex = z1 z2 -> (
-	make-from-real-imag	(real-part z1 + real-part z2)
-						(imag-part z1 + imag-part z2)
+    make-from-real-imag (real-part z1 + real-part z2)
+                        (imag-part z1 + imag-part z2)
 )
 
 fun sub-complex = z1 z2 -> (
-	make-from-real-imag	(real-part z1 - real-part z2)
-						(imag-part z1 - imag-part z2)
+    make-from-real-imag (real-part z1 - real-part z2)
+                        (imag-part z1 - imag-part z2)
 )
 
 fun mul-complex = z1 z2 -> (
-	make-from-mag-ang	(magnitude z1 * magnitude z2)
-						(angle z1     + angle z2)
+    make-from-mag-ang   (magnitude z1 * magnitude z2)
+                        (angle z1     + angle z2)
 )
 
 fun div-complex = z1 z2 -> (
-	make-from-mag-ang	(magnitude z1 / magnitude z2)
-						(angle z1     - angle z2)
+    make-from-mag-ang   (magnitude z1 / magnitude z2)
+                        (angle z1     - angle z2)
 )
 #)
 
@@ -1404,11 +1402,11 @@ fun real-part = z -> fst z
 fun imag-part = z -> snd z
 
 fun magnitude = z -> sqrt (
-	square (real-part z) + square (imag-part z)
+    square (real-part z) + square (imag-part z)
 )
 
 fun angle = z -> (
-	atan (imag-part z) (real-part z)
+    atan (imag-part z) (real-part z)
 )
 
 fun make-from-real-imag = x y -> (x, y)
@@ -1429,7 +1427,7 @@ fun real-part = z -> magnitude z * cos (angle z)
 fun imag-part = z -> magnitude z * sin (angle z)
 
 fun make-from-real-imag = x y -> (
-	(sqrt (square x + square y), atan y x)
+    (sqrt (square x + square y), atan y x)
 )
 
 fun make-from-mag-ang = r a -> (r, a)
@@ -1463,19 +1461,19 @@ fun real-part-rectanglar = z -> fst z
 fun imag-part-rectanglar = z -> snd z
 
 fun magnitude-rectanglar = z -> sqrt (
-	square (real-part-rectanglar z) + square (imag-part-rectanglar z)
+    square (real-part-rectanglar z) + square (imag-part-rectanglar z)
 )
 
 fun angle-rectanglar = z -> (
-	atan (imag-part-rectanglar z) (real-part-rectanglar z)
+    atan (imag-part-rectanglar z) (real-part-rectanglar z)
 )
 
 fun make-from-real-imag-rectanglar = x y -> (
-	attach-tag @Rectanglar (x, y)
+    attach-tag @Rectanglar (x, y)
 )
 
 fun make-from-mag-ang-rectanglar = r a -> (
-	attach-tag @Rectanglar (r * cos a, r * sin a)
+    attach-tag @Rectanglar (r * cos a, r * sin a)
 )
 
 
@@ -1490,41 +1488,41 @@ fun real-part-polar = z -> magnitude-polar z * cos (angle-polar z)
 fun imag-part-polar = z -> magnitude-polar z * sin (angle-polar z)
 
 fun make-from-real-imag-polar = x y -> (
-	attach-tag @Polar (sqrt (square x + square y), atan y x)
+    attach-tag @Polar (sqrt (square x + square y), atan y x)
 )
 
 fun make-from-mag-ang-polar = r a -> (
-	attach-tag @Polar (r, a)
+    attach-tag @Polar (r, a)
 )
 
 
 #### Generic selectors ####
 
 fun real-part = z -> cond z {
-  rectanglar?	-> real-part-rectanglar (contents z)
-| polar?		-> real-part-polar      (contents z)
-  else			-> panic ("Unknown type -- REAL-PART: " ^ inspect z)
+  rectanglar?   -> real-part-rectanglar (contents z)
+| polar?        -> real-part-polar      (contents z)
+  else          -> panic ("Unknown type -- REAL-PART: " ^ inspect z)
 }
 
 
 fun imag-part = z -> cond z {
-  rectanglar?	-> imag-part-rectanglar (contents z)
-| polar?		-> imag-part-polar      (contents z)
-  else			-> panic ("Unknown type -- IMAG-PART: " ^ inspect z)
+  rectanglar?   -> imag-part-rectanglar (contents z)
+| polar?        -> imag-part-polar      (contents z)
+  else          -> panic ("Unknown type -- IMAG-PART: " ^ inspect z)
 }
 
 
 fun magnitude = z -> cond z {
-  rectanglar?	-> magnitude-rectanglar (contents z)
-| polar?		-> magnitude-polar      (contents z)
-  else			-> panic ("Unknown type -- MAGNITUDE: " ^ inspect z)
+  rectanglar?   -> magnitude-rectanglar (contents z)
+| polar?        -> magnitude-polar      (contents z)
+  else          -> panic ("Unknown type -- MAGNITUDE: " ^ inspect z)
 }
 
 
 fun angle = z -> cond z {
-  rectanglar?	-> angle-rectanglar (contents z)
-| polar?		-> angle-polar      (contents z)
-  else			-> panic ("Unknown type -- ANGLE: " ^ inspect z)
+  rectanglar?   -> angle-rectanglar (contents z)
+| polar?        -> angle-polar      (contents z)
+  else          -> panic ("Unknown type -- ANGLE: " ^ inspect z)
 }
 
 
@@ -1538,27 +1536,27 @@ fun make-from-mag-ang =  r a -> make-from-mag-ang-polar r a
 #### same as before ####
 
 fun add-complex = z1 z2 -> (
-	make-from-real-imag
-		(real-part z1 + real-part z2)
-		(imag-part z1 + imag-part z2)
+    make-from-real-imag
+        (real-part z1 + real-part z2)
+        (imag-part z1 + imag-part z2)
 )
 
 fun sub-complex = z1 z2 -> (
-	make-from-real-imag
-		(real-part z1 - real-part z2)
-		(imag-part z1 - imag-part z2)
+    make-from-real-imag
+        (real-part z1 - real-part z2)
+        (imag-part z1 - imag-part z2)
 )
 
 fun mul-complex = z1 z2 -> (
-	make-from-mag-ang
-		(magnitude z1 * magnitude z2)
-		(angle z1     + angle z2)
+    make-from-mag-ang
+        (magnitude z1 * magnitude z2)
+        (angle z1     + angle z2)
 )
 
 fun div-complex = z1 z2 -> (
-	make-from-mag-ang
-		(magnitude z1 / magnitude z2)
-		(angle z1     - angle z2)
+    make-from-mag-ang
+        (magnitude z1 / magnitude z2)
+        (angle z1     - angle z2)
 )
 
 

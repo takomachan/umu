@@ -1,204 +1,202 @@
-# vim: set nu ai sw=4 ts=4 :
-
 structure List = struct {
-	# head : ['a] -> 'a
-	fun head = [x|_] -> x
+    # head : ['a] -> 'a
+    fun head = [x|_] -> x
 
 
-	# tail : ['a] -> ['a]
-	fun tail = [_|xs] -> xs
+    # tail : ['a] -> ['a]
+    fun tail = [_|xs] -> xs
 
 
-	# singleton : 'a -> ['a]
-	fun singleton = x -> [x]
+    # singleton : 'a -> ['a]
+    fun singleton = x -> [x]
 
 
-	# singleton? : ['a] -> BOOL
-	fun singleton? = xs -> case xs {
-	  [_]  -> TRUE
-	  else -> FALSE
-	}
+    # singleton? : ['a] -> BOOL
+    fun singleton? = xs -> case xs {
+      [_]  -> TRUE
+      else -> FALSE
+    }
 
 
-	# equal? : ('a -> 'b -> BOOL) -> 'A -> 'B -> BOOL
-	(#
-		where, if
-		* 'A is a List and 'a is element of 'A
-		* 'B is a List and 'b is element of 'B
-		* equal 'a to 'b
-		then TRUE, else FALSE
-	#)
-	fun rec equal? = eq? xs ys ->
-		if (xs kind-of? List && ys kind-of? List)
-			case xs {
-			  []	  -> empty? ys
-			| [x|xs'] ->
-				case ys {
-				  []	  -> FALSE
-				| [y|ys'] -> eq? x y && equal? eq? xs' ys'
-				}
-			}
-		else
-			FALSE
+    # equal? : ('a -> 'b -> BOOL) -> 'A -> 'B -> BOOL
+    (#
+        where, if
+        * 'A is a List and 'a is element of 'A
+        * 'B is a List and 'b is element of 'B
+        * equal 'a to 'b
+        then TRUE, else FALSE
+    #)
+    fun rec equal? = eq? xs ys ->
+        if (xs kind-of? List && ys kind-of? List)
+            case xs {
+              []      -> empty? ys
+            | [x|xs'] ->
+                case ys {
+                  []      -> FALSE
+                | [y|ys'] -> eq? x y && equal? eq? xs' ys'
+                }
+            }
+        else
+            FALSE
 
 
-	# fold : 'b -> ('a -> 'b -> 'b) -> ['a] -> 'b
-	fun rec fold = a f xs -> case xs {
-	  []	  -> a
-	| [x|xs'] -> fold (f x a) f xs'
-	}
+    # fold : 'b -> ('a -> 'b -> 'b) -> ['a] -> 'b
+    fun rec fold = a f xs -> case xs {
+      []      -> a
+    | [x|xs'] -> fold (f x a) f xs'
+    }
 
 
-	# foldr : 'b -> ('a -> 'b -> 'b) -> ['a] -> 'b
-	fun rec foldr = a f xs -> case xs {
-	  []	  -> a
-	| [x|xs'] -> f x (foldr a f xs')
-	}
+    # foldr : 'b -> ('a -> 'b -> 'b) -> ['a] -> 'b
+    fun rec foldr = a f xs -> case xs {
+      []      -> a
+    | [x|xs'] -> f x (foldr a f xs')
+    }
 
 
-	# foldl : 'b -> ('b -> 'a -> 'b) -> ['a] -> 'b
-	fun rec foldl = a f xs -> case xs {
-	  []	  -> a
-	| [x|xs'] -> foldl (f a x) f xs'
-	}
+    # foldl : 'b -> ('b -> 'a -> 'b) -> ['a] -> 'b
+    fun rec foldl = a f xs -> case xs {
+      []      -> a
+    | [x|xs'] -> foldl (f a x) f xs'
+    }
 
 
-	# length : ['a] -> INT
-	fun rec length = xs -> case xs {
-	  []	  -> 0
-	| [x|xs'] -> length xs' + 1
-	}
+    # length : ['a] -> INT
+    fun rec length = xs -> case xs {
+      []      -> 0
+    | [x|xs'] -> length xs' + 1
+    }
 
-	val length' = fold 0 { _ len -> len + 1 }
-
-
-	# sum : [INT] -> INT
-	fun rec sum = xs -> case xs {
-	  []	  -> 0
-	| [x|xs'] -> x + sum xs'
-	}
-
-	val sum' = fold 0 (+)
+    val length' = fold 0 { _ len -> len + 1 }
 
 
-	# map : ('a -> 'b) -> ['a] -> ['b]
-	fun rec map = f xs -> case xs {
-	  []	  -> []
-	| [x|xs'] -> [f x | map f xs']
-	}
+    # sum : [INT] -> INT
+    fun rec sum = xs -> case xs {
+      []      -> 0
+    | [x|xs'] -> x + sum xs'
+    }
 
-	fun map' = f -> foldr [] { x xs -> [f x | xs] }
-
-
-	# filter : ('a -> BOOL) -> ['a] -> ['a]
-	fun rec filter = f xs -> case xs {
-	  []	  -> []
-	| [x|xs'] -> if (f x) xs' else xs'
-	}
-
-	fun filter' = f -> foldr [] { x xs -> if (f x) xs' else xs }
+    val sum' = fold 0 (+)
 
 
-	# append : ['a] -> ['a] -> ['a]
-	fun rec append = xs ys -> case xs {
-	  []   -> ys
-	| [x|xs'] -> case ys {
-		  []   -> xs
-		  else -> [x | append xs' ys]
-		}
-	}
+    # map : ('a -> 'b) -> ['a] -> ['b]
+    fun rec map = f xs -> case xs {
+      []      -> []
+    | [x|xs'] -> [f x | map f xs']
+    }
 
-	fun append' = xs ys -> foldr ys cons xs
-	val append'' = (++)
+    fun map' = f -> foldr [] { x xs -> [f x | xs] }
 
 
-	# concat : [['a]] -> ['a]
-	fun rec concat = xss -> case xss {
-	  []		-> []
-	| [xs|xss'] -> xs ++ concat xss'
-	}
+    # filter : ('a -> BOOL) -> ['a] -> ['a]
+    fun rec filter = f xs -> case xs {
+      []      -> []
+    | [x|xs'] -> if (f x) xs' else xs'
+    }
 
-	val concat'  = fold  [] { xs xss -> xss ++ xs }
-	val concat'' = foldr [] (++)
-
-
-	# join-string : String -> [String] -> String
-	fun join-string = j xs -> case xs {
-	  []	  -> ""
-	| [x|xs'] -> case xs' {
-		  []   -> x
-		  else -> x ^ fold "" { x' s -> s ^ j ^ x' } xs'
-		}
-	}
+    fun filter' = f -> foldr [] { x xs -> if (f x) xs' else xs }
 
 
-	# reverse : ['a] -> ['a]
-	fun rec reverse = xs -> case xs {
-	  []	  -> []
-	| [x|xs'] -> reverse xs' ++ [x]
-	}
+    # append : ['a] -> ['a] -> ['a]
+    fun rec append = xs ys -> case xs {
+      []   -> ys
+    | [x|xs'] -> case ys {
+          []   -> xs
+          else -> [x | append xs' ys]
+        }
+    }
 
-	val reverse' = rev []
-	where {
-		fun rec rev = a xs -> case xs {
-		  []	  -> a
-		| [x|xs'] -> rev [x|a] xs'
-		}
-	}
-
-	val reverse'' = fold [] cons
+    fun append' = xs ys -> foldr ys cons xs
+    val append'' = (++)
 
 
-	# zip : ['a] -> ['b] -> [('a, 'b)]
-	fun rec zip = xs ys -> case xs {
-	  []	  -> ys
-	| [x|xs'] -> case ys {
-		  []	  -> xs
-		| [y|ys'] -> [(x, y) | zip xs' ys']
-		}
-	}
+    # concat : [['a]] -> ['a]
+    fun rec concat = xss -> case xss {
+      []        -> []
+    | [xs|xss'] -> xs ++ concat xss'
+    }
 
-	val zip' = foldr (const []) f
-	where {
-		fun f = x g ys -> case ys {
-		  []	  -> []
-		| [y|ys'] -> [(x, y) | g ys']
-		}
-	}
+    val concat'  = fold  [] { xs xss -> xss ++ xs }
+    val concat'' = foldr [] (++)
 
 
-	# unzip : [('a, 'b)] -> (['a], ['b])
-	fun rec unzip = xs -> case xs {
-	  []		 -> ([], [])
-	| [pair|xs'] -> ([y|ys'], [z|zs'])
-					where val (y, z)	 = pair
-						  val (ys', zs') = unzip xs'
-	}
-
-	val unzip' = foldr ([], []) { (y, z) (ys, zs) -> ([y|ys], [z|zs]) }
-
-
-	# partition : ('a -> BOOL) -> ['a] -> (['a], ['a])
-	fun rec partition = f xs -> case xs {
-	  []	  -> ([], [])
-	| [x|xs'] -> if (f x) ([x|ys], zs) else (ys, [x|zs])
-				 where val (ys, zs) = partition f xs'
-	}
-
-	fun partition' = f -> foldr ([], []) { x (ys, zs) ->
-		if (f x) ([x|ys], zs) else (ys, [x|zs])
-	}
+    # join-string : String -> [String] -> String
+    fun join-string = j xs -> case xs {
+      []      -> ""
+    | [x|xs'] -> case xs' {
+          []   -> x
+          else -> x ^ fold "" { x' s -> s ^ j ^ x' } xs'
+        }
+    }
 
 
-	# sort : ('a -> 'a -> BOOL) -> ['a] -> ['a]
-	fun rec sort = lt? xs -> case xs {
-	  []		  -> []
-	| [pivot|xs'] -> sort lt? littles ++ [pivot] ++ sort lt? bigs
-					 where val (littles, bigs) =
-									partition { x -> lt? x pivot } xs'
-	}
+    # reverse : ['a] -> ['a]
+    fun rec reverse = xs -> case xs {
+      []      -> []
+    | [x|xs'] -> reverse xs' ++ [x]
+    }
+
+    val reverse' = rev []
+    where {
+        fun rec rev = a xs -> case xs {
+          []      -> a
+        | [x|xs'] -> rev [x|a] xs'
+        }
+    }
+
+    val reverse'' = fold [] cons
+
+
+    # zip : ['a] -> ['b] -> [('a, 'b)]
+    fun rec zip = xs ys -> case xs {
+      []      -> ys
+    | [x|xs'] -> case ys {
+          []      -> xs
+        | [y|ys'] -> [(x, y) | zip xs' ys']
+        }
+    }
+
+    val zip' = foldr (const []) f
+    where {
+        fun f = x g ys -> case ys {
+          []      -> []
+        | [y|ys'] -> [(x, y) | g ys']
+        }
+    }
+
+
+    # unzip : [('a, 'b)] -> (['a], ['b])
+    fun rec unzip = xs -> case xs {
+      []         -> ([], [])
+    | [pair|xs'] -> ([y|ys'], [z|zs'])
+                    where val (y, z)     = pair
+                          val (ys', zs') = unzip xs'
+    }
+
+    val unzip' = foldr ([], []) { (y, z) (ys, zs) -> ([y|ys], [z|zs]) }
+
+
+    # partition : ('a -> BOOL) -> ['a] -> (['a], ['a])
+    fun rec partition = f xs -> case xs {
+      []      -> ([], [])
+    | [x|xs'] -> if (f x) ([x|ys], zs) else (ys, [x|zs])
+                 where val (ys, zs) = partition f xs'
+    }
+
+    fun partition' = f -> foldr ([], []) { x (ys, zs) ->
+        if (f x) ([x|ys], zs) else (ys, [x|zs])
+    }
+
+
+    # sort : ('a -> 'a -> BOOL) -> ['a] -> ['a]
+    fun rec sort = lt? xs -> case xs {
+      []          -> []
+    | [pivot|xs'] -> sort lt? littles ++ [pivot] ++ sort lt? bigs
+                     where val (littles, bigs) =
+                                    partition { x -> lt? x pivot } xs'
+    }
 } where {
-	import Umu::List { val cons = Cons }
+    import Umu::List { val cons = Cons }
 }
 
 ;;
@@ -206,12 +204,12 @@ structure List = struct {
 
 
 # See: PythonでもRubyみたいに配列をメソッドチェーンでつなげたい
-# 		https://edvakf.hatenadiary.org/entry/20090405/1238885788
+#       https://edvakf.hatenadiary.org/entry/20090405/1238885788
 
-val sort	= List::sort (<)
-val reverse	= List::reverse
-val map		= List::map
-val join	= List::join-string
+val sort    = List::sort (<)
+val reverse = List::reverse
+val map     = List::map
+val join    = List::join-string
 
 ;;
 
