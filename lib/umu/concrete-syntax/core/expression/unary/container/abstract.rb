@@ -1,4 +1,3 @@
-# vim: set nu ai sw=4 ts=4 :
 # coding: utf-8
 # frozen_string_literal: true
 
@@ -19,38 +18,38 @@ module Unary
 module Container
 
 class Abstract < Unary::Abstract
-	include Enumerable
+    include Enumerable
 
-	alias exprs obj
-
-
-	def initialize(loc, exprs)
-		ASSERT.kind_of exprs, ::Array
-
-		super
-	end
+    alias exprs obj
 
 
-	def each
-		self.exprs.each do |x|
-			yield x
-		end
-	end
+    def initialize(loc, exprs)
+        ASSERT.kind_of exprs, ::Array
+
+        super
+    end
 
 
-	def empty?
-		self.count == 0
-	end
+    def each
+        self.exprs.each do |x|
+            yield x
+        end
+    end
+
+
+    def empty?
+        self.count == 0
+    end
 end
 
-end	# Umu::ConcreteSyntax::Core::Expression::Unary::Container
+end # Umu::ConcreteSyntax::Core::Expression::Unary::Container
 
-end	# Umu::ConcreteSyntax::Core::Expression::Unary
+end # Umu::ConcreteSyntax::Core::Expression::Unary
 
-end	# Umu::ConcreteSyntax::Core::Expression
+end # Umu::ConcreteSyntax::Core::Expression
 
-end	# Umu::ConcreteSyntax::Core
+end # Umu::ConcreteSyntax::Core
 
-end	# Umu::ConcreteSyntax
+end # Umu::ConcreteSyntax
 
-end	# Umu
+end # Umu

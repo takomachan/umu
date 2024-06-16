@@ -1,3 +1,6 @@
+# coding: utf-8
+# frozen_string_literal: true
+
 require 'umu/common'
 require 'umu/value'
 
@@ -15,57 +18,57 @@ module Bindings
 module Target
 
 class Abstract
-	attr_reader :val
+    attr_reader :val
 
 
-	def initialize(val)
-		ASSERT.kind_of val, ::Object	# Polymophism
+    def initialize(val)
+        ASSERT.kind_of val, ::Object    # Polymophism
 
-		@val = val
-	end
+        @val = val
+    end
 
 
-	def get_value(context)
-		raise X::SubclassResponsibility
-	end
+    def get_value(context)
+        raise X::SubclassResponsibility
+    end
 end
 
 
 
 class Value < Abstract
-	alias value val
+    alias value val
 
 
-	def initialize(value)
-		ASSERT.kind_of value, VC::Top
+    def initialize(value)
+        ASSERT.kind_of value, VC::Top
 
-		super(value)
-	end
+        super(value)
+    end
 
 
-	def get_value(_context)
-		self.value
-	end
+    def get_value(_context)
+        self.value
+    end
 end
 
 
 
 class Recursive < Abstract
-	alias lam_expr val
+    alias lam_expr val
 
 
-	def initialize(lam_expr)
-		ASSERT.kind_of lam_expr, ASCEN::Lambda::Entry
+    def initialize(lam_expr)
+        ASSERT.kind_of lam_expr, ASCEN::Lambda::Entry
 
-		super(lam_expr)
-	end
+        super(lam_expr)
+    end
 
 
-	def get_value(context)
-		ASSERT.kind_of context, ECV::Abstract
+    def get_value(context)
+        ASSERT.kind_of context, ECV::Abstract
 
-		VC.make_function self.lam_expr, context
-	end
+        VC.make_function self.lam_expr, context
+    end
 end
 
 end # Umu::Environment::Context::Value::Bindings::Target
@@ -75,23 +78,23 @@ end # Umu::Environment::Context::Value::Bindings
 
 module_function
 
-	def make_value_target(value)
-		ASSERT.kind_of value, VC::Top
+    def make_value_target(value)
+        ASSERT.kind_of value, VC::Top
 
-		Bindings::Target::Value.new(value).freeze
-	end
+        Bindings::Target::Value.new(value).freeze
+    end
 
 
-	def make_recursive_target(lam_expr)
-		ASSERT.kind_of lam_expr, ASCEN::Lambda::Entry
+    def make_recursive_target(lam_expr)
+        ASSERT.kind_of lam_expr, ASCEN::Lambda::Entry
 
-		Bindings::Target::Recursive.new(lam_expr).freeze
-	end
+        Bindings::Target::Recursive.new(lam_expr).freeze
+    end
 
-end	# Umu::Environment::Context::Value
+end # Umu::Environment::Context::Value
 
-end	# Umu::Environment::Context
+end # Umu::Environment::Context
 
-end	# Umu::Environment
+end # Umu::Environment
 
-end	# Umu
+end # Umu

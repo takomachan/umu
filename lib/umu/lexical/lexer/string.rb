@@ -1,4 +1,3 @@
-# vim: set nu ai sw=4 ts=4 :
 # coding: utf-8
 # frozen_string_literal: true
 
@@ -20,159 +19,159 @@ module Lexer
 module String
 
 class Abstract < Lexer::Abstract
-	attr_reader :buf
+    attr_reader :buf
 
 
-	def self.deconstruct_keys
-		{
-			:buf => ::String
-		}
-	end
+    def self.deconstruct_keys
+        {
+            :buf => ::String
+        }
+    end
 
 
-	def initialize(loc, braket_stack, buf)
-		ASSERT.kind_of loc,				L::Location
-		ASSERT.kind_of braket_stack,	::Array
-		ASSERT.kind_of buf,				::String
+    def initialize(loc, braket_stack, buf)
+        ASSERT.kind_of loc,             L::Location
+        ASSERT.kind_of braket_stack,    ::Array
+        ASSERT.kind_of buf,             ::String
 
-		super(loc, braket_stack)
+        super(loc, braket_stack)
 
-		@buf = buf
-	end
-
-
-	def to_s
-		format("%s {braket_stack=%s, buf=%s} -- %s",
-			E::Tracer.class_to_string(self.class),
-			self.braket_stack.inspect,
-			self.buf.inspect,
-			self.loc.to_s
-		)
-	end
+        @buf = buf
+    end
 
 
-	def lex(scanner)
-		ASSERT.kind_of scanner, ::StringScanner
+    def to_s
+        format("%s {braket_stack=%s, buf=%s} -- %s",
+            E::Tracer.class_to_string(self.class),
+            self.braket_stack.inspect,
+            self.buf.inspect,
+            self.loc.to_s
+        )
+    end
 
-		case
-		# End-String
-		when scanner.scan(/"/)
-			[
-				:EndString,
 
-				scanner.matched,
+    def lex(scanner)
+        ASSERT.kind_of scanner, ::StringScanner
 
-				__make_token__(loc, self.buf),
+        case
+        # End-String
+        when scanner.scan(/"/)
+            [
+                :EndString,
 
-				__make_separator__
-			]
+                scanner.matched,
 
-		# New-line
-		when scanner.skip(/\n/)
-			raise X::LexicalError.new(
-				loc,
-				"Unexpected end-string: '\"%s'", self.buf
-			)
+                __make_token__(loc, self.buf),
 
-		# Escapes
-		when scanner.scan(/\\./)
-			opt_esc = L::Escape.opt_escape scanner.matched
-			unless opt_esc
-				raise X::LexicalError.new(
-					loc,
-					"Unknown escape-character: '%s' after '\"%s'",
-												scanner.matched, self.buf
-				)
-			end
+                __make_separator__
+            ]
 
-			[
-				:Escape,
+        # New-line
+        when scanner.skip(/\n/)
+            raise X::LexicalError.new(
+                loc,
+                "Unexpected end-string: '\"%s'", self.buf
+            )
 
-				scanner.matched,
+        # Escapes
+        when scanner.scan(/\\./)
+            opt_esc = L::Escape.opt_escape scanner.matched
+            unless opt_esc
+                raise X::LexicalError.new(
+                    loc,
+                    "Unknown escape-character: '%s' after '\"%s'",
+                                                scanner.matched, self.buf
+                )
+            end
 
-				nil,
+            [
+                :Escape,
 
-				__make_state__(self.buf + opt_esc)
-			]
+                scanner.matched,
 
-		# Others
-		when scanner.scan(/./)
-			[
-				:Other,
+                nil,
 
-				scanner.matched,
-				
-				nil,
+                __make_state__(self.buf + opt_esc)
+            ]
 
-				__make_state__(self.buf + scanner.matched)
-			]
+        # Others
+        when scanner.scan(/./)
+            [
+                :Other,
 
-		else
-			ASSERT.abort scanner.inspect
-		end
-	end
+                scanner.matched,
+                
+                nil,
+
+                __make_state__(self.buf + scanner.matched)
+            ]
+
+        else
+            ASSERT.abort scanner.inspect
+        end
+    end
 
 
 private
 
-	def __make_token__(loc, val)
-		ASSERT.kind_of loc, L::Location
-		ASSERT.kind_of val, ::String
+    def __make_token__(loc, val)
+        ASSERT.kind_of loc, L::Location
+        ASSERT.kind_of val, ::String
 
-		raise X::SubclassResponsibility
-	end
+        raise X::SubclassResponsibility
+    end
 
 
-	def __make_state__(buf)
-		ASSERT.kind_of buf, ::String
+    def __make_state__(buf)
+        ASSERT.kind_of buf, ::String
 
-		raise X::SubclassResponsibility
-	end
+        raise X::SubclassResponsibility
+    end
 end
 
 
 
 class Basic < Abstract
-	def __make_token__(loc, val)
-		ASSERT.kind_of loc, L::Location
-		ASSERT.kind_of val, ::String
+    def __make_token__(loc, val)
+        ASSERT.kind_of loc, L::Location
+        ASSERT.kind_of val, ::String
 
-		LT.make_string loc, val
-	end
+        LT.make_string loc, val
+    end
 
 
-	def __make_state__(buf)
-		ASSERT.kind_of buf, ::String
+    def __make_state__(buf)
+        ASSERT.kind_of buf, ::String
 
-		__make_string__ buf
-	end
+        __make_string__ buf
+    end
 end
 
 
 
 class Symbolized < Abstract
-	def __make_token__(loc, val)
-		ASSERT.kind_of loc, L::Location
-		ASSERT.kind_of val, ::String
+    def __make_token__(loc, val)
+        ASSERT.kind_of loc, L::Location
+        ASSERT.kind_of val, ::String
 
-		esc_char = L::Escape.find_escape val
-		if esc_char
-			raise X::LexicalError.new(
-					loc,
-					"Escape character in symbolized string: '%s'",
-						L::Escape.unescape(esc_char)
-				)
-		end
+        esc_char = L::Escape.find_escape val
+        if esc_char
+            raise X::LexicalError.new(
+                    loc,
+                    "Escape character in symbolized string: '%s'",
+                        L::Escape.unescape(esc_char)
+                )
+        end
 
-		LT.make_symbol loc, val
-	end
+        LT.make_symbol loc, val
+    end
 
 
-	def __make_state__(buf)
-		ASSERT.kind_of buf, ::String
+    def __make_state__(buf)
+        ASSERT.kind_of buf, ::String
 
-		__make_symbolized_string__ buf
-	end
+        __make_symbolized_string__ buf
+    end
 end
 
 end # Umu::Lexical::Lexer::String

@@ -1,4 +1,3 @@
-# vim: set nu ai sw=4 ts=4 :
 # coding: utf-8
 # frozen_string_literal: true
 
@@ -17,66 +16,66 @@ class Abstract < ::StandardError; end
 
 
 class Expected < Abstract
-	attr_reader :msg
+    attr_reader :msg
 
 
-	def initialize(msg, *args)
-		ASSERT.kind_of msg, ::String
+    def initialize(msg, *args)
+        ASSERT.kind_of msg, ::String
 
-		@msg = format msg, *args
-	end
+        @msg = format msg, *args
+    end
 
 
-	def to_s
-		format "[%s] %s", __category__, self.msg
-	end
+    def to_s
+        format "[%s] %s", __category__, self.msg
+    end
 
 
 private
 
-	def __category__
-		self.class.to_s.split(/::/)[2]
-	end
+    def __category__
+        self.class.to_s.split(/::/)[2]
+    end
 end
 
 
 
 class ExecutionError < Expected
-	attr_reader :loc
+    attr_reader :loc
 
 
-	def initialize(loc, msg, *args)
-		ASSERT.kind_of loc,	L::Location
+    def initialize(loc, msg, *args)
+        ASSERT.kind_of loc, L::Location
 
-		super(msg, *args)
+        super(msg, *args)
 
-		@loc = loc
-	end
+        @loc = loc
+    end
 
 
-	def to_s
-		format "%s -- %s", super.to_s, self.loc.to_s
-	end
+    def to_s
+        format "%s -- %s", super.to_s, self.loc.to_s
+    end
 end
 
 
 
 class RuntimeError < ExecutionError
-	attr_reader :env
+    attr_reader :env
 
 
-	def initialize(loc, env, msg, *args)
-		ASSERT.kind_of env, E::Entry
+    def initialize(loc, env, msg, *args)
+        ASSERT.kind_of env, E::Entry
 
-		super(loc, msg, *args)
+        super(loc, msg, *args)
 
-		@env = env
-	end
+        @env = env
+    end
 
 
-	def print_backtrace
-		self.env.print_backtrace
-	end
+    def print_backtrace
+        self.env.print_backtrace
+    end
 end
 
 
@@ -93,36 +92,36 @@ class SyntaxErrorWithoutLocation < Abstraction::Expected
 
 private
 
-	def __category__
-		'SyntaxError'
-	end
+    def __category__
+        'SyntaxError'
+    end
 end
 
 
 
-class LexicalError			< Abstraction::ExecutionError; end
-class SyntaxError			< Abstraction::ExecutionError; end
-class NotImplemented		< Abstraction::ExecutionError; end
+class LexicalError          < Abstraction::ExecutionError; end
+class SyntaxError           < Abstraction::ExecutionError; end
+class NotImplemented        < Abstraction::ExecutionError; end
 
 
 
-class NameError				< Abstraction::RuntimeError; end
-class TypeError				< Abstraction::RuntimeError; end
-class ArgumentError			< Abstraction::RuntimeError; end
-class ApplicationError		< Abstraction::RuntimeError; end
-class SelectionError		< Abstraction::RuntimeError; end
-class EqualityError			< Abstraction::RuntimeError; end
-class OrderError			< Abstraction::RuntimeError; end
-class NoMethodError			< Abstraction::RuntimeError; end
-class UnmatchError			< Abstraction::RuntimeError; end
-class ZeroDivisionError		< Abstraction::RuntimeError; end
-class EmptyError			< Abstraction::RuntimeError; end
-class Panic					< Abstraction::RuntimeError; end
+class NameError             < Abstraction::RuntimeError; end
+class TypeError             < Abstraction::RuntimeError; end
+class ArgumentError         < Abstraction::RuntimeError; end
+class ApplicationError      < Abstraction::RuntimeError; end
+class SelectionError        < Abstraction::RuntimeError; end
+class EqualityError         < Abstraction::RuntimeError; end
+class OrderError            < Abstraction::RuntimeError; end
+class NoMethodError         < Abstraction::RuntimeError; end
+class UnmatchError          < Abstraction::RuntimeError; end
+class ZeroDivisionError     < Abstraction::RuntimeError; end
+class EmptyError            < Abstraction::RuntimeError; end
+class Panic                 < Abstraction::RuntimeError; end
 
 
 
 class SubclassResponsibility < Abstraction::Unexpected; end
 
-end	# Umu::Exception
+end # Umu::Exception
 
-end	# Umu
+end # Umu

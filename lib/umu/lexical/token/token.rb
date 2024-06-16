@@ -1,4 +1,3 @@
-# vim: set nu ai sw=4 ts=4 :
 # coding: utf-8
 # frozen_string_literal: true
 
@@ -14,220 +13,220 @@ module Lexical
 module Token
 
 class ReservedWord < Abstraction::Symbol
-	def initialize(loc, val)
-		ASSERT.kind_of val, ::String
+    def initialize(loc, val)
+        ASSERT.kind_of val, ::String
 
-		super(loc, val.upcase)
-	end
-
-
-	def to_s
-		self.sym.to_s
-	end
+        super(loc, val.upcase)
+    end
 
 
-	alias to_racc_token sym
+    def to_s
+        self.sym.to_s
+    end
+
+
+    alias to_racc_token sym
 end
 
 
 
 class ReservedSymbol < Abstraction::Symbol
-	def to_s
-		format "'%s'", self.sym
-	end
+    def to_s
+        format "'%s'", self.sym
+    end
 
 
-	def to_racc_token
-		self.sym.to_s
-	end
+    def to_racc_token
+        self.sym.to_s
+    end
 end
 
 
 
 class Symbol < Abstraction::Symbol
-	def to_s
-		format "SYM(%s)", self.sym
-	end
+    def to_s
+        format "SYM(%s)", self.sym
+    end
 
 
-	def to_racc_token
-		:SYMBOL
-	end
+    def to_racc_token
+        :SYMBOL
+    end
 end
 
 
 
 class ModuleDirectory < Abstraction::Symbol
-	def to_s
-		format "DIR(%s::)", self.sym
-	end
+    def to_s
+        format "DIR(%s::)", self.sym
+    end
 
 
-	def to_racc_token
-		:MODULE_DIR
-	end
+    def to_racc_token
+        :MODULE_DIR
+    end
 end
 
 
 
 class Identifier < Abstraction::Symbol
-	def to_s
-		format "ID(%s)", self.sym
-	end
+    def to_s
+        format "ID(%s)", self.sym
+    end
 
 
-	def to_racc_token
-		:ID
-	end
+    def to_racc_token
+        :ID
+    end
 end
 
 
 
 class Label < Abstraction::Symbol
-	def to_s
-		format "LABEL(%s:)", self.sym
-	end
+    def to_s
+        format "LABEL(%s:)", self.sym
+    end
 
 
-	def to_racc_token
-		:LABEL
-	end
+    def to_racc_token
+        :LABEL
+    end
 end
 
 
 
 class String < Abstraction::String
-	def initialize(loc, val)
-		ASSERT.kind_of val, ::String
+    def initialize(loc, val)
+        ASSERT.kind_of val, ::String
 
-		super
-	end
-
-
-	def to_s
-		format "STRING(\"%s\")", L::Escape.unescape(self.val)
-	end
+        super
+    end
 
 
-	def to_racc_token
-		:STRING
-	end
+    def to_s
+        format "STRING(\"%s\")", L::Escape.unescape(self.val)
+    end
+
+
+    def to_racc_token
+        :STRING
+    end
 end
 
 
 
 class Int < Abstraction::Abstract
-	def initialize(loc, val)
-		ASSERT.kind_of val, ::Integer
+    def initialize(loc, val)
+        ASSERT.kind_of val, ::Integer
 
-		super
-	end
-
-
-	def to_s
-		format "INT(%s)", self.val.to_s
-	end
+        super
+    end
 
 
-	def to_racc_token
-		:INT
-	end
+    def to_s
+        format "INT(%s)", self.val.to_s
+    end
+
+
+    def to_racc_token
+        :INT
+    end
 end
 
 
 
 class Real < Abstraction::Abstract
-	def initialize(loc, val)
-		ASSERT.kind_of val, ::Float
+    def initialize(loc, val)
+        ASSERT.kind_of val, ::Float
 
-		super
-	end
-
-
-	def to_s
-		format "REAL(%s)", self.val.to_s
-	end
+        super
+    end
 
 
-	def to_racc_token
-		:REAL
-	end
+    def to_s
+        format "REAL(%s)", self.val.to_s
+    end
+
+
+    def to_racc_token
+        :REAL
+    end
 end
 
 
 
 module_function
 
-	def make_reserved_word(loc, val)
-		ASSERT.kind_of loc, L::Location
-		ASSERT.kind_of val, ::String
+    def make_reserved_word(loc, val)
+        ASSERT.kind_of loc, L::Location
+        ASSERT.kind_of val, ::String
 
-		ReservedWord.new(loc, val.freeze).freeze
-	end
-
-
-	def make_reserved_symbol(loc, val)
-		ASSERT.kind_of loc, L::Location
-		ASSERT.kind_of val, ::String
-
-		ReservedSymbol.new(loc, val.freeze).freeze
-	end
+        ReservedWord.new(loc, val.freeze).freeze
+    end
 
 
-	def make_symbol(loc, val)
-		ASSERT.kind_of loc, L::Location
-		ASSERT.kind_of val, ::String
+    def make_reserved_symbol(loc, val)
+        ASSERT.kind_of loc, L::Location
+        ASSERT.kind_of val, ::String
 
-		Symbol.new(loc, val.freeze).freeze
-	end
-
-
-	def make_module_directory(loc, val)
-		ASSERT.kind_of loc, L::Location
-		ASSERT.kind_of val, ::String
-
-		ModuleDirectory.new(loc, val.freeze).freeze
-	end
+        ReservedSymbol.new(loc, val.freeze).freeze
+    end
 
 
-	def make_identifier(loc, val)
-		ASSERT.kind_of loc, L::Location
-		ASSERT.kind_of val, ::String
+    def make_symbol(loc, val)
+        ASSERT.kind_of loc, L::Location
+        ASSERT.kind_of val, ::String
 
-		Identifier.new(loc, val.freeze).freeze
-	end
-
-
-	def make_label(loc, val)
-		ASSERT.kind_of loc, L::Location
-		ASSERT.kind_of val, ::String
-
-		Label.new(loc, val.freeze).freeze
-	end
+        Symbol.new(loc, val.freeze).freeze
+    end
 
 
-	def make_string(loc, val)
-		ASSERT.kind_of loc, L::Location
-		ASSERT.kind_of val, ::String
+    def make_module_directory(loc, val)
+        ASSERT.kind_of loc, L::Location
+        ASSERT.kind_of val, ::String
 
-		String.new(loc, val.freeze).freeze
-	end
-
-
-	def make_integer(loc, val)
-		ASSERT.kind_of loc, L::Location
-		ASSERT.kind_of val, ::Integer
-
-		Int.new(loc, val).freeze
-	end
+        ModuleDirectory.new(loc, val.freeze).freeze
+    end
 
 
-	def make_real(loc, val)
-		ASSERT.kind_of loc, L::Location
-		ASSERT.kind_of val, ::Float
+    def make_identifier(loc, val)
+        ASSERT.kind_of loc, L::Location
+        ASSERT.kind_of val, ::String
 
-		Real.new(loc, val).freeze
-	end
+        Identifier.new(loc, val.freeze).freeze
+    end
+
+
+    def make_label(loc, val)
+        ASSERT.kind_of loc, L::Location
+        ASSERT.kind_of val, ::String
+
+        Label.new(loc, val.freeze).freeze
+    end
+
+
+    def make_string(loc, val)
+        ASSERT.kind_of loc, L::Location
+        ASSERT.kind_of val, ::String
+
+        String.new(loc, val.freeze).freeze
+    end
+
+
+    def make_integer(loc, val)
+        ASSERT.kind_of loc, L::Location
+        ASSERT.kind_of val, ::Integer
+
+        Int.new(loc, val).freeze
+    end
+
+
+    def make_real(loc, val)
+        ASSERT.kind_of loc, L::Location
+        ASSERT.kind_of val, ::Float
+
+        Real.new(loc, val).freeze
+    end
 
 end # Umu::Lexical::Token
 

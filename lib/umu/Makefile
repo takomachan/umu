@@ -2,7 +2,8 @@
 #
 MAIN	= umu
 
-SRCS	= commander.rb \
+SRCS	= version.rb \
+			commander.rb \
 			commander/commander.rb \
 			commander/option.rb \
 			commander/subcommand.rb \

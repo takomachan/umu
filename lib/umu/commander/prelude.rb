@@ -1,4 +1,3 @@
-# vim: set nu ai sw=4 ts=4 :
 # coding: utf-8
 # frozen_string_literal: true
 
@@ -18,801 +17,801 @@ SOURCE_TEXT  = <<'___EOS___'
 ######################################
 
 structure Umu = struct {
-	######## Bool ########
+    ######## Bool ########
 
-	# TRUE : Bool
-	val TRUE = &{Bool}.make-true
+    # TRUE : Bool
+    val TRUE = &{Bool}.make-true
 
-	# FALSE : Bool
-	val FALSE = &{Bool}.make-false
+    # FALSE : Bool
+    val FALSE = &{Bool}.make-false
 
 
 
-	######## Option ########
+    ######## Option ########
 
-	structure Option = struct {
-		#### Constructor ####
+    structure Option = struct {
+        #### Constructor ####
 
-		# Some : 'a -> Some 'a
-		val Some = &{Some}.make
+        # Some : 'a -> Some 'a
+        val Some = &{Some}.make
 
-		# NONE : None
-		val NONE = &{None}.make
+        # NONE : None
+        val NONE = &{None}.make
 
 
-		#### Classifier ####
+        #### Classifier ####
 
-		# Some? : Option 'a -> Bool
-		val Some? = &(Option.some?)
+        # Some? : Option 'a -> Bool
+        val Some? = &(Option.some?)
 
-		# None? : Option 'a -> Bool
-		val None? = &(Option.none?)
-	}
+        # None? : Option 'a -> Bool
+        val None? = &(Option.none?)
+    }
 
 
 
-	#### Math ####
+    #### Math ####
 
-	structure Math = struct {
-		# NAN 			: Real
-		val NAN = &{Real}.make-nan
+    structure Math = struct {
+        # NAN           : Real
+        val NAN = &{Real}.make-nan
 
-		# INFINITY	 	: Real
-		val INFINITY = &{Real}.make-infinity
+        # INFINITY      : Real
+        val INFINITY = &{Real}.make-infinity
 
-		# PI 			: Real
-		val PI = &{Real}.make-pi
+        # PI            : Real
+        val PI = &{Real}.make-pi
 
-		# E 			: Real
-		val E = &{Real}.make-e
+        # E             : Real
+        val E = &{Real}.make-e
 
-		# nan?			: Real -> Bool
-		val nan? = &(Real.nan?)
+        # nan?          : Real -> Bool
+        val nan? = &(Real.nan?)
 
-		# infinite?		: Real -> Bool
-		val infinite? = &(Real.infinite?)
+        # infinite?     : Real -> Bool
+        val infinite? = &(Real.infinite?)
 
-		# equal?		: Real -> Real -> Int -> Bool
-		fun equal? = (x : Real) (y : Real) (n : Int) ->
-			x.truncate n.== (y.truncate n)
+        # equal?        : Real -> Real -> Int -> Bool
+        fun equal? = (x : Real) (y : Real) (n : Int) ->
+            x.truncate n.== (y.truncate n)
 
-		# finite?		: Real -> Bool
-		val finite? = &(Real.finite?)
+        # finite?       : Real -> Bool
+        val finite? = &(Real.finite?)
 
-		# sin			: Real -> Real
-		val sin = &(Real.sin)
+        # sin           : Real -> Real
+        val sin = &(Real.sin)
 
-		# cos			: Real -> Real
-		val cos = &(Real.cos)
+        # cos           : Real -> Real
+        val cos = &(Real.cos)
 
-		# tan			: Real -> Real
-		val tan = &(Real.tan)
+        # tan           : Real -> Real
+        val tan = &(Real.tan)
 
-		# asin			: Real -> Real
-		val asin = &(loat.asin)
+        # asin          : Real -> Real
+        val asin = &(loat.asin)
 
-		# acos			: Real -> Real
-		val acos = &(Real.acos)
+        # acos          : Real -> Real
+        val acos = &(Real.acos)
 
-		# atan			: Real -> Real
-		val atan = &(Real.atan)
+        # atan          : Real -> Real
+        val atan = &(Real.atan)
 
-		# atan2			: Real -> Real -> Real
-		val atan2 = &(Real.atan2)
+        # atan2         : Real -> Real -> Real
+        val atan2 = &(Real.atan2)
 
-		# sinh			: Real -> Real
-		val sinh = &(Real.sinh)
+        # sinh          : Real -> Real
+        val sinh = &(Real.sinh)
 
-		# cosh			: Real -> Real
-		val cosh = &(Real.cosh)
+        # cosh          : Real -> Real
+        val cosh = &(Real.cosh)
 
-		# tanh			: Real -> Real
-		val tanh = &(Real.tanh)
+        # tanh          : Real -> Real
+        val tanh = &(Real.tanh)
 
-		# exp			: Real -> Real
-		val exp = &(Real.exp)
+        # exp           : Real -> Real
+        val exp = &(Real.exp)
 
-		# log			: Real -> Real
-		val log = &(Real.log)
+        # log           : Real -> Real
+        val log = &(Real.log)
 
-		# log10			: Real -> Real
-		val log10 = &(Real.log10)
+        # log10         : Real -> Real
+        val log10 = &(Real.log10)
 
-		# sqrt			: Real -> Real
-		val sqrt = &(Real.sqrt)
+        # sqrt          : Real -> Real
+        val sqrt = &(Real.sqrt)
 
-		# truncate		: Real -> Int -> Real
-		fun truncate = (x : Real) (n : Int) -> x.truncate n
+        # truncate      : Real -> Int -> Real
+        fun truncate = (x : Real) (n : Int) -> x.truncate n
 
-		# ceil			: Real -> Int -> Real
-		fun ceil = (x : Real) (n : Int) -> x.ceil n
+        # ceil          : Real -> Int -> Real
+        fun ceil = (x : Real) (n : Int) -> x.ceil n
 
-		# floor			: Real -> Int -> Real
-		fun floor = (x : Real) (n : Int) -> x.floor n
+        # floor         : Real -> Int -> Real
+        fun floor = (x : Real) (n : Int) -> x.floor n
 
-		# ldexp			: Real -> Int -> Real
-		fun ldexp = (x : Real) (y : Int) -> x.ldexp y
+        # ldexp         : Real -> Int -> Real
+        fun ldexp = (x : Real) (y : Int) -> x.ldexp y
 
-		# frexp			: Real -> (Real, Real)
-		fun frexp = (x : Real) (y : Int) -> x.frexp y
+        # frexp         : Real -> (Real, Real)
+        fun frexp = (x : Real) (y : Int) -> x.frexp y
 
-		# divmod		: Real -> Real -> (Real, Real)
-		fun divmod = (x : Real) (y : Int) -> x.divmod y
-	}
+        # divmod        : Real -> Real -> (Real, Real)
+        fun divmod = (x : Real) (y : Int) -> x.divmod y
+    }
 
 
 
-	#### I/O ####
+    #### I/O ####
 
-	structure IO = struct {
-		# gets : () -> Option String 
-		fun gets = () -> _STDIN.gets
+    structure IO = struct {
+        # gets : () -> Option String 
+        fun gets = () -> _STDIN.gets
 
-		# puts : String -> ()
-		fun puts = x -> _STDOUT.puts x
+        # puts : String -> ()
+        fun puts = x -> _STDOUT.puts x
 
-		# display : 'a -> ()
-		fun display = x -> _STDOUT.puts (x.to-s)
+        # display : 'a -> ()
+        fun display = x -> _STDOUT.puts (x.to-s)
 
-		# tab : Int -> ()
-		fun rec tab = n ->
-			if (0.< n) (
-				_STDOUT.puts " " ;
-				tab (n.- 1)
-			) else
-				()
+        # tab : Int -> ()
+        fun rec tab = n ->
+            if (0.< n) (
+                _STDOUT.puts " " ;
+                tab (n.- 1)
+            ) else
+                ()
 
-		# nl : () -> ()
-		fun nl = () -> _STDOUT.puts "\n"
+        # nl : () -> ()
+        fun nl = () -> _STDOUT.puts "\n"
 
-		# print : 'a -> ()
-		fun print = x -> _STDOUT.puts (x.to-s.^ "\n")
+        # print : 'a -> ()
+        fun print = x -> _STDOUT.puts (x.to-s.^ "\n")
 
-		# p : 'a -> ()
-		fun p = x -> _STDOUT.puts (x.inspect.^ "\n")
+        # p : 'a -> ()
+        fun p = x -> _STDOUT.puts (x.inspect.^ "\n")
 
-		# msgout : 'a -> ()
-		fun msgout = x -> _STDERR.puts (x.to-s.^ "\n")
+        # msgout : 'a -> ()
+        fun msgout = x -> _STDERR.puts (x.to-s.^ "\n")
 
-		# random : 'a -> 'a	where { 'a <- Number }
-		fun random = x : Number -> x.random
-	} where {
-		val _STDIN	= &{IO}.make-stdin
-		val _STDOUT	= &{IO}.make-stdout
-		val _STDERR	= &{IO}.make-stderr
-	}
+        # random : 'a -> 'a where { 'a <- Number }
+        fun random = x : Number -> x.random
+    } where {
+        val _STDIN  = &{IO}.make-stdin
+        val _STDOUT = &{IO}.make-stdout
+        val _STDERR = &{IO}.make-stderr
+    }
 
 
 
-	######## List ########
+    ######## List ########
 
-	structure List = struct {
-		# Nil : () -> ['a]
-		fun Nil = () -> &{List}.make-nil
+    structure List = struct {
+        # Nil : () -> ['a]
+        fun Nil = () -> &{List}.make-nil
 
 
-		# Cons : 'a -> ['a] -> ['a]
-		fun Cons = x (xs : List) -> &{List}.make-cons x xs
+        # Cons : 'a -> ['a] -> ['a]
+        fun Cons = x (xs : List) -> &{List}.make-cons x xs
 
 
-		# empty? : ['a] -> Bool
-		val empty? = &(List.empty?)
+        # empty? : ['a] -> Bool
+        val empty? = &(List.empty?)
 
 
-		# des : ['a] -> Option ('a, ['a])
-		val des = &(List.des)
+        # des : ['a] -> Option ('a, ['a])
+        val des = &(List.des)
 
 
-		# head : ['a] -> 'a
-		fun head = xs : List -> xs.des!$1
+        # head : ['a] -> 'a
+        fun head = xs : List -> xs.des!$1
 
 
-		# tail : ['a] -> ['a]
-		fun tail = xs : List -> xs.des!$2
+        # tail : ['a] -> ['a]
+        fun tail = xs : List -> xs.des!$2
 
 
-		# equal-with? : ('a -> 'b -> Bool) -> ['a] -> ['b] -> Bool
-		fun rec equal-with? = eq? xs ys ->
-			if (xs kind-of? List)
-				if (ys kind-of? List)
-					case xs {
-					  []	  -> empty? ys
-					| [x|xs'] -> case ys {
-						  []	  -> FALSE
-						| [y|ys'] -> equal-with? eq? x	 y &&
-									 equal-with? eq? xs' ys'
-						}
-					}
-				else
-					FALSE
-			else
-				if (ys kind-of? List)
-					FALSE
-				else
-					eq? xs ys
+        # equal-with? : ('a -> 'b -> Bool) -> ['a] -> ['b] -> Bool
+        fun rec equal-with? = eq? xs ys ->
+            if (xs kind-of? List)
+                if (ys kind-of? List)
+                    case xs {
+                      []      -> empty? ys
+                    | [x|xs'] -> case ys {
+                          []      -> FALSE
+                        | [y|ys'] -> equal-with? eq? x   y &&
+                                     equal-with? eq? xs' ys'
+                        }
+                    }
+                else
+                    FALSE
+            else
+                if (ys kind-of? List)
+                    FALSE
+                else
+                    eq? xs ys
 
 
-		# equal? : ['a] -> ['b] -> Bool
-		val equal? = equal-with? { x y -> x.== y }
+        # equal? : ['a] -> ['b] -> Bool
+        val equal? = equal-with? { x y -> x.== y }
 
 
-		# foldr : 'b -> ('a -> 'b -> 'b) -> ['a] -> 'b
-		(#
-		fun rec foldr = a f xs -> case xs {
-		  []	  -> a
-		| [x|xs'] -> f x (foldr a f xs')
-		}
-		#)
-		fun foldr = a (f : Function) (xs : List) -> xs.foldr a f
+        # foldr : 'b -> ('a -> 'b -> 'b) -> ['a] -> 'b
+        (#
+        fun rec foldr = a f xs -> case xs {
+          []      -> a
+        | [x|xs'] -> f x (foldr a f xs')
+        }
+        #)
+        fun foldr = a (f : Function) (xs : List) -> xs.foldr a f
 
 
-		# foldr1 : ('a -> 'a -> 'a) -> ['a] -> 'a
-		(#
-		fun foldr1 = f xs -> foldr x f xs'
-							where { val [x|xs'] = xs }
-		#)
-		fun foldr1 = (f : Function) (xs : Cons) -> xs'.foldr x f
-							where { val [x|xs'] = xs }
+        # foldr1 : ('a -> 'a -> 'a) -> ['a] -> 'a
+        (#
+        fun foldr1 = f xs -> foldr x f xs'
+                            where { val [x|xs'] = xs }
+        #)
+        fun foldr1 = (f : Function) (xs : Cons) -> xs'.foldr x f
+                            where { val [x|xs'] = xs }
 
 
-		# foldl : 'b -> ('a -> 'b -> 'b) -> ['a] -> 'b
-		(#
-		fun rec foldl = a f xs -> case xs {
-		  []	  -> a
-		| [x|xs'] -> foldl (f x a) f xs'
-		}
-		#)
-		fun foldl = a (f : Function) (xs : List) -> xs.foldl a f
+        # foldl : 'b -> ('a -> 'b -> 'b) -> ['a] -> 'b
+        (#
+        fun rec foldl = a f xs -> case xs {
+          []      -> a
+        | [x|xs'] -> foldl (f x a) f xs'
+        }
+        #)
+        fun foldl = a (f : Function) (xs : List) -> xs.foldl a f
 
 
-		# foldl1 : ('a -> 'a -> 'a) -> ['a] -> 'a
-		(#
-		fun foldl1 = (f : Function) (xs : Cons) -> foldl x f xs'
-							where { val [x|xs'] = xs }
-		#)
-		fun foldl1 = (f : Function) (xs : Cons) -> xs'.foldl x f
-							where { val [x|xs'] = xs }
+        # foldl1 : ('a -> 'a -> 'a) -> ['a] -> 'a
+        (#
+        fun foldl1 = (f : Function) (xs : Cons) -> foldl x f xs'
+                            where { val [x|xs'] = xs }
+        #)
+        fun foldl1 = (f : Function) (xs : Cons) -> xs'.foldl x f
+                            where { val [x|xs'] = xs }
 
 
-		# length : ['a] -> Int
-		# val length = foldl 0 { _ len -> len.+ 1 }
-		fun length = xs : List -> xs.foldl 0 { _ len -> len.+ 1 }
+        # length : ['a] -> Int
+        # val length = foldl 0 { _ len -> len.+ 1 }
+        fun length = xs : List -> xs.foldl 0 { _ len -> len.+ 1 }
 
 
-		# reverse : ['a] -> ['a]
-		# val reverse = foldl [] Cons
-		fun reverse = xs : List -> xs.foldl [] Cons
+        # reverse : ['a] -> ['a]
+        # val reverse = foldl [] Cons
+        fun reverse = xs : List -> xs.foldl [] Cons
 
 
-		# max : ['a] -> 'a
-		val max = foldl1 { x y -> if (y.< x) x else y }
+        # max : ['a] -> 'a
+        val max = foldl1 { x y -> if (y.< x) x else y }
 
 
-		# min : ['a] -> 'a
-		val min = foldl1 { x y -> if (x.< y) x else y }
+        # min : ['a] -> 'a
+        val min = foldl1 { x y -> if (x.< y) x else y }
 
 
-		# map : ('a -> 'b) -> ['a] -> ['b]
-		# fun map = f -> foldr [] { x xs -> [f x | xs] }
-		fun map = (f : Function) (xs : List) -> xs.map f
+        # map : ('a -> 'b) -> ['a] -> ['b]
+        # fun map = f -> foldr [] { x xs -> [f x | xs] }
+        fun map = (f : Function) (xs : List) -> xs.map f
 
 
-		# filter : ('a -> Bool) -> ['a] -> ['a]
-		# fun filter = f -> foldr [] { x xs -> if (f x) [x|xs] else xs }
-		fun filter = (f : Function) (xs : List) -> xs.filter f
+        # filter : ('a -> Bool) -> ['a] -> ['a]
+        # fun filter = f -> foldr [] { x xs -> if (f x) [x|xs] else xs }
+        fun filter = (f : Function) (xs : List) -> xs.filter f
 
 
-		# append : ['a] -> ['a] -> ['a]
-		# fun append = (xs : List) (ys : List) -> foldr ys Cons xs
-		fun append = (xs : List) (ys : List) -> xs.append ys
+        # append : ['a] -> ['a] -> ['a]
+        # fun append = (xs : List) (ys : List) -> foldr ys Cons xs
+        fun append = (xs : List) (ys : List) -> xs.append ys
 
 
-		# concat : [['a]] -> ['a]
-		# val concat = foldl [] { xs xss -> append xss xs }
-		val concat = &(List.concat)
+        # concat : [['a]] -> ['a]
+        # val concat = foldl [] { xs xss -> append xss xs }
+        val concat = &(List.concat)
 
 
-		# concat-with : ('a -> ['b]) -> ['a] -> ['b]
-		fun concat-with = (f : Function) (xs : List) -> xs.concat-with f
+        # concat-with : ('a -> ['b]) -> ['a] -> ['b]
+        fun concat-with = (f : Function) (xs : List) -> xs.concat-with f
 
 
-		# zip-with : ('a -> 'b -> 'c) -> ['a] -> ['b] -> ['c]
-		fun zip-with = f -> foldr e g
-		where {
-			fun e = _ -> []
+        # zip-with : ('a -> 'b -> 'c) -> ['a] -> ['b] -> ['c]
+        fun zip-with = f -> foldr e g
+        where {
+            fun e = _ -> []
 
-			fun g = x h ys -> case ys {
-			  []	  -> []
-			| [y|ys'] -> [f x y | h ys']
-			}
-		}
+            fun g = x h ys -> case ys {
+              []      -> []
+            | [y|ys'] -> [f x y | h ys']
+            }
+        }
 
 
-		# zip : ['a] -> ['b] -> [('a, 'b)]
-		# val zip = zip-with { x y -> (x, y) }
-		fun zip = (xs : List) (ys : List) -> xs.zip ys
+        # zip : ['a] -> ['b] -> [('a, 'b)]
+        # val zip = zip-with { x y -> (x, y) }
+        fun zip = (xs : List) (ys : List) -> xs.zip ys
 
 
-		# unzip : [('a, 'b)] -> (['a], ['b])
-		# val unzip = foldr ([], []) { (y, z) (ys, zs) -> ([y|ys], [z|zs]) }
-		val unzip = &(List.unzip)
+        # unzip : [('a, 'b)] -> (['a], ['b])
+        # val unzip = foldr ([], []) { (y, z) (ys, zs) -> ([y|ys], [z|zs]) }
+        val unzip = &(List.unzip)
 
 
-		# partition : ('a -> Bool) -> ['a] -> (['a], ['a])
-		(#
-		fun partition = (f : Function) (xs : List) -> foldr ([], []) {
-			x (ys, zs)
-		->
-			if (f x)
-				([x|ys],    zs)
-			else
-				(   ys,  [x|zs])
-		} xs
-		#)
-		fun partition = (f : Function) (xs : List) -> xs.partition f
+        # partition : ('a -> Bool) -> ['a] -> (['a], ['a])
+        (#
+        fun partition = (f : Function) (xs : List) -> foldr ([], []) {
+            x (ys, zs)
+        ->
+            if (f x)
+                ([x|ys],    zs)
+            else
+                (   ys,  [x|zs])
+        } xs
+        #)
+        fun partition = (f : Function) (xs : List) -> xs.partition f
 
 
-		# sort : ['a] -> ['a]
-		(#
-		fun rec sort = xs -> case xs {
-		  []		  -> []
-		| [pivot|xs'] ->
-				concat [sort littles, [pivot], sort bigs]
-			where val (littles, bigs) = partition (< pivot) xs'
-		}
-		#)
-		val sort = &(List.sort)
-	}
+        # sort : ['a] -> ['a]
+        (#
+        fun rec sort = xs -> case xs {
+          []          -> []
+        | [pivot|xs'] ->
+                concat [sort littles, [pivot], sort bigs]
+            where val (littles, bigs) = partition (< pivot) xs'
+        }
+        #)
+        val sort = &(List.sort)
+    }
 
 
 
-	######## String ########
+    ######## String ########
 
-	structure String = struct {
-		# panic : String -> ()
-		val panic = &(String.panic)
+    structure String = struct {
+        # panic : String -> ()
+        val panic = &(String.panic)
 
 
-		# join : String -> [String] -> String
-		fun join = j xs -> case xs {
-		  []	  -> ""
-		| [x|xs'] -> case xs' {
-			  []   -> x
-			  else -> x.^ (xs'.foldl "" { x' s -> s.^ j.^ x' })
-			}
-		}
+        # join : String -> [String] -> String
+        fun join = j xs -> case xs {
+          []      -> ""
+        | [x|xs'] -> case xs' {
+              []   -> x
+              else -> x.^ (xs'.foldl "" { x' s -> s.^ j.^ x' })
+            }
+        }
 
 
-		# concat : [String] -> String
-		val concat = join ""
-	}
+        # concat : [String] -> String
+        val concat = join ""
+    }
 
 
 
-	######## Prelude ########
+    ######## Prelude ########
 
-	structure Prelude = struct {
-		#### Top ####
+    structure Prelude = struct {
+        #### Top ####
 
-		# inspect	: 'a -> String
-		val inspect = &(inspect)
+        # inspect   : 'a -> String
+        val inspect = &(inspect)
 
-		# to-s		: 'a -> String
-		val to-s = &(to-s)
+        # to-s      : 'a -> String
+        val to-s = &(to-s)
 
-		# (==)		: 'a -> 'b -> Bool
-		fun (==) = x y -> x.== y
+        # (==)      : 'a -> 'b -> Bool
+        fun (==) = x y -> x.== y
 
-		# (<>)		: 'a -> 'b -> Bool
-		fun (<>) = x y -> x.== y.not
+        # (<>)      : 'a -> 'b -> Bool
+        fun (<>) = x y -> x.== y.not
 
-		# (<)		: 'a -> 'a -> Bool
-		fun (<) = x y -> x.< y
+        # (<)       : 'a -> 'a -> Bool
+        fun (<) = x y -> x.< y
 
-		# (>)		: 'a -> 'a -> Bool
-		fun (>) = x y -> y.< x
+        # (>)       : 'a -> 'a -> Bool
+        fun (>) = x y -> y.< x
 
-		# (<=)		: 'a -> 'a -> Bool
-		fun (<=) = x y -> y.< x.not
+        # (<=)      : 'a -> 'a -> Bool
+        fun (<=) = x y -> y.< x.not
 
-		# (>=)		: 'a -> 'a -> Bool
-		fun (>=) = x y -> x.< y.not
+        # (>=)      : 'a -> 'a -> Bool
+        fun (>=) = x y -> x.< y.not
 
 
-		#### Bool ####
+        #### Bool ####
 
-		# TRUE		: Bool
-		val TRUE = TRUE
+        # TRUE      : Bool
+        val TRUE = TRUE
 
-		# FALSE		: Bool
-		val FALSE = FALSE
+        # FALSE     : Bool
+        val FALSE = FALSE
 
-		# not		: Bool -> Bool
-		val not = &(Bool.not)
+        # not       : Bool -> Bool
+        val not = &(Bool.not)
 
 
-		#### Number ####
+        #### Number ####
 
-		# 	positive?	: Number -> Bool
-		val positive? = &(Number.positive?)
+        #   positive?   : Number -> Bool
+        val positive? = &(Number.positive?)
 
-		# 	negative?	: Number -> Bool
-		val negative? = &(Number.negative?)
+        #   negative?   : Number -> Bool
+        val negative? = &(Number.negative?)
 
-		# 	zero?		: Number -> Bool
-		val zero? = &(Number.zero?)
+        #   zero?       : Number -> Bool
+        val zero? = &(Number.zero?)
 
-		# 	odd?		: Int -> Bool
-		val odd? = &(Int.odd?)
+        #   odd?        : Int -> Bool
+        val odd? = &(Int.odd?)
 
-		# 	even?		: Int -> Bool
-		val even? = &(Int.even?)
+        #   even?       : Int -> Bool
+        val even? = &(Int.even?)
 
-		# abs			: 'a -> 'a	where { 'a <- Number }
-		val abs = &(Number.abs)
+        # abs           : 'a -> 'a  where { 'a <- Number }
+        val abs = &(Number.abs)
 
-		# negate		: 'a -> 'a	where { 'a <- Number }
-		val negate = &(Number.negate)
+        # negate        : 'a -> 'a  where { 'a <- Number }
+        val negate = &(Number.negate)
 
-		# to-i			: Number -> Int
-		val to-i = &(Number.to-i)
+        # to-i          : Number -> Int
+        val to-i = &(Number.to-i)
 
-		# to-r			: Number -> Real
-		val to-r = &(Number.to-r)
+        # to-r          : Number -> Real
+        val to-r = &(Number.to-r)
 
-		# (+)			: 'a -> 'a -> 'a		where { 'a <- Number }
-		fun (+) = (x : Number) (y : Number) -> x.+ y
+        # (+)           : 'a -> 'a -> 'a        where { 'a <- Number }
+        fun (+) = (x : Number) (y : Number) -> x.+ y
 
-		# (-)			: 'a -> 'a -> 'a		where { 'a <- Number }
-		fun (-) = (x : Number) (y : Number) -> x.- y
+        # (-)           : 'a -> 'a -> 'a        where { 'a <- Number }
+        fun (-) = (x : Number) (y : Number) -> x.- y
 
-		# (*)			: 'a -> 'a -> 'a		where { 'a <- Number }
-		fun (*) = (x : Number) (y : Number) -> x.* y
+        # (*)           : 'a -> 'a -> 'a        where { 'a <- Number }
+        fun (*) = (x : Number) (y : Number) -> x.* y
 
-		# (/)			: 'a -> 'a -> 'a		where { 'a <- Number }
-		fun (/) = (x : Number) (y : Number) -> x./ y
+        # (/)           : 'a -> 'a -> 'a        where { 'a <- Number }
+        fun (/) = (x : Number) (y : Number) -> x./ y
 
-		# (mod)			: 'a -> 'a -> 'a		where { 'a <- Number }
-		fun (mod) = (x : Number) (y : Number) -> x.mod y
+        # (mod)         : 'a -> 'a -> 'a        where { 'a <- Number }
+        fun (mod) = (x : Number) (y : Number) -> x.mod y
 
-		# (pow)			: 'a -> 'a -> 'a		where { 'a <- Number }
-		fun (pow) = (x : Number) (y : Number) -> x.pow y
+        # (pow)         : 'a -> 'a -> 'a        where { 'a <- Number }
+        fun (pow) = (x : Number) (y : Number) -> x.pow y
 
 
-		#### Math ####
+        #### Math ####
 
-		# NAN		: Real
-		val NAN = Math::NAN
+        # NAN       : Real
+        val NAN = Math::NAN
 
-		# INFINITY	: Real
-		val INFINITY = Math::INFINITY
+        # INFINITY  : Real
+        val INFINITY = Math::INFINITY
 
-		# nan?		: Real -> Bool
-		val nan? = Math::nan?
+        # nan?      : Real -> Bool
+        val nan? = Math::nan?
 
-		# infinite?	: Real -> Bool
-		val infinite? = Math::infinite?
+        # infinite? : Real -> Bool
+        val infinite? = Math::infinite?
 
-		# finite?	: Real -> Bool
-		val finite? = Math::finite?
+        # finite?   : Real -> Bool
+        val finite? = Math::finite?
 
 
-		#### String ####
+        #### String ####
 
-		# panic		: String -> ()
-		val panic = String::panic
+        # panic     : String -> ()
+        val panic = String::panic
 
-		# (^)		: String -> String -> String
-		fun (^) = (x : String) (y : String) -> x.^ y
+        # (^)       : String -> String -> String
+        fun (^) = (x : String) (y : String) -> x.^ y
 
-		# join	 	: String -> [String] -> String
-		val join = String::join
+        # join      : String -> [String] -> String
+        val join = String::join
 
 
-		#### I/O ####
+        #### I/O ####
 
-		# gets		: () -> Option String 
-		val gets = IO::gets
+        # gets      : () -> Option String 
+        val gets = IO::gets
 
-		# puts		: 'a -> ()
-		val puts = IO::puts
+        # puts      : 'a -> ()
+        val puts = IO::puts
 
-		# display	: 'a -> ()
-		val display = IO::display
+        # display   : 'a -> ()
+        val display = IO::display
 
-		# tab		: Int -> ()
-		val tab = IO::tab
+        # tab       : Int -> ()
+        val tab = IO::tab
 
-		# nl		: () -> ()
-		val nl = IO::nl
+        # nl        : () -> ()
+        val nl = IO::nl
 
-		# print		: 'a -> ()
-		val print = IO::print
+        # print     : 'a -> ()
+        val print = IO::print
 
-		# p			: 'a -> ()
-		val p = IO::p
+        # p         : 'a -> ()
+        val p = IO::p
 
 
-		#### Tuple ####
+        #### Tuple ####
 
-		# (,)	: 'a -> 'b -> ('a, 'b)
-		fun (,) = x y -> (x, y)
+        # (,)   : 'a -> 'b -> ('a, 'b)
+        fun (,) = x y -> (x, y)
 
-		# fst	: ('a, 'b) -> 'a
-		fun fst = (f, _) -> f
+        # fst   : ('a, 'b) -> 'a
+        fun fst = (f, _) -> f
 
-		# snd	: ('a, 'b) -> 'b
-		fun snd = (_, s) -> s
+        # snd   : ('a, 'b) -> 'b
+        fun snd = (_, s) -> s
 
 
-		#### Union ####
+        #### Union ####
 
-		# val-of : Union 'a -> Top
-		fun val-of = x : Union -> x.contents
+        # val-of : Union 'a -> Top
+        fun val-of = x : Union -> x.contents
 
 
-		#### Datum ####
-		# See SICP(Wizard Book), 2.4.2 Tagged data
+        #### Datum ####
+        # See SICP(Wizard Book), 2.4.2 Tagged data
 
-		# Datum : Symbol -> 'a -> Datum 'a
-		fun Datum = (t : Symbol) x -> &{Datum}.make t x
+        # Datum : Symbol -> 'a -> Datum 'a
+        fun Datum = (t : Symbol) x -> &{Datum}.make t x
 
-		# tag-of : Datum 'a -> Symbol
-		val tag-of = &(Datum.tag)
+        # tag-of : Datum 'a -> Symbol
+        val tag-of = &(Datum.tag)
 
 
-		#### Option ####
+        #### Option ####
 
-		# Some	: 'a -> Option 'a
-		val Some = Option::Some
+        # Some  : 'a -> Option 'a
+        val Some = Option::Some
 
-		# NONE	: Option 'a
-		val NONE = Option::NONE
+        # NONE  : Option 'a
+        val NONE = Option::NONE
 
-		# Some?	: Option 'a -> Bool
-		val Some? = Option::Some?
+        # Some? : Option 'a -> Bool
+        val Some? = Option::Some?
 
-		# None?	: Option 'a -> Bool
-		val None? = Option::None?
+        # None? : Option 'a -> Bool
+        val None? = Option::None?
 
 
-		#### List ####
+        #### List ####
 
-		# (|)		: 'a -> ['a] -> ['a]
-		val (|) = List::Cons
+        # (|)       : 'a -> ['a] -> ['a]
+        val (|) = List::Cons
 
-		# (++)		: ['a] -> ['a] -> ['a]
-		val (++) = List::append
+        # (++)      : ['a] -> ['a] -> ['a]
+        val (++) = List::append
 
-		# empty?	: ['a] -> Bool
-		val empty? = List::empty?
+        # empty?    : ['a] -> Bool
+        val empty? = List::empty?
 
-		# head		: ['a] -> 'a
-		val head = List::head
+        # head      : ['a] -> 'a
+        val head = List::head
 
-		# tail		: ['a] -> ['a]
-		val tail = List::tail
+        # tail      : ['a] -> ['a]
+        val tail = List::tail
 
-		# equal?	: 'a -> 'b -> Bool
-		val equal? = List::equal?
+        # equal?    : 'a -> 'b -> Bool
+        val equal? = List::equal?
 
-		# foldr		: 'b -> ('a -> 'b -> 'b) -> ['a] -> 'b
-		val foldr = List::foldr
+        # foldr     : 'b -> ('a -> 'b -> 'b) -> ['a] -> 'b
+        val foldr = List::foldr
 
-		# foldr1	: ('a -> 'a -> 'a) -> ['a] -> 'a
-		val foldr1 = List::foldr1
+        # foldr1    : ('a -> 'a -> 'a) -> ['a] -> 'a
+        val foldr1 = List::foldr1
 
-		# foldl		: 'b -> ('a -> 'b -> 'b) -> ['a] -> 'b
-		val foldl = List::foldl
+        # foldl     : 'b -> ('a -> 'b -> 'b) -> ['a] -> 'b
+        val foldl = List::foldl
 
-		# foldl1	: ('a -> 'a -> 'a) -> ['a] -> 'a
-		val foldl1 = List::foldl1
+        # foldl1    : ('a -> 'a -> 'a) -> ['a] -> 'a
+        val foldl1 = List::foldl1
 
-		# length	: ['a] -> Int
-		val length = List::length
+        # length    : ['a] -> Int
+        val length = List::length
 
-		# reverse	: ['a] -> ['a]
-		val reverse = List::reverse
+        # reverse   : ['a] -> ['a]
+        val reverse = List::reverse
 
-		# max		: ['a] -> 'a
-		val max = List::max
+        # max       : ['a] -> 'a
+        val max = List::max
 
-		# min		: ['a] -> 'a
-		val min = List::min
+        # min       : ['a] -> 'a
+        val min = List::min
 
-		# map		: ('a -> 'b) -> ['a] -> ['b]
-		val map = List::map
+        # map       : ('a -> 'b) -> ['a] -> ['b]
+        val map = List::map
 
-		# filter	: ('a -> Bool) -> ['a] -> ['a]
-		val filter = List::filter
+        # filter    : ('a -> Bool) -> ['a] -> ['a]
+        val filter = List::filter
 
-		# concat	: [['a]] -> ['a]
-		val concat = List::concat
+        # concat    : [['a]] -> ['a]
+        val concat = List::concat
 
-		# concat-with : ('a -> ['b]) -> ['a] -> ['b]
-		val concat-with = List::concat-with
+        # concat-with : ('a -> ['b]) -> ['a] -> ['b]
+        val concat-with = List::concat-with
 
-		# zip		: ['a] -> ['b] -> (['a, 'b])
-		val zip = List::zip
+        # zip       : ['a] -> ['b] -> (['a, 'b])
+        val zip = List::zip
 
-		# unzip		: [('a, 'b)] -> (['a], ['b])
-		val unzip = List::unzip
+        # unzip     : [('a, 'b)] -> (['a], ['b])
+        val unzip = List::unzip
 
-		# partition	: ('a -> Bool) -> ['a] -> (['a], ['a])
-		val partition = List::partition
+        # partition : ('a -> Bool) -> ['a] -> (['a], ['a])
+        val partition = List::partition
 
-		# sort		: ['a] -> ['a]
-		val sort = List::sort
+        # sort      : ['a] -> ['a]
+        val sort = List::sort
 
 
-		#### Function application - Aka. "PIPE" ####
+        #### Function application - Aka. "PIPE" ####
 
-		## (|>)	: 'a -> ('a -> 'b) -> 'b
-		fun (|>) = x (f : Function) -> f x
+        ## (|>) : 'a -> ('a -> 'b) -> 'b
+        fun (|>) = x (f : Function) -> f x
 
-		## (<|)	: ('a -> 'b) -> 'a -> 'b
-		fun (<|) = (f : Function) x -> f x
+        ## (<|) : ('a -> 'b) -> 'a -> 'b
+        fun (<|) = (f : Function) x -> f x
 
 
-		#### Function composition ####
+        #### Function composition ####
 
-		## (>>)	: ('a -> 'b) -> ('b -> 'c) -> 'a -> 'c
-		fun (>>) = (f : Function) (g : Function) -> {x -> g (f x)}
+        ## (>>) : ('a -> 'b) -> ('b -> 'c) -> 'a -> 'c
+        fun (>>) = (f : Function) (g : Function) -> {x -> g (f x)}
 
-		## (<<)	: ('b -> 'c) -> ('a -> 'b) -> 'a -> 'c
-		fun (<<) = (g : Function) (f : Function) -> {x -> g (f x)}
+        ## (<<) : ('b -> 'c) -> ('a -> 'b) -> 'a -> 'c
+        fun (<<) = (g : Function) (f : Function) -> {x -> g (f x)}
 
 
-		#### High order Function ####
+        #### High order Function ####
 
-		## id		: 'a -> 'a
-		fun id = x -> x
+        ## id       : 'a -> 'a
+        fun id = x -> x
 
-		## const	: 'a -> 'b -> 'a
-		fun const = x _ -> x
+        ## const    : 'a -> 'b -> 'a
+        fun const = x _ -> x
 
-		## tee      : ('a -> 'b) -> 'a -> 'a
-		fun tee = (f : Function) x -> (f x ; x)
+        ## tee      : ('a -> 'b) -> 'a -> 'a
+        fun tee = (f : Function) x -> (f x ; x)
 
-		## curry	: (('a, 'b) -> 'c) -> ('a -> 'b -> 'c)
-		fun curry = (f : Function) x y -> f (x, y)
+        ## curry    : (('a, 'b) -> 'c) -> ('a -> 'b -> 'c)
+        fun curry = (f : Function) x y -> f (x, y)
 
-		## uncurry	: ('a -> 'b -> 'c) -> (('a, 'b) -> 'c)
-		fun uncurry = (f : Function) (x, y) -> f x y
+        ## uncurry  : ('a -> 'b -> 'c) -> (('a, 'b) -> 'c)
+        fun uncurry = (f : Function) (x, y) -> f x y
 
-		## swap		: (('a, 'b) -> 'c) -> (('b, 'a) -> 'c)
-		fun swap = (f : Function) (x, y) -> f (y, x)
+        ## swap     : (('a, 'b) -> 'c) -> (('b, 'a) -> 'c)
+        fun swap = (f : Function) (x, y) -> f (y, x)
 
-		## flip		: ('a -> 'b -> 'c) -> ('b -> 'a -> 'c)
-		fun flip = (f : Function) x y -> f y x
+        ## flip     : ('a -> 'b -> 'c) -> ('b -> 'a -> 'c)
+        fun flip = (f : Function) x y -> f y x
 
-		## pair		: ('a -> 'b, 'a -> 'c) -> ('a -> ('b, 'c))
-		fun pair = (f : Function, g : Function) x -> (f x, g x)
+        ## pair     : ('a -> 'b, 'a -> 'c) -> ('a -> ('b, 'c))
+        fun pair = (f : Function, g : Function) x -> (f x, g x)
 
-		## cross	: ('a -> 'b, 'c -> 'd) -> (('a, 'c) -> ('b, 'd))
-		fun cross = (f : Function, g : Function) ->
-						pair (fst >> f, snd >> g)
-	}
+        ## cross    : ('a -> 'b, 'c -> 'd) -> (('a, 'c) -> ('b, 'd))
+        fun cross = (f : Function, g : Function) ->
+                        pair (fst >> f, snd >> g)
+    }
 
 
 
-	######## Assertion ########
+    ######## Assertion ########
 
-	structure Assert = struct {
-		# unit : 'a -> ()
-		fun unit = actual -> let {
-			assert (actual kind-of? Unit)	(msg () actual)
-		in
-			()
-		}
+    structure Assert = struct {
+        # unit : 'a -> ()
+        fun unit = actual -> let {
+            assert (actual kind-of? Unit)   (msg () actual)
+        in
+            ()
+        }
 
 
-		# bool : 'a -> Bool -> Bool
-		fun bool =
-				actual
-				(expect : Bool)
-		-> let {
-			assert (actual kind-of? Bool)	"Bool"
-			assert (actual == expect)		(msg expect actual)
-		in
-			actual
-		}
+        # bool : 'a -> Bool -> Bool
+        fun bool =
+                actual
+                (expect : Bool)
+        -> let {
+            assert (actual kind-of? Bool)   "Bool"
+            assert (actual == expect)       (msg expect actual)
+        in
+            actual
+        }
 
 
-		# bools : ['a] -> ('a -> 'b) -> [Bool] -> [Bool]
-		fun bools =
-				(sources : List)
-				(f       : Function)
-				(expects : List)
-		-> let {
-			val results = sources |> map f
-		in
-			results |> zip expects |> map { (result, expect) ->
-				bool result expect
-			}
-		}
+        # bools : ['a] -> ('a -> 'b) -> [Bool] -> [Bool]
+        fun bools =
+                (sources : List)
+                (f       : Function)
+                (expects : List)
+        -> let {
+            val results = sources |> map f
+        in
+            results |> zip expects |> map { (result, expect) ->
+                bool result expect
+            }
+        }
 
 
-		# true : 'a -> Bool
-		fun true = actual -> bool actual TRUE
+        # true : 'a -> Bool
+        fun true = actual -> bool actual TRUE
 
 
-		# false : 'a -> Bool
-		fun false = actual -> bool actual FALSE
+        # false : 'a -> Bool
+        fun false = actual -> bool actual FALSE
 
 
-		# integer : 'a -> Int -> Int
-		fun integer =
-				actual
-				(expect : Int)
-		-> let {
-			assert (actual kind-of? Int)	"Int"
-			assert (actual == expect)		(msg expect actual)
-		in
-			actual
-		}
+        # integer : 'a -> Int -> Int
+        fun integer =
+                actual
+                (expect : Int)
+        -> let {
+            assert (actual kind-of? Int)    "Int"
+            assert (actual == expect)       (msg expect actual)
+        in
+            actual
+        }
 
 
-		# integers : ['a] -> ('a -> 'b) -> [Int] -> [Int]
-		fun integers =
-				(sources : List)
-				(f       : Function)
-				(expects : List)
-		-> let {
-			val results = sources |> map f
-		in
-			results |> zip expects |> map { (result, expect) ->
-				integer result expect
-			}
-		}
+        # integers : ['a] -> ('a -> 'b) -> [Int] -> [Int]
+        fun integers =
+                (sources : List)
+                (f       : Function)
+                (expects : List)
+        -> let {
+            val results = sources |> map f
+        in
+            results |> zip expects |> map { (result, expect) ->
+                integer result expect
+            }
+        }
 
 
-		# real : 'a -> Real -> Int -> Real
-		fun real =
-				actual
-				(expect	: Real)
-				(n		: Int)
-		-> let {
-			assert (actual kind-of? Real)			"Real"
-			assert (Math::equal? actual expect n)	(msg expect actual)
-		in
-			actual
-		}
+        # real : 'a -> Real -> Int -> Real
+        fun real =
+                actual
+                (expect : Real)
+                (n      : Int)
+        -> let {
+            assert (actual kind-of? Real)           "Real"
+            assert (Math::equal? actual expect n)   (msg expect actual)
+        in
+            actual
+        }
 
 
-		# symbol : 'a -> Symbol -> Symbol
-		fun symbol =
-				actual
-				(expect : Symbol)
-		-> let {
-			assert (actual kind-of? Symbol)	"Symbol"
-			assert (actual == expect)		(msg expect actual)
-		in
-			actual
-		}
+        # symbol : 'a -> Symbol -> Symbol
+        fun symbol =
+                actual
+                (expect : Symbol)
+        -> let {
+            assert (actual kind-of? Symbol) "Symbol"
+            assert (actual == expect)       (msg expect actual)
+        in
+            actual
+        }
 
 
-		# string : 'a -> String -> String
-		fun string =
-				actual
-				(expect : String)
-		-> let {
-			assert (actual kind-of? String)	"String"
-			assert (actual == expect)		(msg expect actual)
-		in
-			actual
-		}
-	} where {
-		val (==) = Prelude::(==)
-		val (^)  = Prelude::(^)
-		val (|>) = Prelude::(|>)
+        # string : 'a -> String -> String
+        fun string =
+                actual
+                (expect : String)
+        -> let {
+            assert (actual kind-of? String) "String"
+            assert (actual == expect)       (msg expect actual)
+        in
+            actual
+        }
+    } where {
+        val (==) = Prelude::(==)
+        val (^)  = Prelude::(^)
+        val (|>) = Prelude::(|>)
 
-		val map	= List::map
-		val zip	= List::zip
+        val map = List::map
+        val zip = List::zip
 
-		fun msg = expect actual ->
-			"Expected: " ^ expect.inspect ^ ", but: " ^ actual.inspect
-	}
+        fun msg = expect actual ->
+            "Expected: " ^ expect.inspect ^ ", but: " ^ actual.inspect
+    }
 }
 
 

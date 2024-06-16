@@ -1,4 +1,3 @@
-# vim: set nu ai sw=4 ts=4 :
 # coding: utf-8
 # frozen_string_literal: true
 
@@ -19,163 +18,163 @@ module Nary
 module Lambda
 
 class Abstract < Expression::Abstract
-	attr_reader :pats, :expr, :decls
+    attr_reader :pats, :expr, :decls
 
 
-	def initialize(loc, pats, expr, decls)
-		ASSERT.kind_of pats,	::Array
-		ASSERT.kind_of expr,	CSCE::Abstract
-		ASSERT.kind_of decls,	::Array
+    def initialize(loc, pats, expr, decls)
+        ASSERT.kind_of pats,    ::Array
+        ASSERT.kind_of expr,    CSCE::Abstract
+        ASSERT.kind_of decls,   ::Array
 
-		super(loc)
+        super(loc)
 
-		@pats	= pats
-		@expr	= expr
-		@decls	= decls
-	end
+        @pats   = pats
+        @expr   = expr
+        @decls  = decls
+    end
 
 
-	def to_s
-		format "%s -> %s", self.pats.map(&:to_s).join(' '), self.expr.to_s
-	end
+    def to_s
+        format "%s -> %s", self.pats.map(&:to_s).join(' '), self.expr.to_s
+    end
 
 
 private
 
-	def __name_sym__
-		raise X::SubclassResponsibility
-	end
+    def __name_sym__
+        raise X::SubclassResponsibility
+    end
 
 
-	def __desugar__(env, event)
-		new_env = env.enter event
+    def __desugar__(env, event)
+        new_env = env.enter event
 
-		lamb_params, lamb_decls = self.pats.each_with_index.inject(
-			 [[],		[]]
-		) {
-			|(params,	decls),			(pat, index)|
-			ASSERT.kind_of params,	::Array
-			ASSERT.kind_of decls,	::Array
-			ASSERT.kind_of pat,		CSCP::Abstract
-			ASSERT.kind_of index,	::Integer
+        lamb_params, lamb_decls = self.pats.each_with_index.inject(
+             [[],       []]
+        ) {
+            |(params,   decls),         (pat, index)|
+            ASSERT.kind_of params,  ::Array
+            ASSERT.kind_of decls,   ::Array
+            ASSERT.kind_of pat,     CSCP::Abstract
+            ASSERT.kind_of index,   ::Integer
 
-			result = pat.desugar_lambda index + 1, new_env
-			ASSERT.kind_of result, CSCP::Result
-			param = ASCE.make_parameter(
-						result.ident.loc, result.ident, result.opt_type_sym
-					)
+            result = pat.desugar_lambda index + 1, new_env
+            ASSERT.kind_of result, CSCP::Result
+            param = ASCE.make_parameter(
+                        result.ident.loc, result.ident, result.opt_type_sym
+                    )
 
-			[params + [param], decls + result.decls]
-		}
+            [params + [param], decls + result.decls]
+        }
 
-		local_decls = lamb_decls + self.decls.map { |decl|
-							decl.desugar new_env
-						}
-		body_expr  = self.expr.desugar new_env
-		lamb_expr = if local_decls.empty?
-						body_expr
-					else
-						ASCE.make_let self.loc, local_decls, body_expr
-					end
+        local_decls = lamb_decls + self.decls.map { |decl|
+                            decl.desugar new_env
+                        }
+        body_expr  = self.expr.desugar new_env
+        lamb_expr = if local_decls.empty?
+                        body_expr
+                    else
+                        ASCE.make_let self.loc, local_decls, body_expr
+                    end
 
-		ASCE.make_lambda self.loc, lamb_params, lamb_expr, __name_sym__
-	end
+        ASCE.make_lambda self.loc, lamb_params, lamb_expr, __name_sym__
+    end
 end
 
 
 
 class Named < Abstract
-	attr_reader :sym
+    attr_reader :sym
 
 
-	def initialize(loc, pats, expr, decls, sym)
-		ASSERT.kind_of pats,	::Array
-		ASSERT.kind_of expr,	CSCE::Abstract
-		ASSERT.kind_of decls,	::Array
-		ASSERT.kind_of sym,		::Symbol
+    def initialize(loc, pats, expr, decls, sym)
+        ASSERT.kind_of pats,    ::Array
+        ASSERT.kind_of expr,    CSCE::Abstract
+        ASSERT.kind_of decls,   ::Array
+        ASSERT.kind_of sym,     ::Symbol
 
-		super(loc, pats, expr, decls)
+        super(loc, pats, expr, decls)
 
-		@sym = sym
-	end
+        @sym = sym
+    end
 
 
-	def to_s
-		format("%s = %s%s",
-				self.sym.to_s,
+    def to_s
+        format("%s = %s%s",
+                self.sym.to_s,
 
-				super,
+                super,
 
-				if self.decls.empty?
-					''
-				else
-					format(" %%WHERE {%s}", self.decls.map(&:to_s).join(' '))
-				end
-		)
-	end
+                if self.decls.empty?
+                    ''
+                else
+                    format(" %%WHERE {%s}", self.decls.map(&:to_s).join(' '))
+                end
+        )
+    end
 
 
 private
 
-	def __name_sym__
-		self.sym
-	end
+    def __name_sym__
+        self.sym
+    end
 end
 
 
 
 class Anonymous < Abstract
 
-	def to_s
-		format("{%s%s}",
-				super,
+    def to_s
+        format("{%s%s}",
+                super,
 
-				if self.decls.empty?
-					''
-				else
-					format(" %%WHERE %s", self.decls.map(&:to_s).join(' '))
-				end
-		)
-	end
+                if self.decls.empty?
+                    ''
+                else
+                    format(" %%WHERE %s", self.decls.map(&:to_s).join(' '))
+                end
+        )
+    end
 
 private
 
-	def __name_sym__
-		nil
-	end
+    def __name_sym__
+        nil
+    end
 end
 
-end	# Umu::ConcreteSyntax::Core::Expression::Nary::Lambda
+end # Umu::ConcreteSyntax::Core::Expression::Nary::Lambda
 
-end	# Umu::ConcreteSyntax::Core::Expression::Nary
+end # Umu::ConcreteSyntax::Core::Expression::Nary
 
 
 module_function
 
-	def make_lambda(loc, pats, expr, decls = [])
-		ASSERT.kind_of loc,		L::Location
-		ASSERT.kind_of pats,	::Array
-		ASSERT.kind_of expr,	CSCE::Abstract
-		ASSERT.kind_of decls,	::Array
+    def make_lambda(loc, pats, expr, decls = [])
+        ASSERT.kind_of loc,     L::Location
+        ASSERT.kind_of pats,    ::Array
+        ASSERT.kind_of expr,    CSCE::Abstract
+        ASSERT.kind_of decls,   ::Array
 
-		Nary::Lambda::Anonymous.new(loc, pats, expr, decls.freeze).freeze
-	end
+        Nary::Lambda::Anonymous.new(loc, pats, expr, decls.freeze).freeze
+    end
 
 
-	def make_named_lambda(loc, pats, expr, decls, sym)
-		ASSERT.kind_of loc,		L::Location
-		ASSERT.kind_of pats,	::Array
-		ASSERT.kind_of expr,	CSCE::Abstract
-		ASSERT.kind_of decls,	::Array
-		ASSERT.kind_of sym,		::Symbol
+    def make_named_lambda(loc, pats, expr, decls, sym)
+        ASSERT.kind_of loc,     L::Location
+        ASSERT.kind_of pats,    ::Array
+        ASSERT.kind_of expr,    CSCE::Abstract
+        ASSERT.kind_of decls,   ::Array
+        ASSERT.kind_of sym,     ::Symbol
 
-		Nary::Lambda::Named.new(loc, pats, expr, decls.freeze, sym).freeze
-	end
+        Nary::Lambda::Named.new(loc, pats, expr, decls.freeze, sym).freeze
+    end
 
-end	# Umu::ConcreteSyntax::Core::Expression
+end # Umu::ConcreteSyntax::Core::Expression
 
-end	# Umu::ConcreteSyntax::Core
+end # Umu::ConcreteSyntax::Core
 
-end	# Umu::ConcreteSyntax
+end # Umu::ConcreteSyntax
 
-end	# Umu
+end # Umu

@@ -1,4 +1,3 @@
-# vim: set nu ai sw=4 ts=4 :
 # coding: utf-8
 # frozen_string_literal: true
 
@@ -16,27 +15,27 @@ module Expression
 module Unary
 
 class Class < Abstract
-	alias class_sym obj
+    alias class_sym obj
 
 
-	def initialize(loc, class_sym)
-		ASSERT.kind_of class_sym, ::Symbol
+    def initialize(loc, class_sym)
+        ASSERT.kind_of class_sym, ::Symbol
 
-		super
-	end
-
-
-	def to_s
-		format "&{%s}", self.class_sym
-	end
+        super
+    end
 
 
-	def __evaluate__(env, _event)
-		class_signat = env.ty_lookup self.class_sym, self.loc
-		ASSERT.kind_of class_signat, ECTSC::Base
+    def to_s
+        format "&{%s}", self.class_sym
+    end
 
-		VC.make_class class_signat
-	end
+
+    def __evaluate__(env, _event)
+        class_signat = env.ty_lookup self.class_sym, self.loc
+        ASSERT.kind_of class_signat, ECTSC::Base
+
+        VC.make_class class_signat
+    end
 end
 
 end # Umu::AbstractSyntax::Core::Expression::Unary
@@ -44,17 +43,17 @@ end # Umu::AbstractSyntax::Core::Expression::Unary
 
 module_function
 
-	def make_class(loc, class_sym)
-		ASSERT.kind_of loc,			L::Location
-		ASSERT.kind_of class_sym,	::Symbol
+    def make_class(loc, class_sym)
+        ASSERT.kind_of loc,         L::Location
+        ASSERT.kind_of class_sym,   ::Symbol
 
-		Unary::Class.new(loc, class_sym).freeze
-	end
+        Unary::Class.new(loc, class_sym).freeze
+    end
 
-end	# Umu::AbstractSyntax::Core::Expression
+end # Umu::AbstractSyntax::Core::Expression
 
-end	# Umu::AbstractSyntax::Core
+end # Umu::AbstractSyntax::Core
 
-end	# Umu::AbstractSyntax
+end # Umu::AbstractSyntax
 
-end	# Umu
+end # Umu

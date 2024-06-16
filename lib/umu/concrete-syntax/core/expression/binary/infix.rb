@@ -1,4 +1,3 @@
-# vim: set nu ai sw=4 ts=4 :
 # coding: utf-8
 # frozen_string_literal: true
 
@@ -21,47 +20,47 @@ module Infix
 module Abstraction
 
 class Abstract < Binary::Abstract
-	alias		lhs_opnd lhs
-	attr_reader	:opr_sym
-	alias		rhs_opnd rhs
+    alias       lhs_opnd lhs
+    attr_reader :opr_sym
+    alias       rhs_opnd rhs
 
 
-	def initialize(loc, lhs_opnd, opr_sym, rhs_opnd)
-		ASSERT.kind_of lhs_opnd,	Umu::Abstraction::Model
-		ASSERT.kind_of opr_sym,		::Symbol
-		ASSERT.kind_of rhs_opnd,	Umu::Abstraction::Model
+    def initialize(loc, lhs_opnd, opr_sym, rhs_opnd)
+        ASSERT.kind_of lhs_opnd,    Umu::Abstraction::Model
+        ASSERT.kind_of opr_sym,     ::Symbol
+        ASSERT.kind_of rhs_opnd,    Umu::Abstraction::Model
 
-		super(loc, lhs_opnd, rhs_opnd)
+        super(loc, lhs_opnd, rhs_opnd)
 
-		@opr_sym = opr_sym
-	end
+        @opr_sym = opr_sym
+    end
 
 
-	def to_s
-		_opr = self.opr_sym.to_s
-		opr = if /^[a-zA-Z\-]+\??$/ =~ _opr
-					'%' + _opr.upcase
-				else
-					_opr
-				end
+    def to_s
+        _opr = self.opr_sym.to_s
+        opr = if /^[a-zA-Z\-]+\??$/ =~ _opr
+                    '%' + _opr.upcase
+                else
+                    _opr
+                end
 
-		format "(%s %s %s)", self.lhs_opnd.to_s, opr, self.rhs_opnd.to_s
-	end
+        format "(%s %s %s)", self.lhs_opnd.to_s, opr, self.rhs_opnd.to_s
+    end
 end
 
 
 
 class Simple < Abstract
-	def initialize(loc, lhs_opnd, opr_sym, rhs_opnd)
-		ASSERT.kind_of lhs_opnd,	CSCE::Abstract
-		ASSERT.kind_of opr_sym,		::Symbol
-		ASSERT.kind_of rhs_opnd,	CSCE::Abstract
+    def initialize(loc, lhs_opnd, opr_sym, rhs_opnd)
+        ASSERT.kind_of lhs_opnd,    CSCE::Abstract
+        ASSERT.kind_of opr_sym,     ::Symbol
+        ASSERT.kind_of rhs_opnd,    CSCE::Abstract
 
-		super
-	end
+        super
+    end
 end
 
-end	# Umu::ConcreteSyntax::Core::Expression::Binary::Infix::Abstraction
+end # Umu::ConcreteSyntax::Core::Expression::Binary::Infix::Abstraction
 
 
 
@@ -69,43 +68,43 @@ class Redefinable < Abstraction::Simple
 
 private
 
-	def __desugar__(env, event)
-		new_env = env.enter event
+    def __desugar__(env, event)
+        new_env = env.enter event
 
-		ASCE.make_apply(
-			self.loc,
-			ASCE.make_identifier(loc, self.opr_sym),
-			self.lhs_opnd.desugar(new_env),
-			[self.rhs_opnd.desugar(new_env)]
-		)
-	end
+        ASCE.make_apply(
+            self.loc,
+            ASCE.make_identifier(loc, self.opr_sym),
+            self.lhs_opnd.desugar(new_env),
+            [self.rhs_opnd.desugar(new_env)]
+        )
+    end
 end
 
 
 
 class KindOf < Abstraction::Abstract
-	alias rhs_ident rhs_opnd
+    alias rhs_ident rhs_opnd
 
-	def initialize(loc, lhs_opnd, opr_sym, rhs_ident)
-		ASSERT.kind_of lhs_opnd,	CSCE::Abstract
-		ASSERT.kind_of opr_sym,		::Symbol
-		ASSERT.kind_of rhs_ident,	CSCEU::Identifier::Short
+    def initialize(loc, lhs_opnd, opr_sym, rhs_ident)
+        ASSERT.kind_of lhs_opnd,    CSCE::Abstract
+        ASSERT.kind_of opr_sym,     ::Symbol
+        ASSERT.kind_of rhs_ident,   CSCEU::Identifier::Short
 
-		super
-	end
+        super
+    end
 
 
 private
 
-	def __desugar__(env, event)
-		new_env = env.enter event
+    def __desugar__(env, event)
+        new_env = env.enter event
 
-		ASCE.make_test_kind_of(
-			self.loc,
-			self.lhs_opnd.desugar(new_env),
-			self.rhs_ident.desugar(new_env)
-		)
-	end
+        ASCE.make_test_kind_of(
+            self.loc,
+            self.lhs_opnd.desugar(new_env),
+            self.rhs_ident.desugar(new_env)
+        )
+    end
 end
 
 
@@ -114,21 +113,21 @@ class AndAlso < Abstraction::Simple
 
 private
 
-	def __desugar__(env, event)
-		new_env = env.enter event
+    def __desugar__(env, event)
+        new_env = env.enter event
 
-		ASCE.make_if(
-			self.loc,
-			[
-				ASCE.make_rule(
-					self.loc,
-					self.lhs_opnd.desugar(new_env),
-					self.rhs_opnd.desugar(new_env)
-				)
-			],
-			ASCE.make_bool(self.loc, false)
-		)
-	end
+        ASCE.make_if(
+            self.loc,
+            [
+                ASCE.make_rule(
+                    self.loc,
+                    self.lhs_opnd.desugar(new_env),
+                    self.rhs_opnd.desugar(new_env)
+                )
+            ],
+            ASCE.make_bool(self.loc, false)
+        )
+    end
 end
 
 
@@ -137,81 +136,81 @@ class OrElse < Abstraction::Simple
 
 private
 
-	def __desugar__(env, event)
-		new_env = env.enter event
+    def __desugar__(env, event)
+        new_env = env.enter event
 
-		ASCE.make_if(
-			self.loc,
-			[
-				ASCE.make_rule(
-					self.loc,
-					self.lhs_opnd.desugar(new_env),
-					ASCE.make_bool(loc, true)
-				)
-			],
-			self.rhs_opnd.desugar(new_env)
-		)
-	end
+        ASCE.make_if(
+            self.loc,
+            [
+                ASCE.make_rule(
+                    self.loc,
+                    self.lhs_opnd.desugar(new_env),
+                    ASCE.make_bool(loc, true)
+                )
+            ],
+            self.rhs_opnd.desugar(new_env)
+        )
+    end
 end
 
-end	# Umu::ConcreteSyntax::Core::Expression::Binary::Infix
+end # Umu::ConcreteSyntax::Core::Expression::Binary::Infix
 
-end	# Umu::ConcreteSyntax::Core::Expression::Binary
+end # Umu::ConcreteSyntax::Core::Expression::Binary
 
 
 module_function
 
-	def make_infix(loc, lhs_opnd, opr_sym, rhs_opnd)
-		ASSERT.kind_of loc,			L::Location
-		ASSERT.kind_of lhs_opnd,	CSCE::Abstract
-		ASSERT.kind_of opr_sym,		::Symbol
-		ASSERT.kind_of rhs_opnd,	CSCE::Abstract
+    def make_infix(loc, lhs_opnd, opr_sym, rhs_opnd)
+        ASSERT.kind_of loc,         L::Location
+        ASSERT.kind_of lhs_opnd,    CSCE::Abstract
+        ASSERT.kind_of opr_sym,     ::Symbol
+        ASSERT.kind_of rhs_opnd,    CSCE::Abstract
 
-		Binary::Infix::Redefinable.new(
-			loc, lhs_opnd, opr_sym, rhs_opnd
-		).freeze
-	end
-
-
-	def make_kindof(loc, lhs_opnd, opr_sym, rhs_ident)
-		ASSERT.kind_of loc,			L::Location
-		ASSERT.kind_of lhs_opnd,	CSCE::Abstract
-		ASSERT.kind_of opr_sym,		::Symbol
-		ASSERT.kind_of rhs_ident,	CSCEU::Identifier::Short
-
-		Binary::Infix::KindOf.new(
-			loc, lhs_opnd, opr_sym, rhs_ident
-		).freeze
-	end
+        Binary::Infix::Redefinable.new(
+            loc, lhs_opnd, opr_sym, rhs_opnd
+        ).freeze
+    end
 
 
-	def make_andalso(loc, lhs_opnd, opr_sym, rhs_opnd)
-		ASSERT.kind_of loc,			L::Location
-		ASSERT.kind_of lhs_opnd,	CSCE::Abstract
-		ASSERT.kind_of opr_sym,		::Symbol
-		ASSERT.kind_of rhs_opnd,	CSCE::Abstract
+    def make_kindof(loc, lhs_opnd, opr_sym, rhs_ident)
+        ASSERT.kind_of loc,         L::Location
+        ASSERT.kind_of lhs_opnd,    CSCE::Abstract
+        ASSERT.kind_of opr_sym,     ::Symbol
+        ASSERT.kind_of rhs_ident,   CSCEU::Identifier::Short
 
-		Binary::Infix::AndAlso.new(
-			loc, lhs_opnd, opr_sym, rhs_opnd
-		).freeze
-	end
+        Binary::Infix::KindOf.new(
+            loc, lhs_opnd, opr_sym, rhs_ident
+        ).freeze
+    end
 
 
-	def make_orelse(loc, lhs_opnd, opr_sym, rhs_opnd)
-		ASSERT.kind_of loc,			L::Location
-		ASSERT.kind_of lhs_opnd,	CSCE::Abstract
-		ASSERT.kind_of opr_sym,		::Symbol
-		ASSERT.kind_of rhs_opnd,	CSCE::Abstract
+    def make_andalso(loc, lhs_opnd, opr_sym, rhs_opnd)
+        ASSERT.kind_of loc,         L::Location
+        ASSERT.kind_of lhs_opnd,    CSCE::Abstract
+        ASSERT.kind_of opr_sym,     ::Symbol
+        ASSERT.kind_of rhs_opnd,    CSCE::Abstract
 
-		Binary::Infix::OrElse.new(
-			loc, lhs_opnd, opr_sym, rhs_opnd
-		).freeze
-	end
+        Binary::Infix::AndAlso.new(
+            loc, lhs_opnd, opr_sym, rhs_opnd
+        ).freeze
+    end
 
-end	# Umu::ConcreteSyntax::Core::Expression
 
-end	# Umu::ConcreteSyntax::Core
+    def make_orelse(loc, lhs_opnd, opr_sym, rhs_opnd)
+        ASSERT.kind_of loc,         L::Location
+        ASSERT.kind_of lhs_opnd,    CSCE::Abstract
+        ASSERT.kind_of opr_sym,     ::Symbol
+        ASSERT.kind_of rhs_opnd,    CSCE::Abstract
 
-end	# Umu::ConcreteSyntax
+        Binary::Infix::OrElse.new(
+            loc, lhs_opnd, opr_sym, rhs_opnd
+        ).freeze
+    end
 
-end	# Umu
+end # Umu::ConcreteSyntax::Core::Expression
+
+end # Umu::ConcreteSyntax::Core
+
+end # Umu::ConcreteSyntax
+
+end # Umu

@@ -1,4 +1,3 @@
-# vim: set nu ai sw=4 ts=4 :
 # coding: utf-8
 # frozen_string_literal: true
 
@@ -18,44 +17,44 @@ module Lexer
 
 module_function
 
-	def make_initial_lexer(file_name, line_num)
-		ASSERT.kind_of file_name,	::String
-		ASSERT.kind_of line_num,	::Integer
+    def make_initial_lexer(file_name, line_num)
+        ASSERT.kind_of file_name,   ::String
+        ASSERT.kind_of line_num,    ::Integer
 
-		loc = L.make_location file_name, line_num
+        loc = L.make_location file_name, line_num
 
-		Separator.new(loc, [].freeze).freeze
-	end
+        Separator.new(loc, [].freeze).freeze
+    end
 
 
-	def lex(init_tokens, init_lexer, scanner, pref)
-		ASSERT.kind_of init_tokens,		::Array
-		ASSERT.kind_of scanner,			::StringScanner
-		ASSERT.kind_of pref,			E::Preference
+    def lex(init_tokens, init_lexer, scanner, pref)
+        ASSERT.kind_of init_tokens,     ::Array
+        ASSERT.kind_of scanner,         ::StringScanner
+        ASSERT.kind_of pref,            E::Preference
 
-		pair = loop.inject(
-			 [init_tokens, init_lexer, 0  ]
-		) { |(tokens,      lexer,      before_line_num), _|
+        pair = loop.inject(
+             [init_tokens, init_lexer, 0  ]
+        ) { |(tokens,      lexer,      before_line_num), _|
 
-			break [tokens, lexer] if scanner.eos?
+            break [tokens, lexer] if scanner.eos?
 
-			event, matched, opt_token, next_lexer = lexer.lex scanner
+            event, matched, opt_token, next_lexer = lexer.lex scanner
 
-			if block_given?
-				yield event, matched, opt_token, next_lexer, before_line_num
-			end
+            if block_given?
+                yield event, matched, opt_token, next_lexer, before_line_num
+            end
 
-			if opt_token
-				token = opt_token
+            if opt_token
+                token = opt_token
 
-				[tokens + [token], next_lexer, token.loc.line_num]
-			else
-				[tokens,           next_lexer, before_line_num]
-			end
-		}.freeze
+                [tokens + [token], next_lexer, token.loc.line_num]
+            else
+                [tokens,           next_lexer, before_line_num]
+            end
+        }.freeze
 
-		ASSERT.tuple_of pair, [::Array, LL::Abstract]
-	end
+        ASSERT.tuple_of pair, [::Array, LL::Abstract]
+    end
 
 end # Umu::Lexical::Lexer
 

@@ -1,4 +1,3 @@
-# vim: set nu ai sw=4 ts=4 :
 # coding: utf-8
 # frozen_string_literal: true
 
@@ -19,59 +18,59 @@ module Unary
 module Container
 
 class Sequence < Abstract
-	def initialize(loc, exprs)
-		ASSERT.kind_of	exprs, ::Array
-		ASSERT.assert	exprs.size >= 2
+    def initialize(loc, exprs)
+        ASSERT.kind_of  exprs, ::Array
+        ASSERT.assert   exprs.size >= 2
 
-		super
-	end
+        super
+    end
 
 
-	def to_s
-		format "(%s)", self.map(&:to_s).join(' ; ')
-	end
+    def to_s
+        format "(%s)", self.map(&:to_s).join(' ; ')
+    end
 
 
 private
 
-	def __desugar__(env, event)
-		new_env = env.enter event
+    def __desugar__(env, event)
+        new_env = env.enter event
 
-		*not_last_exprs, last_expr = self.exprs
+        *not_last_exprs, last_expr = self.exprs
 
-		ASCE.make_let(
-			self.loc,
+        ASCE.make_let(
+            self.loc,
 
-			not_last_exprs.map { |expr|
-				ASSERT.kind_of expr, CSCE::Abstract
+            not_last_exprs.map { |expr|
+                ASSERT.kind_of expr, CSCE::Abstract
 
-				ASCD.make_value expr.loc, WILDCARD, expr.desugar(new_env)
-			},
+                ASCD.make_value expr.loc, WILDCARD, expr.desugar(new_env)
+            },
 
-			last_expr.desugar(new_env)
-		)
-	end
+            last_expr.desugar(new_env)
+        )
+    end
 end
 
-end	# Umu::ConcreteSyntax::Core::Expression::Unary::Container
+end # Umu::ConcreteSyntax::Core::Expression::Unary::Container
 
-end	# Umu::ConcreteSyntax::Core::Expression::Unary
+end # Umu::ConcreteSyntax::Core::Expression::Unary
 
 
 module_function
 
-	def make_sequence(loc, exprs)
-		ASSERT.kind_of loc,		L::Location
-		ASSERT.kind_of exprs,	::Array
+    def make_sequence(loc, exprs)
+        ASSERT.kind_of loc,     L::Location
+        ASSERT.kind_of exprs,   ::Array
 
-		Unary::Container::Sequence.new(loc, exprs.freeze).freeze
-	end
+        Unary::Container::Sequence.new(loc, exprs.freeze).freeze
+    end
 
 
-end	# Umu::ConcreteSyntax::Core::Expression
+end # Umu::ConcreteSyntax::Core::Expression
 
-end	# Umu::ConcreteSyntax::Core
+end # Umu::ConcreteSyntax::Core
 
-end	# Umu::ConcreteSyntax
+end # Umu::ConcreteSyntax
 
-end	# Umu
+end # Umu

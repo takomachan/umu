@@ -1,4 +1,3 @@
-# vim: set nu ai sw=4 ts=4 :
 # coding: utf-8
 # frozen_string_literal: true
 
@@ -17,26 +16,26 @@ module Expression
 module Binary
 
 class Abstract < Expression::Abstract
-	attr_reader :lhs, :rhs
+    attr_reader :lhs, :rhs
 
 
-	def initialize(loc, lhs, rhs)
-		ASSERT.kind_of lhs,	::Object
-		ASSERT.kind_of rhs,	::Object
+    def initialize(loc, lhs, rhs)
+        ASSERT.kind_of lhs, ::Object
+        ASSERT.kind_of rhs, ::Object
 
-		super(loc)
+        super(loc)
 
-		@lhs = lhs
-		@rhs = rhs
-	end
+        @lhs = lhs
+        @rhs = rhs
+    end
 end
 
-end	# Umu::ConcreteSyntax::Core::Expression::Binary
+end # Umu::ConcreteSyntax::Core::Expression::Binary
 
-end	# Umu::ConcreteSyntax::Core::Expression
+end # Umu::ConcreteSyntax::Core::Expression
 
-end	# Umu::ConcreteSyntax::Core
+end # Umu::ConcreteSyntax::Core
 
-end	# Umu::ConcreteSyntax
+end # Umu::ConcreteSyntax
 
-end	# Umu
+end # Umu

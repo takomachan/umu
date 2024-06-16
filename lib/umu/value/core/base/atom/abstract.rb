@@ -1,4 +1,3 @@
-# vim: set nu ai sw=4 ts=4 :
 # coding: utf-8
 # frozen_string_literal: true
 
@@ -16,38 +15,38 @@ module Base
 module Atom
 
 class Abstract < Base::Abstract
-	INSTANCE_METHOD_INFOS = [
-		[:meth_less_than,	VCBA::Bool,
-			:'<',			self]
-	]
+    INSTANCE_METHOD_INFOS = [
+        [:meth_less_than,   VCBA::Bool,
+            :'<',           self]
+    ]
 
 
-	attr_reader	:val
+    attr_reader :val
 
 
-	def initialize(val)
-		ASSERT.kind_of val, ::Object	# Polymophic
+    def initialize(val)
+        ASSERT.kind_of val, ::Object    # Polymophic
 
-		super()
+        super()
 
-		@val = val
-	end
-
-
-	def meth_equal(_loc, _env, _event, other)
-		ASSERT.kind_of other, VC::Top
-
-		VC.make_bool(
-			other.kind_of?(self.class) && self.val == other.val
-		)
-	end
+        @val = val
+    end
 
 
-	def meth_less_than(_loc, _env, _event, other)
-		ASSERT.kind_of other, Atom::Abstract
+    def meth_equal(_loc, _env, _event, other)
+        ASSERT.kind_of other, VC::Top
 
-		VC.make_bool self.val < other.val
-	end
+        VC.make_bool(
+            other.kind_of?(self.class) && self.val == other.val
+        )
+    end
+
+
+    def meth_less_than(_loc, _env, _event, other)
+        ASSERT.kind_of other, Atom::Abstract
+
+        VC.make_bool self.val < other.val
+    end
 end
 
 end # Umu::Value::Core::Base::Atom
@@ -56,6 +55,6 @@ end # Umu::Value::Core::Base
 
 end # Umu::Value::Core
 
-end	# Umu::Value
+end # Umu::Value
 
-end	# Umu
+end # Umu

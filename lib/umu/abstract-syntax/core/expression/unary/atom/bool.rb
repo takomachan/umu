@@ -1,4 +1,3 @@
-# vim: set nu ai sw=4 ts=4 :
 # coding: utf-8
 # frozen_string_literal: true
 
@@ -18,25 +17,25 @@ module Unary
 module Atom
 
 class Bool < Abstract
-	def initialize(loc, obj)
-		ASSERT.bool obj
+    def initialize(loc, obj)
+        ASSERT.bool obj
 
-		super
-	end
-
-
-	def to_s
-		if self.obj
-			'TRUE'
-		else
-			'FALSE'
-		end
-	end
+        super
+    end
 
 
-	def __evaluate__(_env, _event)
-		VC.make_bool self.obj
-	end
+    def to_s
+        if self.obj
+            'TRUE'
+        else
+            'FALSE'
+        end
+    end
+
+
+    def __evaluate__(_env, _event)
+        VC.make_bool self.obj
+    end
 end
 
 end # Umu::AbstractSyntax::Core::Expression::Unary::Atom
@@ -46,17 +45,17 @@ end # Umu::AbstractSyntax::Core::Expression::Unary
 
 module_function
 
-	def make_bool(loc, obj)
-		ASSERT.kind_of	loc, L::Location
-		ASSERT.bool		obj
+    def make_bool(loc, obj)
+        ASSERT.kind_of  loc, L::Location
+        ASSERT.bool     obj
 
-		Unary::Atom::Bool.new(loc, obj).freeze
-	end
+        Unary::Atom::Bool.new(loc, obj).freeze
+    end
 
-end	# Umu::AbstractSyntax::Core::Expression
+end # Umu::AbstractSyntax::Core::Expression
 
-end	# Umu::AbstractSyntax::Core
+end # Umu::AbstractSyntax::Core
 
-end	# Umu::AbstractSyntax
+end # Umu::AbstractSyntax
 
-end	# Umu
+end # Umu

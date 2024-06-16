@@ -1,4 +1,3 @@
-# vim: set nu ai sw=4 ts=4 :
 # coding: utf-8
 # frozen_string_literal: true
 
@@ -17,73 +16,73 @@ module Expression
 module Binary
 
 class Apply < Binary::Abstract
-	alias		opr_expr			lhs
-	alias		opnd_head_expr		rhs
-	attr_reader	:opnd_tail_exprs
+    alias       opr_expr            lhs
+    alias       opnd_head_expr      rhs
+    attr_reader :opnd_tail_exprs
 
 
-	def initialize(loc, opr_expr, opnd_head_expr, opnd_tail_exprs)
-		ASSERT.kind_of opr_expr,		CSCE::Abstract
-		ASSERT.kind_of opnd_head_expr,	CSCE::Abstract
-		ASSERT.kind_of opnd_tail_exprs,	::Array
+    def initialize(loc, opr_expr, opnd_head_expr, opnd_tail_exprs)
+        ASSERT.kind_of opr_expr,        CSCE::Abstract
+        ASSERT.kind_of opnd_head_expr,  CSCE::Abstract
+        ASSERT.kind_of opnd_tail_exprs, ::Array
 
-		super(loc, opr_expr, opnd_head_expr)
+        super(loc, opr_expr, opnd_head_expr)
 
-		@opnd_tail_exprs = opnd_tail_exprs
-	end
-
-
-	def to_s
-		format("(%s %s)",
-				self.opr_expr.to_s,
-				self.opnd_exprs.map(&:to_s).join(' ')
-		)
-	end
+        @opnd_tail_exprs = opnd_tail_exprs
+    end
 
 
-	def opnd_exprs
-		[self.opnd_head_expr] + self.opnd_tail_exprs
-	end
+    def to_s
+        format("(%s %s)",
+                self.opr_expr.to_s,
+                self.opnd_exprs.map(&:to_s).join(' ')
+        )
+    end
+
+
+    def opnd_exprs
+        [self.opnd_head_expr] + self.opnd_tail_exprs
+    end
 
 
 private
 
-	def __desugar__(env, event)
-		new_env = env.enter event
+    def __desugar__(env, event)
+        new_env = env.enter event
 
-		ASCE.make_apply(
-			self.loc,
-			self.opr_expr.desugar(new_env),
-			self.opnd_head_expr.desugar(new_env),
-			self.opnd_tail_exprs.map { |expr|
-				ASSERT.kind_of expr, CSCE::Abstract
+        ASCE.make_apply(
+            self.loc,
+            self.opr_expr.desugar(new_env),
+            self.opnd_head_expr.desugar(new_env),
+            self.opnd_tail_exprs.map { |expr|
+                ASSERT.kind_of expr, CSCE::Abstract
 
-				expr.desugar new_env
-			}
-		)
-	end
+                expr.desugar new_env
+            }
+        )
+    end
 end
 
-end	# Umu::ConcreteSyntax::Core::Expression::Binary
+end # Umu::ConcreteSyntax::Core::Expression::Binary
 
 
 module_function
 
-	def make_apply(loc, opr_expr, opnd_head_expr, opnd_tail_exprs = [])
-		ASSERT.kind_of loc,				L::Location
-		ASSERT.kind_of opr_expr,		CSCE::Abstract
-		ASSERT.kind_of opnd_head_expr,	CSCE::Abstract
-		ASSERT.kind_of opnd_tail_exprs,	::Array
+    def make_apply(loc, opr_expr, opnd_head_expr, opnd_tail_exprs = [])
+        ASSERT.kind_of loc,             L::Location
+        ASSERT.kind_of opr_expr,        CSCE::Abstract
+        ASSERT.kind_of opnd_head_expr,  CSCE::Abstract
+        ASSERT.kind_of opnd_tail_exprs, ::Array
 
-		Binary::Apply.new(
-			loc, opr_expr, opnd_head_expr, opnd_tail_exprs.freeze
-		).freeze
-	end
+        Binary::Apply.new(
+            loc, opr_expr, opnd_head_expr, opnd_tail_exprs.freeze
+        ).freeze
+    end
 
-end	# Umu::ConcreteSyntax::Core::Expression
+end # Umu::ConcreteSyntax::Core::Expression
 
-end	# Umu::ConcreteSyntax::Core
+end # Umu::ConcreteSyntax::Core
 
-end	# Umu::ConcreteSyntax
+end # Umu::ConcreteSyntax
 
-end	# Umu
+end # Umu

@@ -1,4 +1,3 @@
-# vim: set nu ai sw=4 ts=4 :
 # coding: utf-8
 # frozen_string_literal: true
 
@@ -18,45 +17,45 @@ module Expression
 module Unary
 
 class Class < Abstract
-	alias		class_sym obj
+    alias       class_sym obj
 
 
-	def initialize(loc, class_sym)
-		ASSERT.kind_of class_sym,	::Symbol
+    def initialize(loc, class_sym)
+        ASSERT.kind_of class_sym,   ::Symbol
 
-		super
-	end
+        super
+    end
 
 
-	def to_s
-		format "&{%s}", self.class_sym
-	end
+    def to_s
+        format "&{%s}", self.class_sym
+    end
 
 
 private
 
-	def __desugar__(_env, _event)
-		ASCE.make_class self.loc, self.class_sym
-	end
+    def __desugar__(_env, _event)
+        ASCE.make_class self.loc, self.class_sym
+    end
 end
 
-end	# Umu::ConcreteSyntax::Core::Expression::Unary
+end # Umu::ConcreteSyntax::Core::Expression::Unary
 
 
 
 module_function
 
-	def make_class(loc, class_sym)
-		ASSERT.kind_of loc,			L::Location
-		ASSERT.kind_of class_sym,	::Symbol
+    def make_class(loc, class_sym)
+        ASSERT.kind_of loc,         L::Location
+        ASSERT.kind_of class_sym,   ::Symbol
 
-		Unary::Class.new(loc, class_sym).freeze
-	end
+        Unary::Class.new(loc, class_sym).freeze
+    end
 
-end	# Umu::ConcreteSyntax::Core::Expression
+end # Umu::ConcreteSyntax::Core::Expression
 
-end	# Umu::ConcreteSyntax::Core
+end # Umu::ConcreteSyntax::Core
 
-end	# Umu::ConcreteSyntax
+end # Umu::ConcreteSyntax
 
-end	# Umu
+end # Umu

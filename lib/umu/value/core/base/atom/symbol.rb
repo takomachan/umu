@@ -1,4 +1,3 @@
-# vim: set nu ai sw=4 ts=4 :
 # coding: utf-8
 # frozen_string_literal: true
 
@@ -16,27 +15,27 @@ module Base
 module Atom
 
 class Symbol < Abstract
-	INSTANCE_METHOD_INFOS = [
-		[:meth_less_than,	VCBA::Bool,
-			:'<',			self]
-	]
+    INSTANCE_METHOD_INFOS = [
+        [:meth_less_than,   VCBA::Bool,
+            :'<',           self]
+    ]
 
 
-	def initialize(val)
-		ASSERT.kind_of val, ::Symbol
+    def initialize(val)
+        ASSERT.kind_of val, ::Symbol
 
-		super
-	end
-
-
-	def to_s
-		'@' + self.val.to_s
-	end
+        super
+    end
 
 
-	def meth_to_string(_loc, _env, _event)
-		VC.make_string self.val.to_s
-	end
+    def to_s
+        '@' + self.val.to_s
+    end
+
+
+    def meth_to_string(_loc, _env, _event)
+        VC.make_string self.val.to_s
+    end
 end
 
 end # Umu::Value::Core::Base::Atom
@@ -46,14 +45,14 @@ end # Umu::Value::Core::Base
 
 module_function
 
-	def make_symbol(val)
-		ASSERT.kind_of val, ::Symbol
+    def make_symbol(val)
+        ASSERT.kind_of val, ::Symbol
 
-		Base::Atom::Symbol.new(val).freeze
-	end
+        Base::Atom::Symbol.new(val).freeze
+    end
 
-end	# Umu::Value::Core
+end # Umu::Value::Core
 
-end	# Umu::Value
+end # Umu::Value
 
-end	# Umu
+end # Umu

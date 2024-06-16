@@ -1,4 +1,3 @@
-# vim: set nu ai sw=4 ts=4 :
 # coding: utf-8
 # frozen_string_literal: true
 
@@ -15,31 +14,31 @@ module Core
 module Expression
 
 class Unit < Expression::Abstract
-	def to_s
-		'()'
-	end
+    def to_s
+        '()'
+    end
 
 
 private
 
-	def __desugar__(_env, _event)
-		ASCE.make_unit self.loc
-	end
+    def __desugar__(_env, _event)
+        ASCE.make_unit self.loc
+    end
 end
 
 
 module_function
 
-	def make_unit(loc)
-		ASSERT.kind_of loc,	L::Location
+    def make_unit(loc)
+        ASSERT.kind_of loc, L::Location
 
-		Unit.new(loc).freeze
-	end
+        Unit.new(loc).freeze
+    end
 
-end	# Umu::ConcreteSyntax::Core::Expression
+end # Umu::ConcreteSyntax::Core::Expression
 
-end	# Umu::ConcreteSyntax::Core
+end # Umu::ConcreteSyntax::Core
 
-end	# Umu::ConcreteSyntax
+end # Umu::ConcreteSyntax
 
-end	# Umu
+end # Umu

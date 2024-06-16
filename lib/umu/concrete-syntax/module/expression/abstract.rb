@@ -1,4 +1,3 @@
-# vim: set nu ai sw=4 ts=4 :
 # coding: utf-8
 # frozen_string_literal: true
 
@@ -19,10 +18,10 @@ module Expression
 
 class Abstract < Module::Abstract; end
 
-end	# Umu::ConcreteSyntax::Module::Expression
+end # Umu::ConcreteSyntax::Module::Expression
 
-end	# Umu::ConcreteSyntax::Module
+end # Umu::ConcreteSyntax::Module
 
-end	# Umu::ConcreteSyntax
+end # Umu::ConcreteSyntax
 
-end	# Umu
+end # Umu
