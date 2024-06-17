@@ -53,6 +53,18 @@ class Named < Abstract
     end
 
 
+    def pretty_print(q)
+        q.group(PP_INDENT_WIDTH, '(', ')') do
+            q.seplist(self.index_by_label) do |label, index|
+                value = self.values[index]
+
+                q.text format("%s: ", label.to_s)
+                q.pp value
+            end
+        end
+    end
+
+
     def select_by_label(sel_lab, loc, env)
         ASSERT.kind_of sel_lab,     ::Symbol
         ASSERT.kind_of loc,         L::Location

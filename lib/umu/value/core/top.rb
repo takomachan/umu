@@ -66,6 +66,11 @@ class Top < ::Object
     end
 
 
+    def pretty_print(q)
+        q.text self.to_s
+    end
+
+
     def invoke(method_signat, loc, env, _event, *arg_values)
         ASSERT.kind_of method_signat,   ECTS::Method
         ASSERT.kind_of loc,             L::Location

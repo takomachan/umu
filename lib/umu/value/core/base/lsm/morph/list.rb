@@ -100,6 +100,22 @@ class Abstract < Morph::Abstract
     end
 
 
+    def pretty_print(q)
+        q.group(PP_INDENT_WIDTH, '[', ']') do
+            case self.count
+            when 0
+                # Nothing to do
+            when 1
+                q.pp self.first
+            else
+                q.seplist(self) do |val|
+                    q.pp val
+                end
+            end
+        end
+    end
+
+
     def empty?
         raise X::SubclassResponsibility
     end

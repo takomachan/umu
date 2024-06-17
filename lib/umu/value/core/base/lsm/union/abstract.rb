@@ -28,6 +28,12 @@ class Abstract < LSM::Abstract
     end
 
 
+    def pretty_print(q)
+        q.text format("&%s ", self.type_sym.to_s)
+        q.pp self.contents
+    end
+
+
     def contents
         VC.make_unit
     end

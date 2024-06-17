@@ -2,6 +2,9 @@
 # frozen_string_literal: true
 
 module Umu
+    PP_INDENT_WIDTH = 4    # for pretty printing
+
+
     module Abstraction
         class Model; end
         class Record; end

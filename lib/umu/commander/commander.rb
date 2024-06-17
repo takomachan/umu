@@ -234,7 +234,7 @@ end
 
             next_env = Commander.process_tokens(next_tokens, env) do |value|
                             STDERR.flush
-                            STDOUT.puts value.to_s
+                            PP.pp value
                             STDOUT.flush
                         end
 

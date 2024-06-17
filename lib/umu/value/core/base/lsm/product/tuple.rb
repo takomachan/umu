@@ -40,6 +40,15 @@ class Tuple < Abstract
     end
 
 
+    def pretty_print(q)
+        q.group(PP_INDENT_WIDTH, '(', ')') do
+            q.seplist(self) do |val|
+                q.pp val
+            end
+        end
+    end
+
+
     def meth_to_string(loc, env, event)
         VC.make_string(
             format("(%s)",

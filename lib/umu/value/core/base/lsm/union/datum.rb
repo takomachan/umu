@@ -55,6 +55,12 @@ class Datum < Abstract
     end
 
 
+    def pretty_print(q)
+        q.text format("%s ", self.tag_sym.to_s)
+        q.pp self.contents
+    end
+
+
     def meth_to_string(loc, env, event)
         VC.make_string(
             format("%s %s",

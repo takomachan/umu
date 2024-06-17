@@ -29,7 +29,6 @@ class Field < ::Object
 
 
     def to_s
-        format "val %s = %s", self.label, self.value
         case self.value
         when Entry
             format "structure %s", self.label.to_s
@@ -37,6 +36,24 @@ class Field < ::Object
             format "fun %s",       self.label.to_s
         else
             format "val %s : %s",  self.label.to_s, self.value.type_sym.to_s
+        end
+    end
+
+
+    def pretty_print(q)
+        case self.value
+        when Entry
+            q.text format(
+                 "structure %s", self.label.to_s
+            )
+        when Fun
+            q.text format(
+                 "fun %s",       self.label.to_s
+            )
+        else
+            q.text format(
+                 "val %s : %s",  self.label.to_s, self.value.type_sym.to_s
+            )
         end
     end
 end
@@ -75,6 +92,17 @@ class Entry < Top
 
     def to_s
         format "struct {%s}", self.map(&:to_s).join(' ')
+    end
+
+
+    def pretty_print(q)
+        q.group(PP_INDENT_WIDTH, 'struct {', '}') do
+            self.each do |field|
+                q.breakable
+                q.pp field
+            end
+            q.breakable
+        end
     end
 
 
