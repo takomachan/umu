@@ -242,7 +242,7 @@ structure Umu = struct {
         | [x|xs'] -> f x (foldr a f xs')
         }
         #)
-        fun foldr = a (f : Function) (xs : List) -> xs.foldr a f
+        fun foldr = a (f : Fun) (xs : List) -> xs.foldr a f
 
 
         # foldr1 : ('a -> 'a -> 'a) -> ['a] -> 'a
@@ -250,7 +250,7 @@ structure Umu = struct {
         fun foldr1 = f xs -> foldr x f xs'
                             where { val [x|xs'] = xs }
         #)
-        fun foldr1 = (f : Function) (xs : Cons) -> xs'.foldr x f
+        fun foldr1 = (f : Fun) (xs : Cons) -> xs'.foldr x f
                             where { val [x|xs'] = xs }
 
 
@@ -261,15 +261,15 @@ structure Umu = struct {
         | [x|xs'] -> foldl (f x a) f xs'
         }
         #)
-        fun foldl = a (f : Function) (xs : List) -> xs.foldl a f
+        fun foldl = a (f : Fun) (xs : List) -> xs.foldl a f
 
 
         # foldl1 : ('a -> 'a -> 'a) -> ['a] -> 'a
         (#
-        fun foldl1 = (f : Function) (xs : Cons) -> foldl x f xs'
+        fun foldl1 = (f : Fun) (xs : Cons) -> foldl x f xs'
                             where { val [x|xs'] = xs }
         #)
-        fun foldl1 = (f : Function) (xs : Cons) -> xs'.foldl x f
+        fun foldl1 = (f : Fun) (xs : Cons) -> xs'.foldl x f
                             where { val [x|xs'] = xs }
 
 
@@ -293,12 +293,12 @@ structure Umu = struct {
 
         # map : ('a -> 'b) -> ['a] -> ['b]
         # fun map = f -> foldr [] { x xs -> [f x | xs] }
-        fun map = (f : Function) (xs : List) -> xs.map f
+        fun map = (f : Fun) (xs : List) -> xs.map f
 
 
         # filter : ('a -> Bool) -> ['a] -> ['a]
         # fun filter = f -> foldr [] { x xs -> if (f x) [x|xs] else xs }
-        fun filter = (f : Function) (xs : List) -> xs.filter f
+        fun filter = (f : Fun) (xs : List) -> xs.filter f
 
 
         # append : ['a] -> ['a] -> ['a]
@@ -312,7 +312,7 @@ structure Umu = struct {
 
 
         # concat-with : ('a -> ['b]) -> ['a] -> ['b]
-        fun concat-with = (f : Function) (xs : List) -> xs.concat-with f
+        fun concat-with = (f : Fun) (xs : List) -> xs.concat-with f
 
 
         # zip-with : ('a -> 'b -> 'c) -> ['a] -> ['b] -> ['c]
@@ -339,7 +339,7 @@ structure Umu = struct {
 
         # partition : ('a -> Bool) -> ['a] -> (['a], ['a])
         (#
-        fun partition = (f : Function) (xs : List) -> foldr ([], []) {
+        fun partition = (f : Fun) (xs : List) -> foldr ([], []) {
             x (ys, zs)
         ->
             if (f x)
@@ -348,7 +348,7 @@ structure Umu = struct {
                 (   ys,  [x|zs])
         } xs
         #)
-        fun partition = (f : Function) (xs : List) -> xs.partition f
+        fun partition = (f : Fun) (xs : List) -> xs.partition f
 
 
         # sort : ['a] -> ['a]
@@ -647,19 +647,19 @@ structure Umu = struct {
         #### Function application - Aka. "PIPE" ####
 
         ## (|>) : 'a -> ('a -> 'b) -> 'b
-        fun (|>) = x (f : Function) -> f x
+        fun (|>) = x (f : Fun) -> f x
 
         ## (<|) : ('a -> 'b) -> 'a -> 'b
-        fun (<|) = (f : Function) x -> f x
+        fun (<|) = (f : Fun) x -> f x
 
 
         #### Function composition ####
 
         ## (>>) : ('a -> 'b) -> ('b -> 'c) -> 'a -> 'c
-        fun (>>) = (f : Function) (g : Function) -> {x -> g (f x)}
+        fun (>>) = (f : Fun) (g : Fun) -> {x -> g (f x)}
 
         ## (<<) : ('b -> 'c) -> ('a -> 'b) -> 'a -> 'c
-        fun (<<) = (g : Function) (f : Function) -> {x -> g (f x)}
+        fun (<<) = (g : Fun) (f : Fun) -> {x -> g (f x)}
 
 
         #### High order Function ####
@@ -671,25 +671,25 @@ structure Umu = struct {
         fun const = x _ -> x
 
         ## tee      : ('a -> 'b) -> 'a -> 'a
-        fun tee = (f : Function) x -> (f x ; x)
+        fun tee = (f : Fun) x -> (f x ; x)
 
         ## curry    : (('a, 'b) -> 'c) -> ('a -> 'b -> 'c)
-        fun curry = (f : Function) x y -> f (x, y)
+        fun curry = (f : Fun) x y -> f (x, y)
 
         ## uncurry  : ('a -> 'b -> 'c) -> (('a, 'b) -> 'c)
-        fun uncurry = (f : Function) (x, y) -> f x y
+        fun uncurry = (f : Fun) (x, y) -> f x y
 
         ## swap     : (('a, 'b) -> 'c) -> (('b, 'a) -> 'c)
-        fun swap = (f : Function) (x, y) -> f (y, x)
+        fun swap = (f : Fun) (x, y) -> f (y, x)
 
         ## flip     : ('a -> 'b -> 'c) -> ('b -> 'a -> 'c)
-        fun flip = (f : Function) x y -> f y x
+        fun flip = (f : Fun) x y -> f y x
 
         ## pair     : ('a -> 'b, 'a -> 'c) -> ('a -> ('b, 'c))
-        fun pair = (f : Function, g : Function) x -> (f x, g x)
+        fun pair = (f : Fun, g : Fun) x -> (f x, g x)
 
         ## cross    : ('a -> 'b, 'c -> 'd) -> (('a, 'c) -> ('b, 'd))
-        fun cross = (f : Function, g : Function) ->
+        fun cross = (f : Fun, g : Fun) ->
                         pair (fst >> f, snd >> g)
     }
 
@@ -721,7 +721,7 @@ structure Umu = struct {
         # bools : ['a] -> ('a -> 'b) -> [Bool] -> [Bool]
         fun bools =
                 (sources : List)
-                (f       : Function)
+                (f       : Fun)
                 (expects : List)
         -> let {
             val results = sources |> map f
@@ -755,7 +755,7 @@ structure Umu = struct {
         # integers : ['a] -> ('a -> 'b) -> [Int] -> [Int]
         fun integers =
                 (sources : List)
-                (f       : Function)
+                (f       : Fun)
                 (expects : List)
         -> let {
             val results = sources |> map f

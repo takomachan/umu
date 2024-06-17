@@ -37,25 +37,25 @@ class Abstract < Morph::Abstract
         [ :meth_des,            VCBLU::Option::Abstract,
             :des],
         [ :meth_foldr,          VC::Top,
-            :foldr,             VC::Top, VC::Function],
+            :foldr,             VC::Top, VC::Fun],
         [ :meth_foldl,          VC::Top,
-            :foldl,             VC::Top, VC::Function],
+            :foldl,             VC::Top, VC::Fun],
         [ :meth_map,            self,
-            :map,               VC::Function],
+            :map,               VC::Fun],
         [ :meth_filter,         self,
-            :filter,            VC::Function],
+            :filter,            VC::Fun],
         [ :meth_append,         self,
             :append,            self],
         [ :meth_concat,         self,
             :concat],
         [ :meth_concat_with,    self,
-            :'concat-with',     VC::Function],
+            :'concat-with',     VC::Fun],
         [ :meth_zip,            self,
             :zip,               self],
         [ :meth_unzip,          VCBLP::Tuple,
             :unzip],
         [ :meth_partition,      VCBLP::Tuple,
-            :partition,         VC::Function],
+            :partition,         VC::Fun],
         [ :meth_sort,           self,
             :sort]
     ]
@@ -144,7 +144,7 @@ class Abstract < Morph::Abstract
 
     def meth_foldr(loc, env, event, init, func)
         ASSERT.kind_of init,    VC::Top
-        ASSERT.kind_of func,    VC::Function
+        ASSERT.kind_of func,    VC::Fun
 
         new_env = env.enter event
 
@@ -158,7 +158,7 @@ class Abstract < Morph::Abstract
 
     def meth_foldl(loc, env, event, init, func)
         ASSERT.kind_of init,    VC::Top
-        ASSERT.kind_of func,    VC::Function
+        ASSERT.kind_of func,    VC::Fun
 
         new_env = env.enter event
 
@@ -171,7 +171,7 @@ class Abstract < Morph::Abstract
 
 
     def meth_map(loc, env, event, func)
-        ASSERT.kind_of func, VC::Function
+        ASSERT.kind_of func, VC::Fun
 
         new_env = env.enter event
 
@@ -182,7 +182,7 @@ class Abstract < Morph::Abstract
 
 
     def meth_filter(loc, env, event, func)
-        ASSERT.kind_of func, VC::Function
+        ASSERT.kind_of func, VC::Fun
 
         new_env = env.enter event
 
@@ -241,7 +241,7 @@ class Abstract < Morph::Abstract
 
 
     def meth_concat_with(loc, env, event, func)
-        ASSERT.kind_of func, VC::Function
+        ASSERT.kind_of func, VC::Fun
 
         new_env = env.enter event
 
@@ -319,7 +319,7 @@ class Abstract < Morph::Abstract
 
 
     def meth_partition(loc, env, event, func)
-        ASSERT.kind_of func, VC::Function
+        ASSERT.kind_of func, VC::Fun
 
         new_env = env.enter event
 

@@ -33,7 +33,7 @@ class Field < ::Object
         case self.value
         when Entry
             format "structure %s", self.label.to_s
-        when Function
+        when Fun
             format "fun %s",       self.label.to_s
         else
             format "val %s : %s",  self.label.to_s, self.value.type_sym.to_s

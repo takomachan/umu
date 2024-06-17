@@ -75,7 +75,7 @@ module Umu
                     end
                 end
             end
-            class Function < Top; end
+            class Fun < Top; end
         end
     end
     module Environment

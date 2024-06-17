@@ -171,7 +171,7 @@ private
     end
 
     def __opt_type_sym__(opt_type_sym)
-        opt_type_sym || :Function
+        opt_type_sym || :Fun
     end
 end
 

@@ -11,7 +11,7 @@ module Value
 
 module Core
 
-class Function < Top
+class Fun < Top
     attr_reader :lam, :va_context
 
 
@@ -196,7 +196,7 @@ module_function
         ASSERT.kind_of lam,         ASCEN::Lambda::Entry
         ASSERT.kind_of va_context,  ECV::Abstract
 
-        Function.new(lam, va_context).freeze
+        Fun.new(lam, va_context).freeze
     end
 
 end # Umu::Value::Core

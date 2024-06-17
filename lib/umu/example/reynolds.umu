@@ -143,8 +143,8 @@ structure VAL = struct {
     # Bool -> <BOOLEAN>
     fun mk-boolean = x : Bool -> Datum @Boolean x
 
-    # Function -> <FUNVAL>
-    fun mk-funval  = x : Function -> Datum @Funval x
+    # Fun -> <FUNVAL>
+    fun mk-funval  = x : Fun -> Datum @Funval x
 
 
     #### Classifier ####
@@ -367,7 +367,7 @@ where {
     ######## Evaluator ########
 
     # eval : (<EXP>, <ENV>) -> <VAL>
-    fun rec eval = (r : Datum, e : Function) -> case r {
+    fun rec eval = (r : Datum, e : Fun) -> case r {
 
     #### CONST ####
       Const -> evcon r
@@ -527,14 +527,14 @@ val GE = [LAMBDA, [@x, @y], [NOT, [LT, @x, @y]]]
 
 ######## Runner - Frontend of Interpreter ########
 
-fun mk-runner = interpret : Function ->
+fun mk-runner = interpret : Fun ->
        tee { src -> (puts "<SRC> : " ; p src) }
     >> parse
     >> tee { exp -> (puts "<EXP> : " ; p exp) }
     >> interpret
     >> tee { value -> (puts "-> <VAL> : " ; p value) }
 
-val run-I : Function = mk-runner interpret-I
+val run-I : Fun = mk-runner interpret-I
 
 
 
@@ -556,7 +556,7 @@ structure ASSERT = struct {
     fun funval = actual -> let {
         assert (actual kind-of? Datum)              "Datum"
         assert (tag-of actual == @Funval)           "@Funval"
-        assert (val-of actual kind-of? Function)    "Function"
+        assert (val-of actual kind-of? Fun)         "Fun"
     in
         ()
     }
@@ -575,7 +575,7 @@ structure ASSERT = struct {
 
 ######## Test ########
 
-fun test = interpret : Function -> let {
+fun test = interpret : Fun -> let {
     val run = mk-runner interpret
 in (
     print "[CONSTANT]" ;
