@@ -1,6 +1,11 @@
 # coding: utf-8
 # frozen_string_literal: true
 
+require 'optparse'
+
+require_relative '../version'
+
+
 module Umu
 
 module Commander
@@ -11,49 +16,43 @@ module_function
         ASSERT.kind_of args,        ::Array
         ASSERT.kind_of init_pref,   E::Preference
 
-        _, final_pref, file_names = args.inject(
-            [:wait_opt, init_pref,  []]
-        ) {
-            |(state,    pref,       names), arg|
-            ASSERT.kind_of state,   ::Symbol
-            ASSERT.kind_of pref,    E::Preference
-            ASSERT.kind_of names,   ::Array
-            ASSERT.kind_of arg,     ::String
+        interactive_mode = false
+        trace_mode       = false
 
-            case state
-            when :wait_opt
-                if /^-/ =~ arg
-                    case arg
-                    when '-i'
-                        [
-                            state,
-                            pref.update_interactive_mode(true),
-                            names
-                        ]
-                    when '-t'
-                        [
-                            state,
-                            pref.update_trace_mode(true),
-                            names
-                        ]
-                    else
-                        raise X::CommandError.new(
-                                    "Unknown option: '%s'", arg
-                                )
-                    end
-                else
-                    [:skip, pref, names + [arg]]
-                end
-            when :skip
-                [:skip, pref, names + [arg]]
-            else
-                ASSERT.abort "Unknown state: #{state.inspect}"
+        mut_args = args.dup
+
+        OptionParser.new do |opts|
+            opts.on(
+                '-i', '--[no-]interactive',
+                'Interactive execution (REPL)'
+            ) do |answer|
+                interactive_mode = true
             end
-        }
 
-        pair = [final_pref, file_names]
+            opts.on(
+                '-t', '--[no-]trace',
+                'Enable trace'
+            ) do |answer|
+                trace_mode = true
+            end
+
+            begin
+                opts.banner  = 'umu [OPTION ..] SCRIPT_FILE ..'
+                opts.version = VERSION
+                opts.parse! mut_args
+            rescue OptionParser::ParseError => exception
+                raise X::CommandError.new exception.to_s
+            end
+        end
+
+        pref = init_pref
+                .update_interactive_mode(interactive_mode)
+                .update_trace_mode(      trace_mode)
+
+        pair = [pref, mut_args]
         ASSERT.tuple_of pair, [E::Preference, ::Array]
     end
+
 end # Umu::Commander
 
 end # Umu
