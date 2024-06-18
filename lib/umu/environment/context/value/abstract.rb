@@ -15,14 +15,21 @@ module Value
 class Abstract < Abstraction::Collection
     def each
         context = self
-        while context.kind_of?(Bindings::Entry)
-            ASSERT.kind_of context, Bindings::Entry
+        until context.kind_of?(Initial)
+
             yield context
 
             context = context.old_context
         end
 
         nil
+    end
+
+
+    def get_bindings
+        self.bindings.inject({}) { |hash, (sym, target)|
+            hash.merge(sym => target.get_value(self))
+        }
     end
 
 

@@ -92,6 +92,11 @@ class Entry < Abstraction::Record
     end
 
 
+    def va_get_bindings
+        self.va_context.get_bindings
+    end
+
+
     def va_extend_value(sym, value)
         ASSERT.kind_of sym,     ::Symbol
         ASSERT.kind_of value,   VC::Top

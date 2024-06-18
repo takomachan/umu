@@ -232,11 +232,24 @@ end
                 )
             end
 
-            next_env = Commander.process_tokens(next_tokens, env) do |value|
-                            STDERR.flush
-                            PP.pp value
-                            STDOUT.flush
-                        end
+            next_env = Commander.process_tokens(next_tokens, env) do
+                |sym, value|
+
+                case value
+                when VC::Fun
+                    STDERR.printf "fun %s = ", sym.to_s
+                when VC::Struct::Entry
+                    STDERR.printf "structure %s = ", sym.to_s
+                else
+                    STDERR.printf("val %s : %s = ",
+                                     sym.to_s,
+                                     value.type_sym.to_s
+                                )
+                end
+                STDERR.flush
+                PP.pp value
+                STDOUT.flush
+            end
 
             [[],            next_lexer, next_env]
         else
@@ -334,11 +347,46 @@ end
             when ASR::Value
                 value = result.value
 
-                yield value if block_given?
+                if block_given?
+                    yield :it, value
+                end
 
-                env.va_extend_value :it, value
+                next_env = env.va_extend_value :it, value
             when ASR::Environment
-                result.env
+                next_env = result.env
+
+                if block_given?
+                    prev_bindings = env.va_get_bindings
+                    next_bindings = next_env.va_get_bindings
+                    diff_bindings = next_bindings.select {
+                        |sym, next_value|
+
+                        opt_prev_value = prev_bindings[sym]
+
+                        if opt_prev_value
+                            if opt_prev_value == next_value
+                                false
+                            else
+                                true
+                            end
+                        else
+                            true
+                        end
+                    }
+=begin
+                    pp({
+                        PREV: prev_bindings,
+                        NEXT: next_bindings,
+                        DIFF: diff_bindings
+                    })
+=end
+
+                    diff_bindings.each do |sym, value|
+                        yield sym, value
+                    end
+                end
+
+                next_env
             else
                 ASSERT.abort result.inspect
             end
