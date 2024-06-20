@@ -47,7 +47,9 @@ class Let < Expression::Abstract
                 q.pp decl
             end
         end
+
         q.breakable
+
         q.group(PP_INDENT_WIDTH, '%IN', '') do
             q.breakable
 

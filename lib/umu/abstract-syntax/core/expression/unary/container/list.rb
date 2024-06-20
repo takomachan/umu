@@ -62,7 +62,7 @@ class List < Abstraction::ArrayBased
             q.text ']'
         else
             q.group(PP_INDENT_WIDTH) do
-                q.breakable
+                q.breakable ''
 
                 q.pp self.first
                 self.drop(1).each do |expr|
@@ -75,17 +75,17 @@ class List < Abstraction::ArrayBased
             end
 
             if self.opt_last_expr
-                q.breakable
+                q.breakable ''
 
                 q.text '|'
                 q.group(PP_INDENT_WIDTH) do
-                    q.breakable
+                    q.breakable ''
 
                     q.pp self.opt_last_expr
                 end
             end
 
-            q.breakable
+            q.breakable ''
 
             q.text ']'
         end

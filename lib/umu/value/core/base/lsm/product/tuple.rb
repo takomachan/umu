@@ -41,7 +41,7 @@ class Tuple < Abstract
 
 
     def pretty_print(q)
-        P.seplist q, self, '(', ')', ', '
+        P.seplist q, self, '(', ')', ','
     end
 
 

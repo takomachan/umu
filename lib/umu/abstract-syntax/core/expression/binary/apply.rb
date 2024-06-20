@@ -46,6 +46,7 @@ class Apply < Binary::Abstract
 
             self.opnd_exprs.each do |expr|
                 q.breakable
+
                 q.pp expr
             end
         end

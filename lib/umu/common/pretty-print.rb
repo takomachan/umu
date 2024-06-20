@@ -28,7 +28,7 @@ module_function
                 enum.drop(1).each do |elem|
                     q.text sep if sep
 
-                    q.breakable ''
+                    q.breakable
 
                     if block_given?
                         yield elem

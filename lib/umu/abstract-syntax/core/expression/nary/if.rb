@@ -91,7 +91,7 @@ class Entry < Expression::Abstract
     def pretty_print(q)
         q.text '('
         q.group(PP_INDENT_WIDTH, '', '') do
-            q.breakable
+            q.breakable ''
 
             case self.rules.size
             when 0
@@ -118,14 +118,12 @@ class Entry < Expression::Abstract
 
             q.breakable
 
-            q.group(PP_INDENT_WIDTH, '%ELSE', '') do
-                q.breakable
-
+            q.group(PP_INDENT_WIDTH, '%ELSE ', '') do
                 q.pp self.else_expr
             end
         end
 
-        q.breakable
+        q.breakable ''
 
         q.text ')'
     end

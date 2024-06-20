@@ -46,7 +46,7 @@ class MutualRecursive < Abstract
 
         not_fst_bindings = self.bindings.reject { |sym, _| sym == fst_sym }
         not_fst_bindings.each do |sym, target|
-            q.breakable
+            q.breakable ''
 
             q.text ' %AND '
             __pretty_print_binding__ q, sym, target

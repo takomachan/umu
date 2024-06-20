@@ -60,19 +60,19 @@ class Switch < Expression::Abstract
         when 0
             # Nothing to do
         when 1
-            q.breakable
+            q.breakable ''
 
             head, body = self.leafs.first
             __pretty_print_leaf__ q, head, body
         else
-            q.breakable
+            q.breakable ''
 
             fst_head, fst_body = self.leafs.first
             __pretty_print_leaf__ q, fst_head, fst_body
 
             not_fst_leafs = self.leafs.reject { |hd, _| hd.eql? fst_head }
             not_fst_leafs.each do |(head, body)|
-                q.breakable
+                q.breakable ''
 
                 q.text '| '
                 q.group(PP_INDENT_WIDTH, '', '') do
@@ -81,17 +81,16 @@ class Switch < Expression::Abstract
             end
         end
 
+        q.breakable ''
 
-        q.breakable
-
-        q.text '%ELSE ->'
+        q.text '%ELSE -> '
         q.group(PP_INDENT_WIDTH, '', '') do
-            q.breakable
+            q.breakable ''
 
             q.pp self.else_expr
         end
 
-        q.breakable
+        q.breakable ''
 
         q.text '}'
     end

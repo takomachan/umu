@@ -149,13 +149,13 @@ class Modifier < Abstraction::Selector
 
 
     def pretty_print(q)
-        q.group(PP_INDENT_WIDTH, '$(', ')') do
-            self.expr_by_label.each do |label, expr|
-                q.breakable
-                q.pp label
-                q.breakable
-                q.pp expr
-            end
+        enum = self.expr_by_label.each
+        P.seplist(q, enum, '$(', ')', ',') do |label, expr|
+            q.pp label
+
+            q.breakable
+
+            q.pp expr
         end
     end
 
@@ -227,7 +227,7 @@ class Method < Abstraction::Abstract
         q.text format(".%s", self.sym.to_s)
         q.group(PP_INDENT_WIDTH, '', '') do
             self.exprs.each do |expr|
-                q.breakable
+                q.text ' '
                 q.pp expr
             end
         end
