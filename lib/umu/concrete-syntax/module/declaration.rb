@@ -221,7 +221,7 @@ class Entry < Declaration::Abstract
 
 
     def exported_vars
-        [CSCP.make_variable(self.loc, self.id.sym)].freeze
+        [].freeze
     end
 
 
