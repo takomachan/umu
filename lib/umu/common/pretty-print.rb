@@ -45,12 +45,6 @@ module_function
             end
         end
     end
-
-(# FIXME: About method PrettyPrint#breakable
-    Expected: [1, 2, 3]
-    Actual:   [ 1, 2, 3 ]
-#)
-
 end # Umu::PrettyPrint
 
 end # Umu

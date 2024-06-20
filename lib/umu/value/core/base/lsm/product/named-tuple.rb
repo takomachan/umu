@@ -44,23 +44,30 @@ class Named < Abstract
     end
 
 
+    def each
+        self.index_by_label.each do |label, index|
+            ASSERT.kind_of label, ::Symbol
+            ASSERT.kind_of index, ::Integer
+
+            yield label, self.values[index]
+        end
+    end
+
+
     def to_s
         format("(%s)",
-            self.index_by_label.map { |label, index|
-                format "%s: %s", label.to_s, self.values[index].to_s
+            self.map { |label, value|
+                format "%s: %s", label.to_s, value.to_s
             }.join(', ')
         )
     end
 
 
     def pretty_print(q)
-        q.group(PP_INDENT_WIDTH, '(', ')') do
-            q.seplist(self.index_by_label) do |label, index|
-                value = self.values[index]
-
-                q.text format("%s: ", label.to_s)
-                q.pp value
-            end
+        P.seplist(q, self, '(', ')', ', ') do |label, value|
+            q.text label.to_s
+            q.text ': '
+            q.pp value
         end
     end
 
@@ -106,13 +113,7 @@ class Named < Abstract
 
 
     def meth_to_string(loc, env, event)
-        VC.make_string(
-            format("(%s)",
-                self.map { |elem|
-                    elem.meth_to_string(loc, env, event).val
-                }.join(', ')
-            )
-        )
+        VC.make_string self.to_s
     end
 
 

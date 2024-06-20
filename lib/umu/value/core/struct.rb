@@ -75,11 +75,6 @@ class Entry < Top
     end
 
 
-    def arity
-        self.objs.size
-    end
-
-
     def each
         self.value_by_label.each do |label, value|
             ASSERT.kind_of label,   ::Symbol
@@ -96,13 +91,7 @@ class Entry < Top
 
 
     def pretty_print(q)
-        q.group(PP_INDENT_WIDTH, 'struct {', '}') do
-            self.each do |field|
-                q.breakable
-                q.pp field
-            end
-            q.breakable
-        end
+        P.seplist q, self, 'struct {', '}', ' '
     end
 
 
@@ -120,26 +109,6 @@ class Entry < Top
         end
 
         ASSERT.kind_of value, VC::Top
-    end
-
-
-    def meth_equal(loc, env, event, other)
-        ASSERT.kind_of other, VC::Top
-
-        VC.make_bool(
-            other.kind_of?(self.class) &&
-            self.arity == other.arity &&
-            self.value_by_label.keys.sort ==
-                    other.value_by_label.keys.sort &&
-            self.value_by_label.all? { |label, value|
-                ASSERT.kind_of label,   ::Symbol
-                ASSERT.kind_of value,   VC::Top
-
-                value.meth_equal(
-                        loc, env, event, other.value_by_label[label]
-                ).true?
-            }
-        )
     end
 end
 

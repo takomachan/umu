@@ -41,11 +41,7 @@ class Tuple < Abstract
 
 
     def pretty_print(q)
-        q.group(PP_INDENT_WIDTH, '(', ')') do
-            q.seplist(self) do |val|
-                q.pp val
-            end
-        end
+        P.seplist q, self, '(', ')', ', '
     end
 
 
