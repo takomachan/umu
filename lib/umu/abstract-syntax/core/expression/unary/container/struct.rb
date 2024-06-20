@@ -19,11 +19,13 @@ module Container
 module Struct
 
 class Field < Abstraction::LabelValuePair
+    def to_s
+        self.label.to_s
+    end
 
-private
 
-    def __infix_string__
-        ' = '
+    def pretty_print(q)
+        q.text self.label.to_s
     end
 end
 
@@ -51,7 +53,14 @@ class Entry < Abstraction::HashBased
 
 
     def to_s
-        format "{%s}", self.map(&:to_s).join(', ')
+        format "%%STRUCT {%s}", self.map(&:to_s).join(', ')
+    end
+
+
+    def pretty_print(q)
+        P.seplist(q, self, '%STRUCT {', '}', ',') do |field|
+            q.pp field
+        end
     end
 
 

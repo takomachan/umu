@@ -32,6 +32,22 @@ class Declarations < Abstract
     end
 
 
+    def pretty_print(q)
+        q.text '{'
+        q.group(PP_INDENT_WIDTH, '', '') do
+            self.decls.each do |decl|
+                q.breakable
+
+                q.pp decl
+            end
+        end
+
+        q.breakable
+
+        q.text '}'
+    end
+
+
 private
 
     def __evaluate__(old_env)

@@ -178,7 +178,8 @@ SRCS	= version.rb \
 			common.rb \
 			common/constant.rb \
 			common/assertion.rb \
-			common/exception.rb
+			common/exception.rb \
+			common/pretty-print.rb
 RACC_SRCS = concrete-syntax/grammar.ry
 
 EXAMPLES =	example/test.umu \

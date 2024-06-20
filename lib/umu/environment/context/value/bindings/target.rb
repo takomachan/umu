@@ -18,13 +18,18 @@ module Bindings
 module Target
 
 class Abstract
-    attr_reader :val
+    attr_reader :obj
 
 
-    def initialize(val)
-        ASSERT.kind_of val, ::Object    # Polymophism
+    def initialize(obj)
+        ASSERT.kind_of obj, ::Object    # Polymophism
 
-        @val = val
+        @obj = obj
+    end
+
+
+    def pretty_print(q)
+        q.pp self.obj
     end
 
 
@@ -36,7 +41,7 @@ end
 
 
 class Value < Abstract
-    alias value val
+    alias value obj
 
 
     def initialize(value)
@@ -54,7 +59,7 @@ end
 
 
 class Recursive < Abstract
-    alias lam_expr val
+    alias lam_expr obj
 
 
     def initialize(lam_expr)

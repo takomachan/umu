@@ -49,6 +49,65 @@ class Switch < Expression::Abstract
     end
 
 
+    def pretty_print(q)
+        q.text '%SWITCH '
+        q.pp self.source_expr
+        q.text ' : '
+        q.text self.souce_type_sym.to_s
+        q.text ' {'
+
+        case self.leafs.size
+        when 0
+            # Nothing to do
+        when 1
+            q.breakable
+
+            head, body = self.leafs.first
+            __pretty_print_leaf__ q, head, body
+        else
+            q.breakable
+
+            fst_head, fst_body = self.leafs.first
+            __pretty_print_leaf__ q, fst_head, fst_body
+
+            not_fst_leafs = self.leafs.reject { |hd, _| hd.eql? fst_head }
+            not_fst_leafs.each do |(head, body)|
+                q.breakable
+
+                q.text '| '
+                q.group(PP_INDENT_WIDTH, '', '') do
+                    __pretty_print_leaf__ q, head, body
+                end
+            end
+        end
+
+
+        q.breakable
+
+        q.text '%ELSE ->'
+        q.group(PP_INDENT_WIDTH, '', '') do
+            q.breakable
+
+            q.pp self.else_expr
+        end
+
+        q.breakable
+
+        q.text '}'
+    end
+
+
+private
+
+    def __pretty_print_leaf__(q, head, body)
+        q.pp head
+        q.text ' -> '
+        q.group(PP_INDENT_WIDTH, '', '') do
+            q.pp body
+        end
+    end
+
+
     def __evaluate__(env, event)
         ASSERT.kind_of env,     E::Entry
         ASSERT.kind_of event,   E::Tracer::Event

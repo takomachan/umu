@@ -33,6 +33,11 @@ class Tuple < Abstraction::ArrayBased
     end
 
 
+    def pretty_print(q)
+        P.seplist q, self, '(', ')', ','
+    end
+
+
 private
 
     def __evaluate__(env, event)

@@ -61,6 +61,22 @@ class Value < Abstract
     end
 
 
+    def pretty_print(q)
+        q.text format("%%VAL %s%s = ",
+                        self.sym.to_s,
+
+                        if self.opt_type_sym
+                            format " : %s", self.opt_type_sym
+                        else
+                            ''
+                        end
+                    )
+        q.group(PP_INDENT_WIDTH, '', '') do
+            q.pp self.expr
+        end
+    end
+
+
 private
 
     def __evaluate__(env)
@@ -108,6 +124,14 @@ class Recursive < Abstract
 
     def to_s
         format "%%VAL %%REC %s = %s", self.sym.to_s, self.lam_expr.to_s
+    end
+
+
+    def pretty_print(q)
+        q.text format("%%VAL %%REC %s = ", self.sym.to_s)
+        q.group(PP_INDENT_WIDTH, '', '') do
+            q.pp self.lam_expr
+        end
     end
 
 

@@ -35,6 +35,15 @@ class Rule < Abstraction::Model
     def to_s
         format "%s %s", self.head_expr, self.body_expr
     end
+
+
+    def pretty_print(q)
+        q.pp self.head_expr
+
+        q.breakable
+
+        q.pp self.body_expr
+    end
 end
 
 
@@ -76,6 +85,49 @@ class Entry < Expression::Abstract
             rules_string,
             self.else_expr.to_s
         )
+    end
+
+
+    def pretty_print(q)
+        q.text '('
+        q.group(PP_INDENT_WIDTH, '', '') do
+            q.breakable
+
+            case self.rules.size
+            when 0
+                q.text '%IF'
+            when 1
+                q.group(PP_INDENT_WIDTH, '%IF ', '') do
+                    q.pp self.rules[0]
+                end
+            else
+                hd_rule, *tl_rules = self.rules
+
+                q.group(PP_INDENT_WIDTH, '%IF ', '') do
+                    q.pp hd_rule
+                end
+
+                tl_rules.each do |rule|
+                    q.breakable
+
+                    q.group(PP_INDENT_WIDTH, '%ELSIF ', '') do
+                        q.pp rule
+                    end
+                end
+            end
+
+            q.breakable
+
+            q.group(PP_INDENT_WIDTH, '%ELSE', '') do
+                q.breakable
+
+                q.pp self.else_expr
+            end
+        end
+
+        q.breakable
+
+        q.text ')'
     end
 
 

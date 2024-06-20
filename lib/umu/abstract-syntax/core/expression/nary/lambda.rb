@@ -43,6 +43,15 @@ class Parameter < Abstraction::Model
             end
         )
     end
+
+
+    def pretty_print(q)
+        q.pp self.ident
+        if self.opt_type_sym
+            q.text ' : '
+            q.text self.opt_type_sym.to_s
+        end
+    end
 end
 
 
@@ -69,6 +78,29 @@ class Entry < Expression::Abstract
             self.params.map(&:to_s).join(' ').to_s,
             self.expr.to_s
         )
+    end
+
+
+    def pretty_print(q)
+        q.group(PP_INDENT_WIDTH, '{', '') do
+            self.params.each do |param|
+                q.breakable
+
+                q.pp param
+            end
+        end
+
+        q.breakable
+
+        q.group(PP_INDENT_WIDTH, '->', '') do
+            q.breakable
+
+            q.pp expr
+        end
+
+        q.breakable
+
+        q.text '}'
     end
 
 

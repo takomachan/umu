@@ -438,7 +438,7 @@ end
             "________ Abstract Syntax: %s ________\n",
             asyn.loc.to_s
         )
-        STDERR.puts asyn.to_s
+        PP.pp asyn, STDERR
         STDERR.puts
         STDERR.puts "________ Evaluator Trace ________"
     end

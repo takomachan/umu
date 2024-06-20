@@ -62,6 +62,11 @@ class ByNumber < Abstraction::Selector
     end
 
 
+    def pretty_print(q)
+        q.text format("$%d", self.sel_num)
+    end
+
+
     def evaluate_for(value, env, _event)
         ASSERT.kind_of value,   VC::Top
         ASSERT.kind_of env,     E::Entry
@@ -95,6 +100,11 @@ class ByLabel < Abstraction::Selector
 
     def to_s
         '$' + self.sel_sym.to_s
+    end
+
+
+    def pretty_print(q)
+        q.text format("$%s", self.sel_sym.to_s)
     end
 
 
@@ -135,6 +145,18 @@ class Modifier < Abstraction::Selector
                 format "%s %s", label.to_s, expr.to_s
             }.join(', ')
         )
+    end
+
+
+    def pretty_print(q)
+        q.group(PP_INDENT_WIDTH, '$(', ')') do
+            self.expr_by_label.each do |label, expr|
+                q.breakable
+                q.pp label
+                q.breakable
+                q.pp expr
+            end
+        end
     end
 
 
@@ -198,6 +220,17 @@ class Method < Abstraction::Abstract
                 ' ' + self.exprs.map(&:to_s).join(' ')
             end
         )
+    end
+
+
+    def pretty_print(q)
+        q.text format(".%s", self.sym.to_s)
+        q.group(PP_INDENT_WIDTH, '', '') do
+            self.exprs.each do |expr|
+                q.breakable
+                q.pp expr
+            end
+        end
     end
 
 
@@ -401,6 +434,19 @@ class Entry < Binary::Abstract
 
             self.rhs_messages.map(&:to_s).join
         )
+    end
+
+
+    def pretty_print(q)
+        q.group(PP_INDENT_WIDTH, '(', ')') do
+            q.pp lhs_expr
+            if self.opt_receiver_type_sym
+                q.text format(" : %s", self.opt_receiver_type_sym.to_s)
+            end
+        end
+        self.rhs_messages.each do |message|
+            q.pp message
+        end
     end
 
 

@@ -47,6 +47,51 @@ class List < Abstraction::ArrayBased
     end
 
 
+    def pretty_print(q)
+        q.text '['
+
+        case self.count
+        when 0
+            q.text ']'
+        when 1
+            q.pp self.first
+            if self.opt_last_expr
+                q.text '|'
+                q.pp self.opt_last_expr
+            end
+            q.text ']'
+        else
+            q.group(PP_INDENT_WIDTH) do
+                q.breakable
+
+                q.pp self.first
+                self.drop(1).each do |expr|
+                    q.text ','
+
+                    q.breakable
+
+                    q.pp expr
+                end
+            end
+
+            if self.opt_last_expr
+                q.breakable
+
+                q.text '|'
+                q.group(PP_INDENT_WIDTH) do
+                    q.breakable
+
+                    q.pp self.opt_last_expr
+                end
+            end
+
+            q.breakable
+
+            q.text ']'
+        end
+    end
+
+
 private
 
     def __evaluate__(env, event)

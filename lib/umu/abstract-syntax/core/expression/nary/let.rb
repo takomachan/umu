@@ -39,6 +39,27 @@ class Let < Expression::Abstract
     end
 
 
+    def pretty_print(q)
+        q.group(PP_INDENT_WIDTH, '%LET {', '') do
+            self.decls.each do |decl|
+                q.breakable
+
+                q.pp decl
+            end
+        end
+        q.breakable
+        q.group(PP_INDENT_WIDTH, '%IN', '') do
+            q.breakable
+
+            q.pp self.expr
+        end
+
+        q.breakable
+
+        q.text '}'
+    end
+
+
     def __evaluate__(init_env, event)
         ASSERT.kind_of init_env,    E::Entry
         ASSERT.kind_of event,       E::Tracer::Event

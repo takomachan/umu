@@ -44,25 +44,16 @@ class Label < Unary::Abstract
     end
 
 
-private
-
-    def __evaluate__(_env, _event)
-        ASSERT.kind_of env,     E::Entry
-        ASSERT.kind_of event,   E::Tracer::Event
-
-
-        new_env = env.enter event
-
-        VC.make_named_tuple(
-            self.map { |expr| expr.evaluate(new_env).value },
-            self.index_by_label
-        )
+    def pretty_print(q)
+        q.text self.to_s
     end
 end
 
 
 
 class Entry < Abstraction::ArrayBased
+    include ::Enumerable
+
     alias exprs array
     attr_reader :index_by_label
 
@@ -78,12 +69,28 @@ class Entry < Abstraction::ArrayBased
     end
 
 
+    def each
+        self.index_by_label.each do |label, index|
+            yield label, self.exprs[index]
+        end
+    end
+
+
     def to_s
         format("(%s)",
-            self.index_by_label.map { |label, index|
-                format "%s %s", label.to_s, self.exprs[index].to_s
+            self.map { |label, expr|
+                format "%s %s", label.to_s, expr.to_s
             }.join(', ')
         )
+    end
+
+
+    def pretty_print(q)
+        P.seplist(q, self, '(', ')', ',') do |(label, expr)|
+            q.pp label
+            q.text ' '
+            q.pp expr
+        end
     end
 
 
@@ -96,7 +103,7 @@ private
         new_env = env.enter event
 
         VC.make_named_tuple(
-            self.map { |expr| expr.evaluate(new_env).value },
+            self.exprs.map { |expr| expr.evaluate(new_env).value },
 
             self.index_by_label.inject({}) { |hash, (label, index)|
                 hash.merge(label.sym => index)

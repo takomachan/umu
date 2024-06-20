@@ -94,6 +94,7 @@ module Umu
 
     module Assertion;   end
     module Exception;   end
+    module PrettyPrint; end
 
 
     L       = Lexical
@@ -137,4 +138,5 @@ module Umu
 
     ASSERT  = Assertion
     X       = Exception
+    P       = PrettyPrint
 end # Umu
