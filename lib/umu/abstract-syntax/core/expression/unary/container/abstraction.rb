@@ -18,19 +18,6 @@ module Container
 
 module Abstraction
 
-class LabelValuePair < Umu::Abstraction::LabelValuePair
-    alias expr value
-
-
-    def initialize(loc, label, expr)
-        ASSERT.kind_of expr, ASCE::Abstract
-
-        super
-    end
-end
-
-
-
 class Abstract < Unary::Abstract
     include ::Enumerable
 
