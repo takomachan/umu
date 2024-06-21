@@ -25,6 +25,10 @@ module_function
             env.update_lex_trace_mode true
         when ':nolextrace'
             env.update_lex_trace_mode false
+        when ':dump'
+            env.update_dump_mode true
+        when ':nodump'
+            env.update_dump_mode false
         when ':class'
                 case args.size
                 when 0

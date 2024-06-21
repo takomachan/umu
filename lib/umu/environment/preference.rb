@@ -13,13 +13,15 @@ class Preference < Abstraction::Record
     attr_reader :interactive_mode
     attr_reader :trace_mode
     attr_reader :lex_trace_mode
+    attr_reader :dump_mode
 
 
     def self.deconstruct_keys
         {
             interactive_mode:   ::Object,
             trace_mode:         ::Object,
-            lex_trace_mode:     ::Object
+            lex_trace_mode:     ::Object,
+            dump_mode:          ::Object
         }.freeze
     end
 
@@ -27,14 +29,18 @@ class Preference < Abstraction::Record
     def initialize(
             interactive_mode,
             trace_mode,
-            lex_trace_mode
+            lex_trace_mode,
+            dump_mode
         )
         ASSERT.bool interactive_mode
         ASSERT.bool trace_mode
+        ASSERT.bool lex_trace_mode
+        ASSERT.bool dump_mode
 
         @interactive_mode   = interactive_mode
         @trace_mode         = trace_mode
         @lex_trace_mode     = lex_trace_mode
+        @dump_mode          = dump_mode
     end
 
 
@@ -49,7 +55,21 @@ class Preference < Abstraction::Record
 
 
     def lex_trace_mode?
-        self.trace_mode && self.lex_trace_mode
+        self.lex_trace_mode
+    end
+
+
+    def dump_mode?
+        self.dump_mode
+    end
+
+
+    def any_trace?
+        [
+            self.trace_mode,
+            self.lex_trace_mode,
+            self.dump_mode
+        ].any?
     end
 
 
@@ -72,6 +92,13 @@ class Preference < Abstraction::Record
 
         self.update(lex_trace_mode: bool)
     end
+
+
+    def update_dump_mode(bool)
+        ASSERT.bool bool
+
+        self.update(dump_mode: bool)
+    end
 end
 
 
@@ -80,16 +107,19 @@ module_function
     def make_preference(
         interactive_mode,
         trace_mode,
-        lex_trace_mode
+        lex_trace_mode,
+        dump_mode
     )
         ASSERT.bool interactive_mode
         ASSERT.bool trace_mode
         ASSERT.bool lex_trace_mode
+        ASSERT.bool dump_mode
 
         Preference.new(
             interactive_mode,
             trace_mode,
-            lex_trace_mode
+            lex_trace_mode,
+            dump_mode
         ).freeze
     end
 
@@ -97,7 +127,8 @@ module_function
 INITIAL_PREFERENCE = make_preference(
     false,  # interactive_mode
     false,  # trace_mode
-    false   # lex_trace_mode
+    false,  # lex_trace_mode
+    false   # dump_mode
 )
 
 end # Umu::Environment

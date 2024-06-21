@@ -157,6 +157,15 @@ class Entry < Abstraction::Record
     end
 
 
+    def update_dump_mode(bool)
+        ASSERT.bool bool
+
+        self.update_preference(
+            self.pref.update_dump_mode(bool)
+        )
+    end
+
+
     def update_preference(pref)
         ASSERT.kind_of pref, Preference
 

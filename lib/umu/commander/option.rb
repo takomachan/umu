@@ -18,6 +18,7 @@ module_function
 
         interactive_mode = false
         trace_mode       = false
+        dump_mode        = false
 
         mut_args = args.dup
 
@@ -36,6 +37,13 @@ module_function
                 trace_mode = true
             end
 
+            opts.on(
+                '-d', '--[no-]dump',
+                'Enable dump'
+            ) do |answer|
+                dump_mode = true
+            end
+
             begin
                 opts.banner  = 'umu [OPTION ..] SCRIPT_FILE ..'
                 opts.version = VERSION
@@ -48,6 +56,7 @@ module_function
         pref = init_pref
                 .update_interactive_mode(interactive_mode)
                 .update_trace_mode(      trace_mode)
+                .update_dump_mode(       dump_mode)
 
         pair = [pref, mut_args]
         ASSERT.tuple_of pair, [E::Preference, ::Array]

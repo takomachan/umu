@@ -36,7 +36,7 @@ end
                                     args, E::INITIAL_PREFERENCE
                                 )
 
-            prelude_env = Commander.process_file(
+            prelude_env = Commander.process_source(
                             Prelude::SOURCE_TEXT,
                             Prelude::FILE_NAME,
                             E.setup(E::INITIAL_PREFERENCE),
@@ -160,24 +160,15 @@ end
         file_name   = STDIN_FILE_NAME
         line_num    = init_lexer.loc.line_num
 
-        if pref.trace_mode?
-            STDERR.puts
+        if pref.any_trace?
             STDERR.printf "________ Source: '%s' ________\n", file_name
             STDERR.printf "%04d: %s", line_num + 1, line
         end
 
-        if pref.trace_mode?
+        if pref.lex_trace_mode?
             STDERR.puts
-            if pref.lex_trace_mode?
-                STDERR.printf("________ Lexer Trace: '%s' ________",
-                                file_name
-                )
-                STDERR.printf "\nINIT-LEXTER: %s\n", init_lexer.to_s
-            else
-                STDERR.printf("________ Tokens: '%s' ________",
-                                file_name
-                )
-            end
+            STDERR.printf "________ Lexer Trace: '%s' ________", file_name
+            STDERR.printf "\nINIT-LEXTER: %s\n", init_lexer.to_s
         end
 
         scanner = ::StringScanner.new line
@@ -185,44 +176,25 @@ end
             tokens, init_lexer, scanner, pref
         ) do |event, matched, opt_token, lexer, before_line_num|
 
-            if pref.trace_mode?
-                if pref.lex_trace_mode?
-                    STDERR.printf("\nPATTERN: %s \"%s\"\n",
-                                    event.to_s,
-                                    L::Escape.unescape(matched)
+            if pref.lex_trace_mode?
+                STDERR.printf("\nPATTERN: %s \"%s\"\n",
+                                event.to_s,
+                                L::Escape.unescape(matched)
+                )
+                if opt_token
+                    token = opt_token
+                    STDERR.printf("    TOKEN: %s -- %s\n",
+                                token.to_s,
+                                token.loc.to_s
                     )
-                    if opt_token
-                        token = opt_token
-                        STDERR.printf("    TOKEN: %s -- %s\n",
-                                    token.to_s,
-                                    token.loc.to_s
-                        )
-                    end
-                    STDERR.printf "    NEXT-LEXER: %s\n", lexer.to_s
-                else
-                    if opt_token
-                        token       = opt_token
-                        tk_line_num = token.loc.line_num
-
-                        if tk_line_num != before_line_num
-                            STDERR.printf "\n%04d: ", tk_line_num + 1
-                        end
-
-                        unless token && token.separator?
-                            STDERR.printf "%s ", token.to_s
-                            STDERR.flush
-                        end
-                    end
                 end
+                STDERR.printf "    NEXT-LEXER: %s\n", lexer.to_s
             end
         end
 
-        if pref.trace_mode?
-            STDERR.puts
-        end
-
         if next_lexer.between_braket?
-            if pref.lex_trace_mode?
+            if pref.dump_mode?
+                STDERR.puts
                 STDERR.printf("________ Tokens: '%s' ________\n",
                                 file_name
                 )
@@ -247,7 +219,7 @@ end
                                 )
                 end
                 STDERR.flush
-                PP.pp value
+                PP.pp value, STDERR
                 STDOUT.flush
             end
 
@@ -268,7 +240,7 @@ end
 
             source = ::File.open(file_name) { |io| io.read }
 
-            Commander.process_file(
+            Commander.process_source(
                 source,
                 file_name,
                 env.update_source(file_name, source)
@@ -279,7 +251,7 @@ end
     end
 
 
-    def process_file(source, file_name, env, init_line_num = 0)
+    def process_source(source, file_name, env, init_line_num = 0)
         ASSERT.kind_of source,          ::String
         ASSERT.kind_of file_name,       ::String
         ASSERT.kind_of env,             E::Entry
@@ -287,7 +259,7 @@ end
 
         pref = env.pref
 
-        if pref.trace_mode?
+        if pref.dump_mode?
             STDERR.puts
             STDERR.printf "________ Source: '%s' ________\n", file_name
             source.each_line.with_index do |line, index|
@@ -295,7 +267,7 @@ end
             end
         end
 
-        if pref.trace_mode?
+        if pref.dump_mode?
             STDERR.puts
             STDERR.printf "________ Tokens: '%s' ________", file_name
         end
@@ -307,7 +279,7 @@ end
             init_tokens, init_lexer, scanner, pref
         ) do |_event, _matched, opt_token, _lexer, before_line_num|
 
-            if pref.trace_mode? && opt_token
+            if pref.dump_mode? && opt_token
                 token       = opt_token
                 tk_line_num = token.loc.line_num
 
@@ -322,7 +294,7 @@ end
             end
         end
 
-        if pref.trace_mode?
+        if pref.dump_mode?
             STDERR.puts
         end
 
@@ -408,6 +380,10 @@ end
 
         result = asyn.evaluate env
 
+        if env.pref.any_trace?
+            STDERR.puts
+        end
+
         ASSERT.kind_of result, ASR::Abstract
     end
 
@@ -415,32 +391,38 @@ end
     def print_trace_of_con_syntax(csyn, pref)
         ASSERT.kind_of csyn,    CS::Abstract
 
-        return unless pref.trace_mode?
+        if pref.dump_mode?
+            STDERR.puts
+            STDERR.printf(
+                "________ Concrete Syntax: %s ________\n",
+                csyn.loc.to_s
+            )
+            STDERR.puts csyn.to_s
+        end
 
-        STDERR.puts
-        STDERR.printf(
-            "________ Concrete Syntax: %s ________\n",
-            csyn.loc.to_s
-        )
-        STDERR.puts csyn.to_s
-        STDERR.puts
-        STDERR.puts "________ Desugar Trace ________"
+        if pref.trace_mode?
+            STDERR.puts
+            STDERR.puts "________ Desugar Trace ________"
+        end
     end
 
 
     def print_trace_of_abs_syntax(asyn, pref)
         ASSERT.kind_of asyn,    AS::Abstract
 
-        return unless pref.trace_mode?
+        if pref.dump_mode?
+            STDERR.puts
+            STDERR.printf(
+                "________ Abstract Syntax: %s ________\n",
+                asyn.loc.to_s
+            )
+            PP.pp asyn, STDERR
+        end
 
-        STDERR.puts
-        STDERR.printf(
-            "________ Abstract Syntax: %s ________\n",
-            asyn.loc.to_s
-        )
-        PP.pp asyn, STDERR
-        STDERR.puts
-        STDERR.puts "________ Evaluator Trace ________"
+        if pref.trace_mode?
+            STDERR.puts
+            STDERR.puts "________ Evaluator Trace ________"
+        end
     end
 
 end # Umu::Commander
