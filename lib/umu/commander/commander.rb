@@ -36,13 +36,16 @@ end
                                     args, E::INITIAL_PREFERENCE
                                 )
 
-            prelude_env = Commander.process_source(
-                            Prelude::SOURCE_TEXT,
-                            Prelude::FILE_NAME,
-                            E.setup(E::INITIAL_PREFERENCE),
-                            Prelude::START_LINE_NUM
-                        )
-            init_env = prelude_env.update_preference pref
+            init_env = if pref.no_prelude?
+                            E.setup pref
+                        else
+                            Commander.process_source(
+                                Prelude::SOURCE_TEXT,
+                                Prelude::FILE_NAME,
+                                E.setup(E::INITIAL_PREFERENCE),
+                                Prelude::START_LINE_NUM
+                            ).update_preference pref
+                        end
 
             if pref.interactive_mode?
                 env = unless file_names.empty?

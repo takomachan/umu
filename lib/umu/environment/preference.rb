@@ -14,6 +14,7 @@ class Preference < Abstraction::Record
     attr_reader :trace_mode
     attr_reader :lex_trace_mode
     attr_reader :dump_mode
+    attr_reader :no_prelude
 
 
     def self.deconstruct_keys
@@ -21,7 +22,8 @@ class Preference < Abstraction::Record
             interactive_mode:   ::Object,
             trace_mode:         ::Object,
             lex_trace_mode:     ::Object,
-            dump_mode:          ::Object
+            dump_mode:          ::Object,
+            no_prelude:         ::Object
         }.freeze
     end
 
@@ -30,17 +32,20 @@ class Preference < Abstraction::Record
             interactive_mode,
             trace_mode,
             lex_trace_mode,
-            dump_mode
+            dump_mode,
+            no_prelude
         )
         ASSERT.bool interactive_mode
         ASSERT.bool trace_mode
         ASSERT.bool lex_trace_mode
         ASSERT.bool dump_mode
+        ASSERT.bool no_prelude
 
         @interactive_mode   = interactive_mode
         @trace_mode         = trace_mode
         @lex_trace_mode     = lex_trace_mode
         @dump_mode          = dump_mode
+        @no_prelude         = no_prelude
     end
 
 
@@ -73,6 +78,11 @@ class Preference < Abstraction::Record
     end
 
 
+    def no_prelude?
+        self.no_prelude
+    end
+
+
     def update_interactive_mode(bool)
         ASSERT.bool bool
 
@@ -99,6 +109,13 @@ class Preference < Abstraction::Record
 
         self.update(dump_mode: bool)
     end
+
+
+    def update_no_prelude(bool)
+        ASSERT.bool bool
+
+        self.update(no_prelude: bool)
+    end
 end
 
 
@@ -108,18 +125,21 @@ module_function
         interactive_mode,
         trace_mode,
         lex_trace_mode,
-        dump_mode
+        dump_mode,
+        no_prelude
     )
         ASSERT.bool interactive_mode
         ASSERT.bool trace_mode
         ASSERT.bool lex_trace_mode
         ASSERT.bool dump_mode
+        ASSERT.bool no_prelude
 
         Preference.new(
             interactive_mode,
             trace_mode,
             lex_trace_mode,
-            dump_mode
+            dump_mode,
+            no_prelude
         ).freeze
     end
 
@@ -128,7 +148,8 @@ INITIAL_PREFERENCE = make_preference(
     false,  # interactive_mode
     false,  # trace_mode
     false,  # lex_trace_mode
-    false   # dump_mode
+    false,  # dump_mode
+    false   # no_prelude
 )
 
 end # Umu::Environment

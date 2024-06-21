@@ -19,6 +19,7 @@ module_function
         interactive_mode = false
         trace_mode       = false
         dump_mode        = false
+        no_prelude       = false
 
         mut_args = args.dup
 
@@ -44,6 +45,13 @@ module_function
                 dump_mode = true
             end
 
+            opts.on(
+                '--no-prelude',
+                'No loading standard prelude'
+            ) do |answer|
+                no_prelude = true
+            end
+
             begin
                 opts.banner  = 'umu [OPTION ..] SCRIPT_FILE ..'
                 opts.version = VERSION
@@ -57,6 +65,7 @@ module_function
                 .update_interactive_mode(interactive_mode)
                 .update_trace_mode(      trace_mode)
                 .update_dump_mode(       dump_mode)
+                .update_no_prelude(      no_prelude)
 
         pair = [pref, mut_args]
         ASSERT.tuple_of pair, [E::Preference, ::Array]
