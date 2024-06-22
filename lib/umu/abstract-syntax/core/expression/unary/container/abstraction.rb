@@ -21,13 +21,11 @@ module Abstraction
 class Abstract < Unary::Abstract
     include ::Enumerable
 
+    alias enum obj
+
 
     def each
-        self.array.each do |expr|
-            ASSERT.kind_of expr, ASCE::Abstract
-
-            yield expr
-        end
+        raise X::SubclassResponsibility
     end
 
 
@@ -38,27 +36,23 @@ end
 
 
 
-class ArrayBased < Abstract
-    alias array obj
+class Expressions < Abstract
+    alias exprs enum
 
 
-    def initialize(loc, array)
-        ASSERT.kind_of array, ::Array
+    def initialize(loc, exprs)
+        ASSERT.kind_of exprs, ::Array
 
         super
     end
-end
 
 
+    def each
+        self.exprs.each do |expr|
+            ASSERT.kind_of expr, ASCE::Abstract
 
-class HashBased < Abstract
-    alias hash obj
-
-
-    def initialize(loc, hash)
-        ASSERT.kind_of hash, ::Hash
-
-        super
+            yield expr
+        end
     end
 end
 

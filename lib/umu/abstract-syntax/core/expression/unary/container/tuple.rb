@@ -16,10 +16,7 @@ module Unary
 
 module Container
 
-class Tuple < Abstraction::ArrayBased
-    alias exprs array
-
-
+class Tuple < Abstraction::Expressions
     def initialize(loc, exprs)
         ASSERT.kind_of exprs, ::Array
         ASSERT.assert exprs.size >= 2   # Pair or More

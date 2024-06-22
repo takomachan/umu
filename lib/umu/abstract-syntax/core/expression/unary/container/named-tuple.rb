@@ -51,10 +51,7 @@ end
 
 
 
-class Entry < Abstraction::ArrayBased
-    include ::Enumerable
-
-    alias exprs array
+class Entry < Abstraction::Expressions
     attr_reader :index_by_label
 
 

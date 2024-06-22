@@ -14,7 +14,11 @@ module_function
         when 0
             q.text eb if eb
         when 1
-            q.pp enum.first
+            if block_given?
+                yield enum.first
+            else
+                q.pp enum.first
+            end
             q.text eb if eb
         else
             q.group(PP_INDENT_WIDTH) do

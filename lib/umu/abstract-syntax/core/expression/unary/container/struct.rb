@@ -16,8 +16,8 @@ module Unary
 
 module Container
 
-class Struct < Abstraction::HashBased
-    alias expr_by_sym hash
+class Struct < Abstraction::Abstract
+    alias expr_by_sym enum
 
 
     def initialize(loc, expr_by_sym)
