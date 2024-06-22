@@ -27,58 +27,6 @@ end
 
 
 
-class LabelValuePair < Model
-    attr_reader :label, :value
-
-
-    def initialize(loc, label, value)
-        ASSERT.kind_of label,   ::Symbol
-        ASSERT.kind_of value,   ::Object    # Polymophic
-
-        super(loc)
-
-        @label  = label
-        @value  = value
-    end
-
-
-    def <=>(other)
-        ASSERT.kind_of other, self.class
-
-        self.label <=> other.label
-    end
-
-
-    def to_s
-        format("%s%s",
-                self.label.to_s,
-
-                if self.value
-                    format("%s%s",
-                            __infix_string__,
-
-                            if block_given?
-                                yield self.value
-                            else
-                                self.value.to_s
-                            end
-                    )
-                else
-                    ''
-                end
-        )
-    end
-
-
-private
-
-    def __infix_string__
-        ':'
-    end
-end
-
-
-
 class Record
     def self.__deconstruct_keys__
         (

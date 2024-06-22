@@ -16,30 +16,6 @@ module Container
 
 module Abstraction
 
-class LabelValuePair < Umu::Abstraction::LabelValuePair
-    alias opt_var_sym value
-
-
-    def initialize(loc, label, opt_var_sym)
-        ASSERT.opt_kind_of opt_var_sym, ::Symbol
-
-        super
-    end
-
-
-    def pat
-        var_sym = if self.opt_var_sym
-                        self.opt_var_sym
-                    else
-                        self.label
-                    end
-
-        CSCP.make_variable self.loc, var_sym
-    end
-end
-
-
-
 class Abstract < Pattern::Abstract
     include Enumerable
 
