@@ -42,8 +42,8 @@ class Abstract < Morph::Abstract
             :foldl,             VC::Top, VC::Fun],
         [ :meth_map,            self,
             :map,               VC::Fun],
-        [ :meth_filter,         self,
-            :filter,            VC::Fun],
+        [ :meth_select,         self,
+            :select,            VC::Fun],
         [ :meth_append,         self,
             :append,            self],
         [ :meth_concat,         self,
@@ -186,7 +186,7 @@ class Abstract < Morph::Abstract
     end
 
 
-    def meth_filter(loc, env, event, func)
+    def meth_select(loc, env, event, func)
         ASSERT.kind_of func, VC::Fun
 
         new_env = env.enter event
@@ -199,7 +199,7 @@ class Abstract < Morph::Abstract
                 raise X::TypeError.new(
                     loc,
                     env,
-                    "filter: expected a Bool, but %s : %s",
+                    "select: expected a Bool, but %s : %s",
                     value.to_s,
                     value.type_sym.to_s
                 )

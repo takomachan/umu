@@ -88,13 +88,13 @@ structure List = struct {
     fun map' = f -> foldr [] { x xs -> [f x | xs] }
 
 
-    # filter : ('a -> BOOL) -> ['a] -> ['a]
-    fun rec filter = f xs -> case xs {
+    # select : ('a -> BOOL) -> ['a] -> ['a]
+    fun rec select = f xs -> case xs {
       []      -> []
     | [x|xs'] -> if (f x) xs' else xs'
     }
 
-    fun filter' = f -> foldr [] { x xs -> if (f x) xs' else xs }
+    fun select' = f -> foldr [] { x xs -> if (f x) xs' else xs }
 
 
     # append : ['a] -> ['a] -> ['a]

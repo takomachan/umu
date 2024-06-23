@@ -296,9 +296,9 @@ structure Umu = struct {
         fun map = (f : Fun) (xs : List) -> xs.map f
 
 
-        # filter : ('a -> Bool) -> ['a] -> ['a]
-        # fun filter = f -> foldr [] { x xs -> if (f x) [x|xs] else xs }
-        fun filter = (f : Fun) (xs : List) -> xs.filter f
+        # select : ('a -> Bool) -> ['a] -> ['a]
+        # fun select = f -> foldr [] { x xs -> if (f x) [x|xs] else xs }
+        fun select = (f : Fun) (xs : List) -> xs.select f
 
 
         # append : ['a] -> ['a] -> ['a]
@@ -626,8 +626,8 @@ structure Umu = struct {
         # map       : ('a -> 'b) -> ['a] -> ['b]
         val map = List::map
 
-        # filter    : ('a -> Bool) -> ['a] -> ['a]
-        val filter = List::filter
+        # select    : ('a -> Bool) -> ['a] -> ['a]
+        val select = List::select
 
         # concat    : [['a]] -> ['a]
         val concat = List::concat
