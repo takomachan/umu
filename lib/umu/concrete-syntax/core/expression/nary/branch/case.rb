@@ -253,11 +253,18 @@ private
                 )
             end
 
-            head_expr   = ASCE.make_test_kind_of(
+            head_expr = ASCE.make_test_kind_of(
                                 head.loc,
+
                                 fn.call(head.loc),
+
                                 head.class_ident.desugar(env),
-                                :Morph
+
+                                if head.opt_superclass_ident
+                                    head.opt_superclass_ident.sym
+                                else
+                                    nil
+                                end
                             )
             body_expr = if head.opt_contents_pat
                     contents_decl = head.opt_contents_pat.desugar_value(

@@ -348,6 +348,14 @@ case_rule_head:
 						val[2]
 					)
 }
+| '[' ']' {
+  	result = CSCE.make_case_rule_class(
+						val[0].loc,
+						CSCE.make_identifier(val[0].loc, :Nil),
+						CSCP.make_unit(val[0].loc),
+						CSCE.make_identifier(val[0].loc, :List)
+					)
+}
 | '[' var_pat opt_last_pat ']' {
 	tail = if val[2]
 				val[2]
@@ -358,14 +366,8 @@ case_rule_head:
   	result = CSCE.make_case_rule_class(
 						val[0].loc,
 						CSCE.make_identifier(val[0].loc, :Cons),
-						CSCP.make_tuple(val[0].loc, [val[1], tail])
-					)
-}
-| '[' ']' {
-  	result = CSCE.make_case_rule_class(
-						val[0].loc,
-						CSCE.make_identifier(val[0].loc, :Nil),
-						CSCP.make_unit(val[0].loc)
+						CSCP.make_tuple(val[0].loc, [val[1], tail]),
+						CSCE.make_identifier(val[0].loc, :List)
 					)
 }
 

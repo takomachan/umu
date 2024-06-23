@@ -183,16 +183,20 @@ end
 
 class Class < Abstract
     alias       class_ident obj
+
     attr_reader :opt_contents_pat
+    attr_reader :opt_superclass_ident
 
 
-    def initialize(loc, class_ident, opt_contents_pat)
-        ASSERT.kind_of      class_ident,        CSCEU::Identifier::Short
-        ASSERT.opt_kind_of  opt_contents_pat,   CSCP::Abstract
+    def initialize(loc, class_ident, opt_contents_pat, opt_superclass_ident)
+        ASSERT.kind_of      class_ident,          CSCEU::Identifier::Short
+        ASSERT.opt_kind_of  opt_contents_pat,     CSCP::Abstract
+        ASSERT.opt_kind_of  opt_superclass_ident, CSCEU::Identifier::Short
 
         super(loc, class_ident)
 
-        @opt_contents_pat = opt_contents_pat
+        @opt_contents_pat     = opt_contents_pat
+        @opt_superclass_ident = opt_superclass_ident
     end
 
 
@@ -203,7 +207,14 @@ class Class < Abstract
 
     def to_s
         format("&%s%s",
-                self.class_ident.to_s,
+                if self.opt_superclass_ident
+                    format("(%s < %s)",
+                             self.class_ident.to_s,
+                             self.opt_superclass_ident.to_s
+                    )
+                else
+                    self.class_ident.to_s
+                end,
 
                 if self.opt_contents_pat
                     ' ' + self.opt_contents_pat.to_s
@@ -284,13 +295,16 @@ module_function
     end
 
 
-    def make_case_rule_class(loc, class_ident, opt_contents_pat)
-        ASSERT.kind_of      loc,                L::Location
-        ASSERT.kind_of      class_ident,        CSCEU::Identifier::Short
-        ASSERT.opt_kind_of  opt_contents_pat,   CSCP::Abstract
+    def make_case_rule_class(
+        loc, class_ident, opt_contents_pat, opt_superclass_ident = nil
+    )
+        ASSERT.kind_of      loc,                  L::Location
+        ASSERT.kind_of      class_ident,          CSCEU::Identifier::Short
+        ASSERT.opt_kind_of  opt_contents_pat,     CSCP::Abstract
+        ASSERT.opt_kind_of  opt_superclass_ident, CSCEU::Identifier::Short
 
         Nary::Rule::Case::Head::Class.new(
-            loc, class_ident, opt_contents_pat
+            loc, class_ident, opt_contents_pat, opt_superclass_ident
         ).freeze
     end
 
