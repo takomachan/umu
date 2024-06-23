@@ -190,8 +190,8 @@ structure Umu = struct {
         fun Nil = () -> &{List}.make-nil
 
 
-        # Cons : 'a -> ['a] -> ['a]
-        fun Cons = x (xs : List) -> &{List}.make-cons x xs
+        # cons : 'a -> ['a] -> ['a]
+        fun cons = x (xs : List) -> xs.cons x
 
 
         # empty? : ['a] -> Bool
@@ -279,8 +279,8 @@ structure Umu = struct {
 
 
         # reverse : ['a] -> ['a]
-        # val reverse = foldl [] Cons
-        fun reverse = xs : List -> xs.foldl [] Cons
+        # val reverse = foldl [] cons
+        fun reverse = xs : List -> xs.foldl [] cons
 
 
         # max : ['a] -> 'a
@@ -302,7 +302,7 @@ structure Umu = struct {
 
 
         # append : ['a] -> ['a] -> ['a]
-        # fun append = (xs : List) (ys : List) -> foldr ys Cons xs
+        # fun append = (xs : List) (ys : List) -> foldr ys cons xs
         fun append = (xs : List) (ys : List) -> xs.append ys
 
 
@@ -582,10 +582,13 @@ structure Umu = struct {
         #### List ####
 
         # (|)       : 'a -> ['a] -> ['a]
-        val (|) = List::Cons
+        val (|) = List::cons
 
         # (++)      : ['a] -> ['a] -> ['a]
         val (++) = List::append
+
+        # cons : 'a -> ['a] -> ['a]
+        val cons = List::cons
 
         # empty?    : ['a] -> Bool
         val empty? = List::empty?

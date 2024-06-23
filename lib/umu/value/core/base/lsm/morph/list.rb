@@ -22,9 +22,7 @@ module List
 class Abstract < Morph::Abstract
     CLASS_METHOD_INFOS = [
         [:meth_make_empty,      self,
-            :'make-empty'],
-        [:meth_make_cons,       self,
-            :'make-cons',       VC::Top, List::Abstract]
+            :'make-empty']
     ]
 
     INSTANCE_METHOD_INFOS = [
@@ -63,14 +61,6 @@ class Abstract < Morph::Abstract
 
     def self.meth_make_empty(_loc, _env, _event)
         VC.make_nil
-    end
-
-
-    def self.meth_make_cons(_loc, _env, _event, x, xs)
-        ASSERT.kind_of x,   VC::Top
-        ASSERT.kind_of xs,  List::Abstract
-
-        VC.make_cons x, xs
     end
 
 
