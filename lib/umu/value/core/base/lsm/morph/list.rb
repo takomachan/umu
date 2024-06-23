@@ -22,7 +22,7 @@ module List
 class Abstract < Morph::Abstract
     CLASS_METHOD_INFOS = [
         [:meth_make_empty,      self,
-            :'make-empty']
+            :'empty']
     ]
 
     INSTANCE_METHOD_INFOS = [

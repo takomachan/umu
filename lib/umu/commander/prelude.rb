@@ -186,10 +186,6 @@ structure Umu = struct {
     ######## List ########
 
     structure List = struct {
-        # Nil : () -> ['a]
-        fun Nil = () -> &{List}.make-nil
-
-
         # cons : 'a -> ['a] -> ['a]
         fun cons = x (xs : List) -> xs.cons x
 
