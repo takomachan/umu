@@ -19,13 +19,13 @@ module Number
 class Real < Abstract
     CLASS_METHOD_INFOS = [
         [:meth_make_nan,        self,
-            :'make-nan'],
+            :'nan'],
         [:meth_make_infinity,   self,
-            :'make-infinity'],
+            :'infinity'],
         [:meth_make_pi,         self,
-            :'make-pi'],
+            :'pi'],
         [:meth_make_e,          self,
-            :'make-e']
+            :'e']
     ]
 
 

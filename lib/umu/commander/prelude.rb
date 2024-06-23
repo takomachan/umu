@@ -54,16 +54,16 @@ structure Umu = struct {
 
     structure Math = struct {
         # NAN           : Real
-        val NAN = &{Real}.make-nan
+        val NAN = &{Real}.nan
 
         # INFINITY      : Real
-        val INFINITY = &{Real}.make-infinity
+        val INFINITY = &{Real}.infinity
 
         # PI            : Real
-        val PI = &{Real}.make-pi
+        val PI = &{Real}.pi
 
         # E             : Real
-        val E = &{Real}.make-e
+        val E = &{Real}.e
 
         # nan?          : Real -> Bool
         val nan? = &(Real.nan?)
