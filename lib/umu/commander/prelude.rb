@@ -144,41 +144,41 @@ structure Umu = struct {
     #### I/O ####
 
     structure IO = struct {
+        val STDIN  = &{IO}.stdin
+        val STDOUT = &{IO}.stdout
+        val STDERR = &{IO}.stderr
+
         # gets : () -> Option String 
-        fun gets = () -> _STDIN.gets
+        fun gets = () -> STDIN.gets
 
         # puts : String -> ()
-        fun puts = x -> _STDOUT.puts x
+        fun puts = x -> STDOUT.puts x
 
         # display : 'a -> ()
-        fun display = x -> _STDOUT.puts (x.to-s)
+        fun display = x -> STDOUT.puts (x.to-s)
 
         # tab : Int -> ()
         fun rec tab = n ->
             if (0.< n) (
-                _STDOUT.puts " " ;
+                STDOUT.puts " " ;
                 tab (n.- 1)
             ) else
                 ()
 
         # nl : () -> ()
-        fun nl = () -> _STDOUT.puts "\n"
+        fun nl = () -> STDOUT.puts "\n"
 
         # print : 'a -> ()
-        fun print = x -> _STDOUT.puts (x.to-s.^ "\n")
+        fun print = x -> STDOUT.puts (x.to-s.^ "\n")
 
         # p : 'a -> ()
-        fun p = x -> _STDOUT.puts (x.inspect.^ "\n")
+        fun p = x -> STDOUT.puts (x.inspect.^ "\n")
 
         # msgout : 'a -> ()
-        fun msgout = x -> _STDERR.puts (x.to-s.^ "\n")
+        fun msgout = x -> STDERR.puts (x.to-s.^ "\n")
 
         # random : 'a -> 'a where { 'a <- Number }
         fun random = x : Number -> x.random
-    } where {
-        val _STDIN  = &{IO}.make-stdin
-        val _STDOUT = &{IO}.make-stdout
-        val _STDERR = &{IO}.make-stderr
     }
 
 
@@ -509,6 +509,10 @@ structure Umu = struct {
 
 
         #### I/O ####
+
+        val STDIN  = IO::STDIN
+        val STDOUT = IO::STDOUT
+        val STDERR = IO::STDERR
 
         # gets      : () -> Option String 
         val gets = IO::gets

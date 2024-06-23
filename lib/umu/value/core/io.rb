@@ -14,11 +14,11 @@ module Core
 class IO < Top
     CLASS_METHOD_INFOS = [
         [:meth_make_stdin,      self,
-            :'make-stdin'],
+            :'stdin'],
         [:meth_make_stdout,     self,
-            :'make-stdout'],
+            :'stdout'],
         [:meth_make_stderr,     self,
-            :'make-stderr']
+            :'stderr']
     ]
 
 
