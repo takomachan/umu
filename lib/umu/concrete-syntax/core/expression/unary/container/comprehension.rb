@@ -68,7 +68,7 @@ class Generator < Abstract
             ASCE.make_method(
                 self.loc,
 
-                :'concat-with',
+                :'concat-map',
 
                 [
                     CSCE.make_lambda(

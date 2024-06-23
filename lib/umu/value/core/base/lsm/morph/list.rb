@@ -46,8 +46,8 @@ class Abstract < Morph::Abstract
             :append,            self],
         [ :meth_concat,         self,
             :concat],
-        [ :meth_concat_with,    self,
-            :'concat-with',     VC::Fun],
+        [ :meth_concat_map,    self,
+            :'concat-map',     VC::Fun],
         [ :meth_zip,            self,
             :zip,               self],
         [ :meth_unzip,          VCBLP::Tuple,
@@ -235,7 +235,7 @@ class Abstract < Morph::Abstract
     end
 
 
-    def meth_concat_with(loc, env, event, func)
+    def meth_concat_map(loc, env, event, func)
         ASSERT.kind_of func, VC::Fun
 
         new_env = env.enter event

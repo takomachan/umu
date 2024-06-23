@@ -307,8 +307,8 @@ structure Umu = struct {
         val concat = &(List.concat)
 
 
-        # concat-with : ('a -> ['b]) -> ['a] -> ['b]
-        fun concat-with = (f : Fun) (xs : List) -> xs.concat-with f
+        # concat-map : ('a -> ['b]) -> ['a] -> ['b]
+        fun concat-map = (f : Fun) (xs : List) -> xs.concat-map f
 
 
         # zip-with : ('a -> 'b -> 'c) -> ['a] -> ['b] -> ['c]
@@ -631,8 +631,8 @@ structure Umu = struct {
         # concat    : [['a]] -> ['a]
         val concat = List::concat
 
-        # concat-with : ('a -> ['b]) -> ['a] -> ['b]
-        val concat-with = List::concat-with
+        # concat-map : ('a -> ['b]) -> ['a] -> ['b]
+        val concat-map = List::concat-map
 
         # zip       : ['a] -> ['b] -> (['a, 'b])
         val zip = List::zip
