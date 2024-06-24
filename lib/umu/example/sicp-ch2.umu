@@ -53,18 +53,17 @@ fun prime? = n -> (
 
 
 
-#############################
-########  CHAPTER 2  ########
-#############################
+
+#### 2 Building Abstractions with Data
+#### 2 データによる抽象の構築 -- p45
 
 ;; print "\n\nCHAPTER 2"
 ;;
 
 
 
-#####################
-#### SECTION 2.1 ####
-#####################
+#### 2.1 Introduction to Data Abstraction
+#### 2.1 データ抽象入門 -- p46
 
 ;; print "\n\nSECTION 2.1"
 ;;
@@ -82,9 +81,8 @@ fun linear-combination' = a b x y -> (
 
 
 
-#######################
-#### SECTION 2.1.1 ####
-#######################
+#### 2.1.1 Example: Arithmetic Operations for Rational Numbers
+#### 2.1.1 例: 有理数の算術演算 -- p46
 
 ;; print "\n\nSECTION 2.1.1"
 ;;
@@ -216,9 +214,8 @@ val alter-denom = snd
 
 
 
-#######################
-#### SECTION 2.1.2 ####
-#######################
+#### 2.1.2 Abstraction Barriers
+#### 2.1.2 抽象の壁 -- p49
 
 ;; print "\n\nSECTION 2.1.2"
 ;;
@@ -250,9 +247,8 @@ fun add-rat'' = x y -> (
 }
 
 
-#######################
-#### SECTION 2.1.3 ####
-#######################
+#### 2.1.3 What Is Meant by Data?
+#### 2.1.3 データとは何か -- p51
 
 ;; print "\n\nSECTION 2.1.3"
 ;;
@@ -294,9 +290,8 @@ val z = dispa-cons x y
 
 
 
-#######################
-#### SECTION 2.1.4 ####
-#######################
+#### 2.1.4 Extended Exercise: Interval Arithmetic
+#### 2.1.4 拡張問題: 区間算術演算 -- p52
 
 ;; print "\n\nSECTION 2.1.4"
 ;;
@@ -336,9 +331,13 @@ fun div-interval = x y -> (
 
 
 
-#######################
-#### SECTION 2.2.1 ####
-#######################
+#### 2.2 Hierarchical Data and the Closure Property
+#### 2.2 階層データ構造と閉包性 -- p55
+
+
+
+#### 2.2.1 Representing Sequences
+#### 2.2.1 並びの表現 -- p55
 
 ;; print "\n\nSECTION 2.2.1"
 ;;
@@ -452,9 +451,8 @@ fun scale-list' = items factor -> map { x -> x * factor } items
 
 
 
-#######################
-#### SECTION 2.2.2 ####
-#######################
+#### 2.2.2 Hierarchical Structures
+#### 2.2.2 階層構造 -- p61
 
 ;; print "\n\nSECTION 2.2.2"
 ;;
@@ -522,9 +520,8 @@ fun rec scale-tree' = tree factor -> map { sub-tree ->
 
 
 
-#######################
-#### SECTION 2.2.3 ####
-#######################
+#### 2.2.3 Sequences as Conventional Interfaces
+#### 2.2.3 公認インターフェイスとしての並び -- p65
 
 ;; print "\n\nSECTION 2.2.3"
 ;;
@@ -832,9 +829,8 @@ fun rec permutations = s -> case s {
 
 
 
-#######################
-#### SECTION 2.2.4 ####
-#######################
+#### 2.2.4 Example: A Picture Language
+#### 2.2.4 例: 図形言語 -- p73
 
 ;; print "\n\nSECTION 2.2.4"
 ;;
@@ -842,18 +838,16 @@ fun rec permutations = s -> case s {
 
 
 
-#####################
-#### SECTION 2.3 ####
-#####################
+#### 2.3 Symbolic Data
+#### 2.3 記号データ -- p83
 
 ;; print "\n\nSECTION 2.3"
 ;;
 
 
 
-#######################
-#### SECTION 2.3.1 ####
-#######################
+#### 2.3.1 Quotation
+#### 2.3.1 クォート -- p83
 
 ;; print "\n\nSECTION 2.3.1"
 ;;
@@ -911,9 +905,8 @@ fun rec memq = item sequence -> case sequence {
 
 
 
-#######################
-#### SECTION 2.3.2 ####
-#######################
+#### 2.3.2 Example: Symbolic Differentiation
+#### 2.3.2 例: 記号微分
 
 ;; print "\n\nSECTION 2.3.2"
 ;;
@@ -1025,9 +1018,8 @@ fun rec deriv' = exp var -> cond exp {
 
 
 
-#######################
-#### SECTION 2.3.3 ####
-#######################
+#### 2.3.3 Example: Representing Sets
+#### 2.3.3 例: 集合の表現 -- p88
 
 ;; print "\n\nSECTION 2.3.3"
 ;;
@@ -1206,9 +1198,8 @@ fun lookup = given-key set-of-records -> case set-of-records {
 
 
 
-#######################
-#### SECTION 2.3.4 ####
-#######################
+#### 2.3.4 Example: Huffman Encoding Trees
+#### 2.3.4 例: Huffman符号化木 -- p94
 
 ;; print "\n\nSECTION 2.3.4"
 ;;
@@ -1347,18 +1338,16 @@ val bits = [
 
 
 
-#####################
-#### SECTION 2.4 ####
-#####################
+#### 2.4 Multiple Representations for Abstract Data
+#### 2.4 抽象データの多重表現 -- p99
 
 ;; print "\n\nSECTION 2.4"
 ;;
 
 
 
-#######################
-#### SECTION 2.4.1 ####
-#######################
+#### 2.4.1 Representations for Complex Numbers
+#### 2.4.1 複素数の表現 -- p100
 
 ;; print "\n\nSECTION 2.4.1"
 ;;
@@ -1435,9 +1424,8 @@ fun make-from-mag-ang = r a -> (r, a)
 
 
 
-#######################
-#### SECTION 2.4.2 ####
-#######################
+#### 2.4.2 Tagged data
+#### 2.4.2 タグ付きデータ -- p102
 
 ;; print "\n\nSECTION 2.4.2"
 ;;
@@ -1580,18 +1568,40 @@ fun div-complex = z1 z2 -> (
 
 
 
-#######################
-#### SECTION 2.4.3 ####
-#######################
+#### 2.4.3 Data-Directed Programming and Additivity
+#### 2.4.3 データ主導プログラミングと加法性 -- p105
 
 ;; print "\n\nSECTION 2.4.3"
 ;;
 
 
 
-#####################
-#### SECTION 2.5 ####
-#####################
+#### 2.5 Systems with Generic Operations
+#### 2.5 汎用演算のシステム -- p110
 
 ;; print "\n\nSECTION 2.5"
+;;
+
+
+
+#### 2.5.1 Generic Arithmetic Operations
+#### 2.5.1 汎用算術演算 -- p110
+
+;; print "\n\nSECTION 2.5.1"
+;;
+
+
+
+#### 2.5.2 Combining Data of Different Types
+#### 2.5.2 異なる型のデータの統合
+
+;; print "\n\nSECTION 2.5.2"
+;;
+
+
+
+#### 2.5.3 Combining Data of Different Types
+#### 2.5.3 異なる型のデータの統合 -- p113
+
+;; print "\n\nSECTION 2.5.3"
 ;;
