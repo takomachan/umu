@@ -98,9 +98,9 @@ structure SP = SHIPMENTS
 # 3.5.1 納入業者 S1 に対して CITY を見つけること。
 
 print "#### 3.5.1 ####" ;;
-[|city|
+pp [|city|
     val (sno, _, _, city) <- S::rows if sno == @S1
-] |> p ;;
+] ;;
 # --> ["London"]
 nl () ;;
 
@@ -109,11 +109,10 @@ nl () ;;
 # 3.5.2 Paris にある納入業者に対して S# と STATUS を見つけること。
 
 print "#### 3.5.2 ####" ;;
-[|sno:, status:|
+pp [|sno:, status:|
     val (sno, _, status, city) <- S::rows if city == "Paris"
-] |> map p ;;
-# --> (sno: @S2, status: 10)
-#     (sno: @S3, status: 30)
+] ;;
+# --> [(sno: @S2, status: 10), (sno: @S3, status: 30)]
 nl () ;;
 
 
@@ -121,10 +120,10 @@ nl () ;;
 # 3.5.3 納入業者 S1 から納入される部品に対して PNAME を見つけること。
 
 print "#### 3.5.3 ####" ;;
-[|pname|
+pp [|pname|
     val (sno, sp-pno, _)        <- SP::rows if sno == @S1
     val (p-pno, pname, _, _, _) <- P::rows  if p-pno == sp-pno
-] |> p ;;
+] ;;
 # --> ["Nut", "Bolt", "Screw"]
 nl () ;;
 
@@ -135,18 +134,20 @@ nl () ;;
 #       都市の名前を見つけること。
 
 print "#### 3.5.4 ####" ;;
-[|pno:, city:|
+pp [|pno:, city:|
     val (sp-sno, pno, _)    <- SP::rows
     val (s-sno, _, _, city) <- S::rows
 
     if s-sno == sp-sno
-] |> map p ;;
-# --> (@P1, "London")
-#     (@P2, "London")
-#     (@P3, "London")
-#     (@P1, "Paris")
-#     (@P2, "Paris")
-#     (@P2, "Paris")
+] ;;
+# --> [
+#     (pno: @P1, city: "London"),
+#     (pno: @P2, city: "London"),
+#     (pno: @P3, city: "London"),
+#     (pno: @P1, city: "Paris"),
+#     (pno: @P2, city: "Paris"),
+#     (pno: @P2, city: "Paris")
+# ]
 nl () ;;
 
 
@@ -260,11 +261,10 @@ structure SP = SHIPMENTS
 #)
 
 print "#### 7.2 ####" ;;
-[|sno:, status:|
+pp [|sno:, status:|
     val (sno, _, status, city) <- S::rows if city == "Paris"
-] |> map p ;;
-# --> (sno: @S2, status: 10)
-#     (sno: @S3, status: 30)
+] ;;
+# --> [(sno: @S2, status: 10), (sno: @S3, status: 30)]
 nl () ;;
 
 
@@ -276,7 +276,7 @@ nl () ;;
 #)
 
 print "#### 7.2.1 ####" ;;
-[|pno| val (_, pno, _) <- SP::rows] |> p ;;
+pp [|pno| val (_, pno, _) <- SP::rows] ;;
 # --> [@P1, @P2, @P3, @P4, @P5, @P6, @P1, @P2, @P2, @P2, @P4, @P5]
 nl () ;;
 
@@ -289,19 +289,21 @@ nl () ;;
 #)
 
 print "#### 7.2.2 ####" ;;
-[|sp| val sp <- SP::rows] |> map p ;;
-# --> [(sno: @S1, pno: @P1, qty: 300)
-#      (sno: @S1, pno: @P2, qty: 200)
-#      (sno: @S1, pno: @P3, qty: 400)
-#      (sno: @S1, pno: @P4, qty: 200)
-#      (sno: @S1, pno: @P5, qty: 100)
-#      (sno: @S1, pno: @P6, qty: 100)
-#      (sno: @S2, pno: @P1, qty: 300)
-#      (sno: @S2, pno: @P2, qty: 400)
-#      (sno: @S3, pno: @P2, qty: 200)
-#      (sno: @S4, pno: @P2, qty: 200)
-#      (sno: @S4, pno: @P4, qty: 300)
-#      (sno: @S4, pno: @P5, qty: 400)
+pp [|sp| val sp <- SP::rows] ;;
+# --> [
+#     (sno: @S1, pno: @P1, qty: 300),
+#     (sno: @S1, pno: @P2, qty: 200),
+#     (sno: @S1, pno: @P3, qty: 400),
+#     (sno: @S1, pno: @P4, qty: 200),
+#     (sno: @S1, pno: @P5, qty: 100),
+#     (sno: @S1, pno: @P6, qty: 100),
+#     (sno: @S2, pno: @P1, qty: 300),
+#     (sno: @S2, pno: @P2, qty: 400),
+#     (sno: @S3, pno: @P2, qty: 200),
+#     (sno: @S4, pno: @P2, qty: 200),
+#     (sno: @S4, pno: @P4, qty: 300),
+#     (sno: @S4, pno: @P5, qty: 400)
+# ]
 nl () ;;
 
 
@@ -317,11 +319,11 @@ nl () ;;
 #)
 
 print "#### 7.2.3 ####" ;;
-[|sno|
+pp [|sno|
     val (sno, _, status, city) <- S::rows
 
     if city == "Paris" && status > 20
-] |> p ;;
+] ;;
 # --> [@S3]
 nl () ;;
 

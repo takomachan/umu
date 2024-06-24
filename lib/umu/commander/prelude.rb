@@ -174,6 +174,9 @@ structure Umu = struct {
         # p : 'a -> ()
         fun p = x -> STDOUT.puts (x.inspect.^ "\n")
 
+        # pp : 'a -> ()
+        fun pp = x -> STDOUT.pp x
+
         # msgout : 'a -> ()
         fun msgout = x -> STDERR.puts (x.to-s.^ "\n")
 
@@ -530,6 +533,9 @@ structure Umu = struct {
 
         # p         : 'a -> ()
         val p = IO::p
+
+        # pp        : 'a -> ()
+        val pp = IO::pp
 
 
         #### Tuple ####

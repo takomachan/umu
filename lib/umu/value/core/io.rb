@@ -23,10 +23,12 @@ class IO < Top
 
 
     INSTANCE_METHOD_INFOS = [
-        [:meth_get_string,  VCBLU::Option::Abstract,
+        [:meth_get_string,   VCBLU::Option::Abstract,
             :'gets'],
-        [:meth_put_string,  VCBA::Unit,
-            :'puts',        VCBA::String]
+        [:meth_put_string,   VCBA::Unit,
+            :'puts',         VCBA::String],
+        [:meth_pretty_print, VCBA::Unit,
+            :'pp',           VC::Top]
     ]
 
 
@@ -77,6 +79,15 @@ class IO < Top
         ASSERT.kind_of value, VCBA::String
 
         self.io.print value.val
+
+        VC.make_unit
+    end
+
+
+    def meth_pretty_print(_loc, _env, event, value)
+        ASSERT.kind_of value, VC::Top
+
+        PP.pp value, self.io
 
         VC.make_unit
     end
