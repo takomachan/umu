@@ -653,15 +653,6 @@ structure Umu = struct {
         val sort = List::sort
 
 
-        #### Function application - Aka. "PIPE" ####
-
-        ## (|>) : 'a -> ('a -> 'b) -> 'b
-        fun (|>) = x (f : Fun) -> f x
-
-        ## (<|) : ('a -> 'b) -> 'a -> 'b
-        fun (<|) = (f : Fun) x -> f x
-
-
         #### Function composition ####
 
         ## (>>) : ('a -> 'b) -> ('b -> 'c) -> 'a -> 'c
@@ -811,12 +802,8 @@ structure Umu = struct {
             actual
         }
     } where {
-        val (==) = Prelude::(==)
-        val (^)  = Prelude::(^)
-        val (|>) = Prelude::(|>)
-
-        val map = List::map
-        val zip = List::zip
+        import Prelude { fun (==) fun (^) }
+        import List    { fun map  fun zip }
 
         fun msg = expect actual ->
             "Expected: " ^ expect.inspect ^ ", but: " ^ actual.inspect

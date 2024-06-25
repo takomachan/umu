@@ -109,6 +109,42 @@ end
 
 
 
+class PipeRight < Abstraction::Simple
+
+private
+
+    def __desugar__(env, event)
+        new_env = env.enter event
+
+        ASCE.make_apply(
+            self.loc,
+            self.lhs_opnd.desugar(new_env),
+            self.rhs_opnd.desugar(new_env),
+            []
+        )
+    end
+end
+
+
+
+class PipeLeft < Abstraction::Simple
+
+private
+
+    def __desugar__(env, event)
+        new_env = env.enter event
+
+        ASCE.make_apply(
+            self.loc,
+            self.rhs_opnd.desugar(new_env),
+            self.lhs_opnd.desugar(new_env),
+            []
+        )
+    end
+end
+
+
+
 class AndAlso < Abstraction::Simple
 
 private
@@ -167,6 +203,30 @@ module_function
         ASSERT.kind_of rhs_opnd,    CSCE::Abstract
 
         Binary::Infix::Redefinable.new(
+            loc, lhs_opnd, opr_sym, rhs_opnd
+        ).freeze
+    end
+
+
+    def make_pipe_right(loc, lhs_opnd, opr_sym, rhs_opnd)
+        ASSERT.kind_of loc,         L::Location
+        ASSERT.kind_of lhs_opnd,    CSCE::Abstract
+        ASSERT.kind_of opr_sym,     ::Symbol
+        ASSERT.kind_of rhs_opnd,    CSCE::Abstract
+
+        Binary::Infix::PipeRight.new(
+            loc, lhs_opnd, opr_sym, rhs_opnd
+        ).freeze
+    end
+
+
+    def make_pipe_left(loc, lhs_opnd, opr_sym, rhs_opnd)
+        ASSERT.kind_of loc,         L::Location
+        ASSERT.kind_of lhs_opnd,    CSCE::Abstract
+        ASSERT.kind_of opr_sym,     ::Symbol
+        ASSERT.kind_of rhs_opnd,    CSCE::Abstract
+
+        Binary::Infix::PipeLeft.new(
             loc, lhs_opnd, opr_sym, rhs_opnd
         ).freeze
     end
