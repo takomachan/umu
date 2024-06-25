@@ -109,6 +109,124 @@ end
 
 
 
+class ComposeRight < Abstraction::Simple
+
+private
+
+=begin
+    val (<<) = { (g : Fun) (f : Fun) -> { x -> g (f x) } }
+                                        ^^^^^^^^^^^^^^^^   -- inner_lamb
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -- outer_lamb
+
+    (<<) lhs_opnd rhs_opnd
+=end
+
+    def __desugar__(env, event)
+        ident_f = ASCE.make_identifier self.loc, :'%f'
+        ident_g = ASCE.make_identifier self.loc, :'%g'
+        ident_x = ASCE.make_identifier self.loc, :'%x'
+
+        inner_lamb_expr = ASCE.make_lambda(
+            self.loc,
+
+            [ASCE.make_parameter(self.loc, ident_x)],
+
+            ASCE.make_apply(
+                self.loc,
+
+                ident_g,
+
+                ASCE.make_apply(
+                    self.loc,
+                    ident_f,
+                    ident_x
+                )
+            )
+        )
+
+        outer_lamb_expr = ASCE.make_lambda(
+            self.loc,
+
+            [
+                ASCE.make_parameter(self.loc, ident_g, :Fun),
+                ASCE.make_parameter(self.loc, ident_f, :Fun)
+            ],
+
+            inner_lamb_expr
+        )
+
+        new_env = env.enter event
+
+        ASCE.make_apply(
+            self.loc,
+            outer_lamb_expr,
+            self.lhs_opnd.desugar(new_env),
+            [self.rhs_opnd.desugar(new_env)]
+        )
+    end
+end
+
+
+
+class ComposeLeft < Abstraction::Simple
+
+private
+
+=begin
+    val (<<) = { (f : Fun) (g : Fun) -> { x -> g (f x) } }
+                                        ^^^^^^^^^^^^^^^^   -- inner_lamb
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -- outer_lamb
+
+    (<<) lhs_opnd rhs_opnd
+=end
+
+    def __desugar__(env, event)
+        ident_f = ASCE.make_identifier self.loc, :'%f'
+        ident_g = ASCE.make_identifier self.loc, :'%g'
+        ident_x = ASCE.make_identifier self.loc, :'%x'
+
+        inner_lamb_expr = ASCE.make_lambda(
+            self.loc,
+
+            [ASCE.make_parameter(self.loc, ident_x)],
+
+            ASCE.make_apply(
+                self.loc,
+
+                ident_g,
+
+                ASCE.make_apply(
+                    self.loc,
+                    ident_f,
+                    ident_x
+                )
+            )
+        )
+
+        outer_lamb_expr = ASCE.make_lambda(
+            self.loc,
+
+            [
+                ASCE.make_parameter(self.loc, ident_f, :Fun),
+                ASCE.make_parameter(self.loc, ident_g, :Fun)
+            ],
+
+            inner_lamb_expr
+        )
+
+        new_env = env.enter event
+
+        ASCE.make_apply(
+            self.loc,
+            outer_lamb_expr,
+            self.lhs_opnd.desugar(new_env),
+            [self.rhs_opnd.desugar(new_env)]
+        )
+    end
+end
+
+
+
 class PipeRight < Abstraction::Simple
 
 private
@@ -203,6 +321,30 @@ module_function
         ASSERT.kind_of rhs_opnd,    CSCE::Abstract
 
         Binary::Infix::Redefinable.new(
+            loc, lhs_opnd, opr_sym, rhs_opnd
+        ).freeze
+    end
+
+
+    def make_comp_right(loc, lhs_opnd, opr_sym, rhs_opnd)
+        ASSERT.kind_of loc,         L::Location
+        ASSERT.kind_of lhs_opnd,    CSCE::Abstract
+        ASSERT.kind_of opr_sym,     ::Symbol
+        ASSERT.kind_of rhs_opnd,    CSCE::Abstract
+
+        Binary::Infix::ComposeRight.new(
+            loc, lhs_opnd, opr_sym, rhs_opnd
+        ).freeze
+    end
+
+
+    def make_comp_left(loc, lhs_opnd, opr_sym, rhs_opnd)
+        ASSERT.kind_of loc,         L::Location
+        ASSERT.kind_of lhs_opnd,    CSCE::Abstract
+        ASSERT.kind_of opr_sym,     ::Symbol
+        ASSERT.kind_of rhs_opnd,    CSCE::Abstract
+
+        Binary::Infix::ComposeLeft.new(
             loc, lhs_opnd, opr_sym, rhs_opnd
         ).freeze
     end

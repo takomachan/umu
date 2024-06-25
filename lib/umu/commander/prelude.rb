@@ -653,15 +653,6 @@ structure Umu = struct {
         val sort = List::sort
 
 
-        #### Function composition ####
-
-        ## (>>) : ('a -> 'b) -> ('b -> 'c) -> 'a -> 'c
-        fun (>>) = (f : Fun) (g : Fun) -> {x -> g (f x)}
-
-        ## (<<) : ('b -> 'c) -> ('a -> 'b) -> 'a -> 'c
-        fun (<<) = (g : Fun) (f : Fun) -> {x -> g (f x)}
-
-
         #### High order Function ####
 
         ## id       : 'a -> 'a

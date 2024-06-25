@@ -375,6 +375,12 @@ case_rule_head:
 
 resrv_infix_expr:
   redef_infix_expr
+| resrv_infix_expr '<<' resrv_infix_expr {
+    result = CSCE.make_comp_right val[0].loc, val[0], val[1].sym, val[2]
+}
+| resrv_infix_expr '>>' resrv_infix_expr {
+    result = CSCE.make_comp_left  val[0].loc, val[0], val[1].sym, val[2]
+}
 | resrv_infix_expr '<|' resrv_infix_expr {
     result = CSCE.make_pipe_right val[0].loc, val[0], val[1].sym, val[2]
 }
@@ -431,8 +437,6 @@ _redef_infix_expr:
 | redef_infix_expr '<='    redef_infix_expr { result = val }
 | redef_infix_expr '>='    redef_infix_expr { result = val }
 | redef_infix_expr '++'    redef_infix_expr { result = val }
-| redef_infix_expr '<<'    redef_infix_expr { result = val }
-| redef_infix_expr '>>'    redef_infix_expr { result = val }
 
 
 # Send expression
@@ -764,7 +768,7 @@ norm_infix_opr:
 | MOD    { result = LT.make_reserved_symbol(val[0].loc, 'mod') }
 | POW    { result = LT.make_reserved_symbol(val[0].loc, 'pow') }
 | '==' | '<>' | '<'  | '>'  | '<=' | '>='
-| '<<' | '>>' | '^'  | '++'
+| '^'  | '++'
 
 
 # Special infix operator
