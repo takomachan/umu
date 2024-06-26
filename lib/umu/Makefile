@@ -187,7 +187,8 @@ EXAMPLES =	example/test.umu \
 			example/sicp-ch1.umu \
 			example/sicp-ch2.umu \
 			example/sicp-ch3.umu \
-			example/cjdate1975.umu
+			example/cjdate1975.umu \
+            example/cjdate1975-jp.umu
 
 
 TMDOCPROC		= tmdoc
