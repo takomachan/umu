@@ -183,12 +183,12 @@ RACC_SRCS = concrete-syntax/grammar.ry
 EXAMPLES =	example/test.umu \
 			example/list.umu \
 			example/set.umu \
-			example/reynolds.umu \
+			example/j.c.reynolds1971.umu \
+			example/c.j.date1975/date.umu \
+            example/c.j.date1975/date-jp.umu \
 			example/sicp-ch1.umu \
 			example/sicp-ch2.umu \
-			example/sicp-ch3.umu \
-			example/cjdate1975.umu \
-            example/cjdate1975-jp.umu
+			example/sicp-ch3.umu
 
 
 TMDOCPROC		= tmdoc
