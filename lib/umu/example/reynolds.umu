@@ -1,6 +1,8 @@
 (#
  Implementation of REYNOLDS's Definional Interpretor
- 1971年に公開されたレイノルズ氏による意味定義用インタプリタをUmuで実装してみた
+
+ 1971年に公開されたレイノルズ氏による意味定義用インタプリタを
+ Umuで実装してみた
 
 
  Reynolds, J. C. :
@@ -16,7 +18,7 @@
        上記論文のInterpreter I と II を元にして
        プログラミング言語の古典的な意味論を解説している
        なお、現在のUmu言語処理系(インタプリタ)は
-       この Interpreter II を元に設計された
+       この Interpreter II を元に設計した
 
 
  Exanple execution :
@@ -32,19 +34,19 @@
             :  (running tests)
             :
             :
-    0001> run-I [ADD, 1, 2]
+    0001> run-I [ADD, 3, 4]
           ^^^^^^^^^^^^^^^^^
-    <SRC> : [@ADD, 1, 2]
-    <EXP> : Appl (Appl (Var @ADD, Const 1), Const 2)
-    -> <VAL> : Integer 3
+    <SRC> : [@ADD, 3, 4]
+    <EXP> : Appl (Appl (Var @ADD, Const 3), Const 4)
+    -> <VAL> : Integer 7
     
-    -> Integer 3 : Datum
+    -> Integer 7 : Datum
     0002>
 #)
 
 
 
-######## Error Handler ########
+######## Error Message ########
 
 structure ERROR = struct {
     # failure       : String -> 'a -> ()
@@ -68,7 +70,7 @@ structure ERROR = struct {
 
 
 
-(######## Expression ########
+(######## Expression (Abstract Syntax Tree, AST) ########
 
 <EXP> = <CONST> + <VAR> + <APPL> + <LAMBDA> + <COND> + <LETREC>
 
@@ -77,18 +79,18 @@ structure ERROR = struct {
 <COND>   = [prem: <EXP>, conc: <EXP>, altr: <EXP>]
 <LETREC> = [dvar: <VAR>, dexp: <LAMBDA>, body: <EXP>]
 
-############################)
+#########################################################)
 
 structure EXP = struct {
     #### Constructor ####
 
-    # mk-const : Int -> <CONST>
+    # mk-const  : Int -> <CONST>
     fun mk-const  = x : Int -> Datum @Const x
 
-    # mk-var : Symbol -> <VAR>
+    # mk-var    : Symbol -> <VAR>
     fun mk-var    = x : Symbol -> Datum @Var x
 
-    # mk-appl : (<EXP>, <EXP>) -> <APPL>
+    # mk-appl   : (<EXP>, <EXP>) -> <APPL>
     fun mk-appl   = (opr : Datum, opnd : Datum) ->
                         Datum @Appl (opr, opnd)
 
@@ -96,7 +98,7 @@ structure EXP = struct {
     fun mk-lambda = (fp : Datum, body : Datum) ->
                         Datum @Lambda (fp, body)
 
-    # mk-cond : (<EXP>, <EXP>, <EXP>) -> <COND>
+    # mk-cond   : (<EXP>, <EXP>, <EXP>) -> <COND>
     fun mk-cond   = (prem : Datum, conc : Datum, altr : Datum) ->
                         Datum @Cond (prem, conc, altr)
 
@@ -107,22 +109,22 @@ structure EXP = struct {
 
     #### Classifier ####
 
-    # const? : <EXP> -> Bool
+    # const?    : <EXP> -> Bool
     fun const?  = exp : Datum -> tag-of exp == @Const
 
-    # var? : <EXP> -> Bool
+    # var?      : <EXP> -> Bool
     fun var?    = exp : Datum -> tag-of exp == @Var
 
-    # appl? : <EXP> -> Bool
+    # appl?     : <EXP> -> Bool
     fun appl?   = exp : Datum -> tag-of exp == @Appl
 
-    # lambda? : <EXP> -> Bool
+    # lambda?   : <EXP> -> Bool
     fun lambda? = exp : Datum -> tag-of exp == @Lambda
 
-    # cond? : <EXP> -> Bool
+    # cond?     : <EXP> -> Bool
     fun cond?   = exp : Datum -> tag-of exp == @Cond
 
-    # letrec? : <EXP> -> Bool
+    # letrec?   : <EXP> -> Bool
     fun letrec? = exp : Datum -> tag-of exp == @Letrec
 }
 
@@ -197,15 +199,14 @@ fun rec parse = exp : Top -> cond exp {
 | form?     -> parse-form exp
   else      -> ERROR::syntax "Unknown Expression: " exp
 } where {
-    # const? : 'a -> Bool
-    fun const? = exp -> exp kind-of? Int
+    # const?    : 'a -> Bool
+    fun const?  = exp -> exp kind-of? Int
 
-    # var? : 'a -> Bool
-    fun var? = exp -> exp kind-of? Symbol
+    # var?      : 'a -> Bool
+    fun var?    = exp -> exp kind-of? Symbol
 
-    # form? : 'a -> Bool
-    fun form? = exp -> exp kind-of? List && length exp >= 2
-
+    # form?     : 'a -> Bool
+    fun form?   = exp -> exp kind-of? List && length exp >= 2
 
 
     #### <Form> ####
@@ -226,7 +227,7 @@ fun rec parse = exp : Top -> cond exp {
     } where {
         #### <If> ####
         # parse-if : ['a] -> <COND>
-        fun parse-if = args -> let {
+        fun parse-if = args : List -> let {
             assert (length args == 3)
                 ERROR::syntax "For IF's arity, expected 3, but: " args
 
@@ -237,7 +238,7 @@ fun rec parse = exp : Top -> cond exp {
 
         #### <Lambda> ####
         # parse-lambda : ['a] -> <LAMBDA>
-        fun parse-lambda = args -> let {
+        fun parse-lambda = args : List -> let {
             assert (length args == 2)
                 ERROR::syntax 
                     "For LAMBDA's arity, expected 2, but: " args
@@ -273,7 +274,7 @@ fun rec parse = exp : Top -> cond exp {
 
         #### <Apply> ####
         # parse-apply : ['a] -> <APPL>
-        fun parse-apply = args -> let {
+        fun parse-apply = args : List -> let {
             assert (length args >= 2)
                 ERROR::syntax
                     "For APPLY's arity, expected 2 or more, but: " args
@@ -288,7 +289,7 @@ fun rec parse = exp : Top -> cond exp {
 
         #### <Let> ####
         # parse-let : ['a] -> <APPL>
-        fun parse-let = args -> let {
+        fun parse-let = args : List -> let {
             assert (length args >= 1)
                 ERROR::syntax
                     "For LET's arity, expected 1 or more, but: " args
@@ -319,7 +320,7 @@ fun rec parse = exp : Top -> cond exp {
 
         #### <Letrec> ####
         # parse-letrec : ['a] -> <LETREC>
-        fun parse-letrec = args -> let {
+        fun parse-letrec = args : List -> let {
             assert (length args >= 1)
                 ERROR::syntax
                     "For LETREC's arity, expected 1 or more, but: " args
@@ -357,90 +358,87 @@ fun rec parse = exp : Top -> cond exp {
 }
 
 
-
 ######## Interpreter I ########
 
 # interpret-I : <EXP> -> <VAL>
 fun interpret-I = r : Datum -> eval (r, initenv)
 where {
-
     ######## Evaluator ########
 
     # eval : (<EXP>, <ENV>) -> <VAL>
     fun rec eval = (r : Datum, e : Fun) -> case r {
-
-    #### CONST ####
-      Const -> evcon r
-        where
-            # evcon : <CONST> -> <INTEGER>
-            fun evcon = r -> VAL::mk-integer (val-of r)
-
-    #### VAR ####
-    | Var -> e r
-
-    #### APPL ####
-    | Appl (opr, opnd) -> let {
-        val va-opr  = eval (opr, e)
-
-        assert (VAL::funval? va-opr)
-            ERROR::application
-                "In APPL, Expected a <FUNVAL>, but: " va-opr
-
-        val va-opnd = eval (opnd, e)
-    in
-        (val-of va-opr) va-opnd
-    }
-
-    #### LAMBDA ####
-    | Lambda -> evlambda (r, e)
-
-    #### COND ####
-    | Cond (prem, conc, altr) -> let {
-        val va-prem = eval (prem, e)
-
-        assert (VAL::boolean? va-prem)
-            ERROR::type' "In COND, expected a <BOOLEAN>, but: " va-prem
-    in
-        if (val-of va-prem)
-            eval (conc, e)
-        else
-            eval (altr, e)
-    }
-
-    #### LETREC ####
-    | Letrec (dvar, dexp, body) -> let {
-        assert (EXP::lambda? dexp)
-            ERROR::failure "In LETREC, expected a LAMBDA, but: " r
-
-        # e' : <ENV>
-        fun rec e' = x -> if (x == dvar)
-                                evlambda (dexp, e')
-                            else
-                                e x
-    in
-        eval (body, e')
-    }
-
-    #### Other Expression ####
-      else -> ERROR::failure ("Unknown EXP: ", r)
-
+      Const     -> eval-const r
+    | Var       -> e r
+    | Appl      -> eval-appl   (r, e)
+    | Lambda    -> eval-lambda (r, e)
+    | Cond      -> eval-cond   (r, e)
+    | Letrec    -> eval-letrec (r, e)
+      else      -> ERROR::failure ("Unknown EXP: ", r)
     } where {
-        # evlambda : (<LAMBDA>, <ENV>) -> <FUNVAL>
-        fun evlambda = (l, e) -> let {
-            val (fp, body) = val-of l
+        # eval-const : <CONST> -> <INTEGER>
+        fun eval-const = r : Datum -> VAL::mk-integer (val-of r)
+
+        # eval-appl : (<APPL>, <ENV>) -> <VAL>
+        fun eval-appl = (a : Datum, e : Fun) -> let {
+            val (opr : Datum, opnd : Datum) = val-of a
+
+            val va-opr : Datum = eval (opr, e)
+
+            assert (VAL::funval? va-opr)
+                ERROR::application
+                    "In APPL, Expected a <FUNVAL>, but: " va-opr
+
+            val va-opnd : Datum = eval (opnd, e)
         in
-            VAL::mk-funval { a -> eval (body, ext (fp, a, e)) }
+            (val-of va-opr) va-opnd
+        }
+
+        # eval-lambda : (<LAMBDA>, <ENV>) -> <FUNVAL>
+        fun eval-lambda = (l : Datum, e : Fun) -> let {
+            val (fp : Datum, body : Datum) = val-of l
+        in
+            VAL::mk-funval { a : Datum -> eval (body, ext (fp, a, e)) }
         } where {
             # ext : (<VAR>, <VAL>, <ENV>) -> <ENV>
-            fun ext = (z, a, e) -> {
-                x -> if (x == z)
-                            a
-                        else
-                            e x
+            fun ext = (z : Datum, a : Datum, e : Fun) -> {
+                x : Datum -> if (x == z)
+                                 a
+                             else
+                                 e x
             }
         }
-    }
 
+        # eval-cond : (<COND>, <ENV>) -> <VAL>
+        fun eval-cond = (c : Datum, e : Fun) -> let {
+            val (prem : Datum, conc : Datum, altr : Datum) = val-of c
+
+            val va-prem = eval (prem, e)
+
+            assert (VAL::boolean? va-prem)
+                ERROR::type' "In COND, expected a <BOOLEAN>, but: " va-prem
+        in
+            if (val-of va-prem)
+                eval (conc, e)
+            else
+                eval (altr, e)
+        }
+
+        # eval-letrec : (<LETREC>, <ENV>) -> <VAL>
+        fun eval-letrec =  (l : Datum, e : Fun) -> let {
+            val (dvar : Datum, dexp : Datum, body : Datum) = val-of l
+
+            assert (EXP::lambda? dexp)
+                ERROR::failure "In LETREC, expected a LAMBDA, but: " r
+
+            # e' : <ENV>
+            fun rec e' = x : Datum -> if (x == dvar)
+                                          eval-lambda (dexp, e')
+                                      else
+                                          e x
+        in
+            eval (body, e')
+        }
+    }
 
 
     ######## Environment ########
@@ -468,19 +466,19 @@ where {
       else      -> ERROR::name "Unknown VAR: " x
     } where {
         # int : <VAL> -> Int
-        fun int = x ->
+        fun int = x : Datum ->
             if (VAL::integer? x)
                 val-of x
             else
                 ERROR::type' "Expected a Int, but: " x
 
         # mk-unop : (Int -> 'a) -> ('a -> <VAL>) -> <FUNVAL>
-        fun mk-unop = unop mk ->
-            VAL::mk-funval { x -> unop (int x) |> mk }
+        fun mk-unop = (unop : Fun) (mk : Fun) ->
+            VAL::mk-funval { x : Datum -> unop (int x) |> mk }
 
         # mk-binop : (Int -> Int -> 'a) -> ('a -> <VAL>) -> <FUNVAL>
-        fun mk-binop = binop mk ->
-            VAL::mk-funval { x ->
+        fun mk-binop = (binop : Fun) (mk : Fun) ->
+            VAL::mk-funval { x : Datum ->
                 VAL::mk-funval { y -> binop (int x) (int y) |> mk }
             }
     }
@@ -528,11 +526,11 @@ val GE = [LAMBDA, [@x, @y], [NOT, [LT, @x, @y]]]
 ######## Runner - Frontend of Interpreter ########
 
 fun mk-runner = interpret : Fun ->
-       tee { src -> (puts "<SRC> : " ; p src) }
+       tee { src -> (puts "<SRC> : " ; pp src) }
     >> parse
-    >> tee { exp -> (puts "<EXP> : " ; p exp) }
+    >> tee { exp -> (puts "<EXP> : " ; pp exp) }
     >> interpret
-    >> tee { value -> (puts "-> <VAL> : " ; p value) }
+    >> tee { value -> (puts "-> <VAL> : " ; pp value) }
 
 val run-I : Fun = mk-runner interpret-I
 
@@ -646,7 +644,7 @@ in (
         #[OUTPUT] --> 3
         nl () ;
 
-        #[INPUT] succ succ succ 2
+        #[INPUT] succ (succ (succ 2))
         let {
             val result = run [SUCC, [SUCC, [SUCC, 2]]]
         in
@@ -677,7 +675,7 @@ in (
 
     print "[APPLY LAMBDA]" ;
 
-        #[INPUT] (fn x => succ x) 2
+        #[INPUT] (fun x -> succ x) 2
         let {
             val result = run [
                 [LAMBDA, [@x], [SUCC, @x]],
@@ -689,7 +687,7 @@ in (
         #[OUTPUT] --> 3
         nl () ;
 
-        #[INPUT] (fn x y z => x - y - z) 10 1 2
+        #[INPUT] (fun x y z -> x - y - z) 10 1 2
         let {
             val result = run [
                 [LAMBDA, [@x, @y, @z], [SUB, [SUB, @x, @y], @z]],
@@ -752,7 +750,7 @@ in (
 
     print "[LETREC]" ;
 
-        #[INPUT] let f = fn x => succ x in f 2
+        #[INPUT] let f = fun x -> succ x in f 2
         let {
             val result = run [
                 LETREC, [@f, 2],
@@ -781,7 +779,7 @@ in (
         nl () ;
 
         #[INPUT]
-        #   letrec fact = fn x =>
+        #   letrec fact = fun x ->
         #       if x <= 1 then 1 else x * fact (x - 1)
         #   in
         #       fact 4 
@@ -802,7 +800,7 @@ in (
         nl () ;
 
         #[INPUT] 
-        #   letrec gcd = fn a b =>
+        #   letrec gcd = fun a b ->
         #       if b == 0 then a else gcd b (a mod b)
         #   in
         #      gcd 16 28
@@ -828,4 +826,4 @@ in (
 
 ;;
 
-test interpret-I ;;
+test interpret-I
