@@ -44,7 +44,7 @@ class Tuple < Abstraction::Abstract
 
 
     def exported_vars
-        self.reject(&:wildcard).inject([]) { |array, vpat|
+        self.reject(&:wildcard?).inject([]) { |array, vpat|
             ASSERT.kind_of array,   ::Array
             ASSERT.kind_of vpat,    Variable
 
