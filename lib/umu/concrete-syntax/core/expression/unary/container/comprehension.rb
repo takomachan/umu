@@ -49,7 +49,7 @@ class Generator < Abstract
 
 
     def to_s
-        format "%s <- %s", self.pat.to_s, self.expr.to_s
+        format "%%VAL %s <- %s", self.pat.to_s, self.expr.to_s
     end
 
 
@@ -149,7 +149,7 @@ class Entry < Container::Abstract
             if self.qualifiers.empty?
                 ''
             else
-                ' ' + self.qualifiers.map(&:to_s).join(', ')
+                ' ' + self.qualifiers.map(&:to_s).join(' ')
             end
         )
     end
