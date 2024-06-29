@@ -107,7 +107,7 @@ end # Umu::ConcreteSyntax::Core::Pattern::Container
 module_function
 
     def make_tuple(loc, pats)
-        ASSERT.kind_of loc,     Umu::Location
+        ASSERT.kind_of loc,     LOC::Entry
         ASSERT.kind_of pats,    ::Array
 
         Container::Tuple.new(loc, pats.freeze).freeze

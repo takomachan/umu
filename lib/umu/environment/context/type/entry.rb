@@ -310,7 +310,7 @@ class Entry
 
     def lookup(sym, loc, env)
         ASSERT.kind_of sym, ::Symbol
-        ASSERT.kind_of loc, Umu::Location
+        ASSERT.kind_of loc, LOC::Entry
         ASSERT.kind_of env, E::Entry
 
         signat = SPEC_OF_SYMBOL[sym]

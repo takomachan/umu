@@ -73,7 +73,7 @@ end # Umu::ConcreteSyntax::Expression::Core::Unary
 module_function
 
     def make_integer(loc, obj)
-        ASSERT.kind_of loc, Umu::Location
+        ASSERT.kind_of loc, LOC::Entry
         ASSERT.kind_of obj, ::Integer
 
         Unary::Atom::Number::Int.new(loc, obj).freeze
@@ -81,7 +81,7 @@ module_function
 
 
     def make_real(loc, obj)
-        ASSERT.kind_of loc, Umu::Location
+        ASSERT.kind_of loc, LOC::Entry
         ASSERT.kind_of obj, ::Float
 
         Unary::Atom::Number::Real.new(loc, obj).freeze

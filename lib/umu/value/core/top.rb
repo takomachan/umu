@@ -71,7 +71,7 @@ class Top < ::Object
 
     def invoke(method_signat, loc, env, _event, *arg_values)
         ASSERT.kind_of method_signat,   ECTS::Method
-        ASSERT.kind_of loc,             Umu::Location
+        ASSERT.kind_of loc,             LOC::Entry
         ASSERT.kind_of env,             E::Entry
         ASSERT.kind_of arg_values,      ::Array
         ASSERT.assert arg_values.all? { |v| v.kind_of? VC::Top }
@@ -117,7 +117,7 @@ class Top < ::Object
 
 
     def apply(_head_value, _tail_values, loc, env)
-        ASSERT.kind_of loc, Umu::Location
+        ASSERT.kind_of loc, LOC::Entry
         ASSERT.kind_of env, E::Entry
 
         raise X::ApplicationError.new(
@@ -164,7 +164,7 @@ private
 
     def __invoke__(meth_sym, loc, env, event, arg_values)
         ASSERT.kind_of meth_sym,    ::Symbol
-        ASSERT.kind_of loc,         Umu::Location
+        ASSERT.kind_of loc,         LOC::Entry
         ASSERT.kind_of env,         E::Entry
         ASSERT.kind_of event,       E::Tracer::Event
         ASSERT.kind_of arg_values,  ::Array

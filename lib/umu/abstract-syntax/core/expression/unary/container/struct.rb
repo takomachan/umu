@@ -76,7 +76,7 @@ end # Umu::AbstractSyntax::Core::Expression::Unary
 module_function
 
     def make_struct(loc, expr_by_sym)
-        ASSERT.kind_of loc,           Umu::Location
+        ASSERT.kind_of loc,           LOC::Entry
         ASSERT.kind_of expr_by_sym,   ::Hash
 
         Unary::Container::Struct.new(loc, expr_by_sym.freeze).freeze

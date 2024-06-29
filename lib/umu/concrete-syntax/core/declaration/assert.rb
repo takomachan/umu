@@ -76,7 +76,7 @@ end
 module_function
 
     def make_assert(loc, test_expr, else_expr)
-        ASSERT.kind_of loc,         Umu::Location
+        ASSERT.kind_of loc,         LOC::Entry
         ASSERT.kind_of test_expr,   CSCE::Abstract
         ASSERT.kind_of else_expr,   CSCE::Abstract
 

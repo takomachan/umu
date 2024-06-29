@@ -69,7 +69,7 @@ end # Umu::Lexical::Token::Separator
 module_function
 
     def make_newline(loc, opt_val)
-        ASSERT.kind_of      loc,        Umu::Location
+        ASSERT.kind_of      loc,        LOC::Entry
         ASSERT.opt_kind_of  opt_val,    ::String
 
         Separator::Newline.new(loc, opt_val.freeze).freeze
@@ -77,7 +77,7 @@ module_function
 
 
     def make_comment(loc, val)
-        ASSERT.kind_of loc, Umu::Location
+        ASSERT.kind_of loc, LOC::Entry
         ASSERT.kind_of val, ::String
 
         Separator::Comment.new(loc, val.freeze).freeze
@@ -85,7 +85,7 @@ module_function
 
 
     def make_white(loc, val)
-        ASSERT.kind_of loc, Umu::Location
+        ASSERT.kind_of loc, LOC::Entry
         ASSERT.kind_of val, ::String
 
         Separator::White.new(loc, val.freeze).freeze

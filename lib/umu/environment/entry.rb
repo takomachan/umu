@@ -63,7 +63,7 @@ class Entry < Abstraction::Record
 
     def ty_lookup(sym, loc)
         ASSERT.kind_of sym, ::Symbol
-        ASSERT.kind_of loc, Umu::Location
+        ASSERT.kind_of loc, LOC::Entry
 
         ASSERT.kind_of self.ty_context.lookup(sym, loc, self), ECTSC::Base
     end
@@ -79,7 +79,7 @@ class Entry < Abstraction::Record
 
     def va_lookup(sym, loc)
         ASSERT.kind_of sym, ::Symbol
-        ASSERT.kind_of loc, Umu::Location
+        ASSERT.kind_of loc, LOC::Entry
 
         self.va_context.lookup sym, loc, self
     end
@@ -210,7 +210,7 @@ class Entry < Abstraction::Record
 
 
     def print_backtrace
-        self.trace_stack.inject(Umu.make_initial_location) do
+        self.trace_stack.inject(LOC.make_initial_location) do
             |last_loc, event|
 
             current_loc = event.loc
@@ -251,7 +251,7 @@ private
 
 
     def __lookup_line_at__(loc)
-        ASSERT.kind_of loc, Umu::Location
+        ASSERT.kind_of loc, LOC::Entry
 
         opt_source = self.sources[loc.file_name]
         if opt_source

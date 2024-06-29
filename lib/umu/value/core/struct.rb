@@ -95,7 +95,7 @@ class Entry < Top
 
     def select(sel_lab, loc, env)
         ASSERT.kind_of sel_lab,     ::Symbol
-        ASSERT.kind_of loc,         Umu::Location
+        ASSERT.kind_of loc,         LOC::Entry
 
         value = self.value_by_label[sel_lab]
         unless value

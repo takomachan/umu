@@ -149,7 +149,7 @@ end # Umu::AbstractSyntax::Core::Declaration::Simple
 module_function
 
     def make_value(loc, sym, expr, opt_type_sym = nil)
-        ASSERT.kind_of      loc,            Umu::Location
+        ASSERT.kind_of      loc,            LOC::Entry
         ASSERT.kind_of      sym,            ::Symbol
         ASSERT.kind_of      expr,           ASCE::Abstract
         ASSERT.opt_kind_of  opt_type_sym,   ::Symbol
@@ -159,7 +159,7 @@ module_function
 
 
     def make_recursive(loc, sym, lam_expr)
-        ASSERT.kind_of loc,         Umu::Location
+        ASSERT.kind_of loc,         LOC::Entry
         ASSERT.kind_of sym,         ::Symbol
         ASSERT.kind_of lam_expr,    ASCEN::Lambda::Entry
 

@@ -219,7 +219,7 @@ private
 
 
     def __make_send_des__(loc, expr)
-        ASSERT.kind_of loc,     Umu::Location
+        ASSERT.kind_of loc,     LOC::Entry
         ASSERT.kind_of expr,    ASCE::Abstract
 
         ASCE.make_send(
@@ -229,7 +229,7 @@ private
 
 
     def __make_select_by_number__(loc, var_sym, sel_num)
-        ASSERT.kind_of loc,     Umu::Location
+        ASSERT.kind_of loc,     LOC::Entry
         ASSERT.kind_of var_sym, ::Symbol
         ASSERT.kind_of sel_num, ::Integer
 
@@ -242,7 +242,7 @@ private
 
 
     def __make_select_head__(loc, var_sym)
-        ASSERT.kind_of loc,     Umu::Location
+        ASSERT.kind_of loc,     LOC::Entry
         ASSERT.kind_of var_sym, ::Symbol
 
         __make_select_by_number__ loc, var_sym, 1
@@ -250,7 +250,7 @@ private
 
 
     def __make_select_tail__(loc, var_sym)
-        ASSERT.kind_of loc,     Umu::Location
+        ASSERT.kind_of loc,     LOC::Entry
         ASSERT.kind_of var_sym, ::Symbol
 
         __make_select_by_number__ loc, var_sym, 2
@@ -263,7 +263,7 @@ end # Umu::ConcreteSyntax::Core::Pattern::Container
 module_function
 
     def make_list(loc, pats, opt_last_pat)
-        ASSERT.kind_of      loc,            Umu::Location
+        ASSERT.kind_of      loc,            LOC::Entry
         ASSERT.kind_of      pats,           ::Array
         ASSERT.opt_kind_of  opt_last_pat,   Variable
 

@@ -46,7 +46,7 @@ end
 module_function
 
     def make_variable(loc, var_sym)
-        ASSERT.kind_of loc,     Umu::Location
+        ASSERT.kind_of loc,     LOC::Entry
         ASSERT.kind_of var_sym, ::Symbol
 
         Variable.new(loc, var_sym).freeze

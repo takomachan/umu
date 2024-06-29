@@ -42,7 +42,7 @@ class Fun < Top
     def apply(head_value, tail_values, loc, env)
         ASSERT.kind_of head_value,  VC::Top
         ASSERT.kind_of tail_values, ::Array
-        ASSERT.kind_of loc,         Umu::Location
+        ASSERT.kind_of loc,         LOC::Entry
         ASSERT.kind_of env,         E::Entry
 
         result_value = E::Tracer.trace(
@@ -71,7 +71,7 @@ private
     def __apply__(init_head_value, init_tail_values, loc, env, event)
         ASSERT.kind_of init_head_value,     VC::Top
         ASSERT.kind_of init_tail_values,    ::Array
-        ASSERT.kind_of loc,                 Umu::Location
+        ASSERT.kind_of loc,                 LOC::Entry
         ASSERT.kind_of env,                 E::Entry
         ASSERT.kind_of event,               E::Tracer::Event
 

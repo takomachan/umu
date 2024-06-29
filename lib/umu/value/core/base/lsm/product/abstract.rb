@@ -44,7 +44,7 @@ class Abstract < LSM::Abstract
 
     def select_by_number(sel_num, loc, env)
         ASSERT.kind_of sel_num,     ::Integer
-        ASSERT.kind_of loc,         Umu::Location
+        ASSERT.kind_of loc,         LOC::Entry
 
         unless 1 <= sel_num && sel_num <= self.arity
             raise X::SelectionError.new(

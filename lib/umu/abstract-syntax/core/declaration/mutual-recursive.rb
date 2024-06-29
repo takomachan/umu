@@ -16,7 +16,7 @@ class MutualRecursive < Abstract
 
 
     def initialize(loc, bindings)
-        ASSERT.kind_of loc,         Umu::Location
+        ASSERT.kind_of loc,         LOC::Entry
         ASSERT.kind_of bindings,    ::Hash
         ASSERT.assert (bindings.size >= 2), bindings.inspect
 
@@ -74,7 +74,7 @@ end
 module_function
 
     def make_mutual_recursive(loc, bindings)
-        ASSERT.kind_of loc,         Umu::Location
+        ASSERT.kind_of loc,         LOC::Entry
         ASSERT.kind_of bindings,    ::Hash
 
         MutualRecursive.new(loc, bindings.freeze).freeze

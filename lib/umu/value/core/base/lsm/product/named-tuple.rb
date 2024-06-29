@@ -72,7 +72,7 @@ class Named < Abstract
 
     def select_by_label(sel_lab, loc, env)
         ASSERT.kind_of sel_lab,     ::Symbol
-        ASSERT.kind_of loc,         Umu::Location
+        ASSERT.kind_of loc,         LOC::Entry
 
         opt_index = self.index_by_label[sel_lab]
         unless opt_index
@@ -90,7 +90,7 @@ class Named < Abstract
 
     def modify(value_by_label, loc, env)
         ASSERT.kind_of value_by_label,  ::Hash
-        ASSERT.kind_of loc,             Umu::Location
+        ASSERT.kind_of loc,             LOC::Entry
 
         mut_values = self.values.dup
         value_by_label.each_key do |label, expr|

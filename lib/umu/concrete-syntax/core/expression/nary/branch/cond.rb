@@ -74,7 +74,7 @@ end # Umu::ConcreteSyntax::Core::Expression::Nary
 module_function
 
     def make_cond(loc, expr, fst_rule, snd_rules, opt_else_expr, else_decls)
-        ASSERT.kind_of      loc,            Umu::Location
+        ASSERT.kind_of      loc,            LOC::Entry
         ASSERT.kind_of      expr,           CSCE::Abstract
         ASSERT.kind_of      fst_rule,       CSCEN::Rule::Cond
         ASSERT.kind_of      snd_rules,      ::Array

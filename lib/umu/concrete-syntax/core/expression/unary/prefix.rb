@@ -65,7 +65,7 @@ end # Umu::ConcreteSyntax::Core::Expression::Unary
 module_function
 
     def make_prefix(loc, sym, rhs_expr)
-        ASSERT.kind_of loc,         Umu::Location
+        ASSERT.kind_of loc,         LOC::Entry
         ASSERT.kind_of sym,         ::Symbol
         ASSERT.kind_of rhs_expr,    CSCE::Abstract
 

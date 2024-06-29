@@ -87,7 +87,7 @@ end
 module_function
 
     def make_recursive(loc, functions)
-        ASSERT.kind_of loc,         Umu::Location
+        ASSERT.kind_of loc,         LOC::Entry
         ASSERT.kind_of functions,   ::Array
 
         Recursive.new(loc, functions.freeze).freeze

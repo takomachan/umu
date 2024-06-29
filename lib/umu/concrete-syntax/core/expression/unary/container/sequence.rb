@@ -58,7 +58,7 @@ end # Umu::ConcreteSyntax::Core::Expression::Unary
 module_function
 
     def make_sequence(loc, exprs)
-        ASSERT.kind_of loc,     Umu::Location
+        ASSERT.kind_of loc,     LOC::Entry
         ASSERT.kind_of exprs,   ::Array
 
         Unary::Container::Sequence.new(loc, exprs.freeze).freeze

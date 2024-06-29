@@ -7,7 +7,9 @@ require 'umu/common/assertion'
 
 module Umu
 
-class Location < Abstraction::Record
+module Location
+
+class Entry < Abstraction::Record
     attr_reader :file_name
     attr_reader :line_num
 
@@ -50,7 +52,7 @@ class Location < Abstraction::Record
 end
 
 
-INITIAL_LOCATION = Location.new('', 0).freeze
+INITIAL_LOCATION = Entry.new('', 0).freeze
 
 
 module_function
@@ -59,11 +61,13 @@ module_function
         ASSERT.kind_of file_name, ::String
         ASSERT.kind_of line_num,  ::Integer
 
-        Location.new(file_name.freeze, line_num).freeze
+        Entry.new(file_name, line_num).freeze
     end
 
 
     def make_initial_location
         INITIAL_LOCATION
     end
+end # Umu::Location
+
 end # Umu

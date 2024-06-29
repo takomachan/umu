@@ -94,6 +94,7 @@ module Umu
 
     module Assertion;   end
     module Exception;   end
+    module Location;   end
     module PrettyPrint; end
 
 
@@ -138,5 +139,6 @@ module Umu
 
     ASSERT  = Assertion
     X       = Exception
+    LOC     = Location
     P       = PrettyPrint
 end # Umu

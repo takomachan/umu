@@ -142,7 +142,7 @@ end # Umu::ConcreteSyntax::Core::Expression::Unary
 module_function
 
     def make_named_tuple_label(loc, sym)
-        ASSERT.kind_of loc,     Umu::Location
+        ASSERT.kind_of loc,     LOC::Entry
         ASSERT.kind_of sym,     ::Symbol
 
         Unary::Container::Named::Label.new(loc, sym).freeze
@@ -150,7 +150,7 @@ module_function
 
 
     def make_named_tuple(loc, fields)
-        ASSERT.kind_of loc,     Umu::Location
+        ASSERT.kind_of loc,     LOC::Entry
         ASSERT.kind_of fields,  ::Array
 
         Unary::Container::Named::Entry.new(loc, fields.freeze).freeze

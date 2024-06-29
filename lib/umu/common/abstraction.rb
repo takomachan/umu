@@ -12,7 +12,7 @@ class Model
 
 
     def initialize(loc)
-        ASSERT.kind_of loc, Umu::Location
+        ASSERT.kind_of loc, LOC::Entry
 
         @loc = loc
     end

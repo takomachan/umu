@@ -74,7 +74,7 @@ end
 module_function
 
     def make_value(loc, pat, expr, decls)
-        ASSERT.kind_of loc,     Umu::Location
+        ASSERT.kind_of loc,     LOC::Entry
         ASSERT.kind_of pat,     CSCP::Abstract
         ASSERT.kind_of expr,    CSCE::Abstract
         ASSERT.kind_of decls,   ::Array
