@@ -1,8 +1,6 @@
 # coding: utf-8
 # frozen_string_literal: true
 
-require 'umu/common'
-require 'umu/abstract-syntax/result'
 
 
 module Umu

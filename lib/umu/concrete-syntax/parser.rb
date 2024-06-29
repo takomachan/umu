@@ -1,10 +1,6 @@
 # coding: utf-8
 # frozen_string_literal: true
 
-require 'umu/common'
-require 'umu/lexical/lexer'
-require 'umu/concrete-syntax'
-
 require_relative 'grammar.tab'
 
 

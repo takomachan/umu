@@ -1,13 +1,6 @@
 # coding: utf-8
 # frozen_string_literal: true
 
-require 'umu/common'
-require 'umu/lexical/location'
-require 'umu/abstract-syntax/core/expression'
-
-require_relative 'preference'
-require_relative 'tracer/stack'
-require_relative 'context'
 
 
 module Umu

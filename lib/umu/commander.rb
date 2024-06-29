@@ -1,5 +1,7 @@
 require 'pp'
 
+require_relative 'common'
+require_relative 'lexical'
 require_relative 'concrete-syntax'
 require_relative 'concrete-syntax/parser'
 require_relative 'abstract-syntax'

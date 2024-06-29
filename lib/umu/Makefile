@@ -6,7 +6,7 @@ SRCS	= version.rb \
 			commander/option.rb \
 			commander/subcommand.rb \
 			commander/prelude.rb \
-			abstraction.rb \
+			lexical.rb \
 			lexical/lexer.rb \
 			lexical/lexer/abstract.rb \
 			lexical/lexer/separator.rb \
@@ -18,8 +18,6 @@ SRCS	= version.rb \
 			lexical/token/abstraction.rb \
 			lexical/token/separator.rb \
 			lexical/token/token.rb \
-			lexical/escape.rb \
-			lexical/location.rb \
 			concrete-syntax.rb \
 			concrete-syntax/parser.rb \
 			concrete-syntax/abstract.rb \
@@ -157,6 +155,7 @@ SRCS	= version.rb \
 			value/core/struct.rb \
 			environment.rb \
 			environment/preference.rb \
+			environment/tracer.rb \
 			environment/tracer/tracer.rb \
 			environment/tracer/stack.rb \
 			environment/context.rb \
@@ -177,6 +176,9 @@ SRCS	= version.rb \
 			common/constant.rb \
 			common/assertion.rb \
 			common/exception.rb \
+			common/abstraction.rb \
+			common/escape.rb \
+			common/location.rb \
 			common/pretty-print.rb
 RACC_SRCS = concrete-syntax/grammar.ry
 

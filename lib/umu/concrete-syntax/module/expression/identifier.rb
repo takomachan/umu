@@ -1,11 +1,6 @@
 # coding: utf-8
 # frozen_string_literal: true
 
-require 'umu/common'
-require 'umu/lexical/location'
-
-require_relative 'abstract'
-
 
 
 module Umu

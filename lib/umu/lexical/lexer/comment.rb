@@ -1,12 +1,6 @@
 # coding: utf-8
 # frozen_string_literal: true
 
-require 'strscan'
-
-require 'umu/common'
-require 'umu/lexical/location'
-require 'umu/lexical/token'
-
 
 
 module Umu

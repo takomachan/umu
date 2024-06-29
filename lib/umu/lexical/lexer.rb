@@ -1,3 +1,5 @@
+require 'strscan'
+
 require_relative 'lexer/abstract'
 require_relative 'lexer/separator'
 require_relative 'lexer/comment'
