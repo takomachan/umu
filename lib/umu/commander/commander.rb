@@ -75,7 +75,7 @@ end
             STDERR.puts e.to_s
 
             1
-        rescue ::SystemCallError, ::SystemStackError => e
+        rescue ::SystemCallError, ::IOError, ::SystemStackError => e
             STDERR.puts
             STDERR.printf "[%s] %s\n", e.class.to_s, e.to_s
 
@@ -144,7 +144,7 @@ end
                 STDERR.puts e.to_s
 
                 [[], lexer.recover, env]
-            rescue ::SystemCallError, ::SystemStackError => e
+            rescue ::SystemCallError, ::IOError, ::SystemStackError => e
                 STDERR.puts
                 STDERR.printf "[%s] %s\n", e.class.to_s, e.to_s
 
