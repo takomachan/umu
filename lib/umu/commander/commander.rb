@@ -70,9 +70,14 @@ end
             STDERR.puts e.to_s
 
             1
-        rescue X::Abstraction::Expected, ::SystemCallError => e
+        rescue X::Abstraction::Expected => e
             STDERR.puts
             STDERR.puts e.to_s
+
+            1
+        rescue ::SystemCallError, ::SystemStackError => e
+            STDERR.puts
+            STDERR.printf "[%s] %s\n", e.class.to_s, e.to_s
 
             1
         rescue ::Interrupt
@@ -134,9 +139,14 @@ end
                 STDERR.puts e.to_s
 
                 [[], lexer.recover, env]
-            rescue X::Abstraction::Expected, ::SystemCallError => e
+            rescue X::Abstraction::Expected => e
                 STDERR.puts
                 STDERR.puts e.to_s
+
+                [[], lexer.recover, env]
+            rescue ::SystemCallError, ::SystemStackError => e
+                STDERR.puts
+                STDERR.printf "[%s] %s\n", e.class.to_s, e.to_s
 
                 [[], lexer.recover, env]
             rescue ::Interrupt
