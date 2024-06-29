@@ -232,7 +232,9 @@ class Entry < Abstraction::Record
                 end
             end
 
-            STDERR.puts event.to_s
+            if self.pref.trace_mode?
+                STDERR.puts event.to_s
+            end
 
             current_loc
         end
