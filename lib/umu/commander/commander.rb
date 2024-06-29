@@ -192,7 +192,7 @@ end
             if pref.lex_trace_mode?
                 STDERR.printf("\nPATTERN: %s \"%s\"\n",
                                 event.to_s,
-                                L::Escape.unescape(matched)
+                                Escape.unescape(matched)
                 )
                 if opt_token
                     token = opt_token

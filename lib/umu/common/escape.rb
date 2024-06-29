@@ -6,8 +6,6 @@ require 'umu/common'
 
 module Umu
 
-module Lexical
-
 module Escape
 
 EACAPE_PAIRS = [
@@ -66,8 +64,6 @@ module_function
         ASSERT.opt_kind_of opt_esc.freeze, ::String
     end
 
-end # Umu::Lexical::Escape
-
-end # Umu::Lexical
+end # Umu::Escape
 
 end # Umu

@@ -101,7 +101,7 @@ class String < Abstraction::String
 
 
     def to_s
-        format "STRING(\"%s\")", L::Escape.unescape(self.val)
+        format "STRING(\"%s\")", Escape.unescape(self.val)
     end
 
 

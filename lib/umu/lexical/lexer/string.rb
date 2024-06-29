@@ -68,7 +68,7 @@ class Abstract < Lexer::Abstract
 
         # Escapes
         when scanner.scan(/\\./)
-            opt_esc = L::Escape.opt_escape scanner.matched
+            opt_esc = Escape.opt_escape scanner.matched
             unless opt_esc
                 raise X::LexicalError.new(
                     loc,
@@ -147,12 +147,12 @@ class Symbolized < Abstract
         ASSERT.kind_of loc, Umu::Location
         ASSERT.kind_of val, ::String
 
-        esc_char = L::Escape.find_escape val
+        esc_char = Escape.find_escape val
         if esc_char
             raise X::LexicalError.new(
                     loc,
                     "Escape character in symbolized string: '%s'",
-                        L::Escape.unescape(esc_char)
+                        Escape.unescape(esc_char)
                 )
         end
 

@@ -33,7 +33,7 @@ class String < Abstract
 
 
     def to_s
-        format "\"%s\"", L::Escape.unescape(self.val)
+        format "\"%s\"", Escape.unescape(self.val)
     end
 
 

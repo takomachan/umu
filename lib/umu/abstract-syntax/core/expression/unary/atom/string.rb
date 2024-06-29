@@ -24,7 +24,7 @@ class String < Abstract
 
 
     def to_s
-        '"' + L::Escape.unescape(self.obj) + '"'
+        '"' + Escape.unescape(self.obj) + '"'
     end
 
 
