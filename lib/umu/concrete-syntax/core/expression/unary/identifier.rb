@@ -96,7 +96,7 @@ end # Umu::ConcreteSyntax::Core::Expression::Unary
 module_function
 
     def make_identifier(loc, sym)
-        ASSERT.kind_of loc, L::Location
+        ASSERT.kind_of loc, Umu::Location
         ASSERT.kind_of sym, ::Symbol
 
         Unary::Identifier::Short.new(loc, sym).freeze

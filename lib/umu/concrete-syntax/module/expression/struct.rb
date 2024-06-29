@@ -89,7 +89,7 @@ end
 module_function
 
     def make_struct(loc, body_decls, local_decls)
-        ASSERT.kind_of loc,         L::Location
+        ASSERT.kind_of loc,         Umu::Location
         ASSERT.kind_of body_decls,  ::Array
         ASSERT.kind_of local_decls, ::Array
 

@@ -78,7 +78,7 @@ end # Umu::ConcreteSyntax::Core::Expression::Nary
 module_function
 
     def make_if(loc, if_rule, elsif_rules, else_expr)
-        ASSERT.kind_of loc,         L::Location
+        ASSERT.kind_of loc,         Umu::Location
         ASSERT.kind_of if_rule,     Nary::Rule::If
         ASSERT.kind_of elsif_rules, ::Array
         ASSERT.kind_of else_expr,   CSCE::Abstract

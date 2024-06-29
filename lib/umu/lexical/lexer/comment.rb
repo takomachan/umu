@@ -18,17 +18,17 @@ class Comment < Abstract
     def self.deconstruct_keys
         {
             :buf            => ::String,
-            :saved_loc      => L::Location,
+            :saved_loc      => Umu::Location,
             :comment_depth  => ::Integer
         }
     end
 
 
     def initialize(loc, braket_stack, buf, saved_loc, comment_depth)
-        ASSERT.kind_of loc,             L::Location
+        ASSERT.kind_of loc,             Umu::Location
         ASSERT.kind_of braket_stack,    ::Array
         ASSERT.kind_of buf,             ::String
-        ASSERT.kind_of saved_loc,       L::Location
+        ASSERT.kind_of saved_loc,       Umu::Location
         ASSERT.kind_of comment_depth,   ::Integer
 
         super(loc, braket_stack)

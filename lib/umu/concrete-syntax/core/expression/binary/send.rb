@@ -239,7 +239,7 @@ end # Umu::ConcreteSyntax::Core::Expression::Binary
 module_function
 
     def make_number_selector(loc, sel_num)
-        ASSERT.kind_of loc,     L::Location
+        ASSERT.kind_of loc,     Umu::Location
         ASSERT.kind_of sel_num, ::Integer
 
         Binary::Send::Message::NumberSelector.new(loc, sel_num).freeze
@@ -247,7 +247,7 @@ module_function
 
 
     def make_label_selector(loc, sel_sym)
-        ASSERT.kind_of loc,     L::Location
+        ASSERT.kind_of loc,     Umu::Location
         ASSERT.kind_of sel_sym, ::Symbol
 
         Binary::Send::Message::LabelSelector.new(loc, sel_sym).freeze
@@ -255,7 +255,7 @@ module_function
 
 
     def make_modifier(loc, fields)
-        ASSERT.kind_of loc,     L::Location
+        ASSERT.kind_of loc,     Umu::Location
         ASSERT.kind_of fields,  ::Array
 
         Binary::Send::Message::Modifier.new(loc, fields.freeze).freeze
@@ -263,7 +263,7 @@ module_function
 
 
     def make_method(loc, sym, exprs = [])
-        ASSERT.kind_of loc,     L::Location
+        ASSERT.kind_of loc,     Umu::Location
         ASSERT.kind_of sym,     ::Symbol
         ASSERT.kind_of exprs,   ::Array
 
@@ -272,7 +272,7 @@ module_function
 
 
     def make_send(loc, lhs_expr, rhs_head_message, rhs_tail_messages = [])
-        ASSERT.kind_of loc,                 L::Location
+        ASSERT.kind_of loc,                 Umu::Location
         ASSERT.kind_of lhs_expr,            CSCE::Abstract
         ASSERT.kind_of rhs_head_message,    Binary::Send::Message::Abstract
         ASSERT.kind_of rhs_tail_messages,   ::Array

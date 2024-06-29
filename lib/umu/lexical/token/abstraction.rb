@@ -16,7 +16,7 @@ class Abstract < Umu::Abstraction::Model
 
 
     def initialize(loc, val)
-        ASSERT.kind_of loc, L::Location
+        ASSERT.kind_of loc, Umu::Location
         ASSERT.kind_of val, ::Object
 
         super(loc)

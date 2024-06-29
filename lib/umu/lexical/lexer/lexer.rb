@@ -15,7 +15,7 @@ module_function
         ASSERT.kind_of file_name,   ::String
         ASSERT.kind_of line_num,    ::Integer
 
-        loc = L.make_location file_name, line_num
+        loc = Umu.make_location file_name, line_num
 
         Separator.new(loc, [].freeze).freeze
     end

@@ -19,7 +19,7 @@ class Event
     def initialize(label, klass, loc, msg)
         ASSERT.kind_of label,   ::String
         ASSERT.kind_of klass,   ::Class
-        ASSERT.kind_of loc,     L::Location
+        ASSERT.kind_of loc,     Umu::Location
         ASSERT.kind_of msg,     ::String
 
         @label  = label
@@ -47,7 +47,7 @@ module_function
     def make_event(label, klass, loc, msg)
         ASSERT.kind_of label,   ::String
         ASSERT.kind_of klass,   ::Class
-        ASSERT.kind_of loc,     L::Location
+        ASSERT.kind_of loc,     Umu::Location
         ASSERT.kind_of msg,     ::String
 
         Event.new(label.freeze, klass, loc, msg.freeze).freeze
@@ -59,7 +59,7 @@ module_function
         ASSERT.kind_of eval_depth,  ::Integer
         ASSERT.kind_of label,       ::String
         ASSERT.kind_of klass,       ::Class
-        ASSERT.kind_of loc,         L::Location
+        ASSERT.kind_of loc,         Umu::Location
         ASSERT.kind_of msg,         ::String
         ASSERT.assert block_given?
 
@@ -89,7 +89,7 @@ module_function
         ASSERT.kind_of eval_depth,  ::Integer
         ASSERT.kind_of label,       ::String
         ASSERT.kind_of klass,       ::Class
-        ASSERT.kind_of loc,         L::Location
+        ASSERT.kind_of loc,         Umu::Location
         ASSERT.kind_of msg,         ::String
 
         if pref.trace_mode?

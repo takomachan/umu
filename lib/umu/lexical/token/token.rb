@@ -155,7 +155,7 @@ end
 module_function
 
     def make_reserved_word(loc, val)
-        ASSERT.kind_of loc, L::Location
+        ASSERT.kind_of loc, Umu::Location
         ASSERT.kind_of val, ::String
 
         ReservedWord.new(loc, val.freeze).freeze
@@ -163,7 +163,7 @@ module_function
 
 
     def make_reserved_symbol(loc, val)
-        ASSERT.kind_of loc, L::Location
+        ASSERT.kind_of loc, Umu::Location
         ASSERT.kind_of val, ::String
 
         ReservedSymbol.new(loc, val.freeze).freeze
@@ -171,7 +171,7 @@ module_function
 
 
     def make_symbol(loc, val)
-        ASSERT.kind_of loc, L::Location
+        ASSERT.kind_of loc, Umu::Location
         ASSERT.kind_of val, ::String
 
         Symbol.new(loc, val.freeze).freeze
@@ -179,7 +179,7 @@ module_function
 
 
     def make_module_directory(loc, val)
-        ASSERT.kind_of loc, L::Location
+        ASSERT.kind_of loc, Umu::Location
         ASSERT.kind_of val, ::String
 
         ModuleDirectory.new(loc, val.freeze).freeze
@@ -187,7 +187,7 @@ module_function
 
 
     def make_identifier(loc, val)
-        ASSERT.kind_of loc, L::Location
+        ASSERT.kind_of loc, Umu::Location
         ASSERT.kind_of val, ::String
 
         Identifier.new(loc, val.freeze).freeze
@@ -195,7 +195,7 @@ module_function
 
 
     def make_label(loc, val)
-        ASSERT.kind_of loc, L::Location
+        ASSERT.kind_of loc, Umu::Location
         ASSERT.kind_of val, ::String
 
         Label.new(loc, val.freeze).freeze
@@ -203,7 +203,7 @@ module_function
 
 
     def make_string(loc, val)
-        ASSERT.kind_of loc, L::Location
+        ASSERT.kind_of loc, Umu::Location
         ASSERT.kind_of val, ::String
 
         String.new(loc, val.freeze).freeze
@@ -211,7 +211,7 @@ module_function
 
 
     def make_integer(loc, val)
-        ASSERT.kind_of loc, L::Location
+        ASSERT.kind_of loc, Umu::Location
         ASSERT.kind_of val, ::Integer
 
         Int.new(loc, val).freeze
@@ -219,7 +219,7 @@ module_function
 
 
     def make_real(loc, val)
-        ASSERT.kind_of loc, L::Location
+        ASSERT.kind_of loc, Umu::Location
         ASSERT.kind_of val, ::Float
 
         Real.new(loc, val).freeze

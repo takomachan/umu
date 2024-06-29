@@ -36,7 +36,7 @@ module_function
                 when 1
                     class_signat = env.ty_lookup(
                         args[0].to_sym,
-                        L.make_location(STDIN_FILE_NAME, line_num)
+                        Umu.make_location(STDIN_FILE_NAME, line_num)
                     )
 
                     class_signat.print_class env

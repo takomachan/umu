@@ -45,7 +45,7 @@ end # Umu::AbstractSyntax::Core::Expression::Unary
 module_function
 
     def make_bool(loc, obj)
-        ASSERT.kind_of  loc, L::Location
+        ASSERT.kind_of  loc, Umu::Location
         ASSERT.bool     obj
 
         Unary::Atom::Bool.new(loc, obj).freeze

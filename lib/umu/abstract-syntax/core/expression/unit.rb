@@ -37,7 +37,7 @@ end
 module_function
 
     def make_unit(loc)
-        ASSERT.kind_of loc, L::Location
+        ASSERT.kind_of loc, Umu::Location
 
         Unit.new(loc).freeze
     end

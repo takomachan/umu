@@ -45,7 +45,7 @@ class ExecutionError < Expected
 
 
     def initialize(loc, msg, *args)
-        ASSERT.kind_of loc, L::Location
+        ASSERT.kind_of loc, Umu::Location
 
         super(msg, *args)
 

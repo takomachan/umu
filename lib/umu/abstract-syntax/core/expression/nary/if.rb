@@ -172,7 +172,7 @@ end # Umu::AbstractSyntax::Core::Expression::Nary
 module_function
 
     def make_rule(loc, head_expr, body_expr)
-        ASSERT.kind_of loc,         L::Location
+        ASSERT.kind_of loc,         Umu::Location
         ASSERT.kind_of head_expr,   ASCE::Abstract
         ASSERT.kind_of body_expr,   ASCE::Abstract
 
@@ -181,7 +181,7 @@ module_function
 
 
     def make_if(loc, rules, else_expr)
-        ASSERT.kind_of loc,         L::Location
+        ASSERT.kind_of loc,         Umu::Location
         ASSERT.kind_of rules,       ::Array
         ASSERT.kind_of else_expr,   ASCE::Abstract
 

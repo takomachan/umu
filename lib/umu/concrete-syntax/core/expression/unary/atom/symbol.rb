@@ -44,7 +44,7 @@ end # Umu::ConcreteSyntax::Core::Expression::Unary
 module_function
 
     def make_symbol(loc, obj)
-        ASSERT.kind_of loc, L::Location
+        ASSERT.kind_of loc, Umu::Location
         ASSERT.kind_of obj, ::Symbol
 
         Unary::Atom::Symbol.new(loc, obj).freeze

@@ -82,7 +82,7 @@ end # Umu::AbstractSyntax::Core::Expression::Binary
 module_function
 
     def make_test_kind_of(loc, expr, class_id, opt_type_sym = nil)
-        ASSERT.kind_of      loc,            L::Location
+        ASSERT.kind_of      loc,            Umu::Location
         ASSERT.kind_of      expr,           ASCE::Abstract
         ASSERT.kind_of      class_id,       ASCEU::Identifier::Short
         ASSERT.opt_kind_of  opt_type_sym,   ::Symbol

@@ -118,7 +118,7 @@ end # Umu::AbstractSyntax::Core::Expression::Nary
 module_function
 
     def make_parameter(loc, ident, opt_type_sym = nil)
-        ASSERT.kind_of      loc,            L::Location
+        ASSERT.kind_of      loc,            Umu::Location
         ASSERT.kind_of      ident,          ASCEU::Identifier::Short
         ASSERT.opt_kind_of  opt_type_sym,   ::Symbol
 
@@ -127,7 +127,7 @@ module_function
 
 
     def make_lambda(loc, params, expr, opt_name = nil)
-        ASSERT.kind_of      loc,            L::Location
+        ASSERT.kind_of      loc,            Umu::Location
         ASSERT.kind_of      params,         ::Array
         ASSERT.kind_of      expr,           ASCE::Abstract
         ASSERT.opt_kind_of  opt_name,       ::Symbol

@@ -114,7 +114,7 @@ end # Umu::ConcreteSyntax::Core::Expression::Identifier
 module_function
 
     def make_identifier(loc, sym)
-        ASSERT.kind_of loc, L::Location
+        ASSERT.kind_of loc, Umu::Location
         ASSERT.kind_of sym, ::Symbol
 
         Identifier::Short.new(loc, sym).freeze

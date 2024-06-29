@@ -313,7 +313,7 @@ end # Umu::ConcreteSyntax::Core::Expression::Binary
 module_function
 
     def make_infix(loc, lhs_opnd, opr_sym, rhs_opnd)
-        ASSERT.kind_of loc,         L::Location
+        ASSERT.kind_of loc,         Umu::Location
         ASSERT.kind_of lhs_opnd,    CSCE::Abstract
         ASSERT.kind_of opr_sym,     ::Symbol
         ASSERT.kind_of rhs_opnd,    CSCE::Abstract
@@ -325,7 +325,7 @@ module_function
 
 
     def make_comp_right(loc, lhs_opnd, opr_sym, rhs_opnd)
-        ASSERT.kind_of loc,         L::Location
+        ASSERT.kind_of loc,         Umu::Location
         ASSERT.kind_of lhs_opnd,    CSCE::Abstract
         ASSERT.kind_of opr_sym,     ::Symbol
         ASSERT.kind_of rhs_opnd,    CSCE::Abstract
@@ -337,7 +337,7 @@ module_function
 
 
     def make_comp_left(loc, lhs_opnd, opr_sym, rhs_opnd)
-        ASSERT.kind_of loc,         L::Location
+        ASSERT.kind_of loc,         Umu::Location
         ASSERT.kind_of lhs_opnd,    CSCE::Abstract
         ASSERT.kind_of opr_sym,     ::Symbol
         ASSERT.kind_of rhs_opnd,    CSCE::Abstract
@@ -349,7 +349,7 @@ module_function
 
 
     def make_pipe_right(loc, lhs_opnd, opr_sym, rhs_opnd)
-        ASSERT.kind_of loc,         L::Location
+        ASSERT.kind_of loc,         Umu::Location
         ASSERT.kind_of lhs_opnd,    CSCE::Abstract
         ASSERT.kind_of opr_sym,     ::Symbol
         ASSERT.kind_of rhs_opnd,    CSCE::Abstract
@@ -361,7 +361,7 @@ module_function
 
 
     def make_pipe_left(loc, lhs_opnd, opr_sym, rhs_opnd)
-        ASSERT.kind_of loc,         L::Location
+        ASSERT.kind_of loc,         Umu::Location
         ASSERT.kind_of lhs_opnd,    CSCE::Abstract
         ASSERT.kind_of opr_sym,     ::Symbol
         ASSERT.kind_of rhs_opnd,    CSCE::Abstract
@@ -373,7 +373,7 @@ module_function
 
 
     def make_kindof(loc, lhs_opnd, opr_sym, rhs_ident)
-        ASSERT.kind_of loc,         L::Location
+        ASSERT.kind_of loc,         Umu::Location
         ASSERT.kind_of lhs_opnd,    CSCE::Abstract
         ASSERT.kind_of opr_sym,     ::Symbol
         ASSERT.kind_of rhs_ident,   CSCEU::Identifier::Short
@@ -385,7 +385,7 @@ module_function
 
 
     def make_andalso(loc, lhs_opnd, opr_sym, rhs_opnd)
-        ASSERT.kind_of loc,         L::Location
+        ASSERT.kind_of loc,         Umu::Location
         ASSERT.kind_of lhs_opnd,    CSCE::Abstract
         ASSERT.kind_of opr_sym,     ::Symbol
         ASSERT.kind_of rhs_opnd,    CSCE::Abstract
@@ -397,7 +397,7 @@ module_function
 
 
     def make_orelse(loc, lhs_opnd, opr_sym, rhs_opnd)
-        ASSERT.kind_of loc,         L::Location
+        ASSERT.kind_of loc,         Umu::Location
         ASSERT.kind_of lhs_opnd,    CSCE::Abstract
         ASSERT.kind_of opr_sym,     ::Symbol
         ASSERT.kind_of rhs_opnd,    CSCE::Abstract

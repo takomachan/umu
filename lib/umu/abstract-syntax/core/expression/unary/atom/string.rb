@@ -41,7 +41,7 @@ end # Umu::AbstractSyntax::Core::Expression::Unary
 module_function
 
     def make_string(loc, obj)
-        ASSERT.kind_of loc, L::Location
+        ASSERT.kind_of loc, Umu::Location
         ASSERT.kind_of obj, ::String
 
         Unary::Atom::String.new(loc, obj.freeze).freeze

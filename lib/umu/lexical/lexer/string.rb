@@ -23,7 +23,7 @@ class Abstract < Lexer::Abstract
 
 
     def initialize(loc, braket_stack, buf)
-        ASSERT.kind_of loc,             L::Location
+        ASSERT.kind_of loc,             Umu::Location
         ASSERT.kind_of braket_stack,    ::Array
         ASSERT.kind_of buf,             ::String
 
@@ -108,7 +108,7 @@ class Abstract < Lexer::Abstract
 private
 
     def __make_token__(loc, val)
-        ASSERT.kind_of loc, L::Location
+        ASSERT.kind_of loc, Umu::Location
         ASSERT.kind_of val, ::String
 
         raise X::SubclassResponsibility
@@ -126,7 +126,7 @@ end
 
 class Basic < Abstract
     def __make_token__(loc, val)
-        ASSERT.kind_of loc, L::Location
+        ASSERT.kind_of loc, Umu::Location
         ASSERT.kind_of val, ::String
 
         LT.make_string loc, val
@@ -144,7 +144,7 @@ end
 
 class Symbolized < Abstract
     def __make_token__(loc, val)
-        ASSERT.kind_of loc, L::Location
+        ASSERT.kind_of loc, Umu::Location
         ASSERT.kind_of val, ::String
 
         esc_char = L::Escape.find_escape val

@@ -87,7 +87,7 @@ end # Umu::AbstractSyntax::Core::Expression::Nary
 module_function
 
     def make_let(loc, decls, expr)
-        ASSERT.kind_of loc,     L::Location
+        ASSERT.kind_of loc,     Umu::Location
         ASSERT.kind_of decls,   ::Array
         ASSERT.kind_of expr,    ASCE::Abstract
 

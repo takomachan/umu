@@ -238,7 +238,7 @@ end # Umu::ConcreteSyntax::Core::Expression::Nary
 module_function
 
     def make_if_rule(loc, head_expr, body_expr)
-        ASSERT.kind_of loc,         L::Location
+        ASSERT.kind_of loc,         Umu::Location
         ASSERT.kind_of head_expr,   CSCE::Abstract
         ASSERT.kind_of body_expr,   CSCE::Abstract
 
@@ -249,7 +249,7 @@ module_function
 
 
     def make_cond_rule(loc, head_expr, body_expr, decls)
-        ASSERT.kind_of loc,         L::Location
+        ASSERT.kind_of loc,         Umu::Location
         ASSERT.kind_of head_expr,   CSCE::Abstract
         ASSERT.kind_of body_expr,   CSCE::Abstract
         ASSERT.kind_of decls,       ::Array
@@ -261,7 +261,7 @@ module_function
 
 
     def make_case_rule(loc, head, body_expr, decls)
-        ASSERT.kind_of loc,         L::Location
+        ASSERT.kind_of loc,         Umu::Location
         ASSERT.kind_of head,        CSCEN::Rule::Case::Head::Abstract
         ASSERT.kind_of body_expr,   CSCE::Abstract
         ASSERT.kind_of decls,       ::Array
@@ -273,7 +273,7 @@ module_function
 
 
     def make_case_rule_atom(loc, atom_value)
-        ASSERT.kind_of loc,         L::Location
+        ASSERT.kind_of loc,         Umu::Location
         ASSERT.kind_of atom_value,  VCBA::Abstract
 
         Nary::Rule::Case::Head::Atom.new(
@@ -283,7 +283,7 @@ module_function
 
 
     def make_case_rule_datum(loc, tag_sym, opt_contents_pat)
-        ASSERT.kind_of      loc,                L::Location
+        ASSERT.kind_of      loc,                Umu::Location
         ASSERT.kind_of      tag_sym,            ::Symbol
         ASSERT.opt_kind_of  opt_contents_pat,   CSCP::Abstract
 
@@ -296,7 +296,7 @@ module_function
     def make_case_rule_class(
         loc, class_ident, opt_contents_pat, opt_superclass_ident = nil
     )
-        ASSERT.kind_of      loc,                  L::Location
+        ASSERT.kind_of      loc,                  Umu::Location
         ASSERT.kind_of      class_ident,          CSCEU::Identifier::Short
         ASSERT.opt_kind_of  opt_contents_pat,     CSCP::Abstract
         ASSERT.opt_kind_of  opt_superclass_ident, CSCEU::Identifier::Short

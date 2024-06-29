@@ -87,7 +87,7 @@ module_function
     def make_functionalized_method(
         loc, method_ident, opt_recv_class_ident = nil
     )
-        ASSERT.kind_of      loc,                    L::Location
+        ASSERT.kind_of      loc,                    Umu::Location
         ASSERT.kind_of      method_ident,           CSCEU::Identifier::Short
         ASSERT.opt_kind_of  opt_recv_class_ident,   CSCEU::Identifier::Short
 

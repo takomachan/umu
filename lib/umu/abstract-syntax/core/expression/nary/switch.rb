@@ -151,7 +151,7 @@ end # Umu::AbstractSyntax::Core::Expression::Nary
 module_function
 
     def make_switch(loc, source_expr, souce_type_sym, leafs, else_expr)
-        ASSERT.kind_of loc,             L::Location
+        ASSERT.kind_of loc,             Umu::Location
         ASSERT.kind_of source_expr,     ASCE::Abstract
         ASSERT.kind_of souce_type_sym,  ::Symbol
         ASSERT.kind_of leafs,           ::Hash

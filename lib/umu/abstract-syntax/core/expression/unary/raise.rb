@@ -44,7 +44,7 @@ end # Umu::AbstractSyntax::Core::Expression::Unary
 module_function
 
     def make_raise(loc, exception_class, msg)
-        ASSERT.kind_of      loc,                L::Location
+        ASSERT.kind_of      loc,                Umu::Location
         ASSERT.subclass_of  exception_class,    X::Abstraction::RuntimeError
         ASSERT.kind_of      msg,                ::String
 

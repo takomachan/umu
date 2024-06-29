@@ -43,7 +43,7 @@ end # Umu::AbstractSyntax::Core::Expression::Unary
 module_function
 
     def make_class(loc, class_sym)
-        ASSERT.kind_of loc,         L::Location
+        ASSERT.kind_of loc,         Umu::Location
         ASSERT.kind_of class_sym,   ::Symbol
 
         Unary::Class.new(loc, class_sym).freeze

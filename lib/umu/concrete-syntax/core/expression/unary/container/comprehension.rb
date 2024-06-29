@@ -181,7 +181,7 @@ end # Umu::ConcreteSyntax::Core::Expression::Unary
 module_function
 
     def make_generator(loc, pat, expr)
-        ASSERT.kind_of loc,     L::Location
+        ASSERT.kind_of loc,     Umu::Location
         ASSERT.kind_of pat,     CSCP::Abstract
         ASSERT.kind_of expr,    CSCE::Abstract
 
@@ -192,7 +192,7 @@ module_function
 
 
     def make_guard(loc, expr)
-        ASSERT.kind_of loc,     L::Location
+        ASSERT.kind_of loc,     Umu::Location
         ASSERT.kind_of expr,    CSCE::Abstract
 
         Unary::Container::Comprehension::Qualifier::Guard.new(
@@ -202,7 +202,7 @@ module_function
 
 
     def make_comprehension(loc, expr, qualifiers)
-        ASSERT.kind_of loc,         L::Location
+        ASSERT.kind_of loc,         Umu::Location
         ASSERT.kind_of expr,        CSCE::Abstract
         ASSERT.kind_of qualifiers,  ::Array
 

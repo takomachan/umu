@@ -86,7 +86,7 @@ class Base < Abstract
 
     def lookup_class_method(sym, loc, env)
         ASSERT.kind_of sym, ::Symbol
-        ASSERT.kind_of loc, L::Location
+        ASSERT.kind_of loc, Umu::Location
         ASSERT.kind_of env, E::Entry
 
         info = self.class_method_info_of_symbol[sym]
@@ -122,7 +122,7 @@ class Base < Abstract
 
     def lookup_instance_method(sym, loc, env)
         ASSERT.kind_of sym, ::Symbol
-        ASSERT.kind_of loc, L::Location
+        ASSERT.kind_of loc, Umu::Location
         ASSERT.kind_of env, E::Entry
 
         info = self.instance_method_info_of_symbol[sym]
@@ -307,7 +307,7 @@ class Meta < Abstract
 
     def lookup_instance_method(sym, loc, env)
         ASSERT.kind_of sym, ::Symbol
-        ASSERT.kind_of loc, L::Location
+        ASSERT.kind_of loc, Umu::Location
         ASSERT.kind_of env, E::Entry
 
         method = self.base_class_signat.lookup_class_method(sym, loc, env)

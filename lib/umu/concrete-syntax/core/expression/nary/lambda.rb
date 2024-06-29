@@ -150,7 +150,7 @@ end # Umu::ConcreteSyntax::Core::Expression::Nary
 module_function
 
     def make_lambda(loc, pats, expr, decls = [])
-        ASSERT.kind_of loc,     L::Location
+        ASSERT.kind_of loc,     Umu::Location
         ASSERT.kind_of pats,    ::Array
         ASSERT.kind_of expr,    CSCE::Abstract
         ASSERT.kind_of decls,   ::Array
@@ -160,7 +160,7 @@ module_function
 
 
     def make_named_lambda(loc, pats, expr, decls, sym)
-        ASSERT.kind_of loc,     L::Location
+        ASSERT.kind_of loc,     Umu::Location
         ASSERT.kind_of pats,    ::Array
         ASSERT.kind_of expr,    CSCE::Abstract
         ASSERT.kind_of decls,   ::Array

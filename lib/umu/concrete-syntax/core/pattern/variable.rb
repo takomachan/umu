@@ -77,7 +77,7 @@ end
 module_function
 
     def make_variable(loc, var_sym, opt_type_sym = nil)
-        ASSERT.kind_of loc,     L::Location
+        ASSERT.kind_of loc,     Umu::Location
         ASSERT.kind_of      var_sym,        ::Symbol
         ASSERT.opt_kind_of  opt_type_sym,   ::Symbol
 

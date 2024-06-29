@@ -16,14 +16,14 @@ class Abstract < Abstraction::Record
 
     def self.deconstruct_keys
         {
-            :loc            => L::Location,
+            :loc            => Umu::Location,
             :braket_stack   => ::Array
         }
     end
 
 
     def initialize(loc, braket_stack)
-        ASSERT.kind_of loc,             L::Location
+        ASSERT.kind_of loc,             Umu::Location
         ASSERT.kind_of braket_stack,    ::Array
 
         @loc            = loc
@@ -94,7 +94,7 @@ private
         loc             = self.loc,
         braket_stack    = self.braket_stack
     )
-        ASSERT.kind_of loc, L::Location
+        ASSERT.kind_of loc, Umu::Location
 
         Separator.new(
             loc, braket_stack.freeze
@@ -109,10 +109,10 @@ private
         loc             = self.loc,
         braket_stack    = self.braket_stack
     )
-        ASSERT.kind_of saved_loc,       L::Location
+        ASSERT.kind_of saved_loc,       Umu::Location
         ASSERT.kind_of comment_depth,   ::Integer
         ASSERT.kind_of buf,             ::String
-        ASSERT.kind_of loc,             L::Location
+        ASSERT.kind_of loc,             Umu::Location
 
         Comment.new(
             loc, braket_stack.freeze, buf.freeze, saved_loc, comment_depth
@@ -124,7 +124,7 @@ private
         loc             = self.loc,
         braket_stack    = self.braket_stack
     )
-        ASSERT.kind_of loc, L::Location
+        ASSERT.kind_of loc, Umu::Location
 
         Token.new(
             loc, braket_stack.freeze
@@ -138,7 +138,7 @@ private
         braket_stack    = self.braket_stack
     )
         ASSERT.kind_of buf, ::String
-        ASSERT.kind_of loc, L::Location
+        ASSERT.kind_of loc, Umu::Location
 
         String::Basic.new(
             loc, braket_stack.freeze, buf.freeze
@@ -152,7 +152,7 @@ private
         braket_stack    = self.braket_stack
     )
         ASSERT.kind_of buf, ::String
-        ASSERT.kind_of loc, L::Location
+        ASSERT.kind_of loc, Umu::Location
 
         String::Symbolized.new(
             loc, braket_stack.freeze, buf.freeze

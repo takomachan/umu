@@ -7,8 +7,6 @@ require 'umu/common/assertion'
 
 module Umu
 
-module Lexical
-
 class Location < Abstraction::Record
     attr_reader :file_name
     attr_reader :line_num
@@ -68,7 +66,4 @@ module_function
     def make_initial_location
         INITIAL_LOCATION
     end
-
-end # Umu::Lexcical
-
 end # Umu

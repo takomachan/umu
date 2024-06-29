@@ -305,7 +305,7 @@ end # Umu::ConcreteSyntax::Core::Expression::Nary
 module_function
 
     def make_case(loc, expr, fst_rule, snd_rules, opt_else_expr, else_decls)
-        ASSERT.kind_of      loc,            L::Location
+        ASSERT.kind_of      loc,            Umu::Location
         ASSERT.kind_of      expr,           CSCE::Abstract
         ASSERT.kind_of      fst_rule,       CSCEN::Rule::Case::Entry
         ASSERT.kind_of      snd_rules,      ::Array

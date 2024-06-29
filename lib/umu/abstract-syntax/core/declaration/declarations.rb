@@ -16,7 +16,7 @@ class Declarations < Abstract
 
 
     def initialize(loc, decls)
-        ASSERT.kind_of loc,     L::Location
+        ASSERT.kind_of loc,     Umu::Location
         ASSERT.kind_of decls,   ::Array
 
         super(loc)
@@ -70,7 +70,7 @@ end
 module_function
 
     def make_declarations(loc, decls)
-        ASSERT.kind_of loc,     L::Location
+        ASSERT.kind_of loc,     Umu::Location
         ASSERT.kind_of decls,   ::Array
 
         Declarations.new(loc, decls.freeze).freeze

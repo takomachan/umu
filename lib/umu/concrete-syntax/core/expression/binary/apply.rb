@@ -67,7 +67,7 @@ end # Umu::ConcreteSyntax::Core::Expression::Binary
 module_function
 
     def make_apply(loc, opr_expr, opnd_head_expr, opnd_tail_exprs = [])
-        ASSERT.kind_of loc,             L::Location
+        ASSERT.kind_of loc,             Umu::Location
         ASSERT.kind_of opr_expr,        CSCE::Abstract
         ASSERT.kind_of opnd_head_expr,  CSCE::Abstract
         ASSERT.kind_of opnd_tail_exprs, ::Array

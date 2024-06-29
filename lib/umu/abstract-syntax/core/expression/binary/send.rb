@@ -367,7 +367,7 @@ private
         ASSERT.kind_of num,             ::Integer
         ASSERT.kind_of arg_values,      ::Array
         ASSERT.kind_of param_signats,   ::Array
-        ASSERT.kind_of loc,             L::Location
+        ASSERT.kind_of loc,             Umu::Location
         ASSERT.kind_of env,             E::Entry
 
         (0 .. num - 1).each do |i|
@@ -498,7 +498,7 @@ end # Umu::AbstractSyntax::Core::Expression::Binary
 
 module_function
     def make_number_selector(loc, sel_num)
-        ASSERT.kind_of loc,     L::Location
+        ASSERT.kind_of loc,     Umu::Location
         ASSERT.kind_of sel_num, ::Integer
 
         Binary::Send::Message::ByNumber.new(loc, sel_num).freeze
@@ -506,7 +506,7 @@ module_function
 
 
     def make_label_selector(loc, sel_sym)
-        ASSERT.kind_of loc,     L::Location
+        ASSERT.kind_of loc,     Umu::Location
         ASSERT.kind_of sel_sym, ::Symbol
 
         Binary::Send::Message::ByLabel.new(loc, sel_sym).freeze
@@ -514,7 +514,7 @@ module_function
 
 
     def make_modifier(loc, expr_by_label)
-        ASSERT.kind_of loc,             L::Location
+        ASSERT.kind_of loc,             Umu::Location
         ASSERT.kind_of expr_by_label,   ::Hash
 
         Binary::Send::Message::Modifier.new(loc, expr_by_label).freeze
@@ -523,7 +523,7 @@ module_function
 
 
     def make_method(loc, sym, exprs = [])
-        ASSERT.kind_of loc,     L::Location
+        ASSERT.kind_of loc,     Umu::Location
         ASSERT.kind_of sym,     ::Symbol
         ASSERT.kind_of exprs,   ::Array
 
@@ -536,7 +536,7 @@ module_function
         rhs_head_message, rhs_tail_messages = [],
         opt_receiver_type_sym = nil
     )
-        ASSERT.kind_of      loc,                    L::Location
+        ASSERT.kind_of      loc,                    Umu::Location
         ASSERT.kind_of      lhs_expr,               ASCE::Abstract
         ASSERT.kind_of      rhs_head_message,
                                 Binary::Send::Message::Abstraction::Abstract
