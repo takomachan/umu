@@ -1,6 +1,5 @@
 #!/usr/bin/env ruby -I../lib
 
-#require 'umu'
 require_relative '../lib/umu'
 
 exit Umu::Commander.main(ARGV)
