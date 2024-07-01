@@ -9,6 +9,7 @@
 .DS_Store
 lib/umu/concrete-syntax/grammar.tab.rb
 umu/tmdoc.home.docbook.epub
+doc/Make.FILES
 doc/tmdoc/LOG.txt
 doc/tmdoc/dbook/
 doc/tmdoc/html/
