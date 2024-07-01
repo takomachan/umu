@@ -1,6 +1,7 @@
-MAIN	= ../../exe/umu
+FILE_DIR  = ../lib/umu
+FILE_HOME = $(FILE_DIR)/version.rb
 
-FILES	= version.rb \
+FILES = version.rb \
 			commander.rb \
 			commander/commander.rb \
 			commander/option.rb \
@@ -181,60 +182,73 @@ FILES	= version.rb \
 			common/location.rb \
 			common/pretty-print.rb
 
-RACC_FILES = concrete-syntax/grammar.ry
+TMDOCPROC		= tmdoc
+DBTOEPUB		= /opt/local/share/xsl/docbook-xsl/epub/bin/dbtoepub
 
-EXAMPLES_DIR = ../../example
-EXAMPLES =	$(EXAMPLES_DIR)/test.umu \
-			$(EXAMPLES_DIR)/list.umu \
-			$(EXAMPLES_DIR)/set.umu \
-			$(EXAMPLES_DIR)/j.c.reynolds1971.umu \
-			$(EXAMPLES_DIR)/c.j.date1975/date.umu \
-            $(EXAMPLES_DIR)/c.j.date1975/date-jp.umu \
-			$(EXAMPLES_DIR)/sicp-ch1.umu \
-			$(EXAMPLES_DIR)/sicp-ch2.umu \
-			$(EXAMPLES_DIR)/sicp-ch3.umu
+DOC_ROOT		= tmdoc
+TMDOC_LOG		= $(DOC_ROOT)/LOG.txt
+DBOOK_TO_HTML	= $(DOC_ROOT)/dbook-to-html.xsl
+DBOOK_TO_EPUB	= $(DOC_ROOT)/dbook-to-epub.xsl
+CSS				= docbook.css
 
-TAR_FILE = ../umu.tar
+BOOK_TITLE		= "Umu - Functional Scripting Language"
+
+DBOOK_DIR 		= $(DOC_ROOT)/dbook
+DBOOK_HOME		= $(DBOOK_DIR)/tmdoc.home.docbook
+
+HTML_DIR		= $(DOC_ROOT)/html
+HTML_HOME		= $(HTML_DIR)/index.html
+
+EPUB			= tmdoc.home.docbook.epub
+
 
 
 help:
 	@echo "[Making Rules]"
-	@echo "        run : Interact interpreter"
-	@echo "       test : Run scripts for testing"
-	@echo ""
-	@echo "         wc : Count source files"
 	@echo "      files : List source files"
 	@echo ""
+	@echo "       open : Open TmDoc document (HTML format)"
+	@echo "       html : Publish TmDoc document (HTML format)"
+	@echo "       epub : Publish TmDoc document (EPUB format)"
+	@echo ""
 	@echo "      clean : Remove all automatically generated files"
-	@echo "        tar : Create tar archive"
 	@echo ""
 
 
-run: $(MAIN)
-	./$< -i -d
+files:
+	@for FILE in $(FILES) ; do echo $(FILE_DIR)/$$FILE ; done
 
-test: $(MAIN) $(EXAMPLES)
-	@for FILE in $(EXAMPLES) ; \
-	do \
-		echo "==== $$FILE ====" ; \
-		./$< $$FILE ; \
-		echo ; \
-		echo ; \
-	done
+open: $(HTML_HOME)
+	w3m -o anchor_color=green $<
 
-wc: $(FILES) $(RACC_FILES)
-	@wc $(FILES) $(RACC_FILES)
+html: $(HTML_HOME)
 
-files: $(FILES)
-	@for FILE in $(FILES) ; do echo $$FILE ; done
+epub: $(EPUB)
 
 clean:
-	rm -f concrete-syntax/grammar.tab.rb $(TAR_FILE)
+	rm -f $(DBOOK_DIR)/tmdoc.*.docbook $(HTML_DIR)/*.html $(EPUB)
 
-tar: $(FILES) $(RACC_FILES) Makefile
-	tar cvf $(TAR_FILE) $(FILES) $(RACC_FILES) Makefile
 
-$(MAIN): $(FILES) concrete-syntax/grammar.tab.rb
 
-concrete-syntax/grammar.tab.rb: concrete-syntax/grammar.ry
-	racc $<
+$(HTML_HOME): $(DBOOK_HOME)
+	xsltproc \
+		--stringparam html.stylesheet ../$(CSS) \
+		-xinclude \
+		-o $(HTML_DIR)/ \
+		$(DBOOK_TO_HTML) $(DBOOK_HOME)
+
+$(EPUB): $(DBOOK_HOME)
+	$(DBTOEPUB) -d \
+		--css $(DOC_ROOT)/$(CSS) \
+		--stylesheet $(DBOOK_TO_EPUB) \
+			$(DBOOK_HOME)
+
+$(DBOOK_HOME): $(FILE_HOME)
+	$(TMDOCPROC) $(OPTS) \
+        --show-all \
+        −−sensitive−level notice \
+        --title      $(BOOK_TITLE) \
+        --log-file   $(TMDOC_LOG) \
+		--input-dir  $(FILE_DIR) \
+		--output-dir $(DBOOK_DIR) \
+        $(FILES)
