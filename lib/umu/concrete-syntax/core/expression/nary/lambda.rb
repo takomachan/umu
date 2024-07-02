@@ -72,7 +72,16 @@ private
         lamb_expr = if local_decls.empty?
                         body_expr
                     else
-                        ASCE.make_let self.loc, local_decls, body_expr
+                        ASCE.make_let(
+                            self.loc,
+
+                            ASCD.make_seq_of_declaration(
+                                self.loc,
+                                local_decls
+                            ),
+
+                            body_expr
+                        )
                     end
 
         ASCE.make_lambda self.loc, lamb_params, lamb_expr, __name_sym__

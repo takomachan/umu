@@ -18,7 +18,7 @@ class Let < Expression::Abstract
 
 
     def initialize(loc, decls, expr)
-        ASSERT.kind_of decls,   ::Array
+        ASSERT.kind_of decls,   ASCD::SeqOfDeclaration
         ASSERT.kind_of expr,    ASCE::Abstract
 
         super(loc)
@@ -88,7 +88,7 @@ module_function
 
     def make_let(loc, decls, expr)
         ASSERT.kind_of loc,     LOC::Entry
-        ASSERT.kind_of decls,   ::Array
+        ASSERT.kind_of decls,   ASCD::SeqOfDeclaration
         ASSERT.kind_of expr,    ASCE::Abstract
 
         Nary::Let.new(loc, decls.freeze, expr).freeze

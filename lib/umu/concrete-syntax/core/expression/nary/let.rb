@@ -46,11 +46,17 @@ private
         else
             ASCE.make_let(
                 self.loc,
-                self.decls.map { |decl|
-                    ASSERT.kind_of decl, CSCD::Abstract
 
-                    decl.desugar(new_env)
-                },
+                ASCD.make_seq_of_declaration(
+                    self.loc,
+
+                    self.decls.map { |decl|
+                        ASSERT.kind_of decl, CSCD::Abstract
+
+                        decl.desugar(new_env)
+                    }
+                ),
+
                 self.expr.desugar(new_env)
             )
         end

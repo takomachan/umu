@@ -36,17 +36,17 @@ private
 
         *not_last_exprs, last_expr = self.exprs
 
-        ASCE.make_let(
+        decls = ASCD.make_seq_of_declaration(
             self.loc,
 
             not_last_exprs.map { |expr|
                 ASSERT.kind_of expr, CSCE::Abstract
 
                 ASCD.make_value expr.loc, WILDCARD, expr.desugar(new_env)
-            },
-
-            last_expr.desugar(new_env)
+            }
         )
+
+        ASCE.make_let self.loc, decls, last_expr.desugar(new_env)
     end
 end
 

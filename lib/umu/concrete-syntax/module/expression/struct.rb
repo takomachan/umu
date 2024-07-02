@@ -78,7 +78,12 @@ private
 
             ASCE.make_let(
                 self.loc,
-                decls.map { |decl| decl.desugar new_env },
+
+                ASCD.make_seq_of_declaration(
+                    self.loc,
+                    decls.map { |decl| decl.desugar new_env }
+                ),
+
                 struct_expr
             )
         end

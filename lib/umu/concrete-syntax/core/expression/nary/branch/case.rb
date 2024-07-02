@@ -146,10 +146,16 @@ private
 
                     ASCE.make_let(
                         rule.loc,
-                        (
-                            [contents_decl] +
-                            rule.decls.map { |decl| decl.desugar env }
+
+                        ASCD.make_seq_of_declaration(
+                            rule.loc,
+
+                            (
+                                [contents_decl] +
+                                rule.decls.map { |decl| decl.desugar env }
+                            )
                         ),
+
                         rule.body_expr.desugar(env)
                     )
                 else
@@ -184,7 +190,10 @@ private
             ASCE.make_let(
                 self.loc,
 
-                [ASCD.make_value(source_expr.loc, :'%x', source_expr)],
+                ASCD.make_seq_of_declaration(
+                    source_expr.loc,
+                    [ASCD.make_value(source_expr.loc, :'%x', source_expr)]
+                ),
 
                 ASCE.make_switch(
                     self.loc,
@@ -215,7 +224,10 @@ private
             ASCE.make_let(
                 self.loc,
 
-                [ASCD.make_value(source_expr.loc, :'%x', source_expr)],
+                ASCD.make_seq_of_declaration(
+                    source_expr.loc,
+                    [ASCD.make_value(source_expr.loc, :'%x', source_expr)]
+                ),
 
                 ASCE.make_if(
                     self.loc,
@@ -282,10 +294,15 @@ private
 
                     ASCE.make_let(
                         rule.loc,
-                        (
-                            [contents_decl] +
-                            rule.decls.map { |decl| decl.desugar env }
+
+                        ASCD.make_seq_of_declaration(
+                            rule.loc,
+                            (
+                                [contents_decl] +
+                                rule.decls.map { |decl| decl.desugar env }
+                            )
                         ),
+
                         rule.body_expr.desugar(env)
                     )
                 else

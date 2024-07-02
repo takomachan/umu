@@ -37,7 +37,10 @@ private
             ASCE.make_let(
                 self.loc,
 
-                [ASCD.make_value(opnd_expr.loc, :'%x', opnd_expr)],
+                ASCD.make_seq_of_declaration(
+                    opnd_expr.loc,
+                    [ASCD.make_value(opnd_expr.loc, :'%x', opnd_expr)]
+                ),
 
                 ASCE.make_if(
                     self.loc,

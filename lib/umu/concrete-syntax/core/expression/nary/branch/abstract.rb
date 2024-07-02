@@ -85,14 +85,19 @@ private
 
         body_expr_  = rule.body_expr.desugar(env)
         body_expr   = unless rule.decls.empty?
-                            ASCE.make_let(
-                                rule.loc,
-                                rule.decls.map { |decl| decl.desugar env },
-                                body_expr_
-                            )
-                        else
-                            body_expr_
-                        end
+            ASCE.make_let(
+                rule.loc,
+
+                ASCD.make_seq_of_declaration(
+                    rule.loc,
+                    rule.decls.map { |decl| decl.desugar env }
+                ),
+
+                body_expr_
+            )
+        else
+            body_expr_
+        end
 
         ASSERT.kind_of body_expr, ASCE::Abstract
     end
@@ -100,28 +105,33 @@ private
 
     def __desugar_else_expr__(env)
         else_expr = if self.opt_else_expr
-                        else_expr_ = self.opt_else_expr.desugar(env)
+            else_expr_ = self.opt_else_expr.desugar(env)
 
-                        unless self.else_decls.empty?
-                            ASCE.make_let(
-                                else_expr_.loc,
-                                self.else_decls.map { |decl|
-                                    decl.desugar env
-                                },
-                                else_expr_
-                            )
-                        else
-                            else_expr_
-                        end
-                    else
-                        ASCE.make_raise(
-                            self.loc,
-                            X::UnmatchError,
-                            format("No rules matched in %s-expression",
-                                    __keyword__
-                            )
-                        )
-                    end
+            unless self.else_decls.empty?
+                ASCE.make_let(
+                    else_expr_.loc,
+
+                    ASCD.make_seq_of_declaration(
+                        else_expr_.loc,
+                        self.else_decls.map { |decl|
+                            decl.desugar env
+                        }
+                    ),
+
+                    else_expr_
+                )
+            else
+                else_expr_
+            end
+        else
+            ASCE.make_raise(
+                self.loc,
+                X::UnmatchError,
+                format("No rules matched in %s-expression",
+                        __keyword__
+                )
+            )
+        end
 
         ASSERT.kind_of else_expr, ASCE::Abstract
     end
