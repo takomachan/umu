@@ -200,7 +200,6 @@ TAR_FILE = ../umu.tar
 help:
 	@echo "[Making Rules]"
 	@echo "        run : Interact interpreter"
-	@echo "       test : Run scripts for testing"
 	@echo ""
 	@echo "         wc : Count source files"
 	@echo "      files : List source files"
@@ -212,15 +211,6 @@ help:
 
 run: $(MAIN)
 	./$< -i -d
-
-test: $(MAIN) $(EXAMPLES)
-	@for FILE in $(EXAMPLES) ; \
-	do \
-		echo "==== $$FILE ====" ; \
-		./$< $$FILE ; \
-		echo ; \
-		echo ; \
-	done
 
 wc: $(FILES) $(RACC_FILES)
 	@wc $(FILES) $(RACC_FILES)

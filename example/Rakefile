@@ -1,0 +1,35 @@
+UMU = '../exe/umu'
+
+FILES =	[
+    'test.umu',
+    'list.umu',
+    'set.umu',
+    'j.c.reynolds1971.umu',
+    'c.j.date1975/date.umu',
+    'c.j.date1975/date-jp.umu',
+    'sicp-ch1.umu',
+    'sicp-ch2.umu',
+    'sicp-ch3.umu'
+]
+
+
+
+task :default => :help
+
+
+task :help do
+	puts "[Making Rules]"
+	puts "    run : Run all scripts"
+	puts "  files : List script files"
+	puts
+end
+
+
+task :run => FILES do
+    FILES.each do |file|
+        puts "==== #{file} ===="
+        sh "#{UMU} #{file}"
+        puts
+        puts
+    end
+end
