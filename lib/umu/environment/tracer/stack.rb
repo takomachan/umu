@@ -35,7 +35,7 @@ class Abstract < Abstraction::Collection
 
 
     def pop
-        raise X::SubclassResponsibility
+        raise X::InternalSubclassResponsibility
     end
 
 

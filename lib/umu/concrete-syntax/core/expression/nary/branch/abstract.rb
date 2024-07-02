@@ -76,7 +76,7 @@ class Abstract < Expression::Abstract
 private
 
     def __keyword__
-        raise X::SubclassResponsibility
+        raise X::InternalSubclassResponsibility
     end
 
 

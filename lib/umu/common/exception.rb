@@ -80,7 +80,7 @@ end
 
 
 
-class Unexpected < Abstract; end
+class SubclassResponsibility < RuntimeError; end
 
 end # Umu::Exception::Abstraction
 
@@ -101,7 +101,6 @@ end
 
 class LexicalError          < Abstraction::ExecutionError; end
 class SyntaxError           < Abstraction::ExecutionError; end
-class NotImplemented        < Abstraction::ExecutionError; end
 
 
 
@@ -110,8 +109,6 @@ class TypeError             < Abstraction::RuntimeError; end
 class ArgumentError         < Abstraction::RuntimeError; end
 class ApplicationError      < Abstraction::RuntimeError; end
 class SelectionError        < Abstraction::RuntimeError; end
-class EqualityError         < Abstraction::RuntimeError; end
-class OrderError            < Abstraction::RuntimeError; end
 class NoMethodError         < Abstraction::RuntimeError; end
 class UnmatchError          < Abstraction::RuntimeError; end
 class ZeroDivisionError     < Abstraction::RuntimeError; end
@@ -120,7 +117,13 @@ class Panic                 < Abstraction::RuntimeError; end
 
 
 
-class SubclassResponsibility < Abstraction::Unexpected; end
+class EqualityError         < Abstraction::SubclassResponsibility; end
+class OrderError            < Abstraction::SubclassResponsibility; end
+class NotImplemented        < Abstraction::SubclassResponsibility; end
+
+
+
+class InternalSubclassResponsibility < Abstraction::Abstract; end
 
 end # Umu::Exception
 

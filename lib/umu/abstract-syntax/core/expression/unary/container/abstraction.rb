@@ -24,7 +24,7 @@ class Abstract < Unary::Abstract
 
 
     def each
-        raise X::SubclassResponsibility
+        raise X::InternalSubclassResponsibility
     end
 
 

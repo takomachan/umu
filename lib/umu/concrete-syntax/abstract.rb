@@ -25,7 +25,7 @@ class Abstract < Abstraction::Model
 private
 
     def __desugar__(env, event)
-        raise X::SubclassResponsibility
+        raise X::InternalSubclassResponsibility
     end
 end
 

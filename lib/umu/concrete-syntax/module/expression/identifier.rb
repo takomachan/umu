@@ -20,12 +20,12 @@ class Abstract < Expression::Abstract
 
 
     def head
-        raise X::SubclassResponsibility
+        raise X::InternalSubclassResponsibility
     end
 
 
     def tail
-        raise X::SubclassResponsibility
+        raise X::InternalSubclassResponsibility
     end
 end
 

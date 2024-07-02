@@ -26,14 +26,14 @@ class Abstract < Abstraction::Model
 
 
     def exported_vars
-        raise X::SubclassResponsibility
+        raise X::InternalSubclassResponsibility
     end
 
 
 private
 
     def __desugar_value__(expr, env, event)
-        raise X::SubclassResponsibility
+        raise X::InternalSubclassResponsibility
     end
 end
 

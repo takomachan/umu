@@ -13,7 +13,7 @@ module Declaration
 
 class Abstract < ConcreteSyntax::Abstract
     def exported_vars
-        raise X::SubclassResponsibility
+        raise X::InternalSubclassResponsibility
     end
 end
 

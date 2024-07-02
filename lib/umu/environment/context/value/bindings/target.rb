@@ -32,7 +32,7 @@ class Abstract
 
 
     def get_value(context)
-        raise X::SubclassResponsibility
+        raise X::InternalSubclassResponsibility
     end
 end
 

@@ -13,7 +13,7 @@ module Declaration
 
 class Abstract < Module::Abstract
     def exported_vars
-        raise X::SubclassResponsibility
+        raise X::InternalSubclassResponsibility
     end
 end
 
@@ -132,11 +132,11 @@ class Abstract < Abstraction::Model
 private
 
     def __reserved_word__
-        raise X::SubclassResponsibility
+        raise X::InternalSubclassResponsibility
     end
 
     def __opt_type_sym__
-        raise X::SubclassResponsibility
+        raise X::InternalSubclassResponsibility
     end
 end
 

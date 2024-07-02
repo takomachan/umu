@@ -40,7 +40,7 @@ class Abstract < Expression::Abstract
 private
 
     def __name_sym__
-        raise X::SubclassResponsibility
+        raise X::InternalSubclassResponsibility
     end
 
 

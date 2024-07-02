@@ -94,7 +94,7 @@ class Abstract < Morph::Abstract
 
 
     def empty?
-        raise X::SubclassResponsibility
+        raise X::InternalSubclassResponsibility
     end
 
 
@@ -122,7 +122,7 @@ class Abstract < Morph::Abstract
 
 
     def meth_des!(_loc, _env, _event)
-        raise X::SubclassResponsibility
+        raise X::InternalSubclassResponsibility
     end
 
 

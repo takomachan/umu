@@ -84,7 +84,7 @@ class Abstract < Abstraction::Record
 
 
     def lex(scanner)
-        raise X::SubclassResponsibility
+        raise X::InternalSubclassResponsibility
     end
 
 

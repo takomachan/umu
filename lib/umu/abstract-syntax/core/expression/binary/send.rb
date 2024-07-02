@@ -21,7 +21,7 @@ module Abstraction
 
 class Abstract < Umu::Abstraction::Model
     def evaluate_for(value, env, event)
-        raise X::SubclassResponsibility
+        raise X::InternalSubclassResponsibility
     end
 end
 

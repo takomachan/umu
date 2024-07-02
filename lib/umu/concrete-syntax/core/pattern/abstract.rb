@@ -13,7 +13,7 @@ module Pattern
 
 class Abstract < Abstraction::Model
     def exported_vars
-        raise X::SubclassResponsibility
+        raise X::InternalSubclassResponsibility
     end
 
 
@@ -48,12 +48,12 @@ class Abstract < Abstraction::Model
 private
 
     def __desugar_value__(expr, env, event)
-        raise X::SubclassResponsibility
+        raise X::InternalSubclassResponsibility
     end
 
 
     def __desugar_lambda__(seq_num, env, event)
-        raise X::SubclassResponsibility
+        raise X::InternalSubclassResponsibility
     end
 end
 

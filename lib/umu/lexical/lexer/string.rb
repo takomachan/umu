@@ -111,14 +111,14 @@ private
         ASSERT.kind_of loc, LOC::Entry
         ASSERT.kind_of val, ::String
 
-        raise X::SubclassResponsibility
+        raise X::InternalSubclassResponsibility
     end
 
 
     def __make_state__(buf)
         ASSERT.kind_of buf, ::String
 
-        raise X::SubclassResponsibility
+        raise X::InternalSubclassResponsibility
     end
 end
 

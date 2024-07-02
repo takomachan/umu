@@ -36,7 +36,7 @@ class Abstract < Umu::AbstractSyntax::Abstract
 private
 
     def __evaluate__(env, event)
-        raise X::SubclassResponsibility
+        raise X::InternalSubclassResponsibility
     end
 end
 

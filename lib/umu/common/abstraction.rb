@@ -19,7 +19,7 @@ class Model
 
 
     def to_s
-        raise X::SubclassResponsibility
+        raise X::InternalSubclassResponsibility
     end
 end
 

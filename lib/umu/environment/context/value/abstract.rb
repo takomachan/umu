@@ -80,7 +80,7 @@ class Abstract < Abstraction::Collection
 private
 
     def __extend__(sym, target)
-        raise X::SubclassResponsibility
+        raise X::InternalSubclassResponsibility
     end
 end
 

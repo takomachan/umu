@@ -37,7 +37,7 @@ class Abstract < AbstractSyntax::Abstract
 private
 
     def __evaluate__(env)
-        raise X::SubclassResponsibility
+        raise X::InternalSubclassResponsibility
     end
 end
 

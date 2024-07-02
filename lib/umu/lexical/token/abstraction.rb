@@ -26,7 +26,7 @@ class Abstract < Umu::Abstraction::Model
 
 
     def to_racc_token
-        raise X::SubclassResponsibility
+        raise X::InternalSubclassResponsibility
     end
 
 

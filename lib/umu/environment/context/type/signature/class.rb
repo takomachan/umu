@@ -17,7 +17,7 @@ module Class
 
 class Abstract
     def lookup_instance_method(sym, loc, env)
-        raise X::SubclassResponsibility
+        raise X::InternalSubclassResponsibility
     end
 end
 

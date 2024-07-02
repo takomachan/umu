@@ -120,7 +120,7 @@ class Abstract < Umu::Abstraction::Model
 
 
     def type_sym
-        raise X::SubclassResponsibility
+        raise X::InternalSubclassResponsibility
     end
 end
 
