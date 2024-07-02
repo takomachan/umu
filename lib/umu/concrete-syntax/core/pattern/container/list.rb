@@ -79,7 +79,7 @@ private
         if self.pats.empty?
             ASCD.make_value self.loc, WILDCARD, expr, :Nil
         else
-            ASCD.make_declarations self.loc, __desugar__(expr, env)
+            ASCD.make_seq_of_declaration self.loc, __desugar__(expr, env)
         end
     end
 

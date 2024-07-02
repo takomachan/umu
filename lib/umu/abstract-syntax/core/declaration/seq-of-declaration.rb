@@ -11,7 +11,9 @@ module Core
 
 module Declaration
 
-class Declarations < Abstract
+class SeqOfDeclaration < Abstract
+    include Enumerable
+
     attr_reader :decls
 
 
@@ -25,15 +27,24 @@ class Declarations < Abstract
     end
 
 
+    def each
+        self.decls.each do |decl|
+            ASSERT.kind_of decl, ASCD::Abstract
+
+            yield decl
+        end
+    end
+
+
     def to_s
-        format "{ %s }", self.decls.map(&:to_s).join(' ')
+        format "{ %s }", self.map(&:to_s).join(' ')
     end
 
 
     def pretty_print(q)
         q.text '{'
         q.group(PP_INDENT_WIDTH, '', '') do
-            self.decls.each do |decl|
+            self.each do |decl|
                 q.breakable
 
                 q.pp decl
@@ -51,7 +62,7 @@ private
     def __evaluate__(old_env)
         ASSERT.kind_of old_env, E::Entry
 
-        new_env = self.decls.inject(old_env) { |env, decl|
+        new_env = self.inject(old_env) { |env, decl|
             ASSERT.kind_of env,     E::Entry
             ASSERT.kind_of decl,    ASCD::Abstract
 
@@ -69,11 +80,11 @@ end
 
 module_function
 
-    def make_declarations(loc, decls)
+    def make_seq_of_declaration(loc, decls)
         ASSERT.kind_of loc,     LOC::Entry
         ASSERT.kind_of decls,   ::Array
 
-        Declarations.new(loc, decls.freeze).freeze
+        SeqOfDeclaration.new(loc, decls.freeze).freeze
     end
 
 end # Umu::AbstractSyntax::Core::Declaration

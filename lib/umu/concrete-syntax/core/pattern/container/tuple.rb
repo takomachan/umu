@@ -57,7 +57,7 @@ private
     def __desugar_value__(expr, env, _event)
         ASSERT.kind_of expr, ASCE::Abstract
 
-        ASCD.make_declarations(
+        ASCD.make_seq_of_declaration(
             self.loc,
             [
                 ASCD.make_value(self.loc, :'%t', expr, :Product)

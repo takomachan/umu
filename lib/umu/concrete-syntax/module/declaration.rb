@@ -234,7 +234,7 @@ private
                 array + field.desugar_field(new_env, self.id)
             }
 
-            ASCD.make_declarations self.loc, decls
+            ASCD.make_seq_of_declaration self.loc, decls
         else
             ASCD.make_import self.loc, self.id.desugar(new_env)
         end
