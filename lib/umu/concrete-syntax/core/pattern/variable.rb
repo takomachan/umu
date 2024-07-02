@@ -26,6 +26,16 @@ class Variable < Abstract
     end
 
 
+    def hash
+        self.var_sym.hash
+    end
+
+
+    def eql?(other)
+        self.var_sym.eql? other.var_sym
+    end
+
+
     def to_s
         format("%s%s",
             self.var_sym.to_s,

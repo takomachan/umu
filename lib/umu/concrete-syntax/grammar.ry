@@ -705,6 +705,9 @@ pat:
 | '(' var_pat ',' var_pat com_pats ')' {
     result = CSCP.make_tuple val[0].loc, [val[1], val[3]] + val[4]
 }
+| '(' named_fld_pat com_named_fld_pats ')' {
+    result = CSCP.make_named_tuple val[0].loc, [val[1]] + val[2]
+}
 
 # Braket: [ ... ]
 | '[' ']' {
@@ -726,6 +729,30 @@ _com_pats:
 | ',' var_pat _com_pats { result = [val[1]] + val[2] }
 
 
+# Comma separated seq of named field pattern
+
+com_named_fld_pats:
+  /* empty */         { result = [] }
+| _com_named_fld_pats { result = val[0] }
+
+_com_named_fld_pats:
+  ',' named_fld_pat                     { result = [val[1]] }
+| ',' named_fld_pat _com_named_fld_pats { result = [val[1]] + val[2] }
+
+named_fld_pat: LABEL opt_var_pat {
+    var_pat = if val[1]
+                  val[1]
+              else
+                  CSCP.make_variable val[0].loc, val[0].sym
+              end
+
+    result = [
+        CSCE.make_named_tuple_label(val[0].loc, val[0].sym),
+        var_pat
+    ]
+}
+
+
 # Last of collection pattern
 
 opt_last_pat:
@@ -734,6 +761,10 @@ opt_last_pat:
 
 
 # Variable pattern
+
+opt_var_pat:
+  /* empty */   { result = nil }
+| var_pat       { result = val[0] }
 
 var_pat:
   ID opt_type_assert {

@@ -99,7 +99,7 @@ structure SP = SHIPMENTS
 
 print "#### 3.5.1 ####" ;;
 pp [|city|
-    val (sno, _, _, city) <- S::rows if sno == @S1
+    val (sno:, city:) <- S::rows if sno == @S1
 ] ;;
 # --> ["London"]
 nl () ;;
@@ -110,7 +110,7 @@ nl () ;;
 
 print "#### 3.5.2 ####" ;;
 pp [|sno:, status:|
-    val (sno, _, status, city) <- S::rows if city == "Paris"
+    val (sno:, status:, city:) <- S::rows if city == "Paris"
 ] ;;
 # --> [(sno: @S2, status: 10), (sno: @S3, status: 30)]
 nl () ;;
@@ -121,8 +121,10 @@ nl () ;;
 
 print "#### 3.5.3 ####" ;;
 pp [|pname|
-    val (sno, sp-pno, _)        <- SP::rows if sno == @S1
-    val (p-pno, pname, _, _, _) <- P::rows  if p-pno == sp-pno
+    val (sno:, pno: sp-pno       ) <- SP::rows if sno == @S1
+    val (      pno: p-pno, pname:) <- P::rows
+
+    if sp-pno == p-pno
 ] ;;
 # --> ["Nut", "Bolt", "Screw"]
 nl () ;;
@@ -135,10 +137,10 @@ nl () ;;
 
 print "#### 3.5.4 ####" ;;
 pp [|pno:, city:|
-    val (sp-sno, pno, _)    <- SP::rows
-    val (s-sno, _, _, city) <- S::rows
+    val (sno: sp-sno, pno:)  <- SP::rows
+    val (sno: s-sno,  city:) <- S::rows
 
-    if s-sno == sp-sno
+    if sp-sno == s-sno
 ] ;;
 # --> [
 #     (pno: @P1, city: "London"),
@@ -262,7 +264,7 @@ structure SP = SHIPMENTS
 
 print "#### 7.2 ####" ;;
 pp [|sno:, status:|
-    val (sno, _, status, city) <- S::rows if city == "Paris"
+    val (sno:, status:, city:) <- S::rows if city == "Paris"
 ] ;;
 # --> [(sno: @S2, status: 10), (sno: @S3, status: 30)]
 nl () ;;
@@ -276,7 +278,7 @@ nl () ;;
 #)
 
 print "#### 7.2.1 ####" ;;
-pp [|pno| val (_, pno, _) <- SP::rows] ;;
+pp [|pno| val (pno:) <- SP::rows] ;;
 # --> [@P1, @P2, @P3, @P4, @P5, @P6, @P1, @P2, @P2, @P2, @P4, @P5]
 nl () ;;
 
@@ -320,7 +322,7 @@ nl () ;;
 
 print "#### 7.2.3 ####" ;;
 pp [|sno|
-    val (sno, _, status, city) <- S::rows
+    val (sno:, status:, city:) <- S::rows
 
     if city == "Paris" && status > 20
 ] ;;
