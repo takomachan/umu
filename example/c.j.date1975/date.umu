@@ -13,79 +13,88 @@ structure UAS = Umu::Assert
 # 3.2 THE RELATIONAL APPROACH -- p64
 # 3.2 関係型の方法 -- p66
 
-structure SUPPLIERS = struct {
-    fun sno    = row : Product -> row$1
-    fun sname  = row : Product -> row$2
-    fun status = row : Product -> row$3
-    fun city   = row : Product -> row$4
+structure RELATIONAL-DATA-MODEL-3 = struct {
+    structure S  = SUPPLIERS
+    structure P  = PARTS
+    structure SP = SHIPMENTS
+} where {
+    structure SUPPLIERS = struct {
+        fun sno    = row : Product -> row$1
+        fun sname  = row : Product -> row$2
+        fun status = row : Product -> row$3
+        fun city   = row : Product -> row$4
 
-    val rows = map { row -> (
-            sno:    sno row,
-            sname:  sname row,
-            status: status row,
-            city:   city row
-        )
-    } [
-    #     S#   SNAME   STATUS CITY
-    #------------------------------------
-        (@S1, "Smith", 20,   "London"),
-        (@S2, "Jones", 10,   "Paris"),
-        (@S3, "Blake", 30,   "Paris")
-    ]
+        val rows = map { row -> (
+                sno:    sno row,
+                sname:  sname row,
+                status: status row,
+                city:   city row
+            )
+        } [
+        #     S#   SNAME   STATUS CITY
+        #------------------------------------
+            (@S1, "Smith", 20,   "London"),
+            (@S2, "Jones", 10,   "Paris"),
+            (@S3, "Blake", 30,   "Paris")
+        ]
+    }
+
+
+    structure PARTS = struct {
+        fun pno    = row : Product -> row$1
+        fun pname  = row : Product -> row$2
+        fun color  = row : Product -> row$3
+        fun weight = row : Product -> row$4
+        fun city   = row : Product -> row$5
+
+        val rows = map { row -> (
+                pno:    pno row,
+                pname:  pname row,
+                color:  color row,
+                weight: weight row,
+                city:   city row
+            )
+        } [
+        #     P#   PNAME    COLOR   WEIGHT CITY
+        #---------------------------------------------
+            (@P1, "Nut",   "Red",   12,   "London"),
+            (@P2, "Bolt",  "Green", 17,   "Paris"),
+            (@P3, "Screw", "Blue",  17,   "Rome"),
+            (@P4, "Screw", "Red",   14,   "London")
+        ]
+    }
+
+
+    structure SHIPMENTS = struct {
+        fun sno = row : Product -> row$1
+        fun pno = row : Product -> row$2
+        fun qty = row : Product -> row$3
+
+        val rows = map { row -> (
+                sno: sno row,
+                pno: pno row,
+                qty: qty row
+            )
+        } [
+        #     S#   P#  QTY
+        #---------------------
+            (@S1, @P1, 300),
+            (@S1, @P2, 200),
+            (@S1, @P3, 400),
+            (@S2, @P1, 300),
+            (@S2, @P2, 400),
+            (@S2, @P2, 200)
+        ]
+    }
 }
 
 
-structure PARTS = struct {
-    fun pno    = row : Product -> row$1
-    fun pname  = row : Product -> row$2
-    fun color  = row : Product -> row$3
-    fun weight = row : Product -> row$4
-    fun city   = row : Product -> row$5
 
-    val rows = map { row -> (
-            pno:    pno row,
-            pname:  pname row,
-            color:  color row,
-            weight: weight row,
-            city:   city row
-        )
-    } [
-    #     P#   PNAME    COLOR   WEIGHT CITY
-    #---------------------------------------------
-        (@P1, "Nut",   "Red",   12,   "London"),
-        (@P2, "Bolt",  "Green", 17,   "Paris"),
-        (@P3, "Screw", "Blue",  17,   "Rome"),
-        (@P4, "Screw", "Red",   14,   "London")
-    ]
+import RELATIONAL-DATA-MODEL-3 {
+    structure S
+    structure P
+    structure SP
 }
-
-
-structure SHIPMENTS = struct {
-    fun sno = row : Tuple -> row$1
-    fun pno = row : Tuple -> row$2
-    fun qty = row : Tuple -> row$3
-
-    val rows = map { row -> (
-            sno: sno row,
-            pno: pno row,
-            qty: qty row
-        )
-    } [
-    #     S#   P#  QTY
-    #---------------------
-        (@S1, @P1, 300),
-        (@S1, @P2, 200),
-        (@S1, @P3, 400),
-        (@S2, @P1, 300),
-        (@S2, @P2, 400),
-        (@S2, @P2, 200)
-    ]
-}
-
-
-structure S  = SUPPLIERS
-structure P  = PARTS
-structure SP = SHIPMENTS
 
 ;;
 
@@ -160,89 +169,98 @@ nl () ;;
 # 4.5 SUMMARY -- p91
 # 4.5 要約 -- p96
 
-structure SUPPLIERS = struct {
-    fun sno    = row : Tuple -> row$1
-    fun sname  = row : Tuple -> row$2
-    fun status = row : Tuple -> row$3
-    fun city   = row : Tuple -> row$4
+structure RELATIONAL-DATA-MODEL-4 = struct {
+    structure S  = SUPPLIERS
+    structure P  = PARTS
+    structure SP = SHIPMENTS
+} where {
+    structure SUPPLIERS = struct {
+        fun sno    = row : Tuple -> row$1
+        fun sname  = row : Tuple -> row$2
+        fun status = row : Tuple -> row$3
+        fun city   = row : Tuple -> row$4
 
-    val rows = map { row -> (
-            sno:    sno row,
-            sname:  sname row,
-            status: status row,
-            city:   city row
-        )
-    } [
-    #    S#    SNAME   STATUS CITY
-    #------------------------------------
-        (@S1, "Smith", 20,   "London"),
-        (@S2, "Jones", 10,   "Paris"),
-        (@S3, "Blake", 30,   "Paris"),
-        (@S4, "Clark", 20,   "London"),
-        (@S5, "Adams", 30,   "Athens")
-    ]
+        val rows = map { row -> (
+                sno:    sno row,
+                sname:  sname row,
+                status: status row,
+                city:   city row
+            )
+        } [
+        #    S#    SNAME   STATUS CITY
+        #------------------------------------
+            (@S1, "Smith", 20,   "London"),
+            (@S2, "Jones", 10,   "Paris"),
+            (@S3, "Blake", 30,   "Paris"),
+            (@S4, "Clark", 20,   "London"),
+            (@S5, "Adams", 30,   "Athens")
+        ]
+    }
+
+
+    structure PARTS = struct {
+        fun pno    = row : Tuple -> row$1
+        fun pname  = row : Tuple -> row$2
+        fun color  = row : Tuple -> row$3
+        fun weight = row : Tuple -> row$4
+        fun city   = row : Tuple -> row$5
+
+        val rows = map { row -> (
+                pno:    pno row,
+                pname:  pname row,
+                color:  color row,
+                weight: weight row,
+                city:   city row
+            )
+        } [
+        #     P#   PNAME    COLOR   WEIGHT CITY
+        #---------------------------------------------
+            (@P1, "Nut",   "Red",   12,   "London"),
+            (@P2, "Bolt",  "Green", 17,   "Paris"),
+            (@P3, "Screw", "Blue",  17,   "Rome"),
+            (@P4, "Screw", "Red",   14,   "London"),
+            (@P5, "Cam",   "Blue",  12,   "Paris"),
+            (@P6, "Cog",   "Red",   19,   "London")
+        ]
+    }
+
+
+    structure SHIPMENTS = struct {
+        fun sno = row : Tuple -> row$1
+        fun pno = row : Tuple -> row$2
+        fun qty = row : Tuple -> row$3
+
+        val rows = map { row -> (
+                sno: sno row,
+                pno: pno row,
+                qty: qty row
+            )
+        } [
+        #     S#   P#  QTY
+        #---------------------
+            (@S1, @P1, 300),
+            (@S1, @P2, 200),
+            (@S1, @P3, 400),
+            (@S1, @P4, 200),
+            (@S1, @P5, 100),
+            (@S1, @P6, 100),
+            (@S2, @P1, 300),
+            (@S2, @P2, 400),
+            (@S3, @P2, 200),
+            (@S4, @P2, 200),
+            (@S4, @P4, 300),
+            (@S4, @P5, 400)
+        ]
+    }
 }
 
 
-structure PARTS = struct {
-    fun pno    = row : Tuple -> row$1
-    fun pname  = row : Tuple -> row$2
-    fun color  = row : Tuple -> row$3
-    fun weight = row : Tuple -> row$4
-    fun city   = row : Tuple -> row$5
 
-    val rows = map { row -> (
-            pno:    pno row,
-            pname:  pname row,
-            color:  color row,
-            weight: weight row,
-            city:   city row
-        )
-    } [
-    #     P#   PNAME    COLOR   WEIGHT CITY
-    #---------------------------------------------
-        (@P1, "Nut",   "Red",   12,   "London"),
-        (@P2, "Bolt",  "Green", 17,   "Paris"),
-        (@P3, "Screw", "Blue",  17,   "Rome"),
-        (@P4, "Screw", "Red",   14,   "London"),
-        (@P5, "Cam",   "Blue",  12,   "Paris"),
-        (@P6, "Cog",   "Red",   19,   "London")
-    ]
+import RELATIONAL-DATA-MODEL-4 {
+    structure S
+    structure P
+    structure SP
 }
-
-
-structure SHIPMENTS = struct {
-    fun sno = row : Tuple -> row$1
-    fun pno = row : Tuple -> row$2
-    fun qty = row : Tuple -> row$3
-
-    val rows = map { row -> (
-            sno: sno row,
-            pno: pno row,
-            qty: qty row
-        )
-    } [
-    #     S#   P#  QTY
-    #---------------------
-        (@S1, @P1, 300),
-        (@S1, @P2, 200),
-        (@S1, @P3, 400),
-        (@S1, @P4, 200),
-        (@S1, @P5, 100),
-        (@S1, @P6, 100),
-        (@S2, @P1, 300),
-        (@S2, @P2, 400),
-        (@S3, @P2, 200),
-        (@S4, @P2, 200),
-        (@S4, @P4, 300),
-        (@S4, @P5, 400)
-    ]
-}
-
-
-structure S  = SUPPLIERS
-structure P  = PARTS
-structure SP = SHIPMENTS
 
 ;;
 
