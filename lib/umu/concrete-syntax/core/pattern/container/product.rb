@@ -44,7 +44,7 @@ private
             [
                 ASCD.make_value(self.loc, :'%t', expr, __type_sym__)
             ] + (
-                __desugar_pattern__(:'%t', env)
+                __desugar_pattern__(:'%t')
             )
         )
     end
@@ -57,13 +57,15 @@ private
 
         CSCP.make_result(
             ASCE.make_identifier(self.loc, var_sym),
-            __desugar_pattern__(var_sym, env),
+            __desugar_pattern__(var_sym),
             __type_sym__
         )
     end
 
 
-    def __desugar_pattern__(var_sym, _env)
+    def __desugar_pattern__(var_sym)
+        ASSERT.kind_of var_sym, ::Symbol
+
         self.each_with_index.reject { |pat, _index|
             ASSERT.kind_of pat, Pattern::Abstract
 
@@ -84,10 +86,12 @@ private
 
 
     def __type_sym__
+        raise X::InternalSubclassResponsibility
     end
 
 
     def __make_selector__(loc, index, pat)
+        raise X::InternalSubclassResponsibility
     end
 end
 
@@ -164,13 +168,18 @@ class Field < Pattern::Abstract
     end
 
 
+    def to_s
+        format "%s %s", self.label.to_s, self.vpat.to_s
+    end
+
+
     def wildcard?
         self.vpat.wildcard?
     end
 
 
-    def to_s
-        format "%s %s", self.label.to_s, self.vpat.to_s
+    def exported_vars
+        self.vpat.exported_vars
     end
 end
 
