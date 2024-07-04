@@ -79,7 +79,7 @@ FILES	= version.rb \
 			concrete-syntax/core/pattern/variable.rb \
 			concrete-syntax/core/pattern/unit.rb \
 			concrete-syntax/core/pattern/container.rb \
-			concrete-syntax/core/pattern/container/abstraction.rb \
+			concrete-syntax/core/pattern/container/abstract.rb \
 			concrete-syntax/core/pattern/container/product.rb \
 			concrete-syntax/core/pattern/container/list.rb \
 			abstract-syntax.rb \

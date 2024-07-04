@@ -15,7 +15,7 @@ module Container
 
 module Product
 
-class Abstract < Abstraction::Abstract
+class Abstract < Container::Abstract
     alias pats array
 
 

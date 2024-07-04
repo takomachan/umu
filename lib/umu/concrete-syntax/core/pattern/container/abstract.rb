@@ -13,8 +13,6 @@ module Pattern
 
 module Container
 
-module Abstraction
-
 class Abstract < Pattern::Abstract
     include Enumerable
 
@@ -45,8 +43,6 @@ private
         format("%%a%d", num).to_sym
     end
 end
-
-end # Umu::ConcreteSyntax::Core::Pattern::Container::Abstraction
 
 end # Umu::ConcreteSyntax::Core::Pattern::Container
 

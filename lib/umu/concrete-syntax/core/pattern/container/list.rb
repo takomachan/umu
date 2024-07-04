@@ -13,7 +13,7 @@ module Pattern
 
 module Container
 
-class List < Abstraction::Abstract
+class List < Container::Abstract
     alias       pats array
     attr_reader :opt_last_pat
 
