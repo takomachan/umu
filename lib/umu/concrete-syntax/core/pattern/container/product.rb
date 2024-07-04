@@ -25,11 +25,11 @@ class Abstract < Container::Abstract
 
 
     def exported_vars
-        self.reject(&:wildcard?).inject([]) { |array, pat|
+        self.reject(&:wildcard?).inject([]) { |array, epat|
             ASSERT.kind_of array,  ::Array
-            ASSERT.kind_of pat,    Pattern::Abstract
+            ASSERT.kind_of epat,   Pattern::Abstract
 
-            array + pat.exported_vars
+            array + epat.exported_vars
         }.freeze
     end
 
@@ -66,21 +66,21 @@ private
     def __desugar_pattern__(var_sym)
         ASSERT.kind_of var_sym, ::Symbol
 
-        self.each_with_index.reject { |pat, _index|
-            ASSERT.kind_of pat, Pattern::Abstract
+        self.each_with_index.reject { |epat, _index|
+            ASSERT.kind_of epat, ElementOfContainer::Abstract
 
-            pat.wildcard? && pat.opt_type_sym.nil?
-        }.map { |pat, index|
-            ASSERT.kind_of pat,    Pattern::Abstract
+            epat.wildcard? && epat.opt_type_sym.nil?
+        }.map { |epat, index|
+            ASSERT.kind_of epat,   ElementOfContainer::Abstract
             ASSERT.kind_of index,  ::Integer
 
             expr = ASCE.make_send(
-                        pat.loc,
-                        ASCE.make_identifier(pat.loc, var_sym),
-                        __make_selector__(pat.loc, index, pat)
+                        epat.loc,
+                        ASCE.make_identifier(epat.loc, var_sym),
+                        __make_selector__(epat.loc, index, epat)
                     )
 
-            ASCD.make_value pat.loc, pat.var_sym, expr, pat.opt_type_sym
+            ASCD.make_value epat.loc, epat.var_sym, expr, epat.opt_type_sym
         }
     end
 
@@ -90,7 +90,7 @@ private
     end
 
 
-    def __make_selector__(loc, index, pat)
+    def __make_selector__(loc, index, epat)
         raise X::InternalSubclassResponsibility
     end
 end
@@ -98,11 +98,11 @@ end
 
 
 class Tuple < Abstract
-    def initialize(loc, pats)
-        ASSERT.kind_of  pats, ::Array
-        ASSERT.assert   pats.size >= 2
+    def initialize(loc, vpats)
+        ASSERT.kind_of  vpats, ::Array
+        ASSERT.assert   vpats.size >= 2
 
-        pats.reject(&:wildcard?).inject({}) do |hash, vpat|
+        vpats.reject(&:wildcard?).inject({}) do |hash, vpat|
             ASSERT.kind_of hash,    ::Hash
             ASSERT.kind_of vpat,    ElementOfContainer::Variable
 
@@ -142,48 +142,6 @@ end
 
 
 module Named
-
-class Field < Pattern::Abstract
-    attr_reader :label, :vpat
-
-
-    def initialize(loc, label, vpat)
-        ASSERT.kind_of label, CSCE::Unary::Container::Named::Label
-        ASSERT.kind_of vpat,  CSCP::ElementOfContainer::Variable
-
-        super(loc)
-
-        @label = label
-        @vpat  = vpat
-    end
-
-
-    def var_sym
-        self.vpat.var_sym
-    end
-
-
-    def opt_type_sym
-        self.vpat.opt_type_sym
-    end
-
-
-    def to_s
-        format "%s %s", self.label.to_s, self.vpat.to_s
-    end
-
-
-    def wildcard?
-        self.vpat.wildcard?
-    end
-
-
-    def exported_vars
-        self.vpat.exported_vars
-    end
-end
-
-
 
 class Entry < Abstract
     attr_reader :index_by_label
@@ -256,7 +214,7 @@ private
 
 
     def __make_selector__(loc, _index, fpat)
-        ASSERT.kind_of fpat, Field
+        ASSERT.kind_of fpat, ElementOfContainer::Field
 
         ASCE.make_label_selector loc, fpat.label.sym
     end
@@ -284,15 +242,6 @@ module_function
         ASSERT.kind_of fields,   ::Array
 
         Container::Product::Named::Entry.new(loc, fields.freeze).freeze
-    end
-
-
-    def make_named_tuple_field(loc, label, vpat)
-        ASSERT.kind_of loc,     LOC::Entry
-        ASSERT.kind_of label,   CSCE::Unary::Container::Named::Label
-        ASSERT.kind_of vpat,    ElementOfContainer::Variable
-
-        Container::Product::Named::Field.new(loc, label, vpat).freeze
     end
 
 end # Umu::ConcreteSyntax::Core::Pattern

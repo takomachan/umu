@@ -108,6 +108,48 @@ private
     end
 end
 
+
+
+class Field < Abstract
+    attr_reader :label, :vpat
+
+
+    def initialize(loc, label, vpat)
+        ASSERT.kind_of label, CSCE::Unary::Container::Named::Label
+        ASSERT.kind_of vpat,  CSCP::ElementOfContainer::Variable
+
+        super(loc)
+
+        @label = label
+        @vpat  = vpat
+    end
+
+
+    def var_sym
+        self.vpat.var_sym
+    end
+
+
+    def opt_type_sym
+        self.vpat.opt_type_sym
+    end
+
+
+    def to_s
+        format "%s %s", self.label.to_s, self.vpat.to_s
+    end
+
+
+    def wildcard?
+        self.vpat.wildcard?
+    end
+
+
+    def exported_vars
+        self.vpat.exported_vars
+    end
+end
+
 end # Umu::ConcreteSyntax::Core::Pattern::ElementOfContainer
 
 
@@ -120,6 +162,15 @@ module_function
 
         ElementOfContainer::Variable.new(loc, var_sym, opt_type_sym).freeze
     end
+
+    def make_named_tuple_field(loc, label, vpat)
+        ASSERT.kind_of loc,     LOC::Entry
+        ASSERT.kind_of label,   CSCE::Unary::Container::Named::Label
+        ASSERT.kind_of vpat,    ElementOfContainer::Variable
+
+        ElementOfContainer::Field.new(loc, label, vpat).freeze
+    end
+
 
 end # Umu::ConcreteSyntax::Core::Pattern
 
