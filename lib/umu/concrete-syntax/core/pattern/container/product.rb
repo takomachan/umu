@@ -104,7 +104,7 @@ class Tuple < Abstract
 
         pats.reject(&:wildcard?).inject({}) do |hash, vpat|
             ASSERT.kind_of hash,    ::Hash
-            ASSERT.kind_of vpat,    Variable
+            ASSERT.kind_of vpat,    ElementOfContainer::Variable
 
             hash.merge(vpat.var_sym => true) { |key, _, _|
                 raise X::SyntaxError.new(
@@ -120,7 +120,7 @@ class Tuple < Abstract
 
     def each
         self.pats.each do |vpat|
-            ASSERT.kind_of vpat, Variable
+            ASSERT.kind_of vpat, ElementOfContainer::Variable
 
             yield vpat
         end
@@ -149,7 +149,7 @@ class Field < Pattern::Abstract
 
     def initialize(loc, label, vpat)
         ASSERT.kind_of label, CSCE::Unary::Container::Named::Label
-        ASSERT.kind_of vpat,  CSCP::Variable
+        ASSERT.kind_of vpat,  CSCP::ElementOfContainer::Variable
 
         super(loc)
 
@@ -201,7 +201,7 @@ class Entry < Abstract
             ASSERT.kind_of l_hash, ::Hash
             ASSERT.kind_of v_hash, ::Hash
             ASSERT.kind_of label,  CSCE::Unary::Container::Named::Label
-            ASSERT.kind_of vpat,   Variable
+            ASSERT.kind_of vpat,   ElementOfContainer::Variable
 
             if vpat.wildcard?
                 [
@@ -290,7 +290,7 @@ module_function
     def make_named_tuple_field(loc, label, vpat)
         ASSERT.kind_of loc,     LOC::Entry
         ASSERT.kind_of label,   CSCE::Unary::Container::Named::Label
-        ASSERT.kind_of vpat,    Variable
+        ASSERT.kind_of vpat,    ElementOfContainer::Variable
 
         Container::Product::Named::Field.new(loc, label, vpat).freeze
     end

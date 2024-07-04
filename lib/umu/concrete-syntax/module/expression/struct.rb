@@ -57,7 +57,7 @@ private
                 array + decl.exported_vars
             }.inject({}) { |hash, vpat|
                 ASSERT.kind_of hash,    ::Hash
-                ASSERT.kind_of vpat,    CSCP::Variable
+                ASSERT.kind_of vpat,    CSCP::ElementOfContainer::Variable
 
                 label = vpat.var_sym
                 expr  = ASCE.make_identifier(vpat.loc, vpat.var_sym)

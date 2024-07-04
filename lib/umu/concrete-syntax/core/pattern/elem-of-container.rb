@@ -11,6 +11,41 @@ module Core
 
 module Pattern
 
+module ElementOfContainer
+
+class Abstract < Pattern::Abstract
+    def hash
+        self.var_sym.hash
+    end
+
+
+    def eql?(other)
+        self.var_sym.eql? other.var_sym
+    end
+
+
+    def var_sym
+        raise X::InternalSubclassResponsibility
+    end
+
+
+    def opt_type_sym
+        raise X::InternalSubclassResponsibility
+    end
+
+
+    def wildcard?
+        raise X::InternalSubclassResponsibility
+    end
+
+
+    def exported_vars
+        raise X::InternalSubclassResponsibility
+    end
+end
+
+
+
 class Variable < Abstract
     attr_reader :var_sym, :opt_type_sym
 
@@ -23,16 +58,6 @@ class Variable < Abstract
 
         @var_sym        = var_sym
         @opt_type_sym   = opt_type_sym
-    end
-
-
-    def hash
-        self.var_sym.hash
-    end
-
-
-    def eql?(other)
-        self.var_sym.eql? other.var_sym
     end
 
 
@@ -83,6 +108,8 @@ private
     end
 end
 
+end # Umu::ConcreteSyntax::Core::Pattern::ElementOfContainer
+
 
 module_function
 
@@ -91,7 +118,7 @@ module_function
         ASSERT.kind_of      var_sym,        ::Symbol
         ASSERT.opt_kind_of  opt_type_sym,   ::Symbol
 
-        Variable.new(loc, var_sym, opt_type_sym).freeze
+        ElementOfContainer::Variable.new(loc, var_sym, opt_type_sym).freeze
     end
 
 end # Umu::ConcreteSyntax::Core::Pattern

@@ -76,7 +76,7 @@ FILES	= version.rb \
 			concrete-syntax/core/pattern.rb \
 			concrete-syntax/core/pattern/result.rb \
 			concrete-syntax/core/pattern/abstract.rb \
-			concrete-syntax/core/pattern/variable.rb \
+			concrete-syntax/core/pattern/elem-of-container.rb \
 			concrete-syntax/core/pattern/unit.rb \
 			concrete-syntax/core/pattern/container.rb \
 			concrete-syntax/core/pattern/container/abstract.rb \

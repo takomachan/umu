@@ -20,7 +20,7 @@ class List < Container::Abstract
 
     def initialize(loc, pats, opt_last_pat)
         ASSERT.kind_of      pats,           ::Array
-        ASSERT.opt_kind_of  opt_last_pat,   Variable
+        ASSERT.opt_kind_of  opt_last_pat,   ElementOfContainer::Variable
         ASSERT.assert (if pats.empty? then opt_last_pat.nil? else true end)
 
         init_hash = if opt_last_pat
@@ -30,7 +30,7 @@ class List < Container::Abstract
                     end
 
         pats.reject(&:wildcard?).inject(init_hash) do |hash, vpat|
-            ASSERT.kind_of vpat,    Variable
+            ASSERT.kind_of vpat,    ElementOfContainer::Variable
             ASSERT.kind_of hash,    ::Hash
 
             hash.merge(vpat.var_sym => true) { |key, _, _|
@@ -64,7 +64,7 @@ class List < Container::Abstract
         (self.pats + [self.opt_last_pat]).reject(&:wildcard?).inject([]) {
             |array, vpat|
             ASSERT.kind_of array,   ::Array
-            ASSERT.kind_of vpat,    Variable
+            ASSERT.kind_of vpat,    ElementOfContainer::Variable
 
             array + vpat.exported_vars
         }.freeze
@@ -109,7 +109,7 @@ private
         ASSERT.kind_of expr, ASCE::Abstract
 
         head_vpat, *tail_pats = self.pats
-        ASSERT.kind_of head_vpat, Variable
+        ASSERT.kind_of head_vpat, ElementOfContainer::Variable
 
         init_loc = head_vpat.loc
 
@@ -139,7 +139,7 @@ private
             ASSERT.kind_of seq_num,     ::Integer
             ASSERT.kind_of pair_sym,    ::Symbol
             ASSERT.kind_of decls,       ::Array
-            ASSERT.kind_of vpat,        Variable
+            ASSERT.kind_of vpat,        ElementOfContainer::Variable
 
             loc             = vpat.loc
             next_seq_num    = seq_num + 1
@@ -265,7 +265,7 @@ module_function
     def make_list(loc, pats, opt_last_pat)
         ASSERT.kind_of      loc,            LOC::Entry
         ASSERT.kind_of      pats,           ::Array
-        ASSERT.opt_kind_of  opt_last_pat,   Variable
+        ASSERT.opt_kind_of  opt_last_pat,   ElementOfContainer::Variable
 
         Container::List.new(loc, pats.freeze, opt_last_pat).freeze
     end
