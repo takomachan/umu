@@ -143,6 +143,36 @@ end
 
 module Named
 
+class Label < Abstraction::Model
+    attr_reader :sym
+
+
+    def initialize(loc, sym)
+        ASSERT.kind_of sym, ::Symbol
+
+        super(loc)
+
+        @sym = sym
+    end
+
+
+    def hash
+        self.sym.hash
+    end
+
+
+    def eql?(other)
+        self.sym.eql? other.sym
+    end
+
+
+    def to_s
+        self.sym.to_s + ':'
+    end
+end
+
+
+
 class Entry < Abstract
     attr_reader :index_by_label
 
@@ -158,7 +188,7 @@ class Entry < Abstract
         ) { |(l_hash, v_hash, index), (label, vpat)|
             ASSERT.kind_of l_hash, ::Hash
             ASSERT.kind_of v_hash, ::Hash
-            ASSERT.kind_of label,  CSCE::Unary::Container::Named::Label
+            ASSERT.kind_of label,  Label
             ASSERT.kind_of vpat,   ElementOfContainer::Variable
 
             if vpat.wildcard?
@@ -194,7 +224,7 @@ class Entry < Abstract
 
     def each
         self.index_by_label.each do |label, index|
-            ASSERT.kind_of label, CSCE::Unary::Container::Named::Label
+            ASSERT.kind_of label, Label
             ASSERT.kind_of index, ::Integer
 
             yield CSCP.make_named_tuple_field(
@@ -239,10 +269,18 @@ module_function
 
     def make_named_tuple(loc, fields)
         ASSERT.kind_of loc,     LOC::Entry
-        ASSERT.kind_of fields,   ::Array
+        ASSERT.kind_of fields,  ::Array
 
         Container::Product::Named::Entry.new(loc, fields.freeze).freeze
     end
+
+    def make_named_tuple_label(loc, sym)
+        ASSERT.kind_of loc,     LOC::Entry
+        ASSERT.kind_of sym,     ::Symbol
+
+        Container::Product::Named::Label.new(loc, sym).freeze
+    end
+
 
 end # Umu::ConcreteSyntax::Core::Pattern
 

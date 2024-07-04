@@ -115,8 +115,8 @@ class Field < Abstract
 
 
     def initialize(loc, label, vpat)
-        ASSERT.kind_of label, CSCE::Unary::Container::Named::Label
-        ASSERT.kind_of vpat,  CSCP::ElementOfContainer::Variable
+        ASSERT.kind_of label, Container::Product::Named::Label
+        ASSERT.kind_of vpat,  ElementOfContainer::Variable
 
         super(loc)
 
@@ -165,7 +165,7 @@ module_function
 
     def make_named_tuple_field(loc, label, vpat)
         ASSERT.kind_of loc,     LOC::Entry
-        ASSERT.kind_of label,   CSCE::Unary::Container::Named::Label
+        ASSERT.kind_of label,   Container::Product::Named::Label
         ASSERT.kind_of vpat,    ElementOfContainer::Variable
 
         ElementOfContainer::Field.new(loc, label, vpat).freeze

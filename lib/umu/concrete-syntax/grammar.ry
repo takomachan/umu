@@ -747,7 +747,7 @@ named_fld_pat: LABEL opt_var_pat {
               end
 
     result = [
-        CSCE.make_named_tuple_label(val[0].loc, val[0].sym),
+        CSCP.make_named_tuple_label(val[0].loc, val[0].sym),
         var_pat
     ]
 }
