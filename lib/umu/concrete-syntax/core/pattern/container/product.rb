@@ -80,7 +80,12 @@ private
                         __make_selector__(epat.loc, index, epat)
                     )
 
-            ASCD.make_value epat.loc, epat.var_sym, expr, epat.opt_type_sym
+            ASCD.make_value(
+                epat.loc,
+                epat.var_pat.var_sym,
+                expr,
+                epat.var_pat.opt_type_sym
+            )
         }
     end
 

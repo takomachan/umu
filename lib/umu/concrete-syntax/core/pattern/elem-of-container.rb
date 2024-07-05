@@ -14,33 +14,34 @@ module Pattern
 module ElementOfContainer
 
 class Abstract < Pattern::Abstract
+    def var_pat
+        raise X::InternalSubclassResponsibility
+    end
+
+
     def hash
-        self.var_sym.hash
+        self.var_pat.var_sym.hash
     end
 
 
     def eql?(other)
-        self.var_sym.eql? other.var_sym
-    end
-
-
-    def var_sym
-        raise X::InternalSubclassResponsibility
-    end
-
-
-    def opt_type_sym
-        raise X::InternalSubclassResponsibility
+        self.var_pat.var_sym.eql? other.var_pat.var_sym
     end
 
 
     def wildcard?
-        raise X::InternalSubclassResponsibility
+        self.var_pat.var_sym == WILDCARD
     end
 
 
     def exported_vars
-        raise X::InternalSubclassResponsibility
+        (
+            if self.wildcard?
+                []
+            else
+                [self]
+            end
+        ).freeze
     end
 end
 
@@ -74,19 +75,8 @@ class Variable < Abstract
     end
 
 
-    def wildcard?
-        self.var_sym == WILDCARD
-    end
-
-
-    def exported_vars
-        (
-            if self.wildcard?
-                []
-            else
-                [self]
-            end
-        ).freeze
+    def var_pat
+        self
     end
 
 
@@ -111,42 +101,22 @@ end
 
 
 class Field < Abstract
-    attr_reader :label, :vpat
+    attr_reader :label, :var_pat
 
 
-    def initialize(loc, label, vpat)
-        ASSERT.kind_of label, Container::Product::Named::Label
-        ASSERT.kind_of vpat,  ElementOfContainer::Variable
+    def initialize(loc, label, var_pat)
+        ASSERT.kind_of label,    Container::Product::Named::Label
+        ASSERT.kind_of var_pat,  ElementOfContainer::Variable
 
         super(loc)
 
-        @label = label
-        @vpat  = vpat
-    end
-
-
-    def var_sym
-        self.vpat.var_sym
-    end
-
-
-    def opt_type_sym
-        self.vpat.opt_type_sym
+        @label   = label
+        @var_pat = var_pat
     end
 
 
     def to_s
-        format "%s %s", self.label.to_s, self.vpat.to_s
-    end
-
-
-    def wildcard?
-        self.vpat.wildcard?
-    end
-
-
-    def exported_vars
-        self.vpat.exported_vars
+        format "%s %s", self.label.to_s, self.var_pat.to_s
     end
 end
 
@@ -163,12 +133,12 @@ module_function
         ElementOfContainer::Variable.new(loc, var_sym, opt_type_sym).freeze
     end
 
-    def make_named_tuple_field(loc, label, vpat)
+    def make_named_tuple_field(loc, label, var_pat)
         ASSERT.kind_of loc,     LOC::Entry
         ASSERT.kind_of label,   Container::Product::Named::Label
-        ASSERT.kind_of vpat,    ElementOfContainer::Variable
+        ASSERT.kind_of var_pat, ElementOfContainer::Variable
 
-        ElementOfContainer::Field.new(loc, label, vpat).freeze
+        ElementOfContainer::Field.new(loc, label, var_pat).freeze
     end
 
 
