@@ -243,19 +243,68 @@ end
 
 
 
-class PipeLeft < Abstraction::Simple
+class PipeLeft < Abstraction::Abstract
+    include Enumerable
+
+    alias       hd_rhs_opnd rhs_opnd
+    attr_reader :tl_rhs_opnds
+
+
+    def initialize(loc, lhs_opnd, opr_sym, hd_rhs_opnd, tl_rhs_opnds)
+        ASSERT.kind_of lhs_opnd,        CSCE::Abstract
+        ASSERT.kind_of opr_sym,         ::Symbol
+        ASSERT.kind_of hd_rhs_opnd,     CSCE::Abstract
+        ASSERT.kind_of tl_rhs_opnds,    ::Array
+
+        super(loc, lhs_opnd, opr_sym, hd_rhs_opnd)
+
+        @tl_rhs_opnds = tl_rhs_opnds
+    end
+
+
+    def each
+        self.tl_rhs_opnds.each do |rhs_opnd|
+            ASSERT.kind_of hd_rhs_opnd, CSCE::Abstract
+
+            yield rhs_opnd
+        end
+    end
+
+
+    def to_s
+        opr = self.opr_sym.to_s
+
+        format("(%s %s %s %s)",
+                 self.lhs_opnd.to_s,
+                 opr,
+                 self.hd_rhs_opnd.to_s,
+                 self.map { |opnd| format "%s %s", opr, opnd }.join(' ')
+        )
+    end
+
 
 private
 
     def __desugar__(env, event)
         new_env = env.enter event
 
-        ASCE.make_apply(
-            self.loc,
-            self.rhs_opnd.desugar(new_env),
-            self.lhs_opnd.desugar(new_env),
-            []
-        )
+        init_apply_expr = ASCE.make_apply(
+                                   self.hd_rhs_opnd.loc,
+                                   self.hd_rhs_opnd.desugar(new_env),
+                                   self.lhs_opnd.desugar(new_env),
+                                   []
+                               )
+
+        result = self.inject(init_apply_expr) { |apply_expr, rhs_opnd|
+            ASCE.make_apply(
+                     rhs_opnd.loc,
+                     rhs_opnd.desugar(new_env),
+                     apply_expr,
+                     []
+                 )
+        }
+
+        ASSERT.kind_of result, ASCE::Abstract
     end
 end
 
@@ -360,14 +409,15 @@ module_function
     end
 
 
-    def make_pipe_left(loc, lhs_opnd, opr_sym, rhs_opnd)
-        ASSERT.kind_of loc,         LOC::Entry
-        ASSERT.kind_of lhs_opnd,    CSCE::Abstract
-        ASSERT.kind_of opr_sym,     ::Symbol
-        ASSERT.kind_of rhs_opnd,    CSCE::Abstract
+    def make_pipe_left(loc, lhs_opnd, opr_sym, hd_rhs_opnd, tl_rhs_opnds)
+        ASSERT.kind_of loc,             LOC::Entry
+        ASSERT.kind_of lhs_opnd,        CSCE::Abstract
+        ASSERT.kind_of opr_sym,         ::Symbol
+        ASSERT.kind_of hd_rhs_opnd,     CSCE::Abstract
+        ASSERT.kind_of tl_rhs_opnds,    ::Array
 
         Binary::Infix::PipeLeft.new(
-            loc, lhs_opnd, opr_sym, rhs_opnd
+            loc, lhs_opnd, opr_sym,  hd_rhs_opnd, tl_rhs_opnds.freeze
         ).freeze
     end
 

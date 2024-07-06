@@ -5,8 +5,8 @@ FILES =	[
     'list.umu',
     'set.umu',
     'j.c.reynolds1971.umu',
-    'c.j.date1975/date.umu',
-    'c.j.date1975/date-jp.umu',
+    'c.j.date1981/date.umu',
+    'c.j.date1981/date-jp.umu',
     'sicp-ch1.umu',
     'sicp-ch2.umu',
     'sicp-ch3.umu'
