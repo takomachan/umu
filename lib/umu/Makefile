@@ -116,6 +116,7 @@ FILES	= version.rb \
 			abstract-syntax/core/expression/binary/abstract.rb \
 			abstract-syntax/core/expression/binary/kind-of.rb \
 			abstract-syntax/core/expression/binary/apply.rb \
+			abstract-syntax/core/expression/binary/pipe.rb \
 			abstract-syntax/core/expression/binary/send.rb \
 			abstract-syntax/core/expression/nary.rb \
 			abstract-syntax/core/expression/nary/if.rb \

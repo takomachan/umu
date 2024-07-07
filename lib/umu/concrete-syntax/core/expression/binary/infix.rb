@@ -275,18 +275,11 @@ private
     def __desugar__(env, event)
         new_env = env.enter event
 
-        init_opnd_expr = self.lhs_opnd.desugar(new_env)
+        opnd_expr     = self.lhs_opnd.desugar new_env
+        hd_opr_exprs,
+        *tl_opr_exprs = self.map { |opr_expr| opr_expr.desugar new_env }
 
-        result = self.inject(init_opnd_expr) { |opnd_expr, opr_expr|
-            ASCE.make_apply(
-                     opr_expr.loc,
-                     opr_expr.desugar(new_env),
-                     opnd_expr,
-                     []
-                 )
-        }
-
-        ASSERT.kind_of result, ASCE::Abstract
+        ASCE.make_pipe self.loc, opnd_expr, hd_opr_exprs, tl_opr_exprs
     end
 end
 
