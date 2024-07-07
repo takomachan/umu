@@ -192,19 +192,14 @@ class ComposeLeft < Abstraction::Simple
 private
 
 =begin
-    val (>>) = { f g -> { x -> x |> f |> g } }
-                        ^^^^^^^^^^^^^^^^^^^^   -- inner_lamb
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -- outer_lamb
-
-    (>>) lhs_opnd rhs_opnd
+    f >> g = { x -> x |> f |> g }
 =end
 
     def __desugar__(env, event)
-        ident_f = ASCE.make_identifier self.loc, :'%f'
-        ident_g = ASCE.make_identifier self.loc, :'%g'
+        new_env = env.enter event
         ident_x = ASCE.make_identifier self.loc, :'%x'
 
-        inner_lamb_expr = ASCE.make_lambda(
+        ASCE.make_lambda(
             self.loc,
 
             [ASCE.make_parameter(self.loc, ident_x)],
@@ -212,29 +207,9 @@ private
             ASCE.make_pipe(
                 self.loc,
                 ident_x,
-                ident_f,
-                [ident_g]
+                self.lhs_opnd.desugar(new_env),
+                [self.rhs_opnd.desugar(new_env)]
             )
-        )
-
-        outer_lamb_expr = ASCE.make_lambda(
-            self.loc,
-
-            [
-                ASCE.make_parameter(self.loc, ident_f, :Fun),
-                ASCE.make_parameter(self.loc, ident_g, :Fun)
-            ],
-
-            inner_lamb_expr
-        )
-
-        new_env = env.enter event
-
-        ASCE.make_apply(
-            self.loc,
-            outer_lamb_expr,
-            self.lhs_opnd.desugar(new_env),
-            [self.rhs_opnd.desugar(new_env)]
         )
     end
 end
@@ -246,19 +221,14 @@ class ComposeRight < Abstraction::Simple
 private
 
 =begin
-    val (<<) = { g f -> { x -> x |> f |> g } }
-                        ^^^^^^^^^^^^^^^^^^^^   -- inner_lamb
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -- outer_lamb
-
-    (<<) lhs_opnd rhs_opnd
+    f << g = { x -> x |> g |> f }
 =end
 
     def __desugar__(env, event)
-        ident_f = ASCE.make_identifier self.loc, :'%f'
-        ident_g = ASCE.make_identifier self.loc, :'%g'
+        new_env = env.enter event
         ident_x = ASCE.make_identifier self.loc, :'%x'
 
-        inner_lamb_expr = ASCE.make_lambda(
+        ASCE.make_lambda(
             self.loc,
 
             [ASCE.make_parameter(self.loc, ident_x)],
@@ -266,29 +236,9 @@ private
             ASCE.make_pipe(
                 self.loc,
                 ident_x,
-                ident_f,
-                [ident_g]
+                self.rhs_opnd.desugar(new_env),
+                [self.lhs_opnd.desugar(new_env)]
             )
-        )
-
-        outer_lamb_expr = ASCE.make_lambda(
-            self.loc,
-
-            [
-                ASCE.make_parameter(self.loc, ident_g, :Fun),
-                ASCE.make_parameter(self.loc, ident_f, :Fun)
-            ],
-
-            inner_lamb_expr
-        )
-
-        new_env = env.enter event
-
-        ASCE.make_apply(
-            self.loc,
-            outer_lamb_expr,
-            self.lhs_opnd.desugar(new_env),
-            [self.rhs_opnd.desugar(new_env)]
         )
     end
 end
