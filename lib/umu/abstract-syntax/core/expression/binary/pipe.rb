@@ -36,7 +36,7 @@ class Pipe < Binary::Abstract
 
 
     def to_s
-        format("(%s %s)",
+        format("(%s |> %s)",
                 self.opnd_expr,
                 self.opr_exprs.map(&:to_s).join(' |> ')
         )
@@ -44,17 +44,17 @@ class Pipe < Binary::Abstract
 
 
     def pretty_print(q)
-        q.group(PP_INDENT_WIDTH, '(', ')') do
-            q.pp self.opnd_expr
+        q.text '('
+        q.pp self.opnd_expr
 
-            self.opr_exprs.each do |expr|
-                q.text ' |>'
+        self.opr_exprs.each do |expr|
+            q.breakable
 
-                q.breakable
-
-                q.pp expr
-            end
+            q.text '|> '
+            q.pp expr
         end
+
+        q.text ')'
     end
 
 
