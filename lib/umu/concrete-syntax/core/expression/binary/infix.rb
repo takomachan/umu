@@ -150,60 +150,38 @@ end
 
 
 
-class ComposeRight < Abstraction::Simple
+class PipeLeft < Abstraction::Pipe
 
 private
 
-=begin
-    val (<<) = { (g : Fun) (f : Fun) -> { x -> g (f x) } }
-                                        ^^^^^^^^^^^^^^^^   -- inner_lamb
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -- outer_lamb
-
-    (<<) lhs_opnd rhs_opnd
-=end
-
     def __desugar__(env, event)
-        ident_f = ASCE.make_identifier self.loc, :'%f'
-        ident_g = ASCE.make_identifier self.loc, :'%g'
-        ident_x = ASCE.make_identifier self.loc, :'%x'
-
-        inner_lamb_expr = ASCE.make_lambda(
-            self.loc,
-
-            [ASCE.make_parameter(self.loc, ident_x)],
-
-            ASCE.make_apply(
-                self.loc,
-
-                ident_g,
-
-                ASCE.make_apply(
-                    self.loc,
-                    ident_f,
-                    ident_x
-                )
-            )
-        )
-
-        outer_lamb_expr = ASCE.make_lambda(
-            self.loc,
-
-            [
-                ASCE.make_parameter(self.loc, ident_g, :Fun),
-                ASCE.make_parameter(self.loc, ident_f, :Fun)
-            ],
-
-            inner_lamb_expr
-        )
-
         new_env = env.enter event
 
-        ASCE.make_apply(
-            self.loc,
-            outer_lamb_expr,
-            self.lhs_opnd.desugar(new_env),
-            [self.rhs_opnd.desugar(new_env)]
-        )
+        opnd_expr,
+        hd_opr_exprs,
+        *tl_opr_exprs = ([self.lhs_opnd] + self.to_a)
+                        .map { |expr| expr.desugar new_env }
+
+        ASCE.make_pipe self.loc, opnd_expr, hd_opr_exprs, tl_opr_exprs
+    end
+end
+
+
+
+class PipeRight < Abstraction::Pipe
+
+private
+
+    def __desugar__(env, event)
+        new_env = env.enter event
+
+        opnd_expr,
+        hd_opr_exprs,
+        *tl_opr_exprs = ([self.lhs_opnd] + self.to_a)
+                        .reverse
+                        .map { |expr| expr.desugar new_env }
+
+        ASCE.make_pipe self.loc, opnd_expr, hd_opr_exprs, tl_opr_exprs
     end
 end
 
@@ -214,11 +192,11 @@ class ComposeLeft < Abstraction::Simple
 private
 
 =begin
-    val (<<) = { (f : Fun) (g : Fun) -> { x -> g (f x) } }
-                                        ^^^^^^^^^^^^^^^^   -- inner_lamb
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -- outer_lamb
+    val (>>) = { f g -> { x -> x |> f |> g } }
+                        ^^^^^^^^^^^^^^^^^^^^   -- inner_lamb
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -- outer_lamb
 
-    (<<) lhs_opnd rhs_opnd
+    (>>) lhs_opnd rhs_opnd
 =end
 
     def __desugar__(env, event)
@@ -231,16 +209,11 @@ private
 
             [ASCE.make_parameter(self.loc, ident_x)],
 
-            ASCE.make_apply(
+            ASCE.make_pipe(
                 self.loc,
-
-                ident_g,
-
-                ASCE.make_apply(
-                    self.loc,
-                    ident_f,
-                    ident_x
-                )
+                ident_x,
+                ident_f,
+                [ident_g]
             )
         )
 
@@ -268,43 +241,55 @@ end
 
 
 
-class PipeLeft < Abstraction::Pipe
+class ComposeRight < Abstraction::Simple
 
 private
 
-    def __desugar__(env, event)
-        new_env = env.enter event
+=begin
+    val (<<) = { g f -> { x -> x |> f |> g } }
+                        ^^^^^^^^^^^^^^^^^^^^   -- inner_lamb
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -- outer_lamb
 
-        opnd_expr     = self.lhs_opnd.desugar new_env
-        hd_opr_exprs,
-        *tl_opr_exprs = self.map { |opr_expr| opr_expr.desugar new_env }
-
-        ASCE.make_pipe self.loc, opnd_expr, hd_opr_exprs, tl_opr_exprs
-    end
-end
-
-
-
-class PipeRight < Abstraction::Pipe
-
-private
+    (<<) lhs_opnd rhs_opnd
+=end
 
     def __desugar__(env, event)
+        ident_f = ASCE.make_identifier self.loc, :'%f'
+        ident_g = ASCE.make_identifier self.loc, :'%g'
+        ident_x = ASCE.make_identifier self.loc, :'%x'
+
+        inner_lamb_expr = ASCE.make_lambda(
+            self.loc,
+
+            [ASCE.make_parameter(self.loc, ident_x)],
+
+            ASCE.make_pipe(
+                self.loc,
+                ident_x,
+                ident_f,
+                [ident_g]
+            )
+        )
+
+        outer_lamb_expr = ASCE.make_lambda(
+            self.loc,
+
+            [
+                ASCE.make_parameter(self.loc, ident_g, :Fun),
+                ASCE.make_parameter(self.loc, ident_f, :Fun)
+            ],
+
+            inner_lamb_expr
+        )
+
         new_env = env.enter event
 
-        opnd_expr, *opr_exprs = ([self.lhs_opnd] + self.to_a).reverse
-        init_opnd_expr        = opnd_expr.desugar(new_env)
-
-        result = opr_exprs.inject(init_opnd_expr) { |opnd_expr, opr_expr|
-            ASCE.make_apply(
-                     opr_expr.loc,
-                     opr_expr.desugar(new_env),
-                     opnd_expr,
-                     []
-                 )
-        }
-
-        ASSERT.kind_of result, ASCE::Abstract
+        ASCE.make_apply(
+            self.loc,
+            outer_lamb_expr,
+            self.lhs_opnd.desugar(new_env),
+            [self.rhs_opnd.desugar(new_env)]
+        )
     end
 end
 
@@ -373,30 +358,6 @@ module_function
     end
 
 
-    def make_comp_right(loc, lhs_opnd, opr_sym, rhs_opnd)
-        ASSERT.kind_of loc,         LOC::Entry
-        ASSERT.kind_of lhs_opnd,    CSCE::Abstract
-        ASSERT.kind_of opr_sym,     ::Symbol
-        ASSERT.kind_of rhs_opnd,    CSCE::Abstract
-
-        Binary::Infix::ComposeRight.new(
-            loc, lhs_opnd, opr_sym, rhs_opnd
-        ).freeze
-    end
-
-
-    def make_comp_left(loc, lhs_opnd, opr_sym, rhs_opnd)
-        ASSERT.kind_of loc,         LOC::Entry
-        ASSERT.kind_of lhs_opnd,    CSCE::Abstract
-        ASSERT.kind_of opr_sym,     ::Symbol
-        ASSERT.kind_of rhs_opnd,    CSCE::Abstract
-
-        Binary::Infix::ComposeLeft.new(
-            loc, lhs_opnd, opr_sym, rhs_opnd
-        ).freeze
-    end
-
-
     def make_pipe_left(loc, lhs_opnd, opr_sym, hd_rhs_opnd, tl_rhs_opnds)
         ASSERT.kind_of loc,             LOC::Entry
         ASSERT.kind_of lhs_opnd,        CSCE::Abstract
@@ -419,6 +380,30 @@ module_function
 
         Binary::Infix::PipeRight.new(
             loc, lhs_opnd, opr_sym, hd_rhs_opnd, tl_rhs_opnds.freeze
+        ).freeze
+    end
+
+
+    def make_comp_left(loc, lhs_opnd, opr_sym, rhs_opnd)
+        ASSERT.kind_of loc,         LOC::Entry
+        ASSERT.kind_of lhs_opnd,    CSCE::Abstract
+        ASSERT.kind_of opr_sym,     ::Symbol
+        ASSERT.kind_of rhs_opnd,    CSCE::Abstract
+
+        Binary::Infix::ComposeLeft.new(
+            loc, lhs_opnd, opr_sym, rhs_opnd
+        ).freeze
+    end
+
+
+    def make_comp_right(loc, lhs_opnd, opr_sym, rhs_opnd)
+        ASSERT.kind_of loc,         LOC::Entry
+        ASSERT.kind_of lhs_opnd,    CSCE::Abstract
+        ASSERT.kind_of opr_sym,     ::Symbol
+        ASSERT.kind_of rhs_opnd,    CSCE::Abstract
+
+        Binary::Infix::ComposeRight.new(
+            loc, lhs_opnd, opr_sym, rhs_opnd
         ).freeze
     end
 
