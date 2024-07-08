@@ -60,7 +60,7 @@ end
 
 
 
-class Pipe < Abstract
+class WithRepetition < Abstract
     include Enumerable
 
     alias       hd_rhs_opnd rhs_opnd
@@ -150,7 +150,7 @@ end
 
 
 
-class PipeLeft < Abstraction::Pipe
+class PipeLeft < Abstraction::WithRepetition
 
 private
 
@@ -168,7 +168,7 @@ end
 
 
 
-class PipeRight < Abstraction::Pipe
+class PipeRight < Abstraction::WithRepetition
 
 private
 
@@ -187,58 +187,53 @@ end
 
 
 
-class ComposeLeft < Abstraction::Simple
+class ComposeLeft < Abstraction::WithRepetition
 
 private
 
 =begin
-    f >> g = { x -> x |> f |> g }
+    f1 >> f2 >> f3 = { x -> x |> f1 |> f2 |> f3 }
 =end
 
     def __desugar__(env, event)
         new_env = env.enter event
         ident_x = ASCE.make_identifier self.loc, :'%x'
 
+        hd_opnd,
+        *tl_opnds = ([self.lhs_opnd] + self.to_a)
+                    .map { |opnd| opnd.desugar new_env }
+
         ASCE.make_lambda(
             self.loc,
-
             [ASCE.make_parameter(self.loc, ident_x)],
-
-            ASCE.make_pipe(
-                self.loc,
-                ident_x,
-                self.lhs_opnd.desugar(new_env),
-                [self.rhs_opnd.desugar(new_env)]
-            )
+            ASCE.make_pipe(self.loc, ident_x, hd_opnd, tl_opnds)
         )
     end
 end
 
 
 
-class ComposeRight < Abstraction::Simple
+class ComposeRight < Abstraction::WithRepetition
 
 private
 
 =begin
-    f << g = { x -> x |> g |> f }
+    f1 << f2 << f3 = { x -> x |> f3 |> f2 |> f1 }
 =end
 
     def __desugar__(env, event)
         new_env = env.enter event
         ident_x = ASCE.make_identifier self.loc, :'%x'
 
+        hd_opnd,
+        *tl_opnds = ([self.lhs_opnd] + self.to_a)
+                    .reverse
+                    .map { |opnd| opnd.desugar new_env }
+
         ASCE.make_lambda(
             self.loc,
-
             [ASCE.make_parameter(self.loc, ident_x)],
-
-            ASCE.make_pipe(
-                self.loc,
-                ident_x,
-                self.rhs_opnd.desugar(new_env),
-                [self.lhs_opnd.desugar(new_env)]
-            )
+            ASCE.make_pipe(self.loc, ident_x, hd_opnd, tl_opnds)
         )
     end
 end
@@ -316,7 +311,7 @@ module_function
         ASSERT.kind_of tl_rhs_opnds,    ::Array
 
         Binary::Infix::PipeLeft.new(
-            loc, lhs_opnd, opr_sym,  hd_rhs_opnd, tl_rhs_opnds.freeze
+            loc, lhs_opnd, opr_sym, hd_rhs_opnd, tl_rhs_opnds.freeze
         ).freeze
     end
 
@@ -334,26 +329,28 @@ module_function
     end
 
 
-    def make_comp_left(loc, lhs_opnd, opr_sym, rhs_opnd)
-        ASSERT.kind_of loc,         LOC::Entry
-        ASSERT.kind_of lhs_opnd,    CSCE::Abstract
-        ASSERT.kind_of opr_sym,     ::Symbol
-        ASSERT.kind_of rhs_opnd,    CSCE::Abstract
+    def make_comp_left(loc, lhs_opnd, opr_sym, hd_rhs_opnd, tl_rhs_opnds)
+        ASSERT.kind_of loc,             LOC::Entry
+        ASSERT.kind_of lhs_opnd,        CSCE::Abstract
+        ASSERT.kind_of opr_sym,         ::Symbol
+        ASSERT.kind_of hd_rhs_opnd,     CSCE::Abstract
+        ASSERT.kind_of tl_rhs_opnds,    ::Array
 
         Binary::Infix::ComposeLeft.new(
-            loc, lhs_opnd, opr_sym, rhs_opnd
+            loc, lhs_opnd, opr_sym, hd_rhs_opnd, tl_rhs_opnds.freeze
         ).freeze
     end
 
 
-    def make_comp_right(loc, lhs_opnd, opr_sym, rhs_opnd)
-        ASSERT.kind_of loc,         LOC::Entry
-        ASSERT.kind_of lhs_opnd,    CSCE::Abstract
-        ASSERT.kind_of opr_sym,     ::Symbol
-        ASSERT.kind_of rhs_opnd,    CSCE::Abstract
+    def make_comp_right(loc, lhs_opnd, opr_sym, hd_rhs_opnd, tl_rhs_opnds)
+        ASSERT.kind_of loc,             LOC::Entry
+        ASSERT.kind_of lhs_opnd,        CSCE::Abstract
+        ASSERT.kind_of opr_sym,         ::Symbol
+        ASSERT.kind_of hd_rhs_opnd,     CSCE::Abstract
+        ASSERT.kind_of tl_rhs_opnds,    ::Array
 
         Binary::Infix::ComposeRight.new(
-            loc, lhs_opnd, opr_sym, rhs_opnd
+            loc, lhs_opnd, opr_sym, hd_rhs_opnd, tl_rhs_opnds.freeze
         ).freeze
     end
 

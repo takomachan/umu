@@ -14,8 +14,6 @@ prechigh
     left    '+' '-' '^'
     left    '==' '<>' '<' '>' '<=' '>='
     left    '++'
-    left    '>>'
-    right   '<<'
     left    KIND_OF
     left    '&&' '||'
 preclow
@@ -372,27 +370,54 @@ case_rule_head:
 # Pipe expression
 
 pipe_expr:
-  resrv_infix_expr {
+  comp_expr {
     result = val[0]
 }
-| resrv_infix_expr '|>' resrv_infix_expr pipel_exprs {
+| comp_expr '|>' comp_expr pipel_exprs {
     result = CSCE.make_pipe_left(
                       val[0].loc, val[0], val[1].sym, val[2], val[3]
                   )
 }
-| resrv_infix_expr '<|' resrv_infix_expr piper_exprs {
+| comp_expr '<|' comp_expr piper_exprs {
     result = CSCE.make_pipe_right(
                       val[0].loc, val[0], val[1].sym, val[2], val[3]
                   )
 }
 
 pipel_exprs:
-  /* empty */                        { result = [] }
-| '|>' resrv_infix_expr pipel_exprs  { result = [val[1]] + val[2] }
+  /* empty */                 { result = [] }
+| '|>' comp_expr pipel_exprs  { result = [val[1]] + val[2] }
 
 piper_exprs:
+  /* empty */                 { result = [] }
+| '<|' comp_expr piper_exprs  { result = [val[1]] + val[2] }
+
+
+
+# Composite expression
+
+comp_expr:
+  resrv_infix_expr {
+    result = val[0]
+}
+| resrv_infix_expr '>>' resrv_infix_expr compl_exprs {
+    result = CSCE.make_comp_left(
+                      val[0].loc, val[0], val[1].sym, val[2], val[3]
+                  )
+}
+| resrv_infix_expr '<<' resrv_infix_expr compr_exprs {
+    result = CSCE.make_comp_right(
+                      val[0].loc, val[0], val[1].sym, val[2], val[3]
+                  )
+}
+
+compl_exprs:
   /* empty */                        { result = [] }
-| '<|' resrv_infix_expr piper_exprs  { result = [val[1]] + val[2] }
+| '>>' resrv_infix_expr compl_exprs  { result = [val[1]] + val[2] }
+
+compr_exprs:
+  /* empty */                        { result = [] }
+| '<<' resrv_infix_expr compr_exprs  { result = [val[1]] + val[2] }
 
 
 
@@ -400,12 +425,6 @@ piper_exprs:
 
 resrv_infix_expr:
   redef_infix_expr
-| resrv_infix_expr '<<' resrv_infix_expr {
-    result = CSCE.make_comp_right val[0].loc, val[0], val[1].sym, val[2]
-}
-| redef_infix_expr '>>' resrv_infix_expr {
-    result = CSCE.make_comp_left  val[0].loc, val[0], val[1].sym, val[2]
-}
 | resrv_infix_expr KIND_OF ID {
     ty_ident = CSCE.make_identifier val[2].loc, val[2].sym
 
