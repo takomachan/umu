@@ -90,6 +90,10 @@ class WithRepetition < Abstract
 
 
     def each
+        return self.to_enum unless block_given?
+
+        yield self.lhs_opnd
+
         yield self.hd_rhs_opnd
 
         self.tl_rhs_opnds.each do |rhs_opnd|
@@ -101,13 +105,9 @@ class WithRepetition < Abstract
 
 
     def to_s
-        opr = self.opr_sym.to_s
+        opr = format " %s ", self.opr_sym.to_s
 
-        format("(%s %s %s)",
-                 self.lhs_opnd.to_s,
-                 opr.to_s,
-                 self.map(&:to_s).join(format(" %s ", opr.to_s))
-        )
+        format "(%s)", self.map(&:to_s).join(opr)
     end
 end
 
@@ -171,12 +171,8 @@ private
 
         opnd_expr,
         hd_opr_exprs,
-        *tl_opr_exprs = ([self.lhs_opnd] + self.to_a).then { |exprs|
-                            if block_given?
-                                yield exprs
-                            else
-                                exprs
-                            end
+        *tl_opr_exprs = self.then { |exprs|
+                            yield exprs
                         }.map { |expr|
                             expr.desugar new_env
                         }
@@ -192,7 +188,7 @@ class Left < Abstract
 private
 
     def __desugar__(env, event)
-        __desugar_pipe__ env, event
+        __desugar_pipe__ env, event, &:each
     end
 end
 
@@ -203,7 +199,7 @@ class Right < Abstract
 private
 
     def __desugar__(env, event)
-        __desugar_pipe__ env, event, &:reverse
+        __desugar_pipe__ env, event, &:reverse_each
     end
 end
 
@@ -226,12 +222,8 @@ private
         ident_x = ASCE.make_identifier self.loc, :'%x'
 
         hd_opnd,
-        *tl_opnds = ([self.lhs_opnd] + self.to_a).then { |exprs|
-                        if block_given?
-                            yield exprs
-                        else
-                            exprs
-                        end
+        *tl_opnds = self.then { |exprs|
+                        yield exprs
                     }.map { |opnd|
                          opnd.desugar new_env
                     }
@@ -255,7 +247,7 @@ private
 =end
 
     def __desugar__(env, event)
-        __desugar_composite__ env, event
+        __desugar_composite__ env, event, &:each
     end
 end
 
@@ -270,7 +262,7 @@ private
 =end
 
     def __desugar__(env, event)
-        __desugar_composite__ env, event, &:reverse
+        __desugar_composite__ env, event, &:reverse_each
     end
 end
 
