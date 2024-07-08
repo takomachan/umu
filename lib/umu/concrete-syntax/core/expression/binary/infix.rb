@@ -17,6 +17,16 @@ module Infix
 
 module Abstraction
 
+unless ::Object.new.respond_to?(:then)	# Ruby 2.5 or after
+	class ::Object
+		def then
+			yield self
+		end
+	end
+end
+
+
+
 class Abstract < Binary::Abstract
     alias       lhs_opnd lhs
     attr_reader :opr_sym
@@ -150,17 +160,26 @@ end
 
 
 
-class PipeLeft < Abstraction::WithRepetition
+module Pipe
+
+class Abstract < Abstraction::WithRepetition
 
 private
 
-    def __desugar__(env, event)
+    def __desugar_pipe__(env, event, &_block)
         new_env = env.enter event
 
         opnd_expr,
         hd_opr_exprs,
-        *tl_opr_exprs = ([self.lhs_opnd] + self.to_a)
-                        .map { |expr| expr.desugar new_env }
+        *tl_opr_exprs = ([self.lhs_opnd] + self.to_a).then { |exprs|
+                            if block_given?
+                                yield exprs
+                            else
+                                exprs
+                            end
+                        }.map { |expr|
+                            expr.desugar new_env
+                        }
 
         ASCE.make_pipe self.loc, opnd_expr, hd_opr_exprs, tl_opr_exprs
     end
@@ -168,26 +187,66 @@ end
 
 
 
-class PipeRight < Abstraction::WithRepetition
+class Left < Abstract
 
 private
 
     def __desugar__(env, event)
-        new_env = env.enter event
-
-        opnd_expr,
-        hd_opr_exprs,
-        *tl_opr_exprs = ([self.lhs_opnd] + self.to_a)
-                        .reverse
-                        .map { |expr| expr.desugar new_env }
-
-        ASCE.make_pipe self.loc, opnd_expr, hd_opr_exprs, tl_opr_exprs
+        __desugar_pipe__ env, event
     end
 end
 
 
 
-class ComposeLeft < Abstraction::WithRepetition
+class Right < Abstract
+
+private
+
+    def __desugar__(env, event)
+        __desugar_pipe__ env, event, &:reverse
+    end
+end
+
+end # Umu::ConcreteSyntax::Core::Expression::Binary::Infix::Pipe
+
+
+
+module Composite
+
+class Abstract < Abstraction::WithRepetition
+
+private
+
+=begin
+    f1 >> f2 >> f3 = { x -> x |> f1 |> f2 |> f3 }
+=end
+
+    def __desugar_composite__(env, event, &_block)
+        new_env = env.enter event
+        ident_x = ASCE.make_identifier self.loc, :'%x'
+
+        hd_opnd,
+        *tl_opnds = ([self.lhs_opnd] + self.to_a).then { |exprs|
+                        if block_given?
+                            yield exprs
+                        else
+                            exprs
+                        end
+                    }.map { |opnd|
+                         opnd.desugar new_env
+                    }
+
+        ASCE.make_lambda(
+            self.loc,
+            [ASCE.make_parameter(self.loc, ident_x)],
+            ASCE.make_pipe(self.loc, ident_x, hd_opnd, tl_opnds)
+        )
+    end
+end
+
+
+
+class Left < Abstract
 
 private
 
@@ -196,24 +255,13 @@ private
 =end
 
     def __desugar__(env, event)
-        new_env = env.enter event
-        ident_x = ASCE.make_identifier self.loc, :'%x'
-
-        hd_opnd,
-        *tl_opnds = ([self.lhs_opnd] + self.to_a)
-                    .map { |opnd| opnd.desugar new_env }
-
-        ASCE.make_lambda(
-            self.loc,
-            [ASCE.make_parameter(self.loc, ident_x)],
-            ASCE.make_pipe(self.loc, ident_x, hd_opnd, tl_opnds)
-        )
+        __desugar_composite__ env, event
     end
 end
 
 
 
-class ComposeRight < Abstraction::WithRepetition
+class Right < Abstract
 
 private
 
@@ -222,21 +270,11 @@ private
 =end
 
     def __desugar__(env, event)
-        new_env = env.enter event
-        ident_x = ASCE.make_identifier self.loc, :'%x'
-
-        hd_opnd,
-        *tl_opnds = ([self.lhs_opnd] + self.to_a)
-                    .reverse
-                    .map { |opnd| opnd.desugar new_env }
-
-        ASCE.make_lambda(
-            self.loc,
-            [ASCE.make_parameter(self.loc, ident_x)],
-            ASCE.make_pipe(self.loc, ident_x, hd_opnd, tl_opnds)
-        )
+        __desugar_composite__ env, event, &:reverse
     end
 end
+
+end # Umu::ConcreteSyntax::Core::Expression::Binary::Infix::Composite
 
 
 
@@ -310,7 +348,7 @@ module_function
         ASSERT.kind_of hd_rhs_opnd,     CSCE::Abstract
         ASSERT.kind_of tl_rhs_opnds,    ::Array
 
-        Binary::Infix::PipeLeft.new(
+        Binary::Infix::Pipe::Left.new(
             loc, lhs_opnd, opr_sym, hd_rhs_opnd, tl_rhs_opnds.freeze
         ).freeze
     end
@@ -323,7 +361,7 @@ module_function
         ASSERT.kind_of hd_rhs_opnd,     CSCE::Abstract
         ASSERT.kind_of tl_rhs_opnds,    ::Array
 
-        Binary::Infix::PipeRight.new(
+        Binary::Infix::Pipe::Right.new(
             loc, lhs_opnd, opr_sym, hd_rhs_opnd, tl_rhs_opnds.freeze
         ).freeze
     end
@@ -336,7 +374,7 @@ module_function
         ASSERT.kind_of hd_rhs_opnd,     CSCE::Abstract
         ASSERT.kind_of tl_rhs_opnds,    ::Array
 
-        Binary::Infix::ComposeLeft.new(
+        Binary::Infix::Composite::Left.new(
             loc, lhs_opnd, opr_sym, hd_rhs_opnd, tl_rhs_opnds.freeze
         ).freeze
     end
@@ -349,7 +387,7 @@ module_function
         ASSERT.kind_of hd_rhs_opnd,     CSCE::Abstract
         ASSERT.kind_of tl_rhs_opnds,    ::Array
 
-        Binary::Infix::ComposeRight.new(
+        Binary::Infix::Composite::Right.new(
             loc, lhs_opnd, opr_sym, hd_rhs_opnd, tl_rhs_opnds.freeze
         ).freeze
     end
