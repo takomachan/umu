@@ -62,6 +62,10 @@ FILES	= version.rb \
 			concrete-syntax/core/expression/binary.rb \
 			concrete-syntax/core/expression/binary/abstract.rb \
 			concrete-syntax/core/expression/binary/infix.rb \
+			concrete-syntax/core/expression/binary/infix/abstraction.rb \
+			concrete-syntax/core/expression/binary/infix/infix.rb \
+			concrete-syntax/core/expression/binary/infix/pipe.rb \
+			concrete-syntax/core/expression/binary/infix/composite.rb \
 			concrete-syntax/core/expression/binary/apply.rb \
 			concrete-syntax/core/expression/binary/send.rb \
 			concrete-syntax/core/expression/nary.rb \
