@@ -501,11 +501,11 @@ message:
   '$' INT {
     result = CSCE.make_number_selector val[1].loc, val[1].val
 }
-| '$' ID {
-    result = CSCE.make_label_selector  val[1].loc, val[1].sym
+| SEL {
+    result = CSCE.make_label_selector  val[0].loc, val[0].sym
 }
-| '$' '(' named_fld com_named_flds ')' {
-    result = CSCE.make_modifier val[0].loc, [val[2]] + val[3]
+| '$(' named_fld com_named_flds ')' {
+    result = CSCE.make_modifier val[0].loc, [val[1]] + val[2]
 }
 | MSG atom_exprs {
     result = CSCE.make_method val[0].loc, val[0].sym, val[1]

@@ -15,7 +15,7 @@ IDENT_WORD = '(_*[[:alpha:]][[:alnum:]]*(\-[[:alnum:]]+)*_*[\?!]?\'*)'
 # See -> https://qiita.com/Takayuki_Nakano/items/8d38beaddb84b488d683
 
 MODULE_DIRECTORY_PATTERN    = Regexp.new IDENT_WORD + '::'
-IDENT_PATTERN               = Regexp.new '([@\.])?' + IDENT_WORD + '(:)?'
+IDENT_PATTERN               = Regexp.new '([@$\.])?' + IDENT_WORD + '(:)?'
 
 RESERVED_WORDS = [
     '__FILE__',     '__LINE__',
@@ -110,6 +110,7 @@ BRAKET_PAIRS = [
     ['{',   '}'],   # Lambda, etc
     ['&(',  ')'],   # Method
     ['&{',  '}'],   # Class
+    ['$(',  ')'],   # Named tuple modifier
 
 
     # Not used, but reserved for future
@@ -236,9 +237,11 @@ SYMBOL_PATTERNS = [
 
                     case head_matched
                     when '@'
-                        LT.make_symbol  self.loc, body_matched
+                        LT.make_symbol   self.loc, body_matched
+                    when '$'
+                        LT.make_selector self.loc, body_matched
                     when '.'
-                        LT.make_message self.loc, body_matched
+                        LT.make_message  self.loc, body_matched
                     else
                         ASSERT.abort head_matched
                     end

@@ -92,6 +92,19 @@ end
 
 
 
+class Selector < Abstraction::Symbol
+    def to_s
+        format "SEL($%s)", self.sym
+    end
+
+
+    def to_racc_token
+        :SEL
+    end
+end
+
+
+
 class Message < Abstraction::Symbol
     def to_s
         format "MSG(.%s)", self.sym
@@ -212,6 +225,14 @@ module_function
         ASSERT.kind_of val, ::String
 
         Label.new(loc, val.freeze).freeze
+    end
+
+
+    def make_selector(loc, val)
+        ASSERT.kind_of loc, LOC::Entry
+        ASSERT.kind_of val, ::String
+
+        Selector.new(loc, val.freeze).freeze
     end
 
 
