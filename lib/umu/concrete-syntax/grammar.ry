@@ -507,11 +507,12 @@ message:
 | '$' '(' named_fld com_named_flds ')' {
     result = CSCE.make_modifier val[0].loc, [val[2]] + val[3]
 }
-| '.' meth_ident atom_exprs {
+| MSG atom_exprs {
+    result = CSCE.make_method val[0].loc, val[0].sym, val[1]
+}
+| '.' norm_infix_opr atom_exprs {
     result = CSCE.make_method val[1].loc, val[1].sym, val[2]
 }
-
-meth_ident: ID | norm_infix_opr
 
 
 # Apply expression
@@ -593,16 +594,22 @@ atom_expr:
 | '(' expr ';' expr sem_exprs ')' {
     result = CSCE.make_sequence val[0].loc, [val[1], val[3]] + val[4]
 }
-| '&(' meth_ident ')' {
+| '&(' ID ')' {
     result = CSCE.make_functionalized_method(
                     val[0].loc,
                     CSCE.make_identifier(val[1].loc, val[1].sym)
                 )
 }
-| '&(' ID '.'  meth_ident ')' {
+| '&(' norm_infix_opr ')' {
     result = CSCE.make_functionalized_method(
                     val[0].loc,
-                    CSCE.make_identifier(val[3].loc, val[3].sym),
+                    CSCE.make_identifier(val[1].loc, val[1].sym)
+                )
+}
+| '&(' ID MSG ')' {
+    result = CSCE.make_functionalized_method(
+                    val[0].loc,
+                    CSCE.make_identifier(val[2].loc, val[2].sym),
                     CSCE.make_identifier(val[1].loc, val[1].sym)
                 )
 }

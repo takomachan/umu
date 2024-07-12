@@ -92,6 +92,19 @@ end
 
 
 
+class Message < Abstraction::Symbol
+    def to_s
+        format "MSG(.%s)", self.sym
+    end
+
+
+    def to_racc_token
+        :MSG
+    end
+end
+
+
+
 class String < Abstraction::String
     def initialize(loc, val)
         ASSERT.kind_of val, ::String
@@ -199,6 +212,14 @@ module_function
         ASSERT.kind_of val, ::String
 
         Label.new(loc, val.freeze).freeze
+    end
+
+
+    def make_message(loc, val)
+        ASSERT.kind_of loc, LOC::Entry
+        ASSERT.kind_of val, ::String
+
+        Message.new(loc, val.freeze).freeze
     end
 
 

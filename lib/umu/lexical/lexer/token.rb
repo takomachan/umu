@@ -15,7 +15,7 @@ IDENT_WORD = '(_*[[:alpha:]][[:alnum:]]*(\-[[:alnum:]]+)*_*[\?!]?\'*)'
 # See -> https://qiita.com/Takayuki_Nakano/items/8d38beaddb84b488d683
 
 MODULE_DIRECTORY_PATTERN    = Regexp.new IDENT_WORD + '::'
-IDENT_PATTERN               = Regexp.new '(@)?' + IDENT_WORD + '(:)?'
+IDENT_PATTERN               = Regexp.new '([@\.])?' + IDENT_WORD + '(:)?'
 
 RESERVED_WORDS = [
     '__FILE__',     '__LINE__',
@@ -214,7 +214,7 @@ SYMBOL_PATTERNS = [
             ]
 
 
-        # Symbol, Reserved-word or Identifier-word
+        # Symbol, Message, Reserved-word or Identifier-word
         when scanner.scan(IDENT_PATTERN)
             head_matched = scanner[1]
             body_matched = scanner[2]
@@ -234,7 +234,14 @@ SYMBOL_PATTERNS = [
                         )
                     end
 
-                    LT.make_symbol self.loc, body_matched
+                    case head_matched
+                    when '@'
+                        LT.make_symbol  self.loc, body_matched
+                    when '.'
+                        LT.make_message self.loc, body_matched
+                    else
+                        ASSERT.abort head_matched
+                    end
                 else
                     if tail_matched
                         LT.make_label self.loc, body_matched
