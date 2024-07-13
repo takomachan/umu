@@ -30,7 +30,7 @@ class Tuple < Abstraction::Expressions
 
 
     def pretty_print(q)
-        P.seplist q, self, '(', ')', ','
+        PRT.seplist q, self, '(', ')', ','
     end
 
 

@@ -140,5 +140,5 @@ module Umu
     ASSERT  = Assertion
     X       = Exception
     LOC     = Location
-    P       = PrettyPrint
+    PRT     = PrettyPrint
 end # Umu

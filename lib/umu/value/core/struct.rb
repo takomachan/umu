@@ -89,7 +89,7 @@ class Entry < Top
 
 
     def pretty_print(q)
-        P.seplist q, self, 'struct {', '}', ' '
+        PRT.seplist q, self, 'struct {', '}', ' '
     end
 
 

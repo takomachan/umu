@@ -148,7 +148,7 @@ class Modifier < Abstraction::Selector
 
     def pretty_print(q)
         enum = self.expr_by_label.each
-        P.seplist(q, enum, '$(', ')', ',') do |label, expr|
+        PRT.seplist(q, enum, '$(', ')', ',') do |label, expr|
             q.pp label
 
             q.breakable
