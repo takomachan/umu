@@ -24,6 +24,11 @@ class Abstract < Container::Abstract
     end
 
 
+    def pretty_print(q)
+        PRT.seplist q, self, '(', ')', ','
+    end
+
+
     def exported_vars
         self.reject(&:wildcard?).inject([]) { |array, epat|
             ASSERT.kind_of array,  ::Array

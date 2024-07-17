@@ -12,6 +12,11 @@ module Core
 module Pattern
 
 class Abstract < Abstraction::Model
+    def pretty_print(q)
+        q.text self.to_s
+    end
+
+
     def exported_vars
         raise X::InternalSubclassResponsibility
     end

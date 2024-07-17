@@ -30,6 +30,11 @@ class Abstract < Umu::Abstraction::Model
 
         @expr = expr
     end
+
+
+    def pretty_print(q)
+        raise X::InternalSubclassResponsibility
+    end
 end
 
 
@@ -50,6 +55,14 @@ class Generator < Abstract
 
     def to_s
         format "%%VAL %s <- %s", self.pat.to_s, self.expr.to_s
+    end
+
+
+    def pretty_print(q)
+        q.text '%VAL '
+        q.pp self.pat
+        q.text ' <- '
+        q.pp self.expr
     end
 
 
@@ -95,6 +108,12 @@ end
 class Guard < Abstract
     def to_s
         format "%%IF %s", self.expr.to_s
+    end
+
+
+    def pretty_print(q)
+        q.text '%IF '
+        q.pp self.expr
     end
 
 
@@ -152,6 +171,21 @@ class Entry < Container::Abstract
                 ' ' + self.qualifiers.map(&:to_s).join(' ')
             end
         )
+    end
+
+
+    def pretty_print(q)
+        q.group(PP_INDENT_WIDTH, '[|', '|') do
+            q.pp self.expr
+        end
+
+        q.group(PP_INDENT_WIDTH, '', ']') do
+            self.qualifiers.each do |qualifier|
+                q.breakable
+
+                q.pp qualifier
+            end
+        end
     end
 
 

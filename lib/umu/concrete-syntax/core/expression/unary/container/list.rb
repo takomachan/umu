@@ -45,6 +45,11 @@ class List < Container::Abstract
     end
 
 
+    def pretty_print(q)
+        PRT.seplist q, self, '[', ']', ','
+    end
+
+
 private
 
     def __desugar__(env, event)

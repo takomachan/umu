@@ -8,6 +8,11 @@ module Umu
 module ConcreteSyntax
 
 class Abstract < Abstraction::Model
+    def pretty_print(q)
+        q.text self.to_s
+    end
+
+
     def desugar(env)
         E::Tracer.trace(
                     env.pref,

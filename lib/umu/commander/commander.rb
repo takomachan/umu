@@ -414,7 +414,7 @@ end
                 "________ Concrete Syntax: %s ________\n",
                 csyn.loc.to_s
             )
-            STDERR.puts csyn.to_s
+            PP.pp csyn, STDERR
         end
 
         if pref.trace_mode?

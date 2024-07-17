@@ -60,6 +60,21 @@ class List < Container::Abstract
     end
 
 
+    def pretty_print(q)
+        if self.opt_last_pat
+            last_pat = self.opt_last_pat
+
+            PRT.seplist q, self, '[', '', ','
+
+            q.group(PP_INDENT_WIDTH, '|', ']') do
+                q.pp last_pat
+            end
+        else
+            PRT.seplist q, self, '[', ']', ','
+        end
+    end
+
+
     def exported_vars
         (self.pats + [self.opt_last_pat]).reject(&:wildcard?).inject([]) {
             |array, vpat|
