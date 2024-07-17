@@ -3,16 +3,6 @@
 
 
 
-unless ::Object.new.respond_to?(:then)	# Ruby 2.5 or after
-	class ::Object
-		def then
-			yield self
-		end
-	end
-end
-
-
-
 module Umu
 
 module ConcreteSyntax
@@ -45,14 +35,39 @@ class Abstract < Binary::Abstract
 
 
     def to_s
-        _opr = self.opr_sym.to_s
-        opr = if /^[a-zA-Z\-]+\??$/ =~ _opr
-                    '%' + _opr.upcase
-                else
-                    _opr
-                end
+        format("(%s %s %s)",
+            self.lhs_opnd.to_s,
+            __opr_to_string__,
+            self.rhs_opnd.to_s
+        )
+    end
 
-        format "(%s %s %s)", self.lhs_opnd.to_s, opr, self.rhs_opnd.to_s
+
+    def pretty_print(q)
+        q.group(PP_INDENT_WIDTH, '(', ')') do
+            q.pp self.lhs_opnd
+
+            q.text ' '
+            q.text __opr_to_string__
+
+            q.breakable
+
+            q.pp self.rhs_opnd
+        end
+    end
+
+
+private
+
+
+    def __opr_to_string__
+        opr = self.opr_sym.to_s
+
+        if /^[a-zA-Z\-]+\??$/ =~ opr
+            '%' + opr.upcase
+        else
+            opr
+        end
     end
 end
 
@@ -108,6 +123,24 @@ class WithRepetition < Abstract
         opr = format " %s ", self.opr_sym.to_s
 
         format "(%s)", self.map(&:to_s).join(opr)
+    end
+
+
+    def pretty_print(q)
+        hd_expr, *tl_exprs = self.to_a
+
+        q.text '('
+        q.pp hd_expr
+
+        tl_exprs.each do |expr|
+            q.breakable
+
+            q.text self.opr_sym.to_s
+            q.text ' '
+            q.pp expr
+        end
+
+        q.text ')'
     end
 end
 

@@ -420,6 +420,11 @@ class Entry < Binary::Abstract
     end
 
 
+    def rhs_messages
+        [self.rhs_head_message] + self.rhs_tail_messages
+    end
+
+
     def to_s
         format("(%s%s)%s",
             self.lhs_expr.to_s,
@@ -442,14 +447,14 @@ class Entry < Binary::Abstract
                 q.text format(" : %s", self.opt_receiver_type_sym.to_s)
             end
         end
-        self.rhs_messages.each do |message|
-            q.pp message
+
+        q.group(PP_INDENT_WIDTH, '', '') do
+            self.rhs_messages.each do |message|
+                q.breakable ''
+
+                q.pp message
+            end
         end
-    end
-
-
-    def rhs_messages
-        [self.rhs_head_message] + self.rhs_tail_messages
     end
 
 

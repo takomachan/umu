@@ -38,6 +38,19 @@ class Apply < Binary::Abstract
     end
 
 
+    def pretty_print(q)
+        q.group(PP_INDENT_WIDTH, '(', ')') do
+            q.pp self.opr_expr
+
+            self.opnd_exprs.each do |expr|
+                q.breakable
+
+                q.pp expr
+            end
+        end
+    end
+
+
     def opnd_exprs
         [self.opnd_head_expr] + self.opnd_tail_exprs
     end

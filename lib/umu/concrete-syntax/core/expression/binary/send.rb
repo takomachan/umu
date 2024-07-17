@@ -105,6 +105,30 @@ class Modifier < Abstract
     end
 
 
+    def pretty_print(q)
+        q.group(PP_INDENT_WIDTH, '$(', ')') do
+            hd_field, *tl_fields = self.fields
+            hd_label, hd_opt_expr = hd_field
+
+            q.text hd_label.to_s
+            if hd_opt_expr
+                q.text ' '
+                q.pp hd_opt_expr
+            end
+
+            self.tl_fields.each do |label, opt_expr|
+                q.breakable
+
+                q.text label.to_s
+                if opt_expr
+                    q.text ' '
+                    q.pp opt_expr
+                end
+            end
+        end
+    end
+
+
 private
 
     def __desugar__(env, event)
@@ -166,6 +190,19 @@ class Method < Abstract
     end
 
 
+    def pretty_print(q)
+        q.group(PP_INDENT_WIDTH, '.', '') do
+            q.text self.sym.to_s
+
+            self.exprs.each do |expr|
+                q.breakable
+
+                q.pp expr
+            end
+        end
+    end
+
+
 private
 
     def __desugar__(env, event)
@@ -205,6 +242,21 @@ class Entry < Binary::Abstract
                 self.lhs_expr.to_s,
                 self.rhs_messages.map(&:to_s).join
         )
+    end
+
+
+    def pretty_print(q)
+        q.group(PP_INDENT_WIDTH, '(', ')') do
+            q.pp self.lhs_expr
+        end
+
+        q.group(PP_INDENT_WIDTH, '', '') do
+            self.rhs_messages.each do |message|
+                q.breakable ''
+
+                q.pp message
+            end
+        end
     end
 
 
