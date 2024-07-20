@@ -39,6 +39,17 @@ class Fun < Top
     end
 
 
+    def pretty_print(q)
+        q.group(PP_INDENT_WIDTH, '#<', '>') do
+            if lam.opt_name
+                q.text format("%s: ", lam.opt_name)
+            end
+
+            q.pp self.lam
+        end
+    end
+
+
     def apply(head_value, tail_values, loc, env)
         ASSERT.kind_of head_value,  VC::Top
         ASSERT.kind_of tail_values, ::Array

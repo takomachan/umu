@@ -30,6 +30,11 @@ class Abstract < Umu::Abstraction::Model
         @head       = head
         @body_expr  = body_expr
     end
+
+
+    def pretty_print(q)
+        raise X::InternalSubclassResponsibility
+    end
 end
 
 
@@ -62,6 +67,28 @@ class WithDeclaration < Abstract
                 end
         )
     end
+
+
+    def pretty_print(q)
+        q.pp self.head
+        q.text ' -> '
+        q.pp self.body_expr
+
+        unless self.decls.empty?
+            q.text ' %WHERE '
+
+            fst_decl, *not_fst_decls = self.decls
+            q.pp fst_decl
+
+            q.breakable
+
+            unless not_fst_decls.empty?
+                not_fst_decls.each do |decl|
+                    pp decl
+                end
+            end
+        end
+    end
 end
 
 end
@@ -80,6 +107,13 @@ class If < Abstraction::Abstract
 
     def to_s
         format "%s %s", self.head_expr, self.body_expr
+    end
+
+
+    def pretty_print(q)
+        q.pp self.head_expr
+        q.text ' '
+        q.pp self.body_expr
     end
 end
 
@@ -114,11 +148,6 @@ class Abstract < Umu::Abstraction::Model
     end
 
 
-    def to_s
-        self.obj.to_s
-    end
-
-
     def type_sym
         raise X::InternalSubclassResponsibility
     end
@@ -134,6 +163,16 @@ class Atom < Abstract
         ASSERT.kind_of atom_value, VCBA::Abstract
 
         super
+    end
+
+
+    def to_s
+        self.obj.to_s
+    end
+
+
+    def pretty_print(q)
+        self.obj.pretty_print(q)
     end
 
 
@@ -174,6 +213,16 @@ class Datum < Abstract
                     ''
                 end
         )
+    end
+
+
+    def pretty_print(q)
+        q.text self.tag_sym.to_s
+
+        if self.opt_contents_pat
+            q.text ' '
+            q.pp self.opt_contents_pat
+        end
     end
 end
 
@@ -220,6 +269,24 @@ class Class < Abstract
                     ''
                 end
         )
+    end
+
+
+    def pretty_print(q)
+        q.text '&'
+        if self.opt_superclass_ident
+            q.text format("(%s < %s)",
+                         self.class_ident.to_s,
+                         self.opt_superclass_ident.to_s
+                    )
+        else
+            q.text self.class_ident.to_s
+        end
+
+        if self.opt_contents_pat
+            q.text ' '
+            q.pp self.opt_contents_pat
+        end
     end
 end
 

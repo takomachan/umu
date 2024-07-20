@@ -121,6 +121,41 @@ class Named < Abstract
     end
 
 
+    def pretty_print(q)
+        q.group(
+            PP_INDENT_WIDTH,
+            format("%s =", self.sym.to_s),
+            ''
+        ) do
+            self.pats.each do |pat|
+                q.breakable
+
+                q.pp pat
+            end
+        end
+
+        q.breakable
+
+        q.group(PP_INDENT_WIDTH, '->', '') do
+            q.breakable
+
+            q.pp self.expr
+        end
+
+        q.breakable
+
+        unless self.decls.empty?
+            q.group(PP_INDENT_WIDTH, '%WHERE', '') do
+                self.decls.each do |decl|
+                    q.breakable
+
+                    q.pp decl
+                end
+            end
+        end
+    end
+
+
 private
 
     def __name_sym__
@@ -142,6 +177,39 @@ class Anonymous < Abstract
                     format(" %%WHERE %s", self.decls.map(&:to_s).join(' '))
                 end
         )
+    end
+
+
+    def pretty_print(q)
+        q.group(PP_INDENT_WIDTH, '{', '') do
+            self.pats.each do |pat|
+                q.breakable
+
+                q.pp pat
+            end
+        end
+
+        q.breakable
+
+        q.group(PP_INDENT_WIDTH, '->', '') do
+            q.breakable
+
+            q.pp self.expr
+        end
+
+        q.breakable
+
+        unless self.decls.empty?
+            q.group(PP_INDENT_WIDTH, '%WHERE', '') do
+                self.decls.each do |decl|
+                    q.breakable
+
+                    q.pp decl
+                end
+            end
+        end
+
+        q.text '}'
     end
 
 private

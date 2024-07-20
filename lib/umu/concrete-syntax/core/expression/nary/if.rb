@@ -49,6 +49,36 @@ class If < Expression::Abstract
     end
 
 
+    def pretty_print(q)
+        q.text '('
+        q.group(PP_INDENT_WIDTH, '', '') do
+            q.breakable ''
+
+            q.group(PP_INDENT_WIDTH, '%IF ', '') do
+                q.pp self.if_rule
+            end
+
+            self.elsif_rules.each do |rule|
+                q.breakable
+
+                q.group(PP_INDENT_WIDTH, '%ELSIF ', '') do
+                    q.pp rule
+                end
+            end
+
+            q.breakable
+
+            q.group(PP_INDENT_WIDTH, '%ELSE ', '') do
+                q.pp self.else_expr
+            end
+        end
+
+        q.breakable ''
+
+        q.text ')'
+    end
+
+
 private
 
     def __desugar__(env, event)

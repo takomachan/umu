@@ -68,6 +68,62 @@ class Abstract < Expression::Abstract
     end
 
 
+    def pretty_print(q)
+        q.text format("%%%s ", __keyword__.upcase)
+        q.pp self.expr
+        q.text ' {'
+
+        q.breakable
+
+        fst_rule, *not_fst_rules = self.rules
+
+        q.pp fst_rule
+        unless not_fst_rules.empty?
+            not_fst_rules.each do |rule|
+                q.breakable
+
+                q.text '| '
+                q.group(PP_INDENT_WIDTH, '', '') do
+                    q.pp rule
+                end
+            end
+        end
+
+        if self.opt_else_expr
+            else_expr = self.opt_else_expr
+
+            q.breakable
+
+            q.text '%ELSE -> '
+            q.group(PP_INDENT_WIDTH, '', '') do
+                q.breakable ''
+
+                q.pp else_expr
+
+                unless self.else_decls.empty?
+                    q.text ' %WHERE '
+
+                    fst_decl, *not_fst_decls = self.else_decls
+
+                    q.pp fst_decl
+
+                    q.breakable
+
+                    not_fst_decls.each do |decl|
+                        q.pp decl
+
+                        q.breakable
+                    end
+                end
+            end
+        end
+
+        q.breakable
+
+        q.text '}'
+    end
+
+
     def rules
         [self.fst_rule] + self.snd_rules
     end
