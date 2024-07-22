@@ -39,6 +39,16 @@ class Structure < Abstract
     end
 
 
+    def pretty_print(q)
+        q.text '%STRUCTURE '
+        q.text self.pat.to_s
+        q.text ' = '
+        q.group(PP_INDENT_WIDTH, '', '') do
+            q.pp self.expr
+        end
+    end
+
+
     def exported_vars
         self.pat.exported_vars
     end
@@ -78,24 +88,22 @@ class Abstract < Abstraction::Model
             ASSERT.opt_kind_of opt_type_sym,    ::Symbol
             ASSERT.opt_kind_of opt_source_id,   CSME::Identifier::Abstract
 
-            format("%%%s %s%s%s",
-                    __reserved_word__,
-
-                    target_id.to_s,
-
-                    if opt_type_sym
-                        format " : %s", opt_type_sym.to_s
-                    else
-                        ''
-                    end,
-
-                    if opt_source_id
-                        format " = %s", opt_source_id.to_s
-                    else
-                        ''
-                    end
-            )
+            __format_field__ target_id, opt_type_sym, opt_source_id
         }.join(' ')
+    end
+
+
+    def pretty_print(q)
+        return if self.fields.empty?
+
+        fst_field, *not_fst_fields = self.fields
+        q.text __format_field__(*fst_field)
+
+        not_fst_fields.each do |field|
+            q.breakable
+
+            q.text __format_field__(*field)
+        end
     end
 
 
@@ -135,8 +143,30 @@ private
         raise X::InternalSubclassResponsibility
     end
 
+
     def __opt_type_sym__
         raise X::InternalSubclassResponsibility
+    end
+
+
+    def __format_field__(target_id, opt_type_sym, opt_source_id)
+        format("%%%s %s%s%s",
+                __reserved_word__,
+
+                target_id.to_s,
+
+                if opt_type_sym
+                    format " : %s", opt_type_sym.to_s
+                else
+                    ''
+                end,
+
+                if opt_source_id
+                    format " = %s", opt_source_id.to_s
+                else
+                    ''
+                end
+        )
     end
 end
 
@@ -212,6 +242,27 @@ class Entry < Declaration::Abstract
                 end
 
         format "%%IMPORT %s%s", self.id.to_s, body
+    end
+
+
+    def pretty_print(q)
+        q.text '%IMPORT '
+        q.text self.id.to_s
+
+        if self.opt_fields
+            q.group(PP_INDENT_WIDTH, ' {', '') do
+
+                q.breakable
+
+                self.opt_fields.each do |field|
+                    q.pp field
+
+                    q.breakable
+                end
+            end
+
+            q.text '}'
+        end
     end
 
 

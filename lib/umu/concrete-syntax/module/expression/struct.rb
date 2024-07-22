@@ -45,6 +45,19 @@ class Struct < Expression::Abstract
     end
 
 
+    def pretty_print(q)
+        PRT.seplist(q, self.body_decls, '%STRUCT {', '}', ' ') do |decl|
+            q.pp decl
+        end
+
+        unless self.local_decls.empty?
+            PRT.seplist(q, self.local_decls, ' %WHERE {', '}', ' ') do |decl|
+                q.pp decl
+            end
+        end
+    end
+
+
 private
 
     def __desugar__(env, event)
