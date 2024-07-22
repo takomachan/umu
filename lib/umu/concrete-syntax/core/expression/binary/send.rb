@@ -178,7 +178,7 @@ class Method < Abstract
 
 
     def to_s
-        format(".%s%s",
+        format(".(%s%s)",
             self.sym.to_s,
 
             if self.exprs.empty?
@@ -191,7 +191,7 @@ class Method < Abstract
 
 
     def pretty_print(q)
-        q.group(PP_INDENT_WIDTH, '.', '') do
+        q.group(PP_INDENT_WIDTH, '.(', ')') do
             q.text self.sym.to_s
 
             self.exprs.each do |expr|

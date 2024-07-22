@@ -209,7 +209,7 @@ class Method < Abstraction::Abstract
 
 
     def to_s
-        format(".%s%s",
+        format(".(%s%s)",
             self.sym.to_s,
 
             if self.exprs.empty?
@@ -222,8 +222,11 @@ class Method < Abstraction::Abstract
 
 
     def pretty_print(q)
-        q.text format(".%s", self.sym.to_s)
-        q.group(PP_INDENT_WIDTH, '', '') do
+        q.group(
+            PP_INDENT_WIDTH,
+            format(".(%s", self.sym.to_s),
+            ')'
+        ) do
             self.exprs.each do |expr|
                 q.text ' '
                 q.pp expr

@@ -37,7 +37,7 @@ class Abstract < Binary::Abstract
     def to_s
         format("(%s %s %s)",
             self.lhs_opnd.to_s,
-            __opr_to_string__,
+            self.opr_sym.to_s,
             self.rhs_opnd.to_s
         )
     end
@@ -48,25 +48,11 @@ class Abstract < Binary::Abstract
             q.pp self.lhs_opnd
 
             q.text ' '
-            q.text __opr_to_string__
+            q.text self.opr_sym.to_s
 
             q.breakable
 
             q.pp self.rhs_opnd
-        end
-    end
-
-
-private
-
-
-    def __opr_to_string__
-        opr = self.opr_sym.to_s
-
-        if /^[a-zA-Z\-]+\??$/ =~ opr
-            '%' + opr.upcase
-        else
-            opr
         end
     end
 end
