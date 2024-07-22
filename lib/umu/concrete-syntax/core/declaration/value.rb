@@ -45,6 +45,26 @@ class Value < Declaration::Abstract
     end
 
 
+    def pretty_print(q)
+        q.text '%VAL '
+        q.pp self.pat
+        q.text ' = '
+        q.group(PP_INDENT_WIDTH, '', '') do
+            q.pp self.expr
+        end
+
+        unless self.decls.empty?
+            q.group(PP_INDENT_WIDTH, '%WHERE {', '}') do
+                self.decls.each do |decl|
+                    q.breakable
+
+                    q.pp decl
+                end
+            end
+        end
+    end
+
+
     def exported_vars
         self.pat.exported_vars
     end

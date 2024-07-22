@@ -90,9 +90,7 @@ class Entry < Expression::Abstract
 
         q.breakable
 
-        q.group(PP_INDENT_WIDTH, '->', '') do
-            q.breakable
-
+        q.group(PP_INDENT_WIDTH, '-> ', '') do
             q.pp expr
         end
 

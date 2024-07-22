@@ -53,6 +53,12 @@ class Simple < Abstract
     def to_s
         format "%%FUN %s", self.lam_expr.to_s
     end
+
+
+    def pretty_print(q)
+        q.text '%FUN '
+        q.pp self.lam_expr
+    end
 end
 
 
@@ -60,6 +66,11 @@ end
 class Recursive < Abstract
     def to_s
         self.lam_expr.to_s
+    end
+
+
+    def pretty_print(q)
+        q.pp self.lam_expr
     end
 end
 

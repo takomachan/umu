@@ -34,6 +34,17 @@ class Assert < Declaration::Abstract
     end
 
 
+    def pretty_print(q)
+        q.text '%ASSERT ('
+        q.pp self.test_expr
+        q.group(PP_INDENT_WIDTH, ') ', '') do
+            q.breakable
+
+            q.pp self.else_expr
+        end
+    end
+
+
     def exported_vars
         [].freeze
     end

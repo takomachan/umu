@@ -136,22 +136,24 @@ class Named < Abstract
 
         q.breakable
 
-        q.group(PP_INDENT_WIDTH, '->', '') do
-            q.breakable
-
+        q.group(PP_INDENT_WIDTH, '-> ', '') do
             q.pp self.expr
         end
 
-        q.breakable
-
         unless self.decls.empty?
-            q.group(PP_INDENT_WIDTH, '%WHERE', '') do
+            q.breakable
+
+            q.group(PP_INDENT_WIDTH, '%WHERE {', '') do
                 self.decls.each do |decl|
                     q.breakable
 
                     q.pp decl
                 end
             end
+
+            q.breakable
+
+            q.text '}'
         end
     end
 
@@ -191,9 +193,7 @@ class Anonymous < Abstract
 
         q.breakable
 
-        q.group(PP_INDENT_WIDTH, '->', '') do
-            q.breakable
-
+        q.group(PP_INDENT_WIDTH, '-> ', '') do
             q.pp self.expr
         end
 

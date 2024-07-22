@@ -265,6 +265,11 @@ class Core < Abstract
     end
 
 
+    def pretty_print(q)
+        q.pp self.core_decl
+    end
+
+
     def exported_vars
         self.core_decl.exported_vars
     end

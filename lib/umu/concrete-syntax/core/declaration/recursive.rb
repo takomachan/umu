@@ -25,9 +25,29 @@ class Recursive < Declaration::Abstract
 
 
     def to_s
-        format("%%FUN rec %s",
+        format("%%FUN %%REC %s",
             self.functions.map(&:to_s).join(' %%AND ')
         )
+    end
+
+
+    def pretty_print(q)
+        q.text '%FUN %REC '
+
+        fst_func, *not_fst_funcs = self.functions
+        q.pp fst_func
+
+        not_fst_funcs.each do |func|
+            q.breakable
+
+            q.text '%AND'
+
+            q.breakable
+
+            q.group(PP_INDENT_WIDTH, '', '') do
+                q.pp func
+            end
+        end
     end
 
 
