@@ -18,8 +18,8 @@ class SeqOfDeclaration < Abstract
 
 
     def initialize(loc, decls)
-        ASSERT.kind_of loc,     LOC::Entry
-        ASSERT.kind_of decls,   ::Array
+        ASSERT.kind_of loc, LOC::Entry
+        ASSERT.assert decls.respond_to?(:each), 'Enumerable'
 
         super(loc)
 
@@ -34,6 +34,9 @@ class SeqOfDeclaration < Abstract
             yield decl
         end
     end
+
+
+    alias to_a decls
 
 
     def to_s
@@ -81,8 +84,8 @@ end
 module_function
 
     def make_seq_of_declaration(loc, decls)
-        ASSERT.kind_of loc,     LOC::Entry
-        ASSERT.kind_of decls,   ::Array
+        ASSERT.kind_of loc, LOC::Entry
+        ASSERT.assert decls.respond_to?(:each), 'Enumerable'
 
         SeqOfDeclaration.new(loc, decls.freeze).freeze
     end

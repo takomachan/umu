@@ -164,8 +164,12 @@ modu_path:
 #######################################
 
 core_decls:
-  /* empty */           { result = [] }
-| core_decl core_decls  { result = [val[0]] + val[1] }
+  /* empty */ {
+    result = CSCD.make_empty_seq_of_declaration
+}
+| core_decl core_decls {
+    result = CSCD.make_seq_of_declaration([val[0]]) + val[1]
+}
 
 core_decl:
   VAL pat '=' expr outer_where_decls {
@@ -227,13 +231,21 @@ fun_body: pat pats '->' expr outer_where_decls {
 # WHERE declaration (Core Language)
 
 outer_where_decls:
-  /* empty */               { result = [] }
-| WHERE '{' core_decls '}'  { result = val[2] }
+  /* empty */ {
+    result = CSCD.make_empty_seq_of_declaration
+}
+| WHERE '{' core_decls '}' {
+    result = val[2]
+}
 
 
 inner_where_decls:
-  /* empty */               { result = [] }
-| WHERE core_decls          { result = val[1] }
+  /* empty */ {
+    result = CSCD.make_empty_seq_of_declaration
+}
+| WHERE core_decls {
+    result = val[1]
+}
 
 
 ######################################
@@ -268,8 +280,12 @@ expr:
 }
 
 opt_else_clause:
-  /* empty */                       { result = [nil,    []]     }
-| ELSE '->' expr inner_where_decls  { result = [val[2], val[3]] }
+  /* empty */ {
+    result = [nil,    CSCD.make_empty_seq_of_declaration]
+}
+| ELSE '->' expr inner_where_decls {
+    result = [val[2], val[3]]
+}
 
 
 # If-expression Rule

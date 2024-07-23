@@ -46,7 +46,7 @@ class WithDeclaration < Abstract
     def initialize(loc, head, body_expr, decls)
         ASSERT.kind_of head,        Umu::Abstraction::Model
         ASSERT.kind_of body_expr,   CSCE::Abstract
-        ASSERT.kind_of decls,       ::Array
+        ASSERT.kind_of decls,       CSCD::SeqOfDeclaration
 
         super(loc, head, body_expr)
 
@@ -63,7 +63,7 @@ class WithDeclaration < Abstract
                 if self.decls.empty?
                     ''
                 else
-                    format " %%WHERE %s", self.decls.map(&:to_s).join(' ')
+                    format " %%WHERE %s", self.decls.to_s
                 end
         )
     end
@@ -76,17 +76,7 @@ class WithDeclaration < Abstract
 
         unless self.decls.empty?
             q.text ' %WHERE '
-
-            fst_decl, *not_fst_decls = self.decls
-            q.pp fst_decl
-
-            q.breakable
-
-            unless not_fst_decls.empty?
-                not_fst_decls.each do |decl|
-                    pp decl
-                end
-            end
+            q.pp self.decls
         end
     end
 end
@@ -319,7 +309,7 @@ module_function
         ASSERT.kind_of loc,         LOC::Entry
         ASSERT.kind_of head_expr,   CSCE::Abstract
         ASSERT.kind_of body_expr,   CSCE::Abstract
-        ASSERT.kind_of decls,       ::Array
+        ASSERT.kind_of decls,       CSCD::SeqOfDeclaration
 
         Nary::Rule::Cond.new(
             loc, head_expr, body_expr, decls.freeze
@@ -331,7 +321,7 @@ module_function
         ASSERT.kind_of loc,         LOC::Entry
         ASSERT.kind_of head,        CSCEN::Rule::Case::Head::Abstract
         ASSERT.kind_of body_expr,   CSCE::Abstract
-        ASSERT.kind_of decls,       ::Array
+        ASSERT.kind_of decls,       CSCD::SeqOfDeclaration
 
         Nary::Rule::Case::Entry.new(
             loc, head, body_expr, decls.freeze

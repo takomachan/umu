@@ -18,7 +18,7 @@ class Let < Expression::Abstract
 
 
     def initialize(loc, decls, expr)
-        ASSERT.kind_of decls,   ::Array
+        ASSERT.kind_of decls,   CSCD::SeqOfDeclaration
         ASSERT.kind_of expr,    CSCE::Abstract
 
         super(loc)
@@ -29,20 +29,13 @@ class Let < Expression::Abstract
 
 
     def to_s
-        format("%%LET { %s %%IN %s }",
-            self.decls.map(&:to_s).join(' '),
-            self.expr.to_s
-        )
+        format "%%LET { %s %%IN %s }", self.decls.to_s, self.expr.to_s
     end
 
 
     def pretty_print(q)
         q.group(PP_INDENT_WIDTH, '%LET {', '') do
-            self.decls.each do |decl|
-                q.breakable
-
-                q.pp decl
-            end
+            q.pp self.decls
         end
 
         q.breakable
@@ -69,17 +62,7 @@ private
         else
             ASCE.make_let(
                 self.loc,
-
-                ASCD.make_seq_of_declaration(
-                    self.loc,
-
-                    self.decls.map { |decl|
-                        ASSERT.kind_of decl, CSCD::Abstract
-
-                        decl.desugar(new_env)
-                    }
-                ),
-
+                self.decls.desugar(new_env),
                 self.expr.desugar(new_env)
             )
         end
@@ -93,7 +76,7 @@ module_function
 
     def make_let(loc, decls, expr)
         ASSERT.kind_of loc,     LOC::Entry
-        ASSERT.kind_of decls,   ::Array
+        ASSERT.kind_of decls,   CSCD::SeqOfDeclaration
         ASSERT.kind_of expr,    CSCE::Abstract
 
         Nary::Let.new(loc, decls.freeze, expr).freeze

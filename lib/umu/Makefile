@@ -38,6 +38,7 @@ FILES	= version.rb \
 			concrete-syntax/core/declaration/value.rb \
 			concrete-syntax/core/declaration/function.rb \
 			concrete-syntax/core/declaration/recursive.rb \
+			concrete-syntax/core/declaration/seq-of-declaration.rb \
 			concrete-syntax/core/expression.rb \
 			concrete-syntax/core/expression/abstract.rb \
 			concrete-syntax/core/expression/unit.rb \

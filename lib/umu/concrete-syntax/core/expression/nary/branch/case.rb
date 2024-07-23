@@ -149,11 +149,7 @@ private
 
                         ASCD.make_seq_of_declaration(
                             rule.loc,
-
-                            (
-                                [contents_decl] +
-                                rule.decls.map { |decl| decl.desugar env }
-                            )
+                            [contents_decl] + rule.decls.desugar(env)
                         ),
 
                         rule.body_expr.desugar(env)
@@ -297,10 +293,7 @@ private
 
                         ASCD.make_seq_of_declaration(
                             rule.loc,
-                            (
-                                [contents_decl] +
-                                rule.decls.map { |decl| decl.desugar env }
-                            )
+                            [contents_decl] + rule.decls.desugar(env).to_a
                         ),
 
                         rule.body_expr.desugar(env)
@@ -327,7 +320,7 @@ module_function
         ASSERT.kind_of      fst_rule,       CSCEN::Rule::Case::Entry
         ASSERT.kind_of      snd_rules,      ::Array
         ASSERT.opt_kind_of  opt_else_expr,  CSCE::Abstract
-        ASSERT.kind_of      else_decls,     ::Array
+        ASSERT.kind_of      else_decls,     CSCD::SeqOfDeclaration
 
         Nary::Branch::Case.new(
             loc, expr, fst_rule, snd_rules, opt_else_expr, else_decls

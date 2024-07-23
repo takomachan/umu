@@ -18,7 +18,7 @@ class Value < Declaration::Abstract
     def initialize(loc, pat, expr, decls)
         ASSERT.kind_of pat,     CSCP::Abstract
         ASSERT.kind_of expr,    CSCE::Abstract
-        ASSERT.kind_of decls,   ::Array
+        ASSERT.kind_of decls,   CSCD::SeqOfDeclaration
 
         super(loc)
 
@@ -37,9 +37,7 @@ class Value < Declaration::Abstract
                 if self.decls.empty?
                     ''
                 else
-                    format(" %%WHERE {%s}",
-                            self.decls.map(&:to_s).join(' ')
-                    )
+                    format " %%WHERE {%s}", self.decls.to_s
                 end
         )
     end
@@ -55,11 +53,7 @@ class Value < Declaration::Abstract
 
         unless self.decls.empty?
             q.group(PP_INDENT_WIDTH, '%WHERE {', '}') do
-                self.decls.each do |decl|
-                    q.breakable
-
-                    q.pp decl
-                end
+                q.pp self.decls
             end
         end
     end
@@ -97,7 +91,7 @@ module_function
         ASSERT.kind_of loc,     LOC::Entry
         ASSERT.kind_of pat,     CSCP::Abstract
         ASSERT.kind_of expr,    CSCE::Abstract
-        ASSERT.kind_of decls,   ::Array
+        ASSERT.kind_of decls,   CSCD::SeqOfDeclaration
 
         Value.new(loc, pat, expr, decls).freeze
     end

@@ -27,7 +27,7 @@ class Abstract < Expression::Abstract
                             CSCEN::Rule::Abstraction::WithDeclaration
         ASSERT.kind_of      snd_rules,      ::Array
         ASSERT.opt_kind_of  opt_else_expr,  CSCE::Abstract
-        ASSERT.kind_of      else_decls,     ::Array
+        ASSERT.kind_of      else_decls,     CSCD::SeqOfDeclaration
 
         super(loc)
 
@@ -54,9 +54,7 @@ class Abstract < Expression::Abstract
                             if self.else_decls.empty?
                                 ' '
                             else
-                                format(" %%WHERE %s ",
-                                    self.else_decls.map(&:to_s).join(' ')
-                                )
+                                format " %%WHERE %s ", self.else_decls.to_s
                             end
                         )
                     )
@@ -102,18 +100,7 @@ class Abstract < Expression::Abstract
 
                 unless self.else_decls.empty?
                     q.text ' %WHERE '
-
-                    fst_decl, *not_fst_decls = self.else_decls
-
-                    q.pp fst_decl
-
-                    q.breakable
-
-                    not_fst_decls.each do |decl|
-                        q.pp decl
-
-                        q.breakable
-                    end
+                    q.pp self.else_decls
                 end
             end
         end
@@ -146,7 +133,7 @@ private
 
                 ASCD.make_seq_of_declaration(
                     rule.loc,
-                    rule.decls.map { |decl| decl.desugar env }
+                    rule.decls.desugar(env)
                 ),
 
                 body_expr_
@@ -169,9 +156,7 @@ private
 
                     ASCD.make_seq_of_declaration(
                         else_expr_.loc,
-                        self.else_decls.map { |decl|
-                            decl.desugar env
-                        }
+                        self.else_decls.desugar(env)
                     ),
 
                     else_expr_

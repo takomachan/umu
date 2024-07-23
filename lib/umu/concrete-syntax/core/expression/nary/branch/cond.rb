@@ -82,7 +82,7 @@ module_function
         ASSERT.kind_of      fst_rule,       CSCEN::Rule::Cond
         ASSERT.kind_of      snd_rules,      ::Array
         ASSERT.opt_kind_of  opt_else_expr,  CSCE::Abstract
-        ASSERT.kind_of      else_decls,     ::Array
+        ASSERT.kind_of      else_decls,     CSCD::SeqOfDeclaration
 
         Nary::Branch::Cond.new(
             loc, expr, fst_rule, snd_rules, opt_else_expr, else_decls
