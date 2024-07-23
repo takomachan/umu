@@ -20,22 +20,36 @@ end
 
 
 class Structure < Abstract
-    attr_reader :pat, :expr
+    attr_reader :pat, :expr, :local_decls
 
 
-    def initialize(loc, pat, expr)
-        ASSERT.kind_of pat,     CSMP::Abstract
-        ASSERT.kind_of expr,    CSME::Abstract
+    def initialize(loc, pat, expr, local_decls)
+        ASSERT.kind_of pat,         CSMP::Abstract
+        ASSERT.kind_of expr,        CSME::Abstract
+        ASSERT.kind_of local_decls, ::Array
 
         super(loc)
 
-        @pat    = pat
-        @expr   = expr
+        @pat         = pat
+        @expr        = expr
+        @local_decls = local_decls
     end
 
 
     def to_s
-        format "%%STRUCTURE %s = %s", self.pat.to_s, self.expr.to_s
+        format("%%STRUCTURE %s = %s%s",
+                 self.pat.to_s,
+
+                 self.expr.to_s,
+
+                if self.local_decls.empty?
+                    ''
+                else
+                    format(" %%WHERE {%s}",
+                            self.local_decls.map(&:to_s).join(' ')
+                    )
+                end
+        )
     end
 
 
@@ -45,6 +59,14 @@ class Structure < Abstract
         q.text ' = '
         q.group(PP_INDENT_WIDTH, '', '') do
             q.pp self.expr
+        end
+
+        unless self.local_decls.empty?
+            PRT.seplist(q, self.local_decls, ' %WHERE {', '}', ' ') do
+                |decl|
+
+                q.pp decl
+            end
         end
     end
 
@@ -59,7 +81,22 @@ private
     def __desugar__(env, event)
         new_env = env.enter event
 
-        self.pat.desugar_value self.expr.desugar(new_env), new_env
+        expr = if self.local_decls.empty?
+                self.expr.desugar new_env
+            else
+                ASCE.make_let(
+                    self.loc,
+
+                    ASCD.make_seq_of_declaration(
+                        self.loc,
+                        self.local_decls.map { |decl| decl.desugar new_env }
+                    ),
+
+                    self.expr.desugar(new_env)
+                )
+            end
+
+        self.pat.desugar_value expr, new_env
     end
 end
 
@@ -337,11 +374,12 @@ end
 
 module_function
 
-    def make_structure(loc, pat, expr)
-        ASSERT.kind_of pat,     CSMP::Abstract
-        ASSERT.kind_of expr,    CSME::Abstract
+    def make_structure(loc, pat, expr, local_decls)
+        ASSERT.kind_of pat,         CSMP::Abstract
+        ASSERT.kind_of expr,        CSME::Abstract
+        ASSERT.kind_of local_decls, ::Array
 
-        Structure.new(loc, pat, expr).freeze
+        Structure.new(loc, pat, expr, local_decls.freeze).freeze
     end
 
 

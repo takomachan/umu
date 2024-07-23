@@ -12,34 +12,24 @@ module Module
 module Expression
 
 class Struct < Expression::Abstract
-    attr_reader :body_decls, :local_decls
+    attr_reader :body_decls
 
 
-    def initialize(loc, body_decls, local_decls)
+    def initialize(loc, body_decls)
         ASSERT.kind_of body_decls,  ::Array
-        ASSERT.kind_of local_decls, ::Array
 
         super(loc)
 
-        @body_decls     = body_decls
-        @local_decls    = local_decls
+        @body_decls = body_decls
     end
 
 
     def to_s
-        format("%%STRUCT {%s}%s",
+        format("%%STRUCT {%s}",
             if self.body_decls.empty?
                 ' '
             else
                 self.body_decls.map(&:to_s).join(' ')
-            end,
-
-            if self.local_decls.empty?
-                ''
-            else
-                format(" %%WHERE {%s}",
-                        self.local_decls.map(&:to_s).join(' ')
-                )
             end
         )
     end
@@ -48,12 +38,6 @@ class Struct < Expression::Abstract
     def pretty_print(q)
         PRT.seplist(q, self.body_decls, '%STRUCT {', '}', ' ') do |decl|
             q.pp decl
-        end
-
-        unless self.local_decls.empty?
-            PRT.seplist(q, self.local_decls, ' %WHERE {', '}', ' ') do |decl|
-                q.pp decl
-            end
         end
     end
 
@@ -81,11 +65,10 @@ private
             }
         )
 
-        struct_expr = ASCE.make_struct self.loc, expr_by_label
-        decls       = self.local_decls + self.body_decls
+        expr = ASCE.make_struct self.loc, expr_by_label
 
-        if decls.empty?
-            struct_expr
+        if self.body_decls.empty?
+            expr
         else
             new_env = env.enter event
 
@@ -94,10 +77,10 @@ private
 
                 ASCD.make_seq_of_declaration(
                     self.loc,
-                    decls.map { |decl| decl.desugar new_env }
+                    self.body_decls.map { |decl| decl.desugar new_env }
                 ),
 
-                struct_expr
+                expr
             )
         end
     end
@@ -106,14 +89,11 @@ end
 
 module_function
 
-    def make_struct(loc, body_decls, local_decls)
+    def make_struct(loc, body_decls)
         ASSERT.kind_of loc,         LOC::Entry
         ASSERT.kind_of body_decls,  ::Array
-        ASSERT.kind_of local_decls, ::Array
 
-        Struct.new(
-            loc, body_decls.freeze, local_decls.freeze
-        ).freeze
+        Struct.new(loc, body_decls.freeze).freeze
     end
 
 end # Umu::ConcreteSyntax::Module::Expression

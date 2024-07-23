@@ -44,10 +44,10 @@ modu_decls:
 
 
 modu_decl:
-  STRUCTURE ID '=' modu_expr {
+  STRUCTURE ID '=' modu_expr modu_where_decls {
     var_pat = CSMP.make_variable val[1].loc, val[1].sym
 
-    result = CSMD.make_structure val[0].loc, var_pat, val[3]
+    result = CSMD.make_structure val[0].loc, var_pat, val[3], val[4]
 }
 | IMPORT modu_long_id opt_import_body {
     result = CSMD.make_import val[0].loc, val[1], val[2]
@@ -55,6 +55,13 @@ modu_decl:
 | core_decl {
     result = CSMD.make_core val[0].loc, val[0]
 }
+
+
+# WHERE declaration (Module Language)
+
+modu_where_decls:
+  /* empty */               { result = [] }
+| WHERE '{' modu_decls '}'  { result = val[2] }
 
 
 # Optional body of import declaration
@@ -122,17 +129,10 @@ opt_import_var:
 ########################################
 
 modu_expr:
-  STRUCT '{' modu_decls '}' modu_where_decls {
-    result = CSME.make_struct val[0].loc, val[2], val[4]
+  STRUCT '{' modu_decls '}' {
+    result = CSME.make_struct val[0].loc, val[2]
 }
 | modu_long_id { result = val[0] }
-
-
-# WHERE declaration (Module Language)
-
-modu_where_decls:
-  /* empty */               { result = [] }
-| WHERE '{' modu_decls '}'  { result = val[2] }
 
 
 # Module long identifire
