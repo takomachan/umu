@@ -178,28 +178,25 @@ class Method < Abstract
 
 
     def to_s
-        format(".(%s%s)",
+        format(".%s%s",
             self.sym.to_s,
 
             if self.exprs.empty?
                 ''
             else
-                ' ' + self.exprs.map(&:to_s).join(' ')
+                format "(%s)", self.exprs.map(&:to_s).join(' ')
             end
         )
     end
 
 
     def pretty_print(q)
-        q.group(PP_INDENT_WIDTH, '.(', ')') do
-            q.text self.sym.to_s
-
-            self.exprs.each do |expr|
-                q.breakable
-
-                q.pp expr
-            end
-        end
+        PRT.seplist(
+            q,
+            self.exprs,
+            format(".%s%s", self.sym.to_s, self.exprs.empty? ? '' : '('),
+            self.exprs.empty? ? '' : ')',
+        ) do |expr| q.pp expr end
     end
 
 
