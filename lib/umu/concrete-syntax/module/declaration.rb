@@ -62,7 +62,9 @@ class Structure < Abstract
         end
 
         unless self.local_decls.empty?
-            PRT.seplist(q, self.local_decls, ' %WHERE {', '}', ' ') do
+            q.breakable
+
+            PRT.seplist(q, self.local_decls, '%WHERE {', '}', ' ') do
                 |decl|
 
                 q.pp decl
