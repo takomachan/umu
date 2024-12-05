@@ -36,9 +36,9 @@ class Struct < Expression::Abstract
 
 
     def pretty_print(q)
-        PRT.seplist(q, self.body_decls, '%STRUCT {', '}', ' ') do |decl|
-            q.pp decl
-        end
+        PRT.group_nary(
+            q, self.body_decls, bb: '%STRUCT {', eb: '}', sep: '  '
+        ) do |decl| q.pp decl end
     end
 
 

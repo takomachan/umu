@@ -82,7 +82,9 @@ class Entry < Abstraction::Expressions
 
 
     def pretty_print(q)
-        PRT.seplist(q, self, '(', ')', ',') do |(label, expr)|
+        PRT.group_nary q, self, bb: '(', eb: ')', join: ', ' do
+            |(label, expr)|
+
             q.pp label
             q.text ' '
             q.pp expr

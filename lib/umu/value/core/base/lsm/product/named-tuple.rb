@@ -62,7 +62,9 @@ class Named < Abstract
 
 
     def pretty_print(q)
-        PRT.seplist(q, self, '(', ')', ',') do |label, value|
+        PRT.group_nary q, self, bb: '(', eb: ')', join: ', ' do
+            |label, value|
+
             q.text label.to_s
             q.text ': '
             q.pp value

@@ -46,7 +46,14 @@ class List < Container::Abstract
 
 
     def pretty_print(q)
-        PRT.seplist q, self, '[', ']', ','
+        if self.opt_last_expr
+            PRT.group_nary q, self, bb: '[', join: ', '
+            PRT.group q, bb: '|', eb: ']' do
+                q.pp self.opt_last_expr
+            end
+        else
+            PRT.group_nary q, self, bb: '[', eb: ']', join: ', '
+        end
     end
 
 

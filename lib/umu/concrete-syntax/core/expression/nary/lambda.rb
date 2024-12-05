@@ -120,34 +120,23 @@ class Named < Abstract
 
 
     def pretty_print(q)
-        q.group(
-            PP_INDENT_WIDTH,
-            format("%s =", self.sym.to_s),
-            ''
-        ) do
-            self.pats.each do |pat|
-                q.breakable
-
-                q.pp pat
-            end
-        end
+        PRT.group_nary(
+            q,
+            self.pats,
+            bb: format("%s = ", self.sym.to_s),
+            join: ' '
+        )
 
         q.breakable
 
-        q.group(PP_INDENT_WIDTH, '-> ', ' ') do
+        PRT.group q, bb: '-> ' do
             q.pp self.expr
         end
 
         unless self.decls.empty?
             q.breakable
 
-            PRT.seplist(q, self.decls, '%WHERE { ') do |decl|
-                q.pp decl
-            end
-
-            q.breakable
-
-            q.text '}'
+            PRT.group_nary q, self.decls, bb: '%WHERE {', eb: '}', sep: ' '
         end
     end
 
@@ -177,26 +166,18 @@ class Anonymous < Abstract
 
 
     def pretty_print(q)
-        q.group(PP_INDENT_WIDTH, '{', '') do
-            self.pats.each do |pat|
-                q.breakable
-
-                q.pp pat
-            end
-        end
+        PRT.group_nary q, self.pats, bb: '{', sep: ' '
 
         q.breakable
 
-        q.group(PP_INDENT_WIDTH, '-> ', '') do
+        PRT.group q, bb: '-> ' do
             q.pp self.expr
         end
 
         unless self.decls.empty?
             q.breakable
 
-            PRT.seplist(q, self.decls, '%WHERE ') do |decl|
-                q.pp decl
-            end
+            PRT.group_nary q, self.decls, bb: '%WHERE', sep: ' '
         end
 
         q.breakable

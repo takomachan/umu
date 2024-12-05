@@ -25,12 +25,12 @@ class Sequence < Abstract
 
 
     def to_s
-        format "(%s)", self.map(&:to_s).join(' ; ')
+        format "(%s)", self.map(&:to_s).join('; ')
     end
 
 
     def pretty_print(q)
-        PRT.seplist q, self, '(', ')', ';'
+        PRT.group_nary q, self, bb: '(', eb: ')', join: '; '
     end
 
 

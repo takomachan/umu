@@ -54,21 +54,16 @@ class Structure < Abstract
 
 
     def pretty_print(q)
-        q.text '%STRUCTURE '
-        q.text self.pat.to_s
-        q.text ' = '
-        q.group(PP_INDENT_WIDTH, '', '') do
+        PRT.group q, bb: format("%%STRUCTURE %s = ", self.pat.to_s) do
             q.pp self.expr
         end
 
         unless self.local_decls.empty?
             q.breakable
 
-            PRT.seplist(q, self.local_decls, '%WHERE {', '}', ' ') do
-                |decl|
-
-                q.pp decl
-            end
+            PRT.group_nary(
+                 q, self.local_decls, bb: '%WHERE {', eb: '}', sep: ' '
+            )
         end
     end
 
@@ -289,18 +284,9 @@ class Entry < Declaration::Abstract
         q.text self.id.to_s
 
         if self.opt_fields
-            q.group(PP_INDENT_WIDTH, ' {', '') do
-
-                q.breakable
-
-                self.opt_fields.each do |field|
-                    q.pp field
-
-                    q.breakable
-                end
-            end
-
-            q.text '}'
+            PRT.group_nary(
+                q, self.opt_fields, bb: ' {', eb: '}', sep: ' '
+           ) do |field| q.pp field end
         end
     end
 

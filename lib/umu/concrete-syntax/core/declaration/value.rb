@@ -47,12 +47,14 @@ class Value < Declaration::Abstract
         q.text '%VAL '
         q.pp self.pat
         q.text ' = '
-        q.group(PP_INDENT_WIDTH, '', '') do
+        PRT.group q do
             q.pp self.expr
         end
 
+        q.breakable
+
         unless self.decls.empty?
-            q.group(PP_INDENT_WIDTH, '%WHERE {', '}') do
+            PRT.group q, bb: '%WHERE {', eb: '}' do
                 q.pp self.decls
             end
         end

@@ -42,7 +42,9 @@ class Struct < Abstraction::Abstract
 
 
     def pretty_print(q)
-        PRT.seplist(q, self, '%STRUCT {', '}', ',') do |sym, _expr|
+        PRT.group_nary q, self, bb: '%STRUCT {', eb: '}', join: ', ' do
+            |sym, _expr|
+
             q.text sym.to_s
         end
     end

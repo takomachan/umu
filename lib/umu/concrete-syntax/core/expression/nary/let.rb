@@ -34,21 +34,15 @@ class Let < Expression::Abstract
 
 
     def pretty_print(q)
-        q.group(PP_INDENT_WIDTH, '%LET {', '') do
+        PRT.group q, bb: '%LET {', sep: ' ' do
             q.pp self.decls
         end
 
         q.breakable
 
-        q.group(PP_INDENT_WIDTH, '%IN', '') do
-            q.breakable
-
+        PRT.group q, bb: '%IN', eb: '}', sep: ' ' do
             q.pp self.expr
         end
-
-        q.breakable
-
-        q.text '}'
     end
 
 

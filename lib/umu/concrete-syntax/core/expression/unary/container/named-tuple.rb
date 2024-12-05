@@ -106,29 +106,16 @@ class Entry < Abstract
 
 
     def pretty_print(q)
-        hd_pair, *tl_pairs = self.index_by_label.map { |label, index|
-                                 [label, self.exprs[index]]
-                             }
+        PRT.group_nary(
+            q, self.index_by_label, bb: '(', eb: ')', join: ', '
+        ) do |label, index|
 
-        q.group(PP_INDENT_WIDTH, '(', ')') do
-            hd_label, hd_opt_expr = hd_pair
+            opt_expr = self.exprs[index]
 
-            q.text hd_label.to_s
-            if hd_opt_expr
+            q.text label.to_s
+            if opt_expr
                 q.text ' '
-                q.pp hd_opt_expr
-            end
-
-            tl_pairs.each do |label, opt_expr|
-                q.text ','
-
-                q.breakable
-
-                q.text label.to_s
-                if opt_expr
-                    q.text ' '
-                    q.pp opt_expr
-                end
+                q.pp opt_expr
             end
         end
     end

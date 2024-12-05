@@ -37,9 +37,7 @@ class Assert < Declaration::Abstract
     def pretty_print(q)
         q.text '%ASSERT ('
         q.pp self.test_expr
-        q.group(PP_INDENT_WIDTH, ') ', '') do
-            q.breakable
-
+        PRT.group q, bb: ') ' do
             q.pp self.else_expr
         end
     end

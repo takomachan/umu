@@ -25,7 +25,7 @@ class Abstract < Container::Abstract
 
 
     def pretty_print(q)
-        PRT.seplist q, self, '(', ')', ','
+        PRT.group_nary q, self, bb: '(', eb: ')', join: ', '
     end
 
 

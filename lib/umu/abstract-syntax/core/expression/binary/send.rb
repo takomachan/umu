@@ -147,8 +147,9 @@ class Modifier < Abstraction::Selector
 
 
     def pretty_print(q)
-        enum = self.expr_by_label.each
-        PRT.seplist(q, enum, '$(', ')', ',') do |label, expr|
+        PRT.group_nary(
+            q, self.expr_by_label, bb: '$(', eb: ')', join: ', '
+        ) do |label, expr|
             q.pp label
 
             q.breakable
@@ -222,12 +223,20 @@ class Method < Abstraction::Abstract
 
 
     def pretty_print(q)
-        PRT.seplist(
+        PRT.group_nary(
             q,
+
             self.exprs,
-            format(".%s%s", self.sym.to_s, self.exprs.empty? ? '' : '('),
-            self.exprs.empty? ? '' : ')',
-        ) do |expr| q.pp expr end
+
+            bb: format(".%s%s",
+                       self.sym.to_s,
+                       self.exprs.empty? ? '' : '('
+            ),
+
+            eb: self.exprs.empty? ? '' : ')',
+
+            join: ' '
+        )
     end
 
 
@@ -447,13 +456,7 @@ class Entry < Binary::Abstract
             end
         end
 
-        q.group(PP_INDENT_WIDTH, '', '') do
-            self.rhs_messages.each do |message|
-                q.breakable ''
-
-                q.pp message
-            end
-        end
+        PRT.group_nary q, self.rhs_messages
     end
 
 

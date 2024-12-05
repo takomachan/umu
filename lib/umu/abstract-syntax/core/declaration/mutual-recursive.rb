@@ -56,7 +56,7 @@ private
 
     def __pretty_print_binding__(q, sym, target)
             q.text format("%s = ", sym.to_s)
-            q.group(PP_INDENT_WIDTH, '', '') do
+            PRT.group q do
                 q.pp target
             end
     end

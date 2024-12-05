@@ -44,7 +44,7 @@ class Recursive < Declaration::Abstract
 
             q.breakable
 
-            q.group(PP_INDENT_WIDTH, '', '') do
+            PRT.group q do
                 q.pp func
             end
         end

@@ -39,7 +39,7 @@ class Apply < Binary::Abstract
 
 
     def pretty_print(q)
-        q.group(PP_INDENT_WIDTH, '(', ')') do
+        PRT.group q, bb: '(', eb: ')' do
             q.pp self.opr_expr
 
             self.opnd_exprs.each do |expr|

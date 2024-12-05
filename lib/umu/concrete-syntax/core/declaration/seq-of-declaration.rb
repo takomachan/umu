@@ -57,13 +57,7 @@ class SeqOfDeclaration < Declaration::Abstract
 
 
     def pretty_print(q)
-        q.group(PP_INDENT_WIDTH, '', '') do
-            self.each do |decl|
-                q.breakable
-
-                q.pp decl
-            end
-        end
+        PRT.group_nary q, self
     end
 
 

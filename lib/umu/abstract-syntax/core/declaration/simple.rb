@@ -69,7 +69,7 @@ class Value < Abstract
                             ''
                         end
                     )
-        q.group(PP_INDENT_WIDTH, '', '') do
+        PRT.group q do
             q.pp self.expr
         end
     end

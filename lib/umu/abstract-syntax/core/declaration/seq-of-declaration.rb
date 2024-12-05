@@ -45,18 +45,7 @@ class SeqOfDeclaration < Abstract
 
 
     def pretty_print(q)
-        q.text '{'
-        q.group(PP_INDENT_WIDTH, '', '') do
-            self.each do |decl|
-                q.breakable
-
-                q.pp decl
-            end
-        end
-
-        q.breakable
-
-        q.text '}'
+        PRT.group_nary q, self, bb: '{', eb: '}', sep: ' '
     end
 
 

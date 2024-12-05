@@ -64,13 +64,13 @@ class List < Container::Abstract
         if self.opt_last_pat
             last_pat = self.opt_last_pat
 
-            PRT.seplist q, self, '[', '', ','
+            PRT.group_nary q, self, bb: '[', join: ', '
 
-            q.group(PP_INDENT_WIDTH, '|', ']') do
+            PRT.group q, bb: '|', eb: ']' do
                 q.pp last_pat
             end
         else
-            PRT.seplist q, self, '[', ']', ','
+            PRT.group_nary q, self, bb: '[', eb: ']', join: ', '
         end
     end
 

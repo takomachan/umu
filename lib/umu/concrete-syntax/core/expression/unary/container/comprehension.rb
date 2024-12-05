@@ -175,17 +175,11 @@ class Entry < Container::Abstract
 
 
     def pretty_print(q)
-        q.group(PP_INDENT_WIDTH, '[|', '|') do
+        PRT.group q, bb: '[|', eb: '|' do
             q.pp self.expr
         end
 
-        q.group(PP_INDENT_WIDTH, '', ']') do
-            self.qualifiers.each do |qualifier|
-                q.breakable
-
-                q.pp qualifier
-            end
-        end
+        PRT.group_nary q, self.qualifiers, eb: ']', sep: ' ', join: ' '
     end
 
 

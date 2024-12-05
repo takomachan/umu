@@ -106,24 +106,13 @@ class Modifier < Abstract
 
 
     def pretty_print(q)
-        q.group(PP_INDENT_WIDTH, '$(', ')') do
-            hd_field, *tl_fields = self.fields
-            hd_label, hd_opt_expr = hd_field
-
-            q.text hd_label.to_s
-            if hd_opt_expr
+        PRT.group_nary(
+            q, self.fields, bb: '$(', eb: ')', join: ', '
+        ) do |label, opt_expr|
+            q.text label.to_s
+            if opt_expr
                 q.text ' '
-                q.pp hd_opt_expr
-            end
-
-            self.tl_fields.each do |label, opt_expr|
-                q.breakable
-
-                q.text label.to_s
-                if opt_expr
-                    q.text ' '
-                    q.pp opt_expr
-                end
+                q.pp opt_expr
             end
         end
     end
@@ -191,12 +180,20 @@ class Method < Abstract
 
 
     def pretty_print(q)
-        PRT.seplist(
+        PRT.group_nary(
             q,
+
             self.exprs,
-            format(".%s%s", self.sym.to_s, self.exprs.empty? ? '' : '('),
-            self.exprs.empty? ? '' : ')',
-        ) do |expr| q.pp expr end
+
+            bb: format(".%s%s",
+                       self.sym.to_s,
+                       self.exprs.empty? ? '' : '('
+            ),
+
+            eb: self.exprs.empty? ? '' : ')',
+
+            join: ' '
+        )
     end
 
 
@@ -243,17 +240,11 @@ class Entry < Binary::Abstract
 
 
     def pretty_print(q)
-        q.group(PP_INDENT_WIDTH, '(', ')') do
+        PRT.group q, bb: '(', eb: ')' do
             q.pp self.lhs_expr
         end
 
-        q.group(PP_INDENT_WIDTH, '', '') do
-            self.rhs_messages.each do |message|
-                q.breakable ''
-
-                q.pp message
-            end
-        end
+        PRT.group_nary q, self.rhs_messages
     end
 
 

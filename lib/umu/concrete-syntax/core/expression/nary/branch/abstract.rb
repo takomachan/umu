@@ -80,8 +80,7 @@ class Abstract < Expression::Abstract
             not_fst_rules.each do |rule|
                 q.breakable
 
-                q.text '| '
-                q.group(PP_INDENT_WIDTH, '', '') do
+                PRT.group q, bb: '| ' do
                     q.pp rule
                 end
             end
@@ -90,12 +89,9 @@ class Abstract < Expression::Abstract
         if self.opt_else_expr
             else_expr = self.opt_else_expr
 
-            q.breakable
+            q.breakable ''
 
-            q.text '%ELSE -> '
-            q.group(PP_INDENT_WIDTH, '', '') do
-                q.breakable ''
-
+            PRT.group q, bb: '%ELSE -> ' do
                 q.pp else_expr
 
                 unless self.else_decls.empty?
