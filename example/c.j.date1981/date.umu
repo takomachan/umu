@@ -14,21 +14,27 @@ structure UAS = Umu::Assert
 # 3.2 関係型の方法 -- p66
 
 structure RELATIONAL-DATA-MODEL-3 = struct {
-    structure S  = SUPPLIERS
-    structure P  = PARTS
-    structure SP = SHIPMENTS
+    structure S  = SUPPLIER
+    structure P  = PART
+    structure SP = SHIPMENT
 } where {
-    structure SUPPLIERS = struct {
+    structure SUPPLIER = struct {
         fun sno    = row : Product -> row$1
         fun sname  = row : Product -> row$2
         fun status = row : Product -> row$3
         fun city   = row : Product -> row$4
 
-        val rows = map { row -> (
-                sno:    sno row,
-                sname:  sname row,
-                status: status row,
-                city:   city row
+        val rows = map {
+            (
+                sno    : Symbol,
+                sname  : String,
+                status : Int,
+                city   : String
+            ) -> (
+                sno:,
+                sname:,
+                status:,
+                city:
             )
         } [
         #     S#   SNAME   STATUS CITY
@@ -40,19 +46,26 @@ structure RELATIONAL-DATA-MODEL-3 = struct {
     }
 
 
-    structure PARTS = struct {
+    structure PART = struct {
         fun pno    = row : Product -> row$1
         fun pname  = row : Product -> row$2
         fun color  = row : Product -> row$3
         fun weight = row : Product -> row$4
         fun city   = row : Product -> row$5
 
-        val rows = map { row -> (
-                pno:    pno row,
-                pname:  pname row,
-                color:  color row,
-                weight: weight row,
-                city:   city row
+        val rows = map {
+            (
+                pno    : Symbol,
+                pname  : String,
+                color  : String,
+                weight : Int,
+                city   : String
+            ) -> (
+                pno:,
+                pname:,
+                color:,
+                weight:,
+                city:
             )
         } [
         #     P#   PNAME    COLOR   WEIGHT CITY
@@ -65,15 +78,20 @@ structure RELATIONAL-DATA-MODEL-3 = struct {
     }
 
 
-    structure SHIPMENTS = struct {
+    structure SHIPMENT = struct {
         fun sno = row : Product -> row$1
         fun pno = row : Product -> row$2
         fun qty = row : Product -> row$3
 
-        val rows = map { row -> (
-                sno: sno row,
-                pno: pno row,
-                qty: qty row
+        val rows = map {
+            (
+                sno : Symbol,
+                pno : Symbol,
+                qty : Int
+            ) -> (
+                sno:,
+                pno:,
+                qty:
             )
         } [
         #     S#   P#  QTY
@@ -170,21 +188,24 @@ nl () ;;
 # 4.5 要約 -- p96
 
 structure RELATIONAL-DATA-MODEL-4 = struct {
-    structure S  = SUPPLIERS
-    structure P  = PARTS
-    structure SP = SHIPMENTS
+    structure S  = SUPPLIER
+    structure P  = PART
+    structure SP = SHIPMENT
 } where {
-    structure SUPPLIERS = struct {
+    structure SUPPLIER = struct {
         fun sno    = row : Tuple -> row$1
         fun sname  = row : Tuple -> row$2
         fun status = row : Tuple -> row$3
         fun city   = row : Tuple -> row$4
 
-        val rows = map { row -> (
-                sno:    sno row,
-                sname:  sname row,
-                status: status row,
-                city:   city row
+        val rows = map {
+            (
+                sno    : Symbol,
+                sname  : String,
+                status : Int,
+                city   : String
+            ) -> (
+                sno:, sname:, status:, city:
             )
         } [
         #    S#    SNAME   STATUS CITY
@@ -198,19 +219,22 @@ structure RELATIONAL-DATA-MODEL-4 = struct {
     }
 
 
-    structure PARTS = struct {
+    structure PART = struct {
         fun pno    = row : Tuple -> row$1
         fun pname  = row : Tuple -> row$2
         fun color  = row : Tuple -> row$3
         fun weight = row : Tuple -> row$4
         fun city   = row : Tuple -> row$5
 
-        val rows = map { row -> (
-                pno:    pno row,
-                pname:  pname row,
-                color:  color row,
-                weight: weight row,
-                city:   city row
+        val rows = map {
+            (
+                pno    : Symbol,
+                pname  : String,
+                color  : String,
+                weight : Int,
+                city   : String
+            ) -> (
+                pno:, pname:, color:, weight:, city:
             )
         } [
         #     P#   PNAME    COLOR   WEIGHT CITY
@@ -225,15 +249,18 @@ structure RELATIONAL-DATA-MODEL-4 = struct {
     }
 
 
-    structure SHIPMENTS = struct {
+    structure SHIPMENT = struct {
         fun sno = row : Tuple -> row$1
         fun pno = row : Tuple -> row$2
         fun qty = row : Tuple -> row$3
 
-        val rows = map { row -> (
-                sno: sno row,
-                pno: pno row,
-                qty: qty row
+        val rows = map {
+            (
+                sno : Symbol,
+                pno : Symbol,
+                qty : Int
+            ) -> (
+                sno:, pno:, qty:
             )
         } [
         #     S#   P#  QTY
