@@ -45,15 +45,21 @@ modu_decls:
 
 modu_decl:
   STRUCTURE ID '=' modu_expr modu_where_decls {
-    var_pat = CSMP.make_variable val[1].loc, val[1].sym
+    kw, id, _, expr, decls = val
 
-    result = CSMD.make_structure val[0].loc, var_pat, val[3], val[4]
+    var_pat = CSMP.make_variable id.loc, id.sym
+
+    result = CSMD.make_structure kw.loc, var_pat, expr, decls
 }
 | IMPORT modu_long_id opt_import_body {
-    result = CSMD.make_import val[0].loc, val[1], val[2]
+    kw, id, opt_body = val
+
+    result = CSMD.make_import kw.loc, id, opt_body
 }
 | core_decl {
-    result = CSMD.make_core val[0].loc, val[0]
+    decl = val[0]
+
+    result = CSMD.make_core decl.loc, decl
 }
 
 
@@ -79,13 +85,19 @@ import_flds:
 
 import_fld:
   VAL _import_fld {
-    result = CSMD.make_value_fields_of_import val[0].loc,  val[1]
+    kw, fld = val
+
+    result = CSMD.make_value_fields_of_import     kw.loc,  fld
 }
 | FUN _import_fld {
-    result = CSMD.make_function_fields_of_import val[0].loc,  val[1]
+    kw, fld = val
+
+    result = CSMD.make_function_fields_of_import  kw.loc,  fld
 }
 | STRUCTURE _import_fld {
-    result = CSMD.make_structure_fields_of_import val[0].loc,  val[1]
+    kw, fld = val
+
+    result = CSMD.make_structure_fields_of_import kw.loc,  fld
 }
 
 _import_fld:
@@ -93,7 +105,9 @@ _import_fld:
     result = [val[0]]
 }
 |  '(' atom_import_fld com_import_flds ')' {
-    result = [val[1]] + val[2]
+    _, fld, flds, _  = val
+
+    result = [fld] + flds
 }
 
 
@@ -111,10 +125,12 @@ _com_import_flds:
 # Atomic import field
 
 atom_import_fld: var_pat opt_import_var {
+    pat, opt_var = val
+
     result = [
-        CSME.make_identifier(val[0].loc, val[0].var_sym),
-        val[0].opt_type_sym,
-        val[1]
+        CSME.make_identifier(pat.loc, pat.var_sym),
+        pat.opt_type_sym,
+        opt_var
     ]
 }
 
@@ -130,7 +146,9 @@ opt_import_var:
 
 modu_expr:
   STRUCT '{' modu_decls '}' {
-    result = CSME.make_struct val[0].loc, val[2]
+    kw, _, decls, _ = val
+
+    result = CSME.make_struct kw.loc, decls
 }
 | modu_long_id { result = val[0] }
 
@@ -138,12 +156,14 @@ modu_expr:
 # Module long identifire
 
 modu_long_id: modu_path ID {
-    last_id = CSME.make_identifier val[1].loc, val[1].sym
+    path, id = val
 
-    result = if val[0].empty?
+    last_id = CSME.make_identifier id.loc, id.sym
+
+    result = if path.empty?
                 last_id
             else
-                head_id, *tail_ids = val[0]
+                head_id, *tail_ids = path
 
                 CSME.make_long_identifier(
                             head_id.loc, head_id, tail_ids + [last_id]
@@ -154,7 +174,9 @@ modu_long_id: modu_path ID {
 modu_path:
   /* empty */           { result = [] }
 | MODULE_DIR modu_path  {
-    result = [CSME.make_identifier(val[0].loc, val[0].sym)] + val[1]
+    dir, path = val
+
+    result = [CSME.make_identifier(dir.loc, dir.sym)] + path
 }
 
 
@@ -173,27 +195,32 @@ core_decls:
 
 core_decl:
   VAL pat '=' expr outer_where_decls {
-    result = CSCD.make_value(
-                    val[0].loc, val[1], val[3], val[4]
-                )
+    kw, pat, _, expr, decls = val
+
+    result = CSCD.make_value kw.loc, pat, expr, decls
 }
 | FUN var_pat '=' fun_body {
-    hd_pat, tl_pats, expr, decls = val[3]
+    kw, fun_pat, _, body         = val
+    hd_pat, tl_pats, expr, decls = body
 
     result = CSCD.make_function(
-        val[1].loc,
+        kw.loc,
         CSCE.make_named_lambda(
-            val[1].loc,
+            fun_pat.loc,
             [hd_pat] + tl_pats, expr, decls,
-            val[1].var_sym
+            fun_pat.var_sym
         )
     )
 }
 | FUN REC recu_bind recu_binds {
-    result = CSCD.make_recursive val[0].loc, [val[2]] + val[3]
+    kw, _, bind, binds = val
+
+    result = CSCD.make_recursive kw.loc, [bind] + binds
 }
 | ASSERT atom_expr expr {
-    result = CSCD.make_assert val[0].loc, val[1], val[2]
+    kw, head_expr, body_expr = val
+
+    result = CSCD.make_assert kw.loc, head_expr, body_expr
 }
 
 
@@ -208,7 +235,8 @@ _recu_binds:
 | AND recu_bind _recu_binds { result = [val[1]] + val[2] }
 
 recu_bind: ID '=' fun_body {
-    hd_pat, tl_pats, expr, decls = val[2]
+    id, _, body = val
+    hd_pat, tl_pats, expr, decls = body
 
     result = CSCD.make_recursive_function(
         val[1].loc,
@@ -224,7 +252,9 @@ recu_bind: ID '=' fun_body {
 # Function body
 
 fun_body: pat pats '->' expr outer_where_decls {
-    result = [val[0], val[1], val[3], val[4]]
+    pat, pats, _, expr, decls = val
+
+    result = [pat, pats, expr, decls]
 }
 
 
@@ -235,7 +265,7 @@ outer_where_decls:
     result = CSCD.make_empty_seq_of_declaration
 }
 | WHERE '{' core_decls '}' {
-    result = val[2]
+    _, _, result, _ = val
 }
 
 
@@ -244,7 +274,7 @@ inner_where_decls:
     result = CSCD.make_empty_seq_of_declaration
 }
 | WHERE core_decls {
-    result = val[1]
+    _, result = val
 }
 
 
@@ -259,32 +289,40 @@ opt_expr:
 expr:
   pipe_expr
 | IF if_rule elsif_rules ELSE expr {
-    result = CSCE.make_if val[0].loc, val[1], val[2], val[4]
+    kw, rule, rules, _, expr = val
+
+    result = CSCE.make_if kw.loc, rule, rules, expr
 }
 | COND atom_expr '{' cond_rule cond_rules opt_else_clause '}' {
-    else_expr, else_decls = val[5]
+    kw, expr, _, rule, rules, opt_clause, _ = val
+    else_expr, else_decls                   = opt_clause
 
     result = CSCE.make_cond(
-                val[0].loc, val[1], val[3], val[4], else_expr, else_decls
+                kw.loc, expr, rule, rules, else_expr, else_decls
             )
 }
 | CASE atom_expr '{' case_rule case_rules opt_else_clause '}' {
-    else_expr, else_decls = val[5]
+    kw, expr, _, rule, rules, opt_clause, _ = val
+    else_expr, else_decls                   = opt_clause
 
     result = CSCE.make_case(
-                val[0].loc, val[1], val[3], val[4], else_expr, else_decls
+                kw.loc, expr, rule, rules, else_expr, else_decls
             )
 }
 | LET '{' core_decls IN expr '}' {
-    result = CSCE.make_let val[0].loc, val[2], val[4]
+    kw, _, decls, _, expr, _ = val
+
+    result = CSCE.make_let kw.loc, decls, expr
 }
 
 opt_else_clause:
   /* empty */ {
-    result = [nil,    CSCD.make_empty_seq_of_declaration]
+    result = [nil,  CSCD.make_empty_seq_of_declaration]
 }
 | ELSE '->' expr inner_where_decls {
-    result = [val[2], val[3]]
+    _, _, expr, decls = val
+
+    result = [expr, decls]
 }
 
 
@@ -299,7 +337,9 @@ _elsif_rules:
 | ELSIF if_rule _elsif_rules    { result = [val[1]] + val[2] }
 
 if_rule: atom_expr expr {
-    result = CSCE.make_if_rule val[0].loc, val[0], val[1]
+    head_expr, body_expr = val
+
+    result = CSCE.make_if_rule head_expr.loc, head_expr, body_expr
 }
 
 
@@ -314,7 +354,11 @@ _cond_rules:
 | '|' cond_rule _cond_rules { result = [val[1]] + val[2] }
 
 cond_rule: expr '->' expr inner_where_decls {
-    result = CSCE.make_cond_rule val[0].loc, val[0], val[2], val[3]
+    head_expr, _, body_expr, decls = val
+
+    result = CSCE.make_cond_rule(
+                     head_expr.loc, head_expr, body_expr, decls
+                )
 }
 
 
@@ -329,7 +373,9 @@ _case_rules:
 | '|' case_rule _case_rules { result = [val[1]] + val[2] }
 
 case_rule: case_rule_head '->' expr inner_where_decls {
-    result = CSCE.make_case_rule val[0].loc, val[0], val[2], val[3]
+    head, _, body_expr, decls = val
+
+    result = CSCE.make_case_rule head.loc, head, body_expr, decls
 }
 
 case_rule_head:
@@ -350,35 +396,43 @@ case_rule_head:
                             )
 }
 | ID opt_pat {
-    result = CSCE.make_case_rule_datum val[0].loc, val[0].sym, val[1]
+    id, opt_pat = val
+
+    result = CSCE.make_case_rule_datum id.loc, id.sym, opt_pat
 }
 | '&' ID opt_pat {
+    kw, id, opt_pat = val
+
     result = CSCE.make_case_rule_class(
-                        val[0].loc,
-                        CSCE.make_identifier(val[1].loc, val[1].sym),
-                        val[2]
+                        kw.loc,
+                        CSCE.make_identifier(id.loc, id.sym),
+                        opt_pat
                     )
 }
 | '[' ']' {
+    bb, _ = val
+
     result = CSCE.make_case_rule_class(
-                        val[0].loc,
-                        CSCE.make_identifier(val[0].loc, :Nil),
-                        CSCP.make_unit(val[0].loc),
-                        CSCE.make_identifier(val[0].loc, :List)
+                        bb.loc,
+                        CSCE.make_identifier(bb.loc, :Nil),
+                        CSCP.make_unit(bb.loc),
+                        CSCE.make_identifier(bb.loc, :List)
                     )
 }
 | '[' var_pat opt_last_pat ']' {
-    tail = if val[2]
-                val[2]
+    bb, var_pat, opt_last_pat, _ = val
+
+    tail = if opt_last_pat
+                opt_last_pat
             else
-                CSCP.make_variable val[0].loc, WILDCARD, :Nil
+                CSCP.make_variable bb.loc, WILDCARD, :Nil
             end
 
     result = CSCE.make_case_rule_class(
-                        val[0].loc,
-                        CSCE.make_identifier(val[0].loc, :Cons),
-                        CSCP.make_tuple(val[0].loc, [val[1], tail]),
-                        CSCE.make_identifier(val[0].loc, :List)
+                        bb.loc,
+                        CSCE.make_identifier(bb.loc, :Cons),
+                        CSCP.make_tuple(bb.loc, [var_pat, tail]),
+                        CSCE.make_identifier(bb.loc, :List)
                     )
 }
 
@@ -390,14 +444,14 @@ pipe_expr:
     result = val[0]
 }
 | comp_expr '|>' comp_expr pipel_exprs {
-    result = CSCE.make_pipe_left(
-                      val[0].loc, val[0], val[1].sym, val[2], val[3]
-                  )
+    lhs, op, hd_rhs, tl_rhs = val
+
+    result = CSCE.make_pipe_left lhs.loc, lhs, op.sym, hd_rhs, tl_rhs
 }
 | comp_expr '<|' comp_expr piper_exprs {
-    result = CSCE.make_pipe_right(
-                      val[0].loc, val[0], val[1].sym, val[2], val[3]
-                  )
+    lhs, op, hd_rhs, tl_rhs = val
+
+    result = CSCE.make_pipe_right lhs.loc, lhs, op.sym, hd_rhs, tl_rhs
 }
 
 pipel_exprs:
@@ -417,14 +471,14 @@ comp_expr:
     result = val[0]
 }
 | resrv_infix_expr '>>' resrv_infix_expr compl_exprs {
-    result = CSCE.make_comp_left(
-                      val[0].loc, val[0], val[1].sym, val[2], val[3]
-                  )
+    lhs, op, hd_rhs, tl_rhs = val
+
+    result = CSCE.make_comp_left lhs.loc, lhs, op.sym, hd_rhs, tl_rhs
 }
 | resrv_infix_expr '<<' resrv_infix_expr compr_exprs {
-    result = CSCE.make_comp_right(
-                      val[0].loc, val[0], val[1].sym, val[2], val[3]
-                  )
+    lhs, op, hd_rhs, tl_rhs = val
+
+    result = CSCE.make_comp_right lhs.loc, lhs, op.sym, hd_rhs, tl_rhs
 }
 
 compl_exprs:
@@ -442,15 +496,21 @@ compr_exprs:
 resrv_infix_expr:
   redef_infix_expr
 | resrv_infix_expr KIND_OF ID {
-    ty_ident = CSCE.make_identifier val[2].loc, val[2].sym
+    lhs, op, id = val
 
-    result = CSCE.make_kindof     val[0].loc, val[0], val[1].sym, ty_ident
+    ty_ident = CSCE.make_identifier id.loc, id.sym
+
+    result = CSCE.make_kindof  lhs.loc, lhs, op.sym, ty_ident
 }
 | resrv_infix_expr '&&' resrv_infix_expr {
-    result = CSCE.make_andalso    val[0].loc, val[0], val[1].sym, val[2]
+    lhs, op, rhs = val
+
+    result = CSCE.make_andalso lhs.loc, lhs, op.sym, rhs
 }
 | resrv_infix_expr '||' resrv_infix_expr {
-    result = CSCE.make_orelse     val[0].loc, val[0], val[1].sym, val[2]
+    lhs, op, rhs = val
+
+    result = CSCE.make_orelse  lhs.loc, lhs, op.sym, rhs
 }
 
 
@@ -459,9 +519,9 @@ resrv_infix_expr:
 redef_infix_expr:
   send_expr
 | _redef_infix_expr {
-    v = val[0]
+    lhs, op, rhs = val[0]
 
-    result = CSCE.make_infix v[0].loc, v[0], v[1].sym, v[2]
+    result = CSCE.make_infix lhs.loc, lhs, op.sym, rhs
 }
 
 _redef_infix_expr:
@@ -496,12 +556,14 @@ _redef_infix_expr:
 # Send expression
 
 send_expr: apply_expr messages {
-    result = if val[1].empty?
-                    val[0]
-                else
-                    hd_msg, *tl_msgs = val[1]
+    expr, msgs = val
 
-                    CSCE.make_send val[0].loc, val[0], hd_msg, tl_msgs
+    result = if msgs.empty?
+                    expr
+                else
+                    hd_msg, *tl_msgs = msgs
+
+                    CSCE.make_send expr.loc, expr, hd_msg, tl_msgs
                 end
 }
 
@@ -515,31 +577,41 @@ _messages:
 
 message:
   '$' INT {
-    result = CSCE.make_number_selector val[1].loc, val[1].val
+    kw, int = val
+
+    result = CSCE.make_number_selector kw.loc, int.val
 }
 | SEL {
     result = CSCE.make_label_selector  val[0].loc, val[0].sym
 }
 | '$(' named_fld com_named_flds ')' {
-    result = CSCE.make_modifier val[0].loc, [val[1]] + val[2]
+    bb, fld, flds, _ = val
+
+    result = CSCE.make_modifier bb.loc, [fld] + flds
 }
 | MSG atom_exprs {
-    result = CSCE.make_method val[0].loc, val[0].sym, val[1]
+    msg, exprs = val
+
+    result = CSCE.make_method msg.loc, msg.sym, exprs
 }
 | '.' norm_infix_opr atom_exprs {
-    result = CSCE.make_method val[1].loc, val[1].sym, val[2]
+    kw, opr, exprs = val
+
+    result = CSCE.make_method kw.loc, opr.sym, exprs
 }
 
 
 # Apply expression
 
 apply_expr: atom_expr atom_exprs {
-    result = if val[1].empty?
-                    val[0]
-                else
-                    hd_expr, *tl_exprs = val[1]
+    expr, exprs = val
 
-                    CSCE.make_apply val[0].loc, val[0], hd_expr, tl_exprs
+    result = if exprs.empty?
+                    expr
+                else
+                    hd_expr, *tl_exprs = exprs
+
+                    CSCE.make_apply expr.loc, expr, hd_expr, tl_exprs
                 end
 }
 
@@ -556,22 +628,28 @@ atom_expr:
     result = CSCE.make_identifier val[0].loc, val[0].sym
 }
 | '(' infix_opr ')' {
-    result = CSCE.make_identifier val[1].loc, val[1].sym
+    bb, opr, _ = val
+
+    result = CSCE.make_identifier bb.loc, opr.sym
 }
 | MODULE_DIR path ID {
-    head_id = CSCE.make_identifier val[0].loc, val[0].sym
-    last_id = CSCE.make_identifier val[2].loc, val[2].sym
+    dir, path, id = val
+
+    head_id = CSCE.make_identifier dir.loc, dir.sym
+    last_id = CSCE.make_identifier id.loc,  id.sym
 
     result = CSCE.make_long_identifier(
-                        val[0].loc, head_id, val[1] + [last_id]
+                        dir.loc, head_id, path + [last_id]
                     )
 }
 | MODULE_DIR path '(' infix_opr ')' {
-    head_id = CSCE.make_identifier val[0].loc, val[0].sym
-    last_id = CSCE.make_identifier val[3].loc, val[3].sym
+    dir, path, _, id, _ = val
+
+    head_id = CSCE.make_identifier dir.loc, dir.sym
+    last_id = CSCE.make_identifier id.loc,  id.sym
 
     result = CSCE.make_long_identifier(
-                        val[0].loc, head_id, val[1] + [last_id]
+                        dir.loc, head_id, path + [last_id]
                     )
 }
 
@@ -599,34 +677,48 @@ atom_expr:
     result = val[1]
 }
 | '(' infix_opr expr ')' {
-    result = CSCE.make_prefix val[1].loc, val[1].sym, val[2]
+    bb, opr, expr = val
+
+    result = CSCE.make_prefix bb.loc, opr.sym, expr
 }
 | '(' expr ',' expr com_exprs ')' {
-    result = CSCE.make_tuple val[0].loc, [val[1], val[3]] + val[4]
+    bb, expr1, _, expr2, exprs, _ = val
+
+    result = CSCE.make_tuple bb.loc, [expr1, expr2] + exprs
 }
 | '(' named_fld ',' named_fld com_named_flds ')' {
-    result = CSCE.make_named_tuple val[0].loc, [val[1], val[3]] + val[4]
+    bb, fld1, _, fld2, flds, _ = val
+
+    result = CSCE.make_named_tuple bb.loc, [fld1, fld2] + flds
 }
 | '(' expr ';' expr sem_exprs ')' {
-    result = CSCE.make_sequence val[0].loc, [val[1], val[3]] + val[4]
+    bb, expr1, _, expr2, exprs, _ = val
+
+    result = CSCE.make_sequence bb.loc, [expr1, expr2] + exprs
 }
 | '&(' ID ')' {
+    bb, msg, _ = val
+
     result = CSCE.make_functionalized_method(
-                    val[0].loc,
-                    CSCE.make_identifier(val[1].loc, val[1].sym)
-                )
-}
-| '&(' norm_infix_opr ')' {
-    result = CSCE.make_functionalized_method(
-                    val[0].loc,
-                    CSCE.make_identifier(val[1].loc, val[1].sym)
+                    bb.loc,
+                    CSCE.make_identifier(msg.loc, msg.sym)
                 )
 }
 | '&(' ID MSG ')' {
+    bb, klass, msg, _ = val
+
     result = CSCE.make_functionalized_method(
-                    val[0].loc,
-                    CSCE.make_identifier(val[2].loc, val[2].sym),
-                    CSCE.make_identifier(val[1].loc, val[1].sym)
+                    bb.loc,
+                    CSCE.make_identifier(msg.loc, msg.sym),
+                    CSCE.make_identifier(klass.loc, klass.sym)
+                )
+}
+| '&(' norm_infix_opr ')' {
+    bb, msg, _ = val
+
+    result = CSCE.make_functionalized_method(
+                    bb.loc,
+                    CSCE.make_identifier(msg.loc, msg.sym)
                 )
 }
 
@@ -635,26 +727,34 @@ atom_expr:
     result = CSCE.make_list val[0].loc, [],                nil
 }
 | '[' expr com_exprs opt_last_expr ']' {
-    result = CSCE.make_list val[0].loc, [val[1]] + val[2], val[3]
+    bb, expr, exprs, opt_expr, _ = val
+
+    result = CSCE.make_list bb.loc, [expr] + exprs, opt_expr
 }
-| '[' '|' expr com_exprs '|' qualifiers  ']' {
-    expr = if val[3].empty?
-                val[2]
+| '[' '|' expr com_exprs '|' qualifiers ']' {
+    bbr, bba, expr, exprs, _, qual, _ = val
+
+    expr = if exprs.empty?
+                expr
             else
-                CSCE.make_tuple val[0].loc, [val[2]] + val[3]
+                CSCE.make_tuple bba.loc, [expr] + exprs
             end
 
-    result = CSCE.make_comprehension val[0].loc, expr, val[5]
+    result = CSCE.make_comprehension bbr.loc, expr, qual
 }
 | '[' '|' named_fld ',' named_fld com_named_flds '|' qualifiers  ']' {
-    expr = CSCE.make_named_tuple val[0].loc, [val[2], val[4]] + val[5]
+    bbr, bba, fld1, _, fld2, flds, _, qual, _ = val
 
-    result = CSCE.make_comprehension val[0].loc, expr, val[7]
+    expr = CSCE.make_named_tuple bba.loc, [fld1, fld2] + flds
+
+    result = CSCE.make_comprehension bbr.loc, expr, qual
 }
 
 # Braket: { ... }
 | '{' pat pats '->' expr inner_where_decls '}' {
-    result = CSCE.make_lambda val[0].loc, [val[1]] + val[2], val[4], val[5]
+    bb, pat, pats, _, expr, decls, _ = val
+
+    result = CSCE.make_lambda bb.loc, [pat] + pats, expr, decls
 }
 | '&{' ID '}' {
     result = CSCE.make_class val[1].loc, val[1].sym
@@ -666,7 +766,9 @@ atom_expr:
 path:
   /* empty */     { result = [] }
 | MODULE_DIR path {
-    result = [CSCE.make_identifier(val[0].loc, val[0].sym)] + val[1]
+    dir, path = val
+
+    result = [CSCE.make_identifier(dir.loc, dir.sym)] + path
 }
 
 
@@ -710,10 +812,9 @@ _com_named_flds:
 | ',' named_fld _com_named_flds { result = [val[1]] + val[2] }
 
 named_fld: LABEL opt_expr {
-    result = [
-        CSCE.make_named_tuple_label(val[0].loc, val[0].sym),
-        val[1]
-    ]
+    lab, opt_expr = val
+
+    result = [CSCE.make_named_tuple_label(lab.loc, lab.sym), opt_expr]
 }
 
 
@@ -730,10 +831,14 @@ _qualifiers:
 
 qualifier:
   VAL pat '<-' expr {
-    result = CSCE.make_generator val[0].loc, val[1], val[3]
+    kw, pat, _, expr = val
+
+    result = CSCE.make_generator kw.loc, pat, expr
 }
 | IF expr {
-    result = CSCE.make_guard val[0].loc, val[1]
+    kw, expr = val
+
+    result = CSCE.make_guard kw.loc, expr
 }
 
 
@@ -758,24 +863,34 @@ pat:
 
 # Braket: ( ... )
 | '(' ')' {
-    result = CSCP.make_unit val[0].loc
+    bb, _ = val
+
+    result = CSCP.make_unit bb.loc
 }
 | '(' var_pat ')' {
-    result = val[1]
+    _, result, _ = val
 }
 | '(' var_pat ',' var_pat com_pats ')' {
-    result = CSCP.make_tuple val[0].loc, [val[1], val[3]] + val[4]
+    bb, pat1, _, pat2, pats, _ = val
+
+    result = CSCP.make_tuple bb.loc, [pat1, pat2] + pats
 }
 | '(' named_fld_pat com_named_fld_pats ')' {
-    result = CSCP.make_named_tuple val[0].loc, [val[1]] + val[2]
+    bb, pat, pats, _ = val
+
+    result = CSCP.make_named_tuple bb.loc, [pat] + pats
 }
 
 # Braket: [ ... ]
 | '[' ']' {
-    result = CSCP.make_list val[0].loc, [],     nil
+    bb, _ = val
+
+    result = CSCP.make_list bb.loc, [],     nil
 }
 | '[' var_pat com_pats opt_last_pat ']' {
-    result = CSCP.make_list val[0].loc, [val[1]] + val[2], val[3]
+    bb, pat, pats, opt_pat, _ = val
+
+    result = CSCP.make_list bb.loc, [pat] + pats, opt_pat
 }
 
 
@@ -801,14 +916,16 @@ _com_named_fld_pats:
 | ',' named_fld_pat _com_named_fld_pats { result = [val[1]] + val[2] }
 
 named_fld_pat: LABEL opt_var_pat {
-    var_pat = if val[1]
-                  val[1]
+    lab, opt_pat = val
+
+    var_pat = if opt_pat
+                  opt_pat
               else
-                  CSCP.make_variable val[0].loc, val[0].sym
+                  CSCP.make_variable lab.loc, lab.sym
               end
 
     result = [
-        CSCP.make_named_tuple_label(val[0].loc, val[0].sym),
+        CSCP.make_named_tuple_label(lab.loc, lab.sym),
         var_pat
     ]
 }
@@ -829,13 +946,19 @@ opt_var_pat:
 
 var_pat:
   ID opt_type_assert {
-    result = CSCP.make_variable val[0].loc, val[0].sym, val[1]
+    id, opt_type = val
+
+    result = CSCP.make_variable id.loc,  id.sym,   opt_type
 }
 | '(' infix_opr ')' {
-    result = CSCP.make_variable val[1].loc, val[1].sym
+    _, opr, _ = val
+
+    result = CSCP.make_variable opr.loc, opr.sym
 }
 | '_' opt_type_assert {
-    result = CSCP.make_variable val[0].loc, WILDCARD,   val[1]
+    wc, opt_type = val
+
+    result = CSCP.make_variable wc.loc,  WILDCARD, opt_type
 }
 
 opt_type_assert:
