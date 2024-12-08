@@ -20,10 +20,10 @@ structure Umu = struct {
     ######## Bool ########
 
     # TRUE : Bool
-    val TRUE = &{Bool}.make-true
+    val TRUE = &Bool.make-true
 
     # FALSE : Bool
-    val FALSE = &{Bool}.make-false
+    val FALSE = &Bool.make-false
 
 
 
@@ -33,10 +33,10 @@ structure Umu = struct {
         #### Constructor ####
 
         # Some : 'a -> Some 'a
-        val Some = &{Some}.make
+        val Some = &Some.make
 
         # NONE : None
-        val NONE = &{None}.make
+        val NONE = &None.make
 
 
         #### Classifier ####
@@ -54,16 +54,16 @@ structure Umu = struct {
 
     structure Math = struct {
         # NAN           : Real
-        val NAN = &{Real}.nan
+        val NAN = &Real.nan
 
         # INFINITY      : Real
-        val INFINITY = &{Real}.infinity
+        val INFINITY = &Real.infinity
 
         # PI            : Real
-        val PI = &{Real}.pi
+        val PI = &Real.pi
 
         # E             : Real
-        val E = &{Real}.e
+        val E = &Real.e
 
         # nan?          : Real -> Bool
         val nan? = &(Real.nan?)
@@ -144,9 +144,9 @@ structure Umu = struct {
     #### I/O ####
 
     structure IO = struct {
-        val STDIN  = &{IO}.stdin
-        val STDOUT = &{IO}.stdout
-        val STDERR = &{IO}.stderr
+        val STDIN  = &IO.stdin
+        val STDOUT = &IO.stdout
+        val STDERR = &IO.stderr
 
         # gets : () -> Option String 
         fun gets = () -> STDIN.gets
@@ -560,7 +560,7 @@ structure Umu = struct {
         # See SICP(Wizard Book), 2.4.2 Tagged data
 
         # Datum : Symbol -> 'a -> Datum 'a
-        fun Datum = (t : Symbol) x -> &{Datum}.make t x
+        fun Datum = (t : Symbol) x -> &Datum.make t x
 
         # tag-of : Datum 'a -> Symbol
         val tag-of = &(Datum.tag)

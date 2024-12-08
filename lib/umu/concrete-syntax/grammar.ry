@@ -652,6 +652,9 @@ atom_expr:
                         dir.loc, head_id, path + [last_id]
                     )
 }
+| '&' ID {
+    result = CSCE.make_class val[1].loc, val[1].sym
+}
 
 # Constant
 | INT       { result = CSCE.make_integer    val[0].loc, val[0].val }
@@ -755,9 +758,6 @@ atom_expr:
     bb, pat, pats, _, expr, decls, _ = val
 
     result = CSCE.make_lambda bb.loc, [pat] + pats, expr, decls
-}
-| '&{' ID '}' {
-    result = CSCE.make_class val[1].loc, val[1].sym
 }
 
 
