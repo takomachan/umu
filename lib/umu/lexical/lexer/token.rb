@@ -75,10 +75,12 @@ RESERVED_WORDS = [
 }
 
 RESERVED_SYMBOLS = [
+    '=',    '$',    '_',    ',',
+    '&',    '|',
     '&&',   '||',
-    '=',    '$',    '|',    '_',
-    '.',    ',',    ':',    ';',
-    '->',   '<-',   '::',   ';;',
+    '.',    ':',    ';',
+    '..',   '::',   ';;',
+    '->',   '<-',
 
     # Redefinable symbols
     '+',    '-',    '*',    '/',    '^',
@@ -86,8 +88,7 @@ RESERVED_SYMBOLS = [
     '++',   '<<',   '>>',   '<|',   '|>',
 
     # Not used, but reserved for future
-    '..',   # Interval (Morph)
-    '&'     # Instance creation (OOP)
+    '...'   # Interval (exclude last value)
 ].inject({}) { |hash, x|
     hash.merge(x => true) { |key, _, _|
         ASSERT.abort format("Duplicated reserved-symbol: '%s'", key)

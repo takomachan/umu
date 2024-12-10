@@ -415,7 +415,7 @@ case_rule_head:
     result = CSCE.make_case_rule_class(
                         bb.loc,
                         CSCE.make_identifier(bb.loc, :Nil),
-                        CSCP.make_unit(bb.loc),
+                        nil,
                         CSCE.make_identifier(bb.loc, :List)
                     )
 }
@@ -734,6 +734,11 @@ atom_expr:
 
     result = CSCE.make_list bb.loc, [expr] + exprs, opt_expr
 }
+| '[' expr '..' expr ']' {
+    bb, expr1, _, expr2, _ = val
+
+    result = CSCE.make_interval bb.loc, expr1, expr2
+}
 | '[' '|' expr com_exprs '|' qualifiers ']' {
     bbr, bba, expr, exprs, _, qual, _ = val
 
@@ -935,7 +940,10 @@ named_fld_pat: LABEL opt_var_pat {
 
 opt_last_pat:
   /* empty */   { result = nil }
-| '|' var_pat   { result = CSCP.make_variable val[1].loc, val[1].var_sym }
+| '|' var_pat   {
+#   result = CSCP.make_variable val[1].loc, val[1].var_sym
+    result = val[1]
+}
 
 
 # Variable pattern

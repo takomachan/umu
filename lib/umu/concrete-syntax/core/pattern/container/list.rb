@@ -155,6 +155,7 @@ private
             ASSERT.kind_of pair_sym,    ::Symbol
             ASSERT.kind_of decls,       ::Array
             ASSERT.kind_of vpat,        ElementOfContainer::Variable
+            pp({vpat: vpat})
 
             loc             = vpat.loc
             next_seq_num    = seq_num + 1
@@ -209,7 +210,8 @@ private
                     ASCD.make_value(
                         last_pat.loc,
                         last_pat.var_sym,
-                        __make_select_tail__(last_pat.loc, final_pair_sym)
+                        __make_select_tail__(last_pat.loc, final_pair_sym),
+                        last_pat.opt_type_sym
                     )
                 ]
             else
@@ -234,11 +236,17 @@ private
 
 
     def __make_send_des__(loc, expr)
-        ASSERT.kind_of loc,     LOC::Entry
-        ASSERT.kind_of expr,    ASCE::Abstract
+        ASSERT.kind_of loc,  LOC::Entry
+        ASSERT.kind_of expr, ASCE::Abstract
+
+        type_sym = if self.opt_last_pat
+                        self.opt_last_pat.opt_type_sym
+                    else
+                        :List
+                    end
 
         ASCE.make_send(
-            loc, expr, ASCE.make_method(loc, :des!), [], :List
+            loc, expr, ASCE.make_method(loc, :des!), [], type_sym
         )
     end
 

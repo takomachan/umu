@@ -98,7 +98,7 @@ class Generator < Abstract
 
             [],
 
-            :List
+            :Morph
         )
     end
 end
