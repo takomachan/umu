@@ -23,7 +23,7 @@ class Class < Top
 
 
     def to_s
-        format "&{%s}", self.class_signat.to_sym
+        format "&%s", self.class_signat.to_sym
     end
 
 

@@ -110,20 +110,21 @@ BRAKET_PAIRS = [
     ['[',   ']'],   # List
     ['{',   '}'],   # Lambda, etc
     ['&(',  ')'],   # Method
-    ['&{',  '}'],   # Class
     ['$(',  ')'],   # Named tuple modifier
 
 
     # Not used, but reserved for future
 
-    ['%[',  ']'],   # Morph (Polymorphism)
+    ['%[',  ']'],   # Morph -- Polymorphism
     ['%q[', ']'],   # Queue
     ['%v[', ']'],   # Vector
     ['%a[', ']'],   # Array
     ['%(',  ')'],   # Set
     ['%{',  '}'],   # Map
-    ['@[',  ']'],   # Assoc(Key-Value list)
-    ['&[',  ']']    # Stream
+    ['@[',  ']'],   # Assoc -- Key-Value list
+    ['&{',  '}'],   # Generator
+    ['$[',  ']'],   # Channel -- Concurrency
+    ['${',  '}']    # Stream -- Infinite list
 ]
 
 
