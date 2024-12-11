@@ -210,13 +210,13 @@ class Method < Abstraction::Abstract
 
 
     def to_s
-        format(".%s%s",
-            self.sym.to_s,
-
+        format(".%s",
             if self.exprs.empty?
-                ''
+                self.sym.to_s
             else
-                format "(%s)", self.exprs.map(&:to_s).join(' ')
+                format "(%s %s)",
+                        self.sym.to_s,
+                        self.exprs.map(&:to_s).join(' ')
             end
         )
     end
@@ -228,10 +228,7 @@ class Method < Abstraction::Abstract
 
             self.exprs,
 
-            bb: format(".%s%s",
-                       self.sym.to_s,
-                       self.exprs.empty? ? '' : '('
-            ),
+            bb: format(self.exprs.empty? ? ".%s" : ".(%s ", self.sym.to_s),
 
             eb: self.exprs.empty? ? '' : ')',
 
