@@ -19,16 +19,6 @@ class Abstract < Container::Abstract
     alias pats array
 
 
-    def to_s
-        format "(%s)", self.map(&:to_s).join(', ')
-    end
-
-
-    def pretty_print(q)
-        PRT.group_nary q, self, bb: '(', eb: ')', join: ', '
-    end
-
-
     def exported_vars
         self.reject(&:wildcard?).inject([]) { |array, epat|
             ASSERT.kind_of array,  ::Array
@@ -134,6 +124,16 @@ class Tuple < Abstract
 
             yield vpat
         end
+    end
+
+
+    def to_s
+        format "(%s)", self.map(&:to_s).join(', ')
+    end
+
+
+    def pretty_print(q)
+        PRT.group_nary q, self, bb: '(', eb: ')', join: ', '
     end
 
 
@@ -243,6 +243,16 @@ class Entry < Abstract
                            self.pats[index]
                        )
         end
+    end
+
+
+    def to_s
+        format "(%s)", self.map(&:to_s).join(' ')
+    end
+
+
+    def pretty_print(q)
+        PRT.group_nary q, self, bb: '(', eb: ')', join: ' '
     end
 
 

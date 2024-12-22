@@ -55,18 +55,18 @@ class Named < Abstract
     def to_s
         format("(%s)",
             self.map { |label, value|
-                format "%s: %s", label.to_s, value.to_s
-            }.join(', ')
+                format "%s:%s", label.to_s, value.to_s
+            }.join(' ')
         )
     end
 
 
     def pretty_print(q)
-        PRT.group_nary q, self, bb: '(', eb: ')', join: ', ' do
+        PRT.group_nary q, self, bb: '(', eb: ')', join: ' ' do
             |label, value|
 
             q.text label.to_s
-            q.text ': '
+            q.text ':'
             q.pp value
         end
     end

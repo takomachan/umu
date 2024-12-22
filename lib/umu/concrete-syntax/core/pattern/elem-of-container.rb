@@ -116,7 +116,7 @@ class Field < Abstract
 
 
     def to_s
-        format "%s %s", self.label.to_s, self.var_pat.to_s
+        self.label.to_s + self.var_pat.to_s
     end
 end
 

@@ -98,23 +98,22 @@ class Entry < Abstract
 
                 format("%s%s",
                         label.to_s,
-                        opt_expr ? (' ' + opt_expr.to_s) : ''
+                        opt_expr ? opt_expr.to_s : ''
                 )
-            }.join(', ')
+            }.join(' ')
         )
     end
 
 
     def pretty_print(q)
         PRT.group_nary(
-            q, self.index_by_label, bb: '(', eb: ')', join: ', '
+            q, self.index_by_label, bb: '(', eb: ')', join: ' '
         ) do |label, index|
 
             opt_expr = self.exprs[index]
 
             q.text label.to_s
             if opt_expr
-                q.text ' '
                 q.pp opt_expr
             end
         end

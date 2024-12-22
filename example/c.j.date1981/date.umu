@@ -31,9 +31,9 @@ structure RELATIONAL-DATA-MODEL-3 = struct {
                 status : Int,
                 city   : String
             ) -> (
-                sno:,
-                sname:,
-                status:,
+                sno:
+                sname:
+                status:
                 city:
             )
         } [
@@ -61,10 +61,10 @@ structure RELATIONAL-DATA-MODEL-3 = struct {
                 weight : Int,
                 city   : String
             ) -> (
-                pno:,
-                pname:,
-                color:,
-                weight:,
+                pno:
+                pname:
+                color:
+                weight:
                 city:
             )
         } [
@@ -89,8 +89,8 @@ structure RELATIONAL-DATA-MODEL-3 = struct {
                 pno : Symbol,
                 qty : Int
             ) -> (
-                sno:,
-                pno:,
+                sno:
+                pno:
                 qty:
             )
         } [
@@ -126,7 +126,7 @@ import RELATIONAL-DATA-MODEL-3 {
 
 print "#### 3.5.1 ####" ;;
 pp [|city|
-    val (sno:, city:) <- S::rows if sno == @S1
+    val (sno: city:) <- S::rows if sno == @S1
 ] ;;
 # --> ["London"]
 nl () ;;
@@ -136,8 +136,8 @@ nl () ;;
 # 3.5.2 Paris にある納入業者に対して S# と STATUS を見つけること。
 
 print "#### 3.5.2 ####" ;;
-pp [|sno:, status:|
-    val (sno:, status:, city:) <- S::rows if city == "Paris"
+pp [|sno: status:|
+    val (sno: status: city:) <- S::rows if city == "Paris"
 ] ;;
 # --> [(sno: @S2, status: 10), (sno: @S3, status: 30)]
 nl () ;;
@@ -148,8 +148,8 @@ nl () ;;
 
 print "#### 3.5.3 ####" ;;
 pp [|pname|
-    val (sno:, pno: sp-pno       ) <- SP::rows if sno == @S1
-    val (      pno: p-pno, pname:) <- P::rows
+    val (sno: pno: sp-pno       ) <- SP::rows if sno == @S1
+    val (     pno: p-pno  pname:) <- P::rows
 
     if sp-pno == p-pno
 ] ;;
@@ -163,19 +163,19 @@ nl () ;;
 #       都市の名前を見つけること。
 
 print "#### 3.5.4 ####" ;;
-pp [|pno:, city:|
-    val (sno: sp-sno, pno:)  <- SP::rows
-    val (sno: s-sno,  city:) <- S::rows
+pp [|pno: city:|
+    val (sno: sp-sno pno:)  <- SP::rows
+    val (sno: s-sno  city:) <- S::rows
 
     if sp-sno == s-sno
 ] ;;
 # --> [
-#     (pno: @P1, city: "London"),
-#     (pno: @P2, city: "London"),
-#     (pno: @P3, city: "London"),
-#     (pno: @P1, city: "Paris"),
-#     (pno: @P2, city: "Paris"),
-#     (pno: @P2, city: "Paris")
+#     (pno:@P1 city:"London"),
+#     (pno:@P2 city:"London"),
+#     (pno:@P3 city:"London"),
+#     (pno:@P1 city:"Paris"),
+#     (pno:@P2 city:"Paris"),
+#     (pno:@P2 city:"Paris")
 # ]
 nl () ;;
 
@@ -205,7 +205,7 @@ structure RELATIONAL-DATA-MODEL-4 = struct {
                 status : Int,
                 city   : String
             ) -> (
-                sno:, sname:, status:, city:
+                sno: sname: status: city:
             )
         } [
         #    S#    SNAME   STATUS CITY
@@ -234,7 +234,7 @@ structure RELATIONAL-DATA-MODEL-4 = struct {
                 weight : Int,
                 city   : String
             ) -> (
-                pno:, pname:, color:, weight:, city:
+                pno: pname: color: weight: city:
             )
         } [
         #     P#   PNAME    COLOR   WEIGHT CITY
@@ -260,7 +260,7 @@ structure RELATIONAL-DATA-MODEL-4 = struct {
                 pno : Symbol,
                 qty : Int
             ) -> (
-                sno:, pno:, qty:
+                sno: pno: qty:
             )
         } [
         #     S#   P#  QTY
@@ -308,10 +308,10 @@ import RELATIONAL-DATA-MODEL-4 {
 #)
 
 print "#### 7.2 ####" ;;
-pp [|sno:, status:|
-    val (sno:, status:, city:) <- S::rows if city == "Paris"
+pp [|sno: status:|
+    val (sno: status: city:) <- S::rows if city == "Paris"
 ] ;;
-# --> [(sno: @S2, status: 10), (sno: @S3, status: 30)]
+# --> [(sno:@S2 status:10), (sno:@S3 status:30)]
 nl () ;;
 
 
@@ -338,18 +338,18 @@ nl () ;;
 print "#### 7.2.2 ####" ;;
 pp [|sp| val sp <- SP::rows] ;;
 # --> [
-#     (sno: @S1, pno: @P1, qty: 300),
-#     (sno: @S1, pno: @P2, qty: 200),
-#     (sno: @S1, pno: @P3, qty: 400),
-#     (sno: @S1, pno: @P4, qty: 200),
-#     (sno: @S1, pno: @P5, qty: 100),
-#     (sno: @S1, pno: @P6, qty: 100),
-#     (sno: @S2, pno: @P1, qty: 300),
-#     (sno: @S2, pno: @P2, qty: 400),
-#     (sno: @S3, pno: @P2, qty: 200),
-#     (sno: @S4, pno: @P2, qty: 200),
-#     (sno: @S4, pno: @P4, qty: 300),
-#     (sno: @S4, pno: @P5, qty: 400)
+#     (sno:@S1 pno:@P1 qty:300),
+#     (sno:@S1 pno:@P2 qty:200),
+#     (sno:@S1 pno:@P3 qty:400),
+#     (sno:@S1 pno:@P4 qty:200),
+#     (sno:@S1 pno:@P5 qty:100),
+#     (sno:@S1 pno:@P6 qty:100),
+#     (sno:@S2 pno:@P1 qty:300),
+#     (sno:@S2 pno:@P2 qty:400),
+#     (sno:@S3 pno:@P2 qty:200),
+#     (sno:@S4 pno:@P2 qty:200),
+#     (sno:@S4 pno:@P4 qty:300),
+#     (sno:@S4 pno:@P5 qty:400)
 # ]
 nl () ;;
 
@@ -367,7 +367,7 @@ nl () ;;
 
 print "#### 7.2.3 ####" ;;
 pp [|sno|
-    val (sno:, status:, city:) <- S::rows
+    val (sno: status: city:) <- S::rows
 
     if city == "Paris" && status > 20
 ] ;;

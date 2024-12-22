@@ -75,18 +75,17 @@ class Entry < Abstraction::Expressions
     def to_s
         format("(%s)",
             self.map { |label, expr|
-                format "%s %s", label.to_s, expr.to_s
-            }.join(', ')
+                format "%s%s", label.to_s, expr.to_s
+            }.join(' ')
         )
     end
 
 
     def pretty_print(q)
-        PRT.group_nary q, self, bb: '(', eb: ')', join: ', ' do
+        PRT.group_nary q, self, bb: '(', eb: ')', join: ' ' do
             |(label, expr)|
 
             q.pp label
-            q.text ' '
             q.pp expr
         end
     end
