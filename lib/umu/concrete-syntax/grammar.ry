@@ -609,6 +609,25 @@ message:
 
     result = CSCE.make_method kw.loc, opr.sym, exprs
 }
+| '.' '[' expr com_exprs ']' {
+    kw, _, expr, exprs, _ = val
+
+    result = case exprs.size
+            when 0
+                CSCE.make_method kw.loc, :'apply',        [expr]
+            when 1
+                CSCE.make_method kw.loc, :'apply-binary', [expr, exprs[0]]
+            else
+                hd_expr, *tl_exprs = exprs
+                list = CSCE.make_list tl_exprs[0].loc, tl_exprs
+
+                CSCE.make_method(
+                     kw.loc,
+                     :'apply-nary',
+                     [expr, hd_expr, list]
+                )
+            end
+}
 
 
 # Apply expression
