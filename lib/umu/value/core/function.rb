@@ -10,6 +10,15 @@ module Value
 module Core
 
 class Fun < Top
+    INSTANCE_METHOD_INFOS = [
+        [:meth_apply,           VC::Top,
+            :apply,             VC::Top],
+        [:meth_apply_binary,    VC::Top,
+            :'apply-binary',    VC::Top, VC::Top],
+        [:meth_apply_nary,      VC::Top,
+            :'apply-nary',      VC::Top, VC::Top, VCBLM::Abstract]
+    ]
+
     attr_reader :lam, :va_context
 
 
@@ -74,6 +83,35 @@ class Fun < Top
                             )
                         }
         ASSERT.kind_of result_value, VC::Top
+    end
+
+
+    def meth_apply(loc, env, event, value)
+        ASSERT.kind_of value, VC::Top
+
+        self.apply value, [], loc, env.enter(event)
+    end
+
+
+    def meth_apply_binary(loc, env, event, fst_value, snd_value)
+        ASSERT.kind_of fst_value, VC::Top
+        ASSERT.kind_of snd_value, VC::Top
+
+        self.apply fst_value, [snd_value], loc, env.enter(event)
+    end
+
+
+    def meth_apply_nary(loc, env, event, fst_value, snd_value, tail_values)
+        ASSERT.kind_of fst_value,   VC::Top
+        ASSERT.kind_of snd_value,   VC::Top
+        ASSERT.kind_of tail_values, VCBLM::Abstract
+
+        self.apply(
+            fst_value,
+            [snd_value] + tail_values.to_a,
+            loc,
+            env.enter(event)
+        )
     end
 
 
