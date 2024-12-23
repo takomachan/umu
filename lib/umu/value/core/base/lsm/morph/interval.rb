@@ -88,13 +88,14 @@ class Interval < Morph::Abstract
     def des!
         raise ::StopIteration if __empty__?
 
-        next_value = VC.make_integer(
-                            self.current_value.val + self.step_value.val
-                        )
-
         VC.make_tuple [
             self.current_value,
-            VC.make_interval(next_value, stop_value, step_value)
+
+            VC.make_interval(
+                self.current_value + self.step_value,
+                self.stop_value,
+                self.step_value
+            )
         ]
     end
 

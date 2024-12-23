@@ -114,10 +114,17 @@ class Abstract < Atom::Abstract
     end
 
 
-    def meth_add(_loc, _env, _event, other)
+    def +(other)
         ASSERT.kind_of other, Number::Abstract
 
         VC.make_number self.class, self.val + other.val
+    end
+
+
+    def meth_add(_loc, _env, _event, other)
+        ASSERT.kind_of other, Number::Abstract
+
+        self.+ other
     end
 
 
