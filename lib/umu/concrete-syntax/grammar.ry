@@ -589,10 +589,20 @@ message:
 
     result = CSCE.make_modifier bb.loc, [fld] + flds
 }
+| '.' '(' ID atom_exprs ')' {
+    kw, _, msg, exprs, _ = val
+
+    result = CSCE.make_method kw.loc, msg.sym, exprs
+}
 | MSG atom_exprs {
     msg, exprs = val
 
     result = CSCE.make_method msg.loc, msg.sym, exprs
+}
+| '.' '(' norm_infix_opr atom_exprs ')' {
+    kw, _, opr, exprs, _ = val
+
+    result = CSCE.make_method kw.loc, opr.sym, exprs
 }
 | '.' norm_infix_opr atom_exprs {
     kw, opr, exprs = val

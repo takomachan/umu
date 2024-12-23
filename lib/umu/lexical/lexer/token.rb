@@ -109,7 +109,7 @@ BRAKET_PAIRS = [
     ['(',   ')'],   # Tuple, etc
     ['[',   ']'],   # List
     ['{',   '}'],   # Lambda, etc
-    ['&(',  ')'],   # Method
+    ['&(',  ')'],   # Instance method
     ['$(',  ')'],   # Named tuple modifier
 
 
@@ -122,9 +122,10 @@ BRAKET_PAIRS = [
     ['%(',  ')'],   # Set
     ['%{',  '}'],   # Map
     ['@[',  ']'],   # Assoc -- Key-Value list
-    ['&{',  '}'],   # Generator
-    ['$[',  ']'],   # Channel -- Concurrency
-    ['${',  '}']    # Stream -- Infinite list
+    ['&{',  '}'],   # Class method
+    ['&[',  ']'],   # Stream -- Deffered list
+    ['$[',  ']'],   # Channel -- For concurrency
+    ['${',  '}']    # Suspended list
 ]
 
 
