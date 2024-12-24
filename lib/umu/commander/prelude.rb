@@ -186,33 +186,33 @@ structure Umu = struct {
 
 
 
-    ######## List ########
+    ######## Morph ########
 
-    structure List = struct {
+    structure Morph = struct {
         # cons : 'a -> ['a] -> ['a]
-        fun cons = x (xs : List) -> xs.cons x
+        fun cons = x (xs : Morph) -> xs.cons x
 
 
         # empty? : ['a] -> Bool
-        val empty? = &(List.empty?)
+        val empty? = &(Morph.empty?)
 
 
         # des : ['a] -> Option ('a, ['a])
-        val des = &(List.des)
+        val des = &(Morph.des)
 
 
         # head : ['a] -> 'a
-        fun head = xs : List -> xs.des!$1
+        fun head = xs : Morph -> xs.des!$1
 
 
         # tail : ['a] -> ['a]
-        fun tail = xs : List -> xs.des!$2
+        fun tail = xs : Morph -> xs.des!$2
 
 
         # equal-with? : ('a -> 'b -> Bool) -> ['a] -> ['b] -> Bool
         fun rec equal-with? = eq? xs ys ->
-            if (xs kind-of? List)
-                if (ys kind-of? List)
+            if (xs kind-of? Morph)
+                if (ys kind-of? Morph)
                     case xs {
                       []      -> empty? ys
                     | [x|xs'] -> case ys {
@@ -224,7 +224,7 @@ structure Umu = struct {
                 else
                     FALSE
             else
-                if (ys kind-of? List)
+                if (ys kind-of? Morph)
                     FALSE
                 else
                     eq? xs ys
@@ -241,7 +241,7 @@ structure Umu = struct {
         | [x|xs'] -> f x (foldr a f xs')
         }
         #)
-        fun foldr = a (f : Fun) (xs : List) -> xs.foldr a f
+        fun foldr = a (f : Fun) (xs : Morph) -> xs.foldr a f
 
 
         # foldr1 : ('a -> 'a -> 'a) -> ['a] -> 'a
@@ -260,7 +260,7 @@ structure Umu = struct {
         | [x|xs'] -> foldl (f x a) f xs'
         }
         #)
-        fun foldl = a (f : Fun) (xs : List) -> xs.foldl a f
+        fun foldl = a (f : Fun) (xs : Morph) -> xs.foldl a f
 
 
         # foldl1 : ('a -> 'a -> 'a) -> ['a] -> 'a
@@ -274,12 +274,12 @@ structure Umu = struct {
 
         # length : ['a] -> Int
         # val length = foldl 0 { _ len -> len.+ 1 }
-        fun length = xs : List -> xs.foldl 0 { _ len -> len.+ 1 }
+        fun length = xs : Morph -> xs.foldl 0 { _ len -> len.+ 1 }
 
 
         # reverse : ['a] -> ['a]
         # val reverse = foldl [] cons
-        fun reverse = xs : List -> xs.foldl [] cons
+        fun reverse = xs : Morph -> xs.foldl [] cons
 
 
         # max : ['a] -> 'a
@@ -292,26 +292,26 @@ structure Umu = struct {
 
         # map : ('a -> 'b) -> ['a] -> ['b]
         # fun map = f -> foldr [] { x xs -> [f x | xs] }
-        fun map = (f : Fun) (xs : List) -> xs.map f
+        fun map = (f : Fun) (xs : Morph) -> xs.map f
 
 
         # select : ('a -> Bool) -> ['a] -> ['a]
         # fun select = f -> foldr [] { x xs -> if (f x) [x|xs] else xs }
-        fun select = (f : Fun) (xs : List) -> xs.select f
+        fun select = (f : Fun) (xs : Morph) -> xs.select f
 
 
         # append : ['a] -> ['a] -> ['a]
-        # fun append = (xs : List) (ys : List) -> foldr ys cons xs
-        fun append = (xs : List) (ys : List) -> xs.append ys
+        # fun append = (xs : Morph) (ys : Morph) -> foldr ys cons xs
+        fun append = (xs : Morph) (ys : Morph) -> xs.append ys
 
 
         # concat : [['a]] -> ['a]
         # val concat = foldl [] { xs xss -> append xss xs }
-        val concat = &(List.concat)
+        val concat = &(Morph.concat)
 
 
         # concat-map : ('a -> ['b]) -> ['a] -> ['b]
-        fun concat-map = (f : Fun) (xs : List) -> xs.concat-map f
+        fun concat-map = (f : Fun) (xs : Morph) -> xs.concat-map f
 
 
         # zip-with : ('a -> 'b -> 'c) -> ['a] -> ['b] -> ['c]
@@ -328,17 +328,17 @@ structure Umu = struct {
 
         # zip : ['a] -> ['b] -> [('a, 'b)]
         # val zip = zip-with { x y -> (x, y) }
-        fun zip = (xs : List) (ys : List) -> xs.zip ys
+        fun zip = (xs : Morph) (ys : Morph) -> xs.zip ys
 
 
         # unzip : [('a, 'b)] -> (['a], ['b])
         # val unzip = foldr ([], []) { (y, z) (ys, zs) -> ([y|ys], [z|zs]) }
-        val unzip = &(List.unzip)
+        val unzip = &(Morph.unzip)
 
 
         # partition : ('a -> Bool) -> ['a] -> (['a], ['a])
         (#
-        fun partition = (f : Fun) (xs : List) -> foldr ([], []) {
+        fun partition = (f : Fun) (xs : Morph) -> foldr ([], []) {
             x (ys, zs)
         ->
             if (f x)
@@ -347,7 +347,7 @@ structure Umu = struct {
                 (   ys,  [x|zs])
         } xs
         #)
-        fun partition = (f : Fun) (xs : List) -> xs.partition f
+        fun partition = (f : Fun) (xs : Morph) -> xs.partition f
 
 
         # sort : ['a] -> ['a]
@@ -359,7 +359,7 @@ structure Umu = struct {
             where val (littles, bigs) = partition (< pivot) xs'
         }
         #)
-        val sort = &(List.sort)
+        val sort = &(Morph.sort)
     }
 
 
@@ -581,76 +581,76 @@ structure Umu = struct {
         val None? = Option::None?
 
 
-        #### List ####
+        #### Morph ####
 
         # (|)       : 'a -> ['a] -> ['a]
-        val (|) = List::cons
+        val (|) = Morph::cons
 
         # (++)      : ['a] -> ['a] -> ['a]
-        val (++) = List::append
+        val (++) = Morph::append
 
         # cons : 'a -> ['a] -> ['a]
-        val cons = List::cons
+        val cons = Morph::cons
 
         # empty?    : ['a] -> Bool
-        val empty? = List::empty?
+        val empty? = Morph::empty?
 
         # head      : ['a] -> 'a
-        val head = List::head
+        val head = Morph::head
 
         # tail      : ['a] -> ['a]
-        val tail = List::tail
+        val tail = Morph::tail
 
         # equal?    : 'a -> 'b -> Bool
-        val equal? = List::equal?
+        val equal? = Morph::equal?
 
         # foldr     : 'b -> ('a -> 'b -> 'b) -> ['a] -> 'b
-        val foldr = List::foldr
+        val foldr = Morph::foldr
 
         # foldr1    : ('a -> 'a -> 'a) -> ['a] -> 'a
-        val foldr1 = List::foldr1
+        val foldr1 = Morph::foldr1
 
         # foldl     : 'b -> ('a -> 'b -> 'b) -> ['a] -> 'b
-        val foldl = List::foldl
+        val foldl = Morph::foldl
 
         # foldl1    : ('a -> 'a -> 'a) -> ['a] -> 'a
-        val foldl1 = List::foldl1
+        val foldl1 = Morph::foldl1
 
         # length    : ['a] -> Int
-        val length = List::length
+        val length = Morph::length
 
         # reverse   : ['a] -> ['a]
-        val reverse = List::reverse
+        val reverse = Morph::reverse
 
         # max       : ['a] -> 'a
-        val max = List::max
+        val max = Morph::max
 
         # min       : ['a] -> 'a
-        val min = List::min
+        val min = Morph::min
 
         # map       : ('a -> 'b) -> ['a] -> ['b]
-        val map = List::map
+        val map = Morph::map
 
         # select    : ('a -> Bool) -> ['a] -> ['a]
-        val select = List::select
+        val select = Morph::select
 
         # concat    : [['a]] -> ['a]
-        val concat = List::concat
+        val concat = Morph::concat
 
         # concat-map : ('a -> ['b]) -> ['a] -> ['b]
-        val concat-map = List::concat-map
+        val concat-map = Morph::concat-map
 
         # zip       : ['a] -> ['b] -> (['a, 'b])
-        val zip = List::zip
+        val zip = Morph::zip
 
         # unzip     : [('a, 'b)] -> (['a], ['b])
-        val unzip = List::unzip
+        val unzip = Morph::unzip
 
         # partition : ('a -> Bool) -> ['a] -> (['a], ['a])
-        val partition = List::partition
+        val partition = Morph::partition
 
         # sort      : ['a] -> ['a]
-        val sort = List::sort
+        val sort = Morph::sort
 
 
         #### High order Function ####
@@ -711,9 +711,9 @@ structure Umu = struct {
 
         # bools : ['a] -> ('a -> 'b) -> [Bool] -> [Bool]
         fun bools =
-                (sources : List)
+                (sources : Morph)
                 (f       : Fun)
-                (expects : List)
+                (expects : Morph)
         -> let {
             val results = sources |> map f
         in
@@ -745,9 +745,9 @@ structure Umu = struct {
 
         # integers : ['a] -> ('a -> 'b) -> [Int] -> [Int]
         fun integers =
-                (sources : List)
+                (sources : Morph)
                 (f       : Fun)
-                (expects : List)
+                (expects : Morph)
         -> let {
             val results = sources |> map f
         in
@@ -794,7 +794,7 @@ structure Umu = struct {
         }
     } where {
         import Prelude { fun (==) fun (^) }
-        import List    { fun map  fun zip }
+        import Morph   { fun map  fun zip }
 
         fun msg = expect actual ->
             "Expected: " ^ expect.inspect ^ ", but: " ^ actual.inspect
