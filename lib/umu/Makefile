@@ -78,6 +78,7 @@ FILES	= version.rb \
 			concrete-syntax/core/expression/nary/branch/case.rb \
 			concrete-syntax/core/expression/nary/lambda.rb \
 			concrete-syntax/core/expression/nary/let.rb \
+			concrete-syntax/core/expression/nary/interval.rb \
 			concrete-syntax/core/pattern.rb \
 			concrete-syntax/core/pattern/result.rb \
 			concrete-syntax/core/pattern/abstract.rb \
@@ -128,6 +129,7 @@ FILES	= version.rb \
 			abstract-syntax/core/expression/nary/switch.rb \
 			abstract-syntax/core/expression/nary/lambda.rb \
 			abstract-syntax/core/expression/nary/let.rb \
+			abstract-syntax/core/expression/nary/interval.rb \
 			value.rb \
 			value/core.rb \
 			value/core/top.rb \
@@ -154,6 +156,7 @@ FILES	= version.rb \
 			value/core/base/lsm/union/option.rb \
 			value/core/base/lsm/morph.rb \
 			value/core/base/lsm/morph/abstract.rb \
+			value/core/base/lsm/morph/interval.rb \
 			value/core/base/lsm/morph/list.rb \
 			value/core/class.rb \
 			value/core/function.rb \

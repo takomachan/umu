@@ -763,10 +763,10 @@ atom_expr:
 
     result = CSCE.make_list bb.loc, [expr] + exprs, opt_expr
 }
-| '[' expr '..' expr ']' {
-    bb, expr1, _, expr2, _ = val
+| '[' expr opt_com_expr '..' expr ']' {
+    bb, fst_expr, opt_snd_expr, _, lst_expr, _ = val
 
-    result = CSCE.make_interval bb.loc, expr1, expr2
+    result = CSCE.make_interval bb.loc, fst_expr, opt_snd_expr, lst_expr
 }
 | '[' '|' expr com_exprs '|' qualifiers ']' {
     bbr, bba, expr, exprs, _, qual, _ = val
@@ -826,6 +826,13 @@ com_exprs:
 _com_exprs:
   ',' expr              { result = [val[1]] }
 | ',' expr _com_exprs   { result = [val[1]] + val[2] }
+
+
+# Optional comma separated expression
+
+opt_com_expr:
+  /* empty */   { result = nil }
+| ',' expr      { result = val[1] }
 
 
 # Last of collection expression

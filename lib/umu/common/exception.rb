@@ -106,6 +106,7 @@ class SyntaxError           < Abstraction::ExecutionError; end
 
 class NameError             < Abstraction::RuntimeError; end
 class TypeError             < Abstraction::RuntimeError; end
+class ValueError            < Abstraction::RuntimeError; end
 class ArgumentError         < Abstraction::RuntimeError; end
 class ApplicationError      < Abstraction::RuntimeError; end
 class SelectionError        < Abstraction::RuntimeError; end
