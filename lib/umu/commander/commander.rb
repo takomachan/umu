@@ -224,6 +224,8 @@ end
             next_env = Commander.process_tokens(next_tokens, env) do
                 |sym, value|
 
+                next if /^%/ =~ sym.to_s
+
                 case value
                 when VC::Fun
                     STDERR.printf "fun %s = ", sym.to_s
