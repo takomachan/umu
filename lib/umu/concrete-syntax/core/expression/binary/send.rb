@@ -207,6 +207,78 @@ private
     end
 end
 
+
+
+class ApplyMethod < Abstract
+    attr_reader :head_expr, :tail_exprs
+
+
+    def initialize(loc, head_expr, tail_exprs)
+        ASSERT.kind_of head_expr,  CSCE::Abstract
+        ASSERT.kind_of tail_exprs, ::Array
+
+        super(loc)
+
+        @head_expr   = head_expr
+        @tail_exprs  = tail_exprs
+    end
+
+
+    def to_s
+        format(".[%s]",
+            ([self.head_expr.to_s] + self.tail_exprs).map(&:to_s).join(', ')
+        )
+    end
+
+
+    def pretty_print(q)
+        PRT.group_nary(
+            q,
+            [self.head_expr] + self.tail_exprs,
+            bb: '.[',
+            eb: ']',
+            join: ', '
+        )
+    end
+
+
+private
+
+    def __desugar__(env, event)
+        new_env = env.enter event
+
+        method = case self.tail_exprs.size
+                when 0
+                    exprs = [self.head_expr.desugar(new_env)]
+
+                    ASCE.make_method self.loc, :apply, exprs
+                when 1
+                    exprs = [
+                        self.head_expr.desugar(new_env),
+                        self.tail_exprs[0].desugar(new_env)
+                    ]
+
+                    ASCE.make_method self.loc, :'apply-binary', exprs
+                else
+                    second_expr, *tail_exprs = self.tail_exprs
+                    exprs = [
+                        self.head_expr.desugar(new_env),
+
+                        second_expr.desugar(new_env),
+
+                        ASCE.make_list(
+                            tail_exprs[0].loc,
+                            tail_exprs.map { |expr| expr.desugar new_env }
+                        )
+                    ]
+
+                    ASCE.make_method self.loc, :'apply-nary', exprs
+                end
+
+        ASSERT.kind_of method, ASCE::Binary::Send::Message::Method
+    end
+end
+
 end # Umu::ConcreteSyntax::Core::Expression::Binary::Send::Message
 
 
@@ -305,6 +377,17 @@ module_function
         ASSERT.kind_of exprs,   ::Array
 
         Binary::Send::Message::Method.new(loc, sym, exprs.freeze).freeze
+    end
+
+
+    def make_apply_method(loc, expr, exprs = [])
+        ASSERT.kind_of loc,     LOC::Entry
+        ASSERT.kind_of expr,    CSCE::Abstract
+        ASSERT.kind_of exprs,   ::Array
+
+        Binary::Send::Message::ApplyMethod.new(
+            loc, expr, exprs.freeze
+        ).freeze
     end
 
 
