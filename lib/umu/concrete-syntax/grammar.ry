@@ -609,6 +609,11 @@ message:
 
     result = CSCE.make_method kw.loc, opr.sym, exprs
 }
+| '.' '(' named_fld named_flds ')' {
+    kw, _, fld, flds, _ = val
+
+    result = CSCE.make_keyword_method kw.loc, fld, flds
+}
 | '.' '[' expr com_exprs ']' {
     kw, _, expr, exprs, _ = val
 

@@ -279,6 +279,89 @@ private
     end
 end
 
+
+
+class KeywordMethod < Abstract
+    attr_reader :head_field, :tail_fields
+
+
+    def initialize(loc, head_field, tail_fields)
+        ASSERT.tuple_of    head_field,    [
+                            CSCEU::Container::Named::Label, ::Object
+                        ]
+        ASSERT.opt_kind_of head_field[1], CSCE::Abstract
+        ASSERT.kind_of     tail_fields,   ::Array
+        tail_fields.each do |lab, expr|
+            ASSERT.kind_of     lab,  CSCEU::Container::Named::Label
+            ASSERT.opt_kind_of expr, CSCE::Abstract
+        end
+
+        super(loc)
+
+        @head_field   = head_field
+        @tail_fields  = tail_fields
+    end
+
+
+    def to_s
+        format(".(%s)",
+            ([self.head_field] + self.tail_fields).map { |lab, opt_expr|
+                lab.to_s + (opt_expr ? opt_expr.to_s : '')
+            }.join(' ')
+        )
+    end
+
+
+    def pretty_print(q)
+        PRT.group_nary(
+            q,
+            [self.head_field] + self.tail_fields,
+            bb: '.(',
+            eb: ')',
+            join: ' '
+        ) do |lab, opt_expr|
+            q.text lab.to_s
+            q.text opt_expr.to_s if opt_expr
+        end
+    end
+
+
+private
+
+    def __desugar__(env, event)
+        new_env = env.enter event
+
+        sym, exprs = if self.tail_fields.empty?
+                    lab, opt_expr = self.head_field
+                    expr = if opt_expr
+                                opt_expr.desugar new_env
+                            else
+                                CSCE.make_identifier lab.loc, lab.sym
+                            end
+
+                    [lab.sym, [expr]]
+                else
+                    labels, exprs = (
+                        [self.head_field] + self.tail_fields
+                    ).inject([[], []]) { |(ls, es), fld|
+                        lab, opt_expr = fld
+                        expr = if opt_expr
+                                    opt_expr.desugar new_env
+                                else
+                                    CSCE.make_identifier lab.loc, lab.sym
+                                end
+
+                        [ls + [lab], es + [expr]]
+                    }
+                    sym = labels.map { |lab| lab.sym.to_s }.join(':').to_sym
+
+                    [sym, exprs]
+                end
+
+        ASCE.make_method self.loc, sym, exprs
+    end
+end
+
 end # Umu::ConcreteSyntax::Core::Expression::Binary::Send::Message
 
 
@@ -387,6 +470,17 @@ module_function
 
         Binary::Send::Message::ApplyMethod.new(
             loc, expr, exprs.freeze
+        ).freeze
+    end
+
+
+    def make_keyword_method(loc, field, fields = [])
+        ASSERT.kind_of  loc,     LOC::Entry
+        ASSERT.tuple_of field,   [CSCEU::Container::Named::Label, ::Object]
+        ASSERT.kind_of  fields,  ::Array
+
+        Binary::Send::Message::KeywordMethod.new(
+            loc, field, fields.freeze
         ).freeze
     end
 
