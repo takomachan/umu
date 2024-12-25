@@ -72,6 +72,7 @@ module Umu
                     end
                     module Morph
                         class Abstract < LSM::Abstract; end
+                        class Interval < Abstract; end
                         module List
                             class Abstract < Morph::Abstract; end
                         end

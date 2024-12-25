@@ -40,6 +40,10 @@ class Int < Abstract
             :mod,               self],
         [:meth_power,           self,
             :pow,               self],
+        [:meth_to,              VCBLM::Interval,
+            :to,                self],
+        [:meth_to_by,           VCBLM::Interval,
+            :'to-by',           self, self],
 
         # I/O
         [:meth_random,          self,
@@ -67,6 +71,21 @@ class Int < Abstract
     def meth_to_int(_loc, _env, _event)
         self
     end
+
+
+    def meth_to(_loc, _env, _event, stop_value)
+        ASSERT.kind_of stop_value, VCBAN::Int
+
+        VC.make_interval self, stop_value
+    end
+
+
+    def meth_to_by(_loc, _env, _event, stop_value, step_value)
+        ASSERT.kind_of stop_value, VCBAN::Int
+        ASSERT.kind_of step_value, VCBAN::Int
+
+        VC.make_interval self, stop_value, step_value
+    end
 end
 
 end # Umu::Value::Core::Atom::Base::Number
@@ -82,6 +101,11 @@ module_function
         ASSERT.kind_of val, ::Integer
 
         Base::Atom::Number::Int.new(val).freeze
+    end
+
+
+    def make_integer_one
+        Base::Atom::Number::Int.new(1).freeze
     end
 
 end # Umu::Value::Core

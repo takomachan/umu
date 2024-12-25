@@ -133,7 +133,11 @@ end # Umu::Value::Core::Base
 
 module_function
 
-    def make_interval(current_value, stop_value, step_value)
+    def make_interval(
+        current_value,
+        stop_value,
+        step_value = VC.make_integer_one
+    )
         ASSERT.kind_of current_value, VCBAN::Int
         ASSERT.kind_of stop_value,    VCBAN::Int
         ASSERT.kind_of step_value,    VCBAN::Int
