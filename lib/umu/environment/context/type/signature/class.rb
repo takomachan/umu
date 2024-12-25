@@ -198,6 +198,16 @@ class Base < Abstract
         indent_0 = '    ' * nest
         indent_1 = '    ' * (nest + 1)
 
+        printf("%sABSTRACT CLASS?: %s\n",
+                indent_0,
+
+                if self.subclasses.empty?
+                    "No, this is a concrete class"
+                else
+                    "Yes"
+                end
+        )
+
         opt_superclass = self.opt_superclass
         if opt_superclass
             superclass = opt_superclass
@@ -233,17 +243,10 @@ class Base < Abstract
             printf "%sCLASS METHODS:\n", indent_0
 
             self.each_class_method(env).sort.each do |meth_signat|
-                printf("%s&%s.%s : %s\n",
+                printf("%s&%s.%s\n",
                     indent_1,
-
-                    self.symbol,
-
-                    meth_signat.symbol,
-
-                    (
-                        meth_signat.param_class_signats +
-                        [meth_signat.ret_class_signat.symbol]
-                    ).map(&:to_sym).join(' -> ')
+                    self.symbol.to_s,
+                    meth_signat.to_s
                 )
             end
         end
@@ -252,17 +255,10 @@ class Base < Abstract
             printf "%sINSTANCE METHODS:\n", indent_0
 
             self.each_instance_method(env).sort.each do |meth_signat|
-                printf("%s%s#%s : %s\n",
+                printf("%s%s#%s\n",
                     indent_1,
-
-                    self.symbol,
-
-                    meth_signat.symbol,
-
-                    (
-                        meth_signat.param_class_signats +
-                        [meth_signat.ret_class_signat.symbol]
-                    ).map(&:to_sym).join(' -> ')
+                    self.symbol.to_s,
+                    meth_signat.to_s
                 )
             end
         end

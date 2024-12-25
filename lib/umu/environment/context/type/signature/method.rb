@@ -51,6 +51,42 @@ class Method
     def hash
         self.symbol.hash
     end
+
+
+    def to_s
+        if __keyword_method__?
+            format("(%s) -> %s",
+                __extract_keywords__.map { |lab, typ|
+                    format "%s:%s", lab, typ.to_sym.to_s
+                }.join(' '),
+
+                self.ret_class_signat.to_sym.to_s
+            )
+        else
+            format("%s : %s",
+                self.symbol.to_s,
+
+                (
+                    self.param_class_signats + [self.ret_class_signat]
+                ).map(&:to_sym).map(&:to_s).join(' -> ')
+            )
+        end
+    end
+
+
+private
+
+    def __keyword_method__?
+        /:/ =~ self.symbol
+    end
+
+
+    def __extract_keywords__
+        labels = self.symbol.to_s.split(':')
+        ASSERT.assert labels.size == self.param_class_signats.size
+
+        labels.zip self.param_class_signats
+    end
 end
 
 
