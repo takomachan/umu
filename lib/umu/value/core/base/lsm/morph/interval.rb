@@ -40,6 +40,8 @@ class Interval < Morph::Abstract
             :'concat-map',      VC::Fun],
         [ :meth_zip,            VCBLM::List::Abstract,
             :zip,               VCBLM::Abstract],
+        [ :meth_uniq,           VCBLM::List::Abstract,
+            :uniq],
         [ :meth_sort,           VCBLM::List::Abstract,
             :sort],
         [ :meth_sort,           VCBLM::List::Abstract,

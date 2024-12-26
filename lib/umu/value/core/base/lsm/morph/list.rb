@@ -38,6 +38,8 @@ class Abstract < Morph::Abstract
             :'concat-map',      VC::Fun],
         [ :meth_zip,            self,
             :zip,               VCBLM::Abstract],
+        [ :meth_uniq,           self,
+            :uniq],
         [ :meth_sort,           self,
             :sort],
         [ :meth_sort,           self,

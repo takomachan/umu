@@ -339,6 +339,10 @@ structure Umu = struct {
         val unzip = &(Morph.unzip)
 
 
+        # uniq : %['a] -> %['a]
+        val uniq = &(Morph.uniq)
+
+
         # partition : ('a -> Bool) -> %['a] -> (%['a], %['a])
         (#
         fun partition = (f : Fun) (xs : Morph) -> foldr ([], []) {
@@ -663,6 +667,9 @@ structure Umu = struct {
 
         # unzip     : %[('a, 'b)] -> (%['a], %['b])
         val unzip = Morph::unzip
+
+        # uniq : %['a] -> %['a]
+        val uniq = Morph::uniq
 
         # partition : ('a -> Bool) -> %['a] -> (%['a], %['a])
         val partition = Morph::partition

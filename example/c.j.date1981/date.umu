@@ -393,7 +393,7 @@ pp (
 
         if city == "Paris"
      ] |>
-         sort-with { a b -> negate (a$status <=> b$status) }
+         sort-with { a b -> negate <| a$status <=> b$status }
 ) ;;
 # --> [(sno:@S3 status:30), (sno:@S2 status:10)]
 nl () ;;
@@ -408,3 +408,25 @@ nl () ;;
     FROM   SP, S
     WHERE  SP.S# = S.S#
 #)
+
+print "#### 7.2.5 ####" ;;
+pp (
+     [|pno: city:|
+        val (sno: sp-sno pno:)  <- SP::rows
+        val (sno: s-sno  city:) <- S::rows
+
+        if sp-sno == s-sno
+     ] |>
+         sort |> uniq
+) ;;
+# --> [
+#   (pno:@P1 city:"London"),
+#   (pno:@P1 city:"Paris"),
+#   (pno:@P2 city:"London"),
+#   (pno:@P2 city:"Paris"),
+#   (pno:@P3 city:"London"),
+#   (pno:@P4 city:"London"),
+#   (pno:@P5 city:"London"),
+#   (pno:@P6 city:"London")
+# ]
+nl () ;;

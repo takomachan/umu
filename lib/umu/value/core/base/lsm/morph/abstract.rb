@@ -62,6 +62,8 @@ class Abstract < LSM::Abstract
             :zip,               VCBLM::Abstract],
         [ :meth_unzip,          VCBLP::Tuple,
             :unzip],
+        [ :meth_uniq,           self,
+            :uniq],
         [ :meth_partition,      VCBLP::Tuple,
             :partition,         VC::Fun],
         [ :meth_sort,           self,
@@ -370,6 +372,35 @@ class Abstract < LSM::Abstract
         }
         
         VC.make_tuple [self.class.make(xs), self.class.make(ys)]
+    end
+
+
+    def meth_uniq(loc, env, event)
+        if self.meth_empty?(loc, env, event).true?
+            self
+        else
+            pair = self.des!
+            x  = pair.select_by_number 1, loc, env
+            xs = pair.select_by_number 2, loc, env
+
+            if xs.meth_empty?(loc, env, event).true?
+                self
+            else
+                _, zs = xs.inject([x, [x]]) { |(before, ys), x1|
+                    [
+                        x1,
+
+                        if x1.meth_equal(loc, env, event, before).true? 
+                            ys
+                        else
+                            ys + [x1]
+                        end
+                    ]
+                }
+
+                self.class.make zs
+            end
+        end
     end
 
 
