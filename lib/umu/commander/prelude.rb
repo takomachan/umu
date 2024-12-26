@@ -20,10 +20,10 @@ structure Umu = struct {
     ######## Bool ########
 
     # TRUE : Bool
-    val TRUE = &Bool.make-true
+    val TRUE = &Bool.true
 
     # FALSE : Bool
-    val FALSE = &Bool.make-false
+    val FALSE = &Bool.false
 
 
 

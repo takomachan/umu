@@ -16,9 +16,9 @@ module Atom
 class Bool < Abstract
     CLASS_METHOD_INFOS = [
         [:meth_make_true,       self,
-            :'make-true'],
+            :'true'],
         [:meth_make_false,      self,
-            :'make-false']
+            :'false']
     ]
 
 
