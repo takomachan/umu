@@ -363,6 +363,10 @@ structure Umu = struct {
         }
         #)
         val sort = &(Morph.sort)
+
+
+        # sort-with : ('a -> Int) -> %['a] -> %['a]
+        fun sort-with = (f : Fun) (xs : Morph) -> xs.sort-with f
     }
 
 
@@ -657,6 +661,9 @@ structure Umu = struct {
 
         # sort      : %['a] -> %['a]
         val sort = Morph::sort
+
+        # sort-with : ('a -> Int) -> %['a] -> %['a]
+        val sort-with = Morph::sort-with
 
 
         #### High order Function ####

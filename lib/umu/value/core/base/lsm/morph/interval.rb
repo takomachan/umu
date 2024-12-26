@@ -41,7 +41,9 @@ class Interval < Morph::Abstract
         [ :meth_zip,            VCBLM::List::Abstract,
             :zip,               VCBLM::Abstract],
         [ :meth_sort,           VCBLM::List::Abstract,
-            :sort]
+            :sort],
+        [ :meth_sort,           VCBLM::List::Abstract,
+            :'sort-with',       VC::Fun],
     ]
 
 

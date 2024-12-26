@@ -39,7 +39,9 @@ class Abstract < Morph::Abstract
         [ :meth_zip,            self,
             :zip,               VCBLM::Abstract],
         [ :meth_sort,           self,
-            :sort]
+            :sort],
+        [ :meth_sort,           self,
+            :'sort-with',       VC::Fun],
     ]
 
 

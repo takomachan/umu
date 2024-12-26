@@ -65,7 +65,9 @@ class Abstract < LSM::Abstract
         [ :meth_partition,      VCBLP::Tuple,
             :partition,         VC::Fun],
         [ :meth_sort,           self,
-            :sort]
+            :sort],
+        [ :meth_sort,           self,
+            :'sort-with',       VC::Fun],
     ]
 
 
@@ -371,16 +373,46 @@ class Abstract < LSM::Abstract
     end
 
 
-    def meth_sort(loc, env, event)
-        xs = self.sort { |a, b|
-            if a.meth_equal(loc, env, event, b).true?
-                0
-            elsif a.meth_less_than(loc, env, event, b).true?
-                -1
-            else
-                1
-            end
-        }
+    def meth_sort(loc, env, event, opt_func = nil)
+        ASSERT.opt_kind_of opt_func, VC::Fun
+
+        xs = if opt_func
+                    func = opt_func
+                    new_env = env.enter event
+
+                    xs = self.sort { |a, b|
+                        ASSERT.kind_of a, VC::Top
+                        ASSERT.kind_of b, VC::Top
+
+                        value = func.apply a, [b], loc, new_env
+                        ASSERT.kind_of value, VC::Top
+
+                        unless value.kind_of? VCBAN::Int
+                            raise X::TypeError.new(
+                                loc,
+                                env,
+                                "sort-with: expected a Int, but %s : %s",
+                                value.to_s,
+                                value.type_sym.to_s
+                            )
+                        end
+
+                        value.val
+                    }
+                else
+                    xs = self.sort { |a, b|
+                        ASSERT.kind_of a, VC::Top
+                        ASSERT.kind_of b, VC::Top
+
+                        if a.meth_less_than(loc, env, event, b).true?
+                            -1
+                        elsif a.meth_equal(loc, env, event, b).true?
+                            0
+                        else
+                            1
+                        end
+                    }
+                end
 
         self.class.make xs
     end
