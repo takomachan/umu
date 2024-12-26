@@ -44,6 +44,8 @@ class Abstract < LSM::Abstract
             :foldr,             VC::Top, VC::Fun],
         [ :meth_foldl,          VC::Top,
             :foldl,             VC::Top, VC::Fun],
+        [ :meth_for_each,       VCBA::Unit,
+            :'for-each',        VC::Fun],
         [ :meth_map,            self,
             :map,               VC::Fun],
         [ :meth_select,         self,
@@ -170,6 +172,19 @@ class Abstract < LSM::Abstract
         }
 
         ASSERT.kind_of result_value, VC::Top
+    end
+
+
+    def meth_for_each(loc, env, event, func)
+        ASSERT.kind_of func, VC::Fun
+
+        new_env = env.enter event
+
+        self.each do |x|
+             func.apply x, [], loc, new_env
+        end
+
+        VC.make_unit
     end
 
 

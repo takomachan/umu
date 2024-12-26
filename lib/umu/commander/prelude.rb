@@ -290,6 +290,10 @@ structure Umu = struct {
         val min = foldl1 { x y -> if (x.< y) x else y }
 
 
+        # for-each : ('a -> 'b) -> ['a] -> ()
+        fun for-each = (f : Fun) (xs : Morph) -> xs.for-each f
+
+
         # map : ('a -> 'b) -> ['a] -> ['b]
         # fun map = f -> foldr [] { x xs -> [f x | xs] }
         fun map = (f : Fun) (xs : Morph) -> xs.map f
