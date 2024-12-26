@@ -300,13 +300,8 @@ structure Umu = struct {
         fun select = (f : Fun) (xs : Morph) -> xs.select f
 
 
-        # append : ['a] -> ['a] -> ['a]
-        # fun append = (xs : Morph) (ys : Morph) -> foldr ys cons xs
-        fun append = (xs : Morph) (ys : Morph) -> xs.append ys
-
-
         # concat : [['a]] -> ['a]
-        # val concat = foldl [] { xs xss -> append xss xs }
+        # val concat = foldl [] { xs xss -> xss ++ xs }
         val concat = &(Morph.concat)
 
 
@@ -587,7 +582,7 @@ structure Umu = struct {
         val (|) = Morph::cons
 
         # (++)      : ['a] -> ['a] -> ['a]
-        val (++) = Morph::append
+        fun (++) = (xs : Morph) (ys : Morph) -> xs.++ ys
 
         # cons : 'a -> ['a] -> ['a]
         val cons = Morph::cons
