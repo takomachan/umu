@@ -18,7 +18,11 @@ module Morph
 class Interval < Morph::Abstract
     CLASS_METHOD_INFOS = [
         [:meth_make_empty,      self,
-            :'empty']
+            :'empty'],
+        [:meth_make,            self,
+            :'make-from:to',    VCBAN::Int, VCBAN::Int],
+        [:meth_make,            self,
+            :'make-from:to:by', VCBAN::Int, VCBAN::Int, VCBAN::Int]
     ]
 
     INSTANCE_METHOD_INFOS = [
@@ -54,6 +58,20 @@ class Interval < Morph::Abstract
             env,
             "Interval object isn't constructible"
         )
+    end
+
+
+    def self.meth_make(
+        _loc, _env, _event,
+        start_value,
+        stop_value,
+        step_value = VC.make_integer_one
+    )
+        ASSERT.kind_of start_value, VCBAN::Int
+        ASSERT.kind_of stop_value,  VCBAN::Int
+        ASSERT.kind_of step_value,  VCBAN::Int
+
+        VC.make_interval start_value, stop_value, step_value
     end
 
 
@@ -134,16 +152,16 @@ end # Umu::Value::Core::Base
 module_function
 
     def make_interval(
-        current_value,
+        start_value,
         stop_value,
         step_value = VC.make_integer_one
     )
-        ASSERT.kind_of current_value, VCBAN::Int
-        ASSERT.kind_of stop_value,    VCBAN::Int
-        ASSERT.kind_of step_value,    VCBAN::Int
+        ASSERT.kind_of start_value, VCBAN::Int
+        ASSERT.kind_of stop_value,  VCBAN::Int
+        ASSERT.kind_of step_value,  VCBAN::Int
 
         Base::LSM::Morph::Interval.new(
-            current_value, stop_value, step_value
+            start_value, stop_value, step_value
         ).freeze
     end
 
