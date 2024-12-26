@@ -40,6 +40,8 @@ class Abstract < LSM::Abstract
             :des!],
         [ :meth_des,            VCBLU::Option::Abstract,
             :des],
+        [ :meth_to_list,        VCBLM::List::Abstract,
+            :'to-list'],
         [ :meth_foldr,          VC::Top,
             :foldr,             VC::Top, VC::Fun],
         [ :meth_foldl,          VC::Top,
@@ -144,6 +146,13 @@ class Abstract < LSM::Abstract
 
     def meth_contents(_loc, _env, _event)
         self.contents
+    end
+
+
+    def meth_to_list(loc, env, event)
+        self.reverse_each.inject(VC.make_nil) { |xs, x|
+             xs.meth_cons loc, env, event, x
+        }
     end
 
 

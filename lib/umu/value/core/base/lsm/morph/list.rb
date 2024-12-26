@@ -81,6 +81,11 @@ class Abstract < Morph::Abstract
             )
         )
     end
+
+
+    def meth_to_list(loc, env, event)
+        self
+    end
 end
 
 
