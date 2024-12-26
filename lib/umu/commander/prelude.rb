@@ -423,6 +423,14 @@ structure Umu = struct {
         # (>=)      : 'a -> 'a -> Bool
         fun (>=) = x y -> x.< y.not
 
+        # (<=>)     : 'a -> 'a -> Int
+        fun (<=>) = x y -> if (x.< y)
+                                -1
+                            elsif (x.== y)
+                                0
+                            else
+                                1
+
 
         #### Bool ####
 

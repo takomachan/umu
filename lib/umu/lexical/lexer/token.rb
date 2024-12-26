@@ -84,7 +84,7 @@ RESERVED_SYMBOLS = [
 
     # Redefinable symbols
     '+',    '-',    '*',    '/',    '^',
-    '==',   '<>',   '<',    '>',    '<=',   '>=',
+    '==',   '<>',   '<',    '>',    '<=',   '>=',   '<=>',
     '++',   '<<',   '>>',   '<|',   '|>',
 
     # Not used, but reserved for future

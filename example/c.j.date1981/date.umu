@@ -386,6 +386,18 @@ nl () ;;
     ORDER  BY STATUS DESC
 #)
 
+print "#### 7.2.4 ####" ;;
+pp (
+     [|sno: status:|
+        val (sno: status: city:) <- S::rows
+
+        if city == "Paris"
+     ] |>
+         sort-with { a b -> negate (a$status <=> b$status) }
+) ;;
+# --> [(sno:@S3 status:30), (sno:@S2 status:10)]
+nl () ;;
+
 
 # 7.2.5 Retrieval with ordring: Get supplier numbers and status for 
 #       suppliers in Paris, in descending order of status.
