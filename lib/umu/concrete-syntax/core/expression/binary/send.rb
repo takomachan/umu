@@ -331,32 +331,19 @@ private
     def __desugar__(env, event)
         new_env = env.enter event
 
-        sym, exprs = if self.tail_fields.empty?
-                    lab, opt_expr = self.head_field
-                    expr = if opt_expr
-                                opt_expr.desugar new_env
-                            else
-                                CSCE.make_identifier lab.loc, lab.sym
-                            end
+        labels, exprs = (
+            [self.head_field] + self.tail_fields
+        ).inject([[], []]) { |(ls, es), fld|
+            lab, opt_expr = fld
+            expr = if opt_expr
+                        opt_expr.desugar new_env
+                    else
+                        ASCE.make_identifier lab.loc, lab.sym
+                    end
 
-                    [lab.sym, [expr]]
-                else
-                    labels, exprs = (
-                        [self.head_field] + self.tail_fields
-                    ).inject([[], []]) { |(ls, es), fld|
-                        lab, opt_expr = fld
-                        expr = if opt_expr
-                                    opt_expr.desugar new_env
-                                else
-                                    CSCE.make_identifier lab.loc, lab.sym
-                                end
-
-                        [ls + [lab], es + [expr]]
-                    }
-                    sym = labels.map { |lab| lab.sym.to_s }.join(':').to_sym
-
-                    [sym, exprs]
-                end
+            [ls + [lab], es + [expr]]
+        }
+        sym = labels.map { |lab| lab.sym.to_s + ':' }.join.to_sym
 
         ASCE.make_method self.loc, sym, exprs
     end

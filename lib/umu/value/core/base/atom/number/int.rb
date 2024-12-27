@@ -42,10 +42,12 @@ class Int < Abstract
             :pow,               self],
         [:meth_to,              VCBLM::Interval,
             :to,                self],
+        [:meth_to,              VCBLM::Interval,
+            :'to:',             self],
         [:meth_to_by,           VCBLM::Interval,
             :'to-by',           self, self],
         [:meth_to_by,           VCBLM::Interval,
-            :'to:by',           self, self],
+            :'to:by:',          self, self],
 
         # I/O
         [:meth_random,          self,

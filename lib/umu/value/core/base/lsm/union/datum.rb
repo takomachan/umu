@@ -20,7 +20,7 @@ class Datum < Abstract
         [:meth_make,    self,
             :'make',    VCBA::Symbol, VC::Top],
         [:meth_make,    self,
-            :'make-tag:contents',
+            :'make-tag:contents:',
                         VCBA::Symbol, VC::Top]
     ]
 
