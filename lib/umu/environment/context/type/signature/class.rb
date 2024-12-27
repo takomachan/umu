@@ -68,6 +68,11 @@ class Base < Abstract
     end
 
 
+    def abstract_class?
+        not self.subclasses.empty?
+    end
+
+
     def num_of_class_methods
         self.class_method_info_of_symbol.size
     end
@@ -177,91 +182,6 @@ class Base < Abstract
                         end
 
         ASSERT.kind_of descendants, ECTS::SetOfClass
-    end
-
-
-    def print_class_tree(nest = 0)
-        ASSERT.kind_of nest, ::Integer
-
-        printf "%s%s\n", '    ' * nest, self.to_sym
-
-        self.subclasses.sort.each do |subclass_signat|
-            subclass_signat.print_class_tree nest + 1
-        end
-    end
-
-
-    def print_class(env, nest = 0)
-        ASSERT.kind_of env,     E::Entry
-        ASSERT.kind_of nest,    ::Integer
-
-        indent_0 = '    ' * nest
-        indent_1 = '    ' * (nest + 1)
-
-        printf("%sABSTRACT CLASS?: %s\n",
-                indent_0,
-
-                if self.subclasses.empty?
-                    "No, this is a concrete class"
-                else
-                    "Yes"
-                end
-        )
-
-        opt_superclass = self.opt_superclass
-        if opt_superclass
-            superclass = opt_superclass
-
-            printf "%sSUPERCLASS: %s\n", indent_0, superclass.to_sym
-        end
-
-        subclasses = self.subclasses
-        unless subclasses.empty?
-            printf("%sSUBCLASSES: %s\n",
-                indent_0,
-                subclasses.map(&:to_sym).join(', ')
-            )
-        end
-
-        ancestors = self.ancestors
-        unless ancestors.empty?
-            printf("%sANCESTORS: %s\n",
-                indent_0,
-                ancestors.map(&:to_sym).join(', ')
-            )
-        end
-
-        descendants = self.descendants
-        unless descendants.empty?
-            printf("%sDESCENDANTS: %s\n",
-                indent_0,
-                descendants.map(&:to_sym).join(', ')
-            )
-        end
-
-        unless self.num_of_class_methods == 0
-            printf "%sCLASS METHODS:\n", indent_0
-
-            self.each_class_method(env).sort.each do |meth_signat|
-                printf("%s&%s.%s\n",
-                    indent_1,
-                    self.symbol.to_s,
-                    meth_signat.to_s
-                )
-            end
-        end
-
-        unless self.num_of_instance_methods == 0
-            printf "%sINSTANCE METHODS:\n", indent_0
-
-            self.each_instance_method(env).sort.each do |meth_signat|
-                printf("%s%s#%s\n",
-                    indent_1,
-                    self.symbol.to_s,
-                    meth_signat.to_s
-                )
-            end
-        end
     end
 
 
