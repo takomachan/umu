@@ -50,11 +50,11 @@ class Real < Abstract
             :pow,               self],
 
         # Math
-        [:meth_nan?,            VCBA::Bool,
+        [:meth_is_nan,          VCBA::Bool,
             :nan?],
-        [:meth_infinite?,       VCBA::Bool,
+        [:meth_is_infinite,     VCBA::Bool,
             :infinite?],
-        [:meth_finite?,         VCBA::Bool,
+        [:meth_is_finite,       VCBA::Bool,
             :finite?],
         [:meth_sin,             self,
             :sin],
@@ -149,17 +149,17 @@ class Real < Abstract
     end
 
 
-    def meth_nan?(_loc, _env, _event)
+    def meth_is_nan(_loc, _env, _event)
         VC.make_bool self.val.nan?
     end
 
 
-    def meth_infinite?(_loc, _env, _event)
+    def meth_is_infinite(_loc, _env, _event)
         VC.make_bool self.val.infinite?.kind_of?(::Integer)
     end
 
 
-    def meth_finite?(_loc, _env, _event)
+    def meth_is_finite(_loc, _env, _event)
         VC.make_bool self.val.finite?
     end
 

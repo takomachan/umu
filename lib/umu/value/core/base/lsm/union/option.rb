@@ -19,20 +19,20 @@ module Option
 
 class Abstract < Union::Abstract
     INSTANCE_METHOD_INFOS = [
-        [:meth_none?,       VCBA::Bool,
+        [:meth_is_none,     VCBA::Bool,
             :none?],
-        [:meth_some?,       VCBA::Bool,
+        [:meth_is_some,     VCBA::Bool,
             :some?]
     ]
 
 
 
-    def meth_none?(_loc, _env, event)
+    def meth_is_none(_loc, _env, event)
         VC.make_false
     end
 
 
-    def meth_some?(_loc, _env, event)
+    def meth_is_some(_loc, _env, event)
         VC.make_false
     end
 end

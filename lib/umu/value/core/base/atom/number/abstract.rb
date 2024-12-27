@@ -18,11 +18,11 @@ module Number
 class Abstract < Atom::Abstract
     INSTANCE_METHOD_INFOS = [
         # Number
-        [:meth_positive?,   VCBA::Bool,
+        [:meth_is_positive, VCBA::Bool,
             :positive?],
-        [:meth_negative?,   VCBA::Bool,
+        [:meth_is_negative, VCBA::Bool,
             :negative?],
-        [:meth_zero?,       VCBA::Bool,
+        [:meth_is_zero,     VCBA::Bool,
             :zero?],
         [:meth_negate,      self,
             :negate],
@@ -69,17 +69,17 @@ class Abstract < Atom::Abstract
     end
 
 
-    def meth_positive?(_loc, _env, _event)
+    def meth_is_positive(_loc, _env, _event)
         VC.make_bool(self.val > 0)
     end
 
 
-    def meth_negative?(_loc, _env, _event)
+    def meth_is_negative(_loc, _env, _event)
         VC.make_bool(self.val < 0)
     end
 
 
-    def meth_zero?(_loc, _env, _event)
+    def meth_is_zero(_loc, _env, _event)
         VC.make_bool self.val.zero?
     end
 

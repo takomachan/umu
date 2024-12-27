@@ -18,9 +18,9 @@ module Number
 class Int < Abstract
     INSTANCE_METHOD_INFOS = [
         # Number
-        [:meth_odd?,            VCBA::Bool,
+        [:meth_is_odd,          VCBA::Bool,
             :odd?],
-        [:meth_even?,           VCBA::Bool,
+        [:meth_is_even,         VCBA::Bool,
             :even?],
         [:meth_absolute,        self,
             :abs],
@@ -60,12 +60,12 @@ class Int < Abstract
     end
 
 
-    def meth_odd?(_loc, _env, _event)
+    def meth_is_odd(_loc, _env, _event)
         VC.make_bool self.val.odd?
     end
 
 
-    def meth_even?(_loc, _env, _event)
+    def meth_is_even(_loc, _env, _event)
         VC.make_bool self.val.even?
     end
 
