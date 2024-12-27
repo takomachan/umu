@@ -582,7 +582,7 @@ structure Umu = struct {
         # See SICP(Wizard Book), 2.4.2 Tagged data
 
         # Datum : Symbol -> 'a -> Datum 'a
-        fun Datum = (t : Symbol) x -> &Datum.(make-tag:t contents:x)
+        fun Datum = (t : Symbol) x -> &Datum.(tag:t contents:x)
 
         # tag-of : Datum 'a -> Symbol
         val tag-of = &(Datum.tag)
