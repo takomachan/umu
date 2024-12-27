@@ -21,7 +21,7 @@ class Abstract < LSM::Abstract
     * .make(xs : ::Array) -> Morph::Abstract
     * .meth_make_empty(loc, env, event) -> Morph::Abstract
     * #meth_cons(loc, env, event, value : VC::Top) -> Morph::Abstract
-    * #meth_empty?(loc, env, event) -> VCBA::Bool
+    * #meth_is_empty(loc, env, event) -> VCBA::Bool
     * #des! -> [VC::Top, Morph::Abstract]
     * #contents -> VC::Top
 =end
@@ -34,7 +34,7 @@ class Abstract < LSM::Abstract
     INSTANCE_METHOD_INFOS = [
         [ :meth_cons,           self,
             :cons,              VC::Top],
-        [ :meth_empty?,         VCBA::Bool,
+        [ :meth_is_empty,       VCBA::Bool,
             :empty?],
         [ :meth_des!,           VCBLP::Tuple,
             :des!],
@@ -111,7 +111,7 @@ class Abstract < LSM::Abstract
     end
 
 
-    def meth_empty?(_loc, _env, _event)
+    def meth_is_empty(_loc, _env, _event)
         raise X::InternalSubclassResponsibility
     end
 
@@ -135,7 +135,7 @@ class Abstract < LSM::Abstract
 
 
     def meth_des(loc, env, event)
-        if self.meth_empty?(loc, env, event).true?
+        if self.meth_is_empty(loc, env, event).true?
             VC.make_none
         else
             VC.make_some self.des!
@@ -376,14 +376,14 @@ class Abstract < LSM::Abstract
 
 
     def meth_uniq(loc, env, event)
-        if self.meth_empty?(loc, env, event).true?
+        if self.meth_is_empty(loc, env, event).true?
             self
         else
             pair = self.des!
             x  = pair.select_by_number 1, loc, env
             xs = pair.select_by_number 2, loc, env
 
-            if xs.meth_empty?(loc, env, event).true?
+            if xs.meth_is_empty(loc, env, event).true?
                 self
             else
                 _, zs = xs.inject([x, [x]]) { |(before, ys), x1|

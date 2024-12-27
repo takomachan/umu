@@ -101,7 +101,7 @@ class Nil < Abstract
     ]
 
 
-    def meth_empty?(_loc, _env, _event)
+    def meth_is_empty(_loc, _env, _event)
         VC.make_true
     end
 
@@ -141,7 +141,7 @@ class Cons < Abstract
     end
 
 
-    def meth_empty?(_loc, _env, _event)
+    def meth_is_empty(_loc, _env, _event)
         VC.make_false
     end
 
