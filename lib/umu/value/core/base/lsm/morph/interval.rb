@@ -15,7 +15,7 @@ module LSM
 
 module Morph
 
-class Interval < Morph::Abstract
+class Interval < Abstract
     CLASS_METHOD_INFOS = [
         [:meth_make_empty,      self,
             :'empty'],
