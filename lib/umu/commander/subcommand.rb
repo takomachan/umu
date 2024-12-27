@@ -81,9 +81,9 @@ module_function
                 indent_0,
 
                 if class_signat.abstract_class?
-                    "No, this is a concrete class"
-                else
                     "Yes"
+                else
+                    "No, this is a concrete class"
                 end
         )
 

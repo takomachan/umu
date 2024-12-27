@@ -58,6 +58,10 @@ class Abstract < LSM::Abstract
             :concat],
         [ :meth_concat_map,     self,
             :'concat-map',      VC::Fun],
+        [ :meth_join,           VCBA::String,
+            :join],
+        [ :meth_join,           VCBA::String,
+            :'join:',           VCBA::String],
         [ :meth_zip,            self,
             :zip,               VCBLM::Abstract],
         [ :meth_unzip,          VCBLP::Tuple,
@@ -291,6 +295,37 @@ class Abstract < LSM::Abstract
         end
 
         self.class.make mut_ys
+    end
+
+
+    def meth_join(loc, env, event, sep_value = nil)
+        ASSERT.opt_kind_of sep_value, VCBA::String
+
+        str, _ = self.inject(["", true]) { |(s, is_first), x|
+                    unless x.kind_of? VCBA::String
+                        raise X::TypeError.new(
+                            loc,
+                            env,
+                            "join: expected a String, but %s : %s",
+                            x.to_s,
+                            x.type_sym.to_s
+                        )
+                    end
+
+                    [
+                        s + (
+                            if sep_value && ! is_first
+                                sep_value.val
+                            else
+                                ""
+                            end
+                        ) + x.val,
+
+                        false
+                    ]
+                }
+
+        VC.make_string str
     end
 
 

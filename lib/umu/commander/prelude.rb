@@ -382,7 +382,8 @@ structure Umu = struct {
         val panic = &(String.panic)
 
 
-        # join : String -> [String] -> String
+        # join : String -> %[String] -> String
+        (#
         fun join = j xs -> case xs {
           []      -> ""
         | [x|xs'] -> case xs' {
@@ -390,10 +391,12 @@ structure Umu = struct {
               else -> x.^ (xs'.foldl "" { x' s -> s.^ j.^ x' })
             }
         }
+        #)
+        fun join = (sep : String) (xs : Morph) -> xs.(join:sep)
 
 
         # concat : [String] -> String
-        val concat = join ""
+        fun concat = xs : Morph -> xs.join
     }
 
 
