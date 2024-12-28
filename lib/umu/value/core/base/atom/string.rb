@@ -19,7 +19,7 @@ class String < Abstract
             :'<',           self],
 
         [:meth_panic,       VCBA::Unit,
-            :panic],
+            :'panic!'],
         [:meth_append,      self,
             :'^',           self]
     ]

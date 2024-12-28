@@ -258,7 +258,7 @@ fun dispa-cons = x y -> dispatch where {
     fun dispatch = m -> case m {
       0     -> x
     | 1     -> y
-      else  -> panic ("Argument not 0 or 1 -- CONS: " ^ (to-s m))
+      else  -> panic! ("Argument not 0 or 1 -- CONS: " ^ (to-s m))
     }
 }
 
@@ -954,7 +954,7 @@ fun rec deriv = exp var -> cond exp {
                         (deriv (multiplier exp) var)
                         (multiplicand exp)
                     )
-  else      -> panic ("unknown expression type -- DERIV: " ^ inspect exp)
+  else      -> panic! ("unknown expression type -- DERIV: " ^ inspect exp)
 }
 
 ;; deriv (@"+", @x, 3) @x
@@ -1003,7 +1003,7 @@ fun rec deriv' = exp var -> cond exp {
                         (deriv' (multiplier exp) var)
                         (multiplicand exp)
                     )
-  else      -> panic ("unknown expression type -- DERIV: " ^ inspect exp)
+  else      -> panic! ("unknown expression type -- DERIV: " ^ inspect exp)
 }
 
 ;; deriv' (@"+", @x, 3) @x
@@ -1077,7 +1077,7 @@ fun rec intersection-set' = set1 set2 -> (
           (== x2) -> [x1 | intersection-set' xs1  xs2]
         | (<  x2) ->       intersection-set' xs1  set2
         | (>  x2) ->       intersection-set' set1 xs2
-          else    -> panic "ABORT"
+          else    -> panic! "ABORT"
         }
     }
 )
@@ -1107,7 +1107,7 @@ fun rec element-of-set? = e set -> (
           (== x)    -> TRUE
         | (<  x)    -> element-of-set? e (left-branch set)
         | (>  x)    -> element-of-set? e (right-branch set)
-          else      -> panic "ABORT"
+          else      -> panic! "ABORT"
         }
     }
 )
@@ -1128,7 +1128,7 @@ fun rec adjoin-set = e set -> (
                         x
                         (left-branch set)
                         (adjoin-set e (right-branch set))
-          else      -> panic "ABORT"
+          else      -> panic! "ABORT"
         }
     }
 )
@@ -1249,7 +1249,7 @@ fun decode = bits tree -> (
     fun choose-branch = bit branch -> case bit {
       0     -> left-branch branch
     | 1     -> right-branch branch
-      else  -> panic ("bad bit -- CHOOSE-BRANCH: " ^ inspect bit)
+      else  -> panic! ("bad bit -- CHOOSE-BRANCH: " ^ inspect bit)
     }
 
     fun rec decode1 = bits current-branch -> case bits {
@@ -1489,28 +1489,28 @@ fun make-from-mag-ang-polar = r a -> (
 fun real-part = z -> cond z {
   rectanglar?   -> real-part-rectanglar (contents z)
 | polar?        -> real-part-polar      (contents z)
-  else          -> panic ("Unknown type -- REAL-PART: " ^ inspect z)
+  else          -> panic! ("Unknown type -- REAL-PART: " ^ inspect z)
 }
 
 
 fun imag-part = z -> cond z {
   rectanglar?   -> imag-part-rectanglar (contents z)
 | polar?        -> imag-part-polar      (contents z)
-  else          -> panic ("Unknown type -- IMAG-PART: " ^ inspect z)
+  else          -> panic! ("Unknown type -- IMAG-PART: " ^ inspect z)
 }
 
 
 fun magnitude = z -> cond z {
   rectanglar?   -> magnitude-rectanglar (contents z)
 | polar?        -> magnitude-polar      (contents z)
-  else          -> panic ("Unknown type -- MAGNITUDE: " ^ inspect z)
+  else          -> panic! ("Unknown type -- MAGNITUDE: " ^ inspect z)
 }
 
 
 fun angle = z -> cond z {
   rectanglar?   -> angle-rectanglar (contents z)
 | polar?        -> angle-polar      (contents z)
-  else          -> panic ("Unknown type -- ANGLE: " ^ inspect z)
+  else          -> panic! ("Unknown type -- ANGLE: " ^ inspect z)
 }
 
 

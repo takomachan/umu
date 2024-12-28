@@ -378,8 +378,8 @@ structure Umu = struct {
     ######## String ########
 
     structure String = struct {
-        # panic : String -> ()
-        val panic = &(String.panic)
+        # panic! : String -> ()
+        val panic! = &(String.panic!)
 
 
         # join : String -> %[String] -> String
@@ -519,8 +519,8 @@ structure Umu = struct {
 
         #### String ####
 
-        # panic     : String -> ()
-        val panic = String::panic
+        # panic!    : String -> ()
+        val panic! = String::panic!
 
         # (^)       : String -> String -> String
         fun (^) = (x : String) (y : String) -> x.^ y

@@ -33,3 +33,10 @@ task :run => FILES do
         puts
     end
 end
+
+
+task :files do
+    FILES.each do |file|
+        puts file
+    end
+end

@@ -65,7 +65,7 @@ structure ERROR = struct {
     fun type'       = msg x -> error ("Type Error",         msg, x)
 } where {
     fun error = (category, msg, x) ->
-        panic ("[" ^ category ^ "] " ^ msg ^ inspect x)
+        panic! ("[" ^ category ^ "] " ^ msg ^ inspect x)
 }
 
 
