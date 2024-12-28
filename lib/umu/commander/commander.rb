@@ -45,8 +45,17 @@ end
                         else
                             Commander.process_source(
                                 Prelude::SOURCE_TEXT,
+
                                 Prelude::FILE_NAME,
-                                E.setup(E::INITIAL_PREFERENCE),
+
+                                E.setup(
+                                    E::INITIAL_PREFERENCE
+                                ).update_source(
+                                    Prelude::FILE_NAME,
+                                    Prelude::SOURCE_TEXT,
+                                    Prelude::START_LINE_NUM
+                                ),
+
                                 Prelude::START_LINE_NUM
                             ).update_preference pref
                         end

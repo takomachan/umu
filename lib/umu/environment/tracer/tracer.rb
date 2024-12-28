@@ -34,7 +34,7 @@ class Event
                     self.loc.file_name,
                     self.loc.line_num + 1,
                     label,
-                    klass.to_s.split(/::/)[-1],
+                    Tracer.class_to_string(klass),
                     self.msg
         )
     end

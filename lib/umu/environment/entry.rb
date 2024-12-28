@@ -190,11 +190,12 @@ class Entry < Abstraction::Record
     end
 
 
-    def update_source(file_name, text)
-        ASSERT.kind_of file_name,   ::String
-        ASSERT.kind_of text,        ::String
+    def update_source(file_name, text, start_line_num = 0)
+        ASSERT.kind_of file_name,       ::String
+        ASSERT.kind_of text,            ::String
+        ASSERT.kind_of start_line_num,  ::Integer
 
-        source, _ = text.each_line.inject([{}, 0]) {
+        source, _ = text.each_line.inject([{}, start_line_num]) {
             |(sources, line_num), line|
 
             [
@@ -210,10 +211,15 @@ class Entry < Abstraction::Record
 
 
     def print_backtrace
-        self.trace_stack.inject(LOC.make_initial_location) do
+        self.trace_stack.reverse_each.inject(LOC.make_initial_location) do
             |last_loc, event|
 
             current_loc = event.loc
+=begin
+            STDERR.printf("* current_loc: %s, last_loc: %s\n",
+                            current_loc.to_s, last_loc.to_s
+            )
+=end
             if current_loc != last_loc
                 opt_line = __lookup_line_at__ current_loc
                 if opt_line
