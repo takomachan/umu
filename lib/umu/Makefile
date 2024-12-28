@@ -133,10 +133,10 @@ FILES	= version.rb \
 			value.rb \
 			value/core.rb \
 			value/core/top.rb \
+			value/core/unit.rb \
 			value/core/base.rb \
 			value/core/base/atom.rb \
 			value/core/base/atom/abstract.rb \
-			value/core/base/atom/unit.rb \
 			value/core/base/atom/bool.rb \
 			value/core/base/atom/number.rb \
 			value/core/base/atom/number/abstract.rb \

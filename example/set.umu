@@ -26,13 +26,13 @@ structure SetBasedOnList = struct {
 
     # _member? : 'a -> ['a] -> BOOL
     fun rec _member? = x ys -> cond ys {
-    | empty? -> FALSE
-    else     -> if (x == y)
-                    TRUE
-                else
-                    _member? x ys'
+    empty? -> FALSE
+    else   -> if (x == y)
+                  TRUE
+              else
+                  _member? x ys'
 
-                where val [y|ys'] = ys
+              where val [y|ys'] = ys
     }
 
     # _cons : 'a -> ['a] ->['a]
@@ -44,32 +44,32 @@ structure SetBasedOnList = struct {
 
     # _make : ['a] -> ['a]
     fun rec _make = xs -> cond xs {
-    | empty? -> []
-    else     -> xs' |> _make |> _cons x
+    empty? -> []
+    else   -> xs' |> _make |> _cons x
 
-                where val [x|xs'] = xs
+              where val [x|xs'] = xs
     }
 
     # _union : ['a] -> ['a] -> ['a]
     fun rec _union = xs ys -> cond xs {
-    | empty? -> ys
-    else     -> _union xs' ys |> _cons x
+    empty? -> ys
+    else   -> _union xs' ys |> _cons x
 
-                where val [x|xs'] = xs
+              where val [x|xs'] = xs
     }
 
     # _inter : ['a] -> ['a] -> ['a]
     fun rec _inter = xs ys -> cond xs {
-    | empty? -> []
-    else     -> _inter xs' ys
-                |> (
-                    if (_member? x ys)
-                        _cons x
-                    else
-                        id
-                )
+    empty? -> []
+    else   -> _inter xs' ys
+              |> (
+                  if (_member? x ys)
+                      _cons x
+                  else
+                      id
+              )
 
-                where val [x|xs'] = xs
+              where val [x|xs'] = xs
     }
 }
 

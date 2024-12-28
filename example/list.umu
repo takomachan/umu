@@ -13,8 +13,8 @@ structure List = struct {
 
     # singleton? : ['a] -> BOOL
     fun singleton? = xs -> case xs {
-    | [_] -> TRUE
-    else  -> FALSE
+    [_]  -> TRUE
+    else -> FALSE
     }
 
 

@@ -46,7 +46,7 @@ class Abstract < LSM::Abstract
             :foldr,             VC::Top, VC::Fun],
         [ :meth_foldl,          VC::Top,
             :foldl,             VC::Top, VC::Fun],
-        [ :meth_for_each,       VCBA::Unit,
+        [ :meth_for_each,       VC::Unit,
             :'for-each',        VC::Fun],
         [ :meth_map,            self,
             :map,               VC::Fun],

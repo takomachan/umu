@@ -379,7 +379,7 @@ val squares = [1, 4, 9, 16, 25]
 
 
 fun rec length = items -> case items {
-| [] -> 0
+[]   -> 0
 else -> 1 + length (tail items)
 }
 
@@ -394,7 +394,7 @@ fun length' = items -> (
     length-iter items 0
 ) where {
     fun rec length-iter = a count -> case a {
-    | [] -> count
+    []   -> count
     else -> length-iter (tail a) (1 + count)
     }
 }
@@ -535,8 +535,8 @@ fun rec sum-odd-squares = tree -> (
         }
     else
         cond tree {
-        | odd? -> square tree
-        else   -> 0
+        odd? -> square tree
+        else -> 0
         }
 )
 
@@ -545,13 +545,13 @@ fun even-fibs = n -> (
     next 0
 ) where {
     fun rec next = k -> cond k {
-    | (> n) -> []
-    else    -> let {
-                    val f = fib k
-                in
-                    if (even? f)    [f | next (k + 1)]
-                    else            next (k + 1)
-                }
+    (> n) -> []
+    else  -> let {
+                 val f = fib k
+             in
+                 if (even? f) [f | next (k + 1)]
+                 else         next (k + 1)
+             }
     }
 }
 
@@ -806,7 +806,7 @@ fun prime-sum-pairs = n -> (
 
 
 fun rec permutations = s -> case s {
-| [] -> [[]]      ## IF empty set? THEN sequence containing empty set
+[]   -> [[]]      ## IF empty set? THEN sequence containing empty set
 else -> flatmap { x ->
             map { p -> [x|p] } (permutations (remove x s))
         } s

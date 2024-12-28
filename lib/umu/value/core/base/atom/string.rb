@@ -18,7 +18,7 @@ class String < Abstract
         [:meth_less_than,   VCBA::Bool,
             :'<',           self],
 
-        [:meth_panic,       VCBA::Unit,
+        [:meth_panic,       VC::Unit,
             :'panic!'],
         [:meth_append,      self,
             :'^',           self]

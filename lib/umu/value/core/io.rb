@@ -23,9 +23,9 @@ class IO < Top
     INSTANCE_METHOD_INFOS = [
         [:meth_get_string,   VCBLU::Option::Abstract,
             :'gets'],
-        [:meth_put_string,   VCBA::Unit,
+        [:meth_put_string,   VC::Unit,
             :'puts',         VCBA::String],
-        [:meth_pretty_print, VCBA::Unit,
+        [:meth_pretty_print, VC::Unit,
             :'pp',           VC::Top]
     ]
 

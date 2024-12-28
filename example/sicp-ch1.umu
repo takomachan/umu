@@ -205,8 +205,8 @@ fun abs = x -> cond x {
 
 ### abs' : Real -> Real
 fun abs' = x -> cond x {
-| negative? -> negate x
-else        -> x
+negative? -> negate x
+else      -> x
 } ;;
 
 
@@ -233,8 +233,8 @@ fun abs = x -> cond x {
 }
 
 fun abs' = x -> cond x {
-| (< 0) -> x
-else    -> x
+(< 0) -> x
+else  -> x
 }
 
 fun abs'' = x -> (

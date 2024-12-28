@@ -9,11 +9,7 @@ module Value
 
 module Core
 
-module Base
-
-module Atom
-
-class Unit < Abstract
+class Unit < Top
     def to_s
         '()'
     end
@@ -26,17 +22,13 @@ class Unit < Abstract
     end
 end
 
-UNIT = Unit.new(nil).freeze
-
-end # Umu::Core::Base::Atom
-
-end # Umu::Core::Base
+UNIT = Unit.new.freeze
 
 
 module_function
 
     def make_unit
-        Base::Atom::UNIT
+        UNIT
     end
 
 end # Umu::Core

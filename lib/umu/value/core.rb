@@ -1,4 +1,5 @@
 require_relative 'core/top'
+require_relative 'core/unit'
 require_relative 'core/base'
 require_relative 'core/class'
 require_relative 'core/function'

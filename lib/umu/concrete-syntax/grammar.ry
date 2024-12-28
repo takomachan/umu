@@ -293,7 +293,7 @@ expr:
 
     result = CSCE.make_if kw.loc, rule, rules, expr
 }
-| COND atom_expr '{' '|' cond_rule cond_rules '}' {
+| COND atom_expr '{' opt_vert cond_rule cond_rules '}' {
     kw, expr, _, _, rule, rules_with_clause, _ = val
     rules, else_expr, else_decls               = rules_with_clause
 
@@ -301,7 +301,7 @@ expr:
                 kw.loc, expr, rule, rules, else_expr, else_decls
             )
 }
-| CASE atom_expr '{' '|' case_rule case_rules '}' {
+| CASE atom_expr '{' opt_vert case_rule case_rules '}' {
     kw, expr, _, _, rule, rules_with_clause, _ = val
     rules, else_expr, else_decls               = rules_with_clause
 
@@ -314,6 +314,8 @@ expr:
 
     result = CSCE.make_let kw.loc, decls, expr
 }
+
+opt_vert: /* empty */ | '|'
 
 
 # If-expression Rule
