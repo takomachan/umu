@@ -110,7 +110,7 @@
 
 ###     assoc : Symbol -> [(Symbol, 'a)] -> Option (Symbol, 'a)
 fun rec assoc = key records -> case records {
-  []     -> NONE
+| []     -> NONE
 | [x|xs] -> if (key == fst x)
                     Some x
                else
@@ -221,8 +221,8 @@ fun make-table' = records -> let {
     }
 
     fun dispatch = m -> case m {
-      @lookup-proc  -> lookup
-      else          -> panic! ("Unknown operation -- TABLE: " ^ inspect m)
+    | @lookup-proc -> lookup
+    else           -> panic! ("Unknown operation -- TABLE: " ^ inspect m)
     }
 in
     dispatch

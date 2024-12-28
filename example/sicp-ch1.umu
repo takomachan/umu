@@ -198,16 +198,15 @@ print "\n\nSECTION 1.1.5" ;;
 
 ### abs : Real -> Real
 fun abs = x -> cond x {
-  positive? -> x
+| positive? -> x
 | zero?     -> 0.0
 | negative? -> negate x
-  else      -> panic! "abs"
 } ;;
 
 ### abs' : Real -> Real
 fun abs' = x -> cond x {
-  negative? -> negate x
-  else      -> x
+| negative? -> negate x
+else        -> x
 } ;;
 
 
@@ -228,14 +227,14 @@ fun (>=) = x y -> not (x < y) ;;
 print "\n\nSECTION 1.1.6" ;;
 
 fun abs = x -> cond x {
-  (< 0)  -> x
+| (< 0)  -> x
 | (== 0) -> 0
 | (> 0)  -> negate 0
 }
 
 fun abs' = x -> cond x {
-  (< 0) -> x
-  else  -> x
+| (< 0) -> x
+else    -> x
 }
 
 fun abs'' = x -> (
@@ -477,9 +476,9 @@ print "\n\nSECTION 1.2.2" ;;
 
 ###     fib : Int -> Int
 fun rec fib = n -> case n {
-  0     -> 0
-| 1     -> 1
-  else  -> fib (n - 1) + fib (n - 2)
+| 0  -> 0
+| 1  -> 1
+else -> fib (n - 1) + fib (n - 2)
 } ;;
 
 let {
@@ -515,12 +514,12 @@ in
 
 ### first-denomination : Int -> Int
 fun first-denomination = kinds-of-coins -> case kinds-of-coins {
-  1     -> 1
-| 2     -> 5
-| 3     -> 10
-| 4     -> 25
-| 5     -> 50
-  else  -> panic! "first-denomination"
+| 1  -> 1
+| 2  -> 5
+| 3  -> 10
+| 4  -> 25
+| 5  -> 50
+else -> panic! "first-denomination"
 }
 
 ###     cc : Int -> Int -> Int
@@ -597,9 +596,9 @@ fun expt' = b n -> expt-iter b n 1
 fun even? = n -> n mod 2 == 0
 
 fun rec fast-expt = b n -> cond n {
-  zero? -> 1
+| zero? -> 1
 | even? -> square <| fast-expt b (n - 1)
-  else  -> b * fast-expt b (n - 1)
+else    -> b * fast-expt b (n - 1)
 }
 
 ;;
@@ -670,9 +669,9 @@ in
 
 ###     expmod : Int -> Int -> Int -> Int
 fun rec expmod = base exp m -> cond exp {
-  zero? -> 1
+| zero? -> 1
 | even? -> square (expmod base (exp / 2) m) mod m
-  else  -> (base * expmod base (exp - 1) m) mod m
+else    -> (base * expmod base (exp - 1) m) mod m
 }
 
 ### fermat-test : Int -> Bool
@@ -951,9 +950,9 @@ in
         val test-value = f midpoint
     in
         cond test-value {
-          positive? -> search f neg-point midpoint
+        | positive? -> search f neg-point midpoint
         | negative? -> search f midpoint  pos-point
-          else      -> midpoint
+        else        -> midpoint
         }
     }
 }

@@ -293,17 +293,17 @@ expr:
 
     result = CSCE.make_if kw.loc, rule, rules, expr
 }
-| COND atom_expr '{' cond_rule cond_rules opt_else_clause '}' {
-    kw, expr, _, rule, rules, opt_clause, _ = val
-    else_expr, else_decls                   = opt_clause
+| COND atom_expr '{' '|' cond_rule cond_rules '}' {
+    kw, expr, _, _, rule, rules_with_clause, _ = val
+    rules, else_expr, else_decls               = rules_with_clause
 
     result = CSCE.make_cond(
                 kw.loc, expr, rule, rules, else_expr, else_decls
             )
 }
-| CASE atom_expr '{' case_rule case_rules opt_else_clause '}' {
-    kw, expr, _, rule, rules, opt_clause, _ = val
-    else_expr, else_decls                   = opt_clause
+| CASE atom_expr '{' '|' case_rule case_rules '}' {
+    kw, expr, _, _, rule, rules_with_clause, _ = val
+    rules, else_expr, else_decls               = rules_with_clause
 
     result = CSCE.make_case(
                 kw.loc, expr, rule, rules, else_expr, else_decls
@@ -313,16 +313,6 @@ expr:
     kw, _, decls, _, expr, _ = val
 
     result = CSCE.make_let kw.loc, decls, expr
-}
-
-opt_else_clause:
-  /* empty */ {
-    result = [nil,  CSCD.make_empty_seq_of_declaration]
-}
-| ELSE '->' expr inner_where_decls {
-    _, _, expr, decls = val
-
-    result = [expr, decls]
 }
 
 
@@ -346,8 +336,22 @@ if_rule: atom_expr expr {
 # Cond-expresson Rule
 
 cond_rules:
-  /* empty */   { result = [] }
-| _cond_rules   { result = val[0] }
+  /* empty */   {
+    result = [[],     nil,  CSCD.make_empty_seq_of_declaration]
+}
+| _cond_rules   {
+    result = [val[0], nil,  CSCD.make_empty_seq_of_declaration]
+}
+| ELSE '->' expr inner_where_decls {
+    _, _, expr, decls = val
+
+    result = [[],     expr, decls]
+}
+| _cond_rules ELSE '->' expr inner_where_decls {
+    rules, _, _, expr, decls = val
+
+    result = [rules,  expr, decls]
+}
 
 _cond_rules:
   '|' cond_rule             { result = [val[1]] }
@@ -365,8 +369,22 @@ cond_rule: expr '->' expr inner_where_decls {
 # Case-expresson Rule
 
 case_rules:
-  /* empty */   { result = [] }
-| _case_rules   { result = val[0] }
+  /* empty */   {
+    result = [[],     nil,  CSCD.make_empty_seq_of_declaration]
+}
+| _case_rules   {
+    result = [val[0], nil,  CSCD.make_empty_seq_of_declaration]
+}
+| ELSE '->' expr inner_where_decls {
+    _, _, expr, decls = val
+
+    result = [[],     expr, decls]
+}
+| _case_rules ELSE '->' expr inner_where_decls {
+    rules, _, _, expr, decls = val
+
+    result = [rules,  expr, decls]
+}
 
 _case_rules:
   '|' case_rule             { result = [val[1]] }

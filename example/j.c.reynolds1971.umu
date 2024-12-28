@@ -194,10 +194,10 @@ structure VAL = struct {
 
 # parse : 'a -> <EXP>
 fun rec parse = exp : Top -> cond exp {
-  const?    -> EXP::mk-const exp
+| const?    -> EXP::mk-const exp
 | var?      -> EXP::mk-var exp
 | form?     -> parse-form exp
-  else      -> ERROR::syntax "Unknown Expression: " exp
+else        -> ERROR::syntax "Unknown Expression: " exp
 } where {
     # const?    : Top -> Bool
     fun const?  = exp -> exp kind-of? Int
@@ -216,11 +216,11 @@ fun rec parse = exp : Top -> cond exp {
     in
         if (keyword kind-of? Symbol)
             case keyword {
-              @IF       -> parse-if     args
+            | @IF       -> parse-if     args
             | @LAMBDA   -> parse-lambda args
             | @LET      -> parse-let    args
             | @LETREC   -> parse-letrec args
-              else      -> parse-apply  exp
+            else        -> parse-apply  exp
             }
         else
             parse-apply exp
@@ -381,7 +381,7 @@ structure ENV-I = struct {
 } where {
     fun initenv = x : Datum -> case (val-of x) {
     #### Constant
-      @TRUE     -> VAL::mk-boolean  TRUE
+    | @TRUE     -> VAL::mk-boolean  TRUE
     | @FALSE    -> VAL::mk-boolean  FALSE
 
     #### Number
@@ -398,7 +398,7 @@ structure ENV-I = struct {
     | @EQ       -> mk-binop (==)    VAL::mk-boolean
     | @LT       -> mk-binop (<)     VAL::mk-boolean
 
-      else      -> ERROR::name "Unknown VAR: " x
+    else        -> ERROR::name "Unknown VAR: " x
     } where {
         # int : <VAL> -> Int
         fun int = x : Datum ->
@@ -429,13 +429,13 @@ where {
 
     # eval : (<EXP>, <ENV>) -> <VAL>
     fun rec eval = (r : Datum, e : Fun) -> case r {
-      Const     -> eval-const r
+    | Const     -> eval-const r
     | Var       -> eval-var    (r, e)
     | Appl      -> eval-appl   (r, e)
     | Lambda    -> eval-lambda (r, e)
     | Cond      -> eval-cond   (r, e)
     | Letrec    -> eval-letrec (r, e)
-      else      -> ERROR::failure ("Unknown EXP: ", r)
+    else        -> ERROR::failure ("Unknown EXP: ", r)
     } where {
         # eval-const : <CONST> -> <INTEGER>
         fun eval-const = c : Datum -> VAL::mk-integer (val-of c)

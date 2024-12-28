@@ -45,17 +45,8 @@ end
                         else
                             Commander.process_source(
                                 Prelude::SOURCE_TEXT,
-
                                 Prelude::FILE_NAME,
-
-                                E.setup(
-                                    E::INITIAL_PREFERENCE
-                                ).update_source(
-                                    Prelude::FILE_NAME,
-                                    Prelude::SOURCE_TEXT,
-                                    Prelude::START_LINE_NUM
-                                ),
-
+                                E.setup(E::INITIAL_PREFERENCE),
                                 Prelude::START_LINE_NUM
                             ).update_preference pref
                         end
@@ -268,11 +259,7 @@ end
 
             source = ::File.open(file_name) { |io| io.read }
 
-            Commander.process_source(
-                source,
-                file_name,
-                env.update_source(file_name, source)
-            )
+            Commander.process_source source, file_name, env
         }
 
         ASSERT.kind_of final_env, E::Entry
@@ -326,7 +313,10 @@ end
             STDERR.puts
         end
 
-        Commander.process_tokens(tokens, env)
+        Commander.process_tokens(
+            tokens,
+            env.update_source(file_name, source, init_line_num)
+        )
     end
 
 

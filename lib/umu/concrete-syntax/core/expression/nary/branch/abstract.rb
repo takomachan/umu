@@ -73,23 +73,18 @@ class Abstract < Expression::Abstract
 
         q.breakable
 
-        fst_rule, *not_fst_rules = self.rules
+        self.rules.each do |rule|
+            q.breakable
 
-        q.pp fst_rule
-        unless not_fst_rules.empty?
-            not_fst_rules.each do |rule|
-                q.breakable
-
-                PRT.group q, bb: '| ' do
-                    q.pp rule
-                end
+            PRT.group q, bb: '| ' do
+                q.pp rule
             end
         end
 
         if self.opt_else_expr
             else_expr = self.opt_else_expr
 
-            q.breakable ''
+            q.breakable ' '
 
             PRT.group q, bb: '%ELSE -> ' do
                 q.pp else_expr

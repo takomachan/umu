@@ -19,9 +19,9 @@ fun square = x -> x * x
 
 ###     fib : Int -> Int
 fun rec fib = n -> case n {
-  0     -> 0
-| 1     -> 1
-  else  -> fib (n - 1) + fib (n - 2)
+| 0  -> 0
+| 1  -> 1
+else -> fib (n - 1) + fib (n - 2)
 }
 
 
@@ -256,9 +256,9 @@ fun add-rat'' = x y -> (
 
 fun dispa-cons = x y -> dispatch where {
     fun dispatch = m -> case m {
-      0     -> x
-    | 1     -> y
-      else  -> panic! ("Argument not 0 or 1 -- CONS: " ^ (to-s m))
+    | 0  -> x
+    | 1  -> y
+    else -> panic! ("Argument not 0 or 1 -- CONS: " ^ (to-s m))
     }
 }
 
@@ -379,8 +379,8 @@ val squares = [1, 4, 9, 16, 25]
 
 
 fun rec length = items -> case items {
-  []   -> 0
-  else -> 1 + length (tail items)
+| [] -> 0
+else -> 1 + length (tail items)
 }
 
 val odds = [1, 3, 5, 7]
@@ -394,8 +394,8 @@ fun length' = items -> (
     length-iter items 0
 ) where {
     fun rec length-iter = a count -> case a {
-        []   -> count
-        else -> length-iter (tail a) (1 + count)
+    | [] -> count
+    else -> length-iter (tail a) (1 + count)
     }
 }
 
@@ -405,7 +405,7 @@ fun length' = items -> (
 
 
 fun rec append = list1 list2 -> case list1 {
-  []       -> list2
+| []       -> list2
 | [x1|xs1] -> [x1 | append xs1 list2]
 }
 
@@ -421,7 +421,7 @@ fun rec append = list1 list2 -> case list1 {
 #### Mapping over lists ####
 
 fun rec scale-list = items factor -> case items {
-  []     -> []
+| []     -> []
 | [x|xs] -> [x * factor | scale-list xs factor]
 }
 
@@ -431,7 +431,7 @@ fun rec scale-list = items factor -> case items {
 
 
 fun map = proc items -> case items {
-  []     -> []
+| []     -> []
 | [x|xs] -> [proc x | map proc xs]
 }
 
@@ -465,7 +465,7 @@ fun scale-list' = items factor -> map { x -> x * factor } items
 fun rec count-leaves = xs -> (
     if (xs kind-of? List)
         case xs {
-          []      -> 0
+        | []      -> 0
         | [x|xs'] -> count-leaves x + count-leaves xs'
         }
     else
@@ -497,7 +497,7 @@ val x = [[1, 2] | [3, 4]]
 fun rec scale-tree = tree factor -> (
     if (tree kind-of? List)
         case tree {
-          []     -> []
+        | []     -> []
         | [x|xs] -> [scale-tree x factor | scale-tree xs factor]
         }
     else
@@ -530,13 +530,13 @@ fun rec scale-tree' = tree factor -> map { sub-tree ->
 fun rec sum-odd-squares = tree -> (
     if (tree kind-of? List)
         case tree {
-          []     -> 0
+        | []     -> 0
         | [x|xs] -> sum-odd-squares x + sum-odd-squares xs
         }
     else
         cond tree {
-          odd?  -> square tree
-          else  -> 0
+        | odd? -> square tree
+        else   -> 0
         }
 )
 
@@ -545,8 +545,8 @@ fun even-fibs = n -> (
     next 0
 ) where {
     fun rec next = k -> cond k {
-      (> n) -> []
-      else  -> let {
+    | (> n) -> []
+    else    -> let {
                     val f = fib k
                 in
                     if (even? f)    [f | next (k + 1)]
@@ -574,7 +574,7 @@ fun even-fibs = n -> (
 
 ###     filter : ('a -> Bool) -> ['a] -> ['a]    where 'a <- Top
 fun rec filter = predicate sequence -> case sequence {
-  []     -> []
+| []     -> []
 | [x|xs] -> if (predicate x)    [x | filter predicate xs]
             else                filter predicate xs
 }
@@ -586,7 +586,7 @@ fun rec filter = predicate sequence -> case sequence {
 
 ###     accumulate : ('a -> 'b -> 'b) -> ['a] -> 'b   where ('a, 'b) <- Top
 fun rec accumulate = op initial sequence -> case sequence {
-  []     -> initial
+| []     -> initial
 | [x|xs] -> op x (accumulate op initial xs)
 }
 
@@ -614,7 +614,7 @@ fun rec enumerate-interval = low high -> (
 fun rec enumerate-tree = tree -> (
     if (tree kind-of? List)
         case tree {
-          []     -> []
+        | []     -> []
         | [x|xs] -> enumerate-tree x ++ enumerate-tree xs
         }
     else
@@ -806,10 +806,10 @@ fun prime-sum-pairs = n -> (
 
 
 fun rec permutations = s -> case s {
-  []   -> [[]]      ## IF empty set? THEN sequence containing empty set
-  else -> flatmap { x ->
-                map { p -> [x|p] } (permutations (remove x s))
-            } s
+| [] -> [[]]      ## IF empty set? THEN sequence containing empty set
+else -> flatmap { x ->
+            map { p -> [x|p] } (permutations (remove x s))
+        } s
 } where {
     fun remove = item sequence -> filter { x -> x <> item } sequence
 }
@@ -891,7 +891,7 @@ val b = 2
 
 
 fun rec memq = item sequence -> case sequence {
-  []     -> NONE
+| []     -> NONE
 | [x|xs] -> if (item == x)  Some sequence
             else            memq item xs
 }
@@ -941,7 +941,7 @@ fun multiplicand = s -> s$3
 
 
 fun rec deriv = exp var -> cond exp {
-  number?   -> 0
+| number?   -> 0
 | variable? -> if (same-variable? exp var) 1 else 0
 | sum?      -> make-sum
                     (deriv (addend exp) var)
@@ -954,7 +954,7 @@ fun rec deriv = exp var -> cond exp {
                         (deriv (multiplier exp) var)
                         (multiplicand exp)
                     )
-  else      -> panic! ("unknown expression type -- DERIV: " ^ inspect exp)
+else        -> panic! ("unknown expression type -- DERIV: " ^ inspect exp)
 }
 
 ;; deriv (@"+", @x, 3) @x
@@ -990,7 +990,7 @@ fun make-product' = m1 m2 -> (
 )
 
 fun rec deriv' = exp var -> cond exp {
-  number?   -> 0
+| number?   -> 0
 | variable? -> if (same-variable? exp var) 1 else 0
 | sum?      -> make-sum'
                     (deriv' (addend exp) var)
@@ -1003,7 +1003,7 @@ fun rec deriv' = exp var -> cond exp {
                         (deriv' (multiplier exp) var)
                         (multiplicand exp)
                     )
-  else      -> panic! ("unknown expression type -- DERIV: " ^ inspect exp)
+else        -> panic! ("unknown expression type -- DERIV: " ^ inspect exp)
 }
 
 ;; deriv' (@"+", @x, 3) @x
@@ -1027,7 +1027,7 @@ fun rec deriv' = exp var -> cond exp {
 #### UNORDERED
 
 fun rec element-of-set? = e set -> case set {
-  []     -> FALSE
+| []     -> FALSE
 | [x|xs] -> if (e == x) TRUE
             else        element-of-set? e xs
 }
@@ -1058,11 +1058,11 @@ fun rec intersection-set = set1 set2 -> (
 #### ORDERED
 
 fun rec element-of-set?' = e set -> case set {
-  []     -> FALSE
+| []     -> FALSE
 | [x|xs] -> cond e {
-              (== x) -> TRUE
+            | (== x) -> TRUE
             | (<  x) -> FALSE
-              else   -> element-of-set?' e xs
+            else     -> element-of-set?' e xs
             }
 }
 
@@ -1074,10 +1074,9 @@ fun rec intersection-set' = set1 set2 -> (
         val [x2|xs2] = set2
     in
         cond x1 {
-          (== x2) -> [x1 | intersection-set' xs1  xs2]
+        | (== x2) -> [x1 | intersection-set' xs1  xs2]
         | (<  x2) ->       intersection-set' xs1  set2
         | (>  x2) ->       intersection-set' set1 xs2
-          else    -> panic! "ABORT"
         }
     }
 )
@@ -1104,10 +1103,9 @@ fun rec element-of-set? = e set -> (
         val x = entry set
     in
         cond e {
-          (== x)    -> TRUE
+        | (== x)    -> TRUE
         | (<  x)    -> element-of-set? e (left-branch set)
         | (>  x)    -> element-of-set? e (right-branch set)
-          else      -> panic! "ABORT"
         }
     }
 )
@@ -1119,7 +1117,7 @@ fun rec adjoin-set = e set -> (
         val x = entry set
     in
         cond e {
-          (== x)    -> set
+        | (== x)    -> set
         | (<  x)    -> make-tree
                         x
                         (adjoin-set e (left-branch set))
@@ -1128,7 +1126,6 @@ fun rec adjoin-set = e set -> (
                         x
                         (left-branch set)
                         (adjoin-set e (right-branch set))
-          else      -> panic! "ABORT"
         }
     }
 )
@@ -1191,7 +1188,7 @@ val s = (7, (3, (1, [], []), (5, [], [])), (9, [], (11, [], [])))
 
 (#
 fun lookup = given-key set-of-records -> case set-of-records {
-  []     -> FALSE
+| []     -> FALSE
 | [x|xs] -> if (given-key == key x) x else lookup given-key xs
 }
 #)
@@ -1247,13 +1244,13 @@ fun decode = bits tree -> (
     decode1 bits tree
 ) where {
     fun choose-branch = bit branch -> case bit {
-      0     -> left-branch branch
-    | 1     -> right-branch branch
-      else  -> panic! ("bad bit -- CHOOSE-BRANCH: " ^ inspect bit)
+    | 0  -> left-branch branch
+    | 1  -> right-branch branch
+    else -> panic! ("bad bit -- CHOOSE-BRANCH: " ^ inspect bit)
     }
 
     fun rec decode1 = bits current-branch -> case bits {
-      []     -> []
+    | []     -> []
     | [x|xs] -> if (leaf? next-branch)
                         [symbol-leaf next-branch | decode1 xs tree]
                     else
@@ -1487,30 +1484,30 @@ fun make-from-mag-ang-polar = r a -> (
 #### Generic selectors ####
 
 fun real-part = z -> cond z {
-  rectanglar?   -> real-part-rectanglar (contents z)
-| polar?        -> real-part-polar      (contents z)
-  else          -> panic! ("Unknown type -- REAL-PART: " ^ inspect z)
+| rectanglar? -> real-part-rectanglar (contents z)
+| polar?      -> real-part-polar      (contents z)
+else          -> panic! ("Unknown type -- REAL-PART: " ^ inspect z)
 }
 
 
 fun imag-part = z -> cond z {
-  rectanglar?   -> imag-part-rectanglar (contents z)
-| polar?        -> imag-part-polar      (contents z)
-  else          -> panic! ("Unknown type -- IMAG-PART: " ^ inspect z)
+| rectanglar? -> imag-part-rectanglar (contents z)
+| polar?      -> imag-part-polar      (contents z)
+else          -> panic! ("Unknown type -- IMAG-PART: " ^ inspect z)
 }
 
 
 fun magnitude = z -> cond z {
-  rectanglar?   -> magnitude-rectanglar (contents z)
-| polar?        -> magnitude-polar      (contents z)
-  else          -> panic! ("Unknown type -- MAGNITUDE: " ^ inspect z)
+| rectanglar? -> magnitude-rectanglar (contents z)
+| polar?      -> magnitude-polar      (contents z)
+else          -> panic! ("Unknown type -- MAGNITUDE: " ^ inspect z)
 }
 
 
 fun angle = z -> cond z {
-  rectanglar?   -> angle-rectanglar (contents z)
-| polar?        -> angle-polar      (contents z)
-  else          -> panic! ("Unknown type -- ANGLE: " ^ inspect z)
+| rectanglar? -> angle-rectanglar (contents z)
+| polar?      -> angle-polar      (contents z)
+else          -> panic! ("Unknown type -- ANGLE: " ^ inspect z)
 }
 
 
