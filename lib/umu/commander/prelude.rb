@@ -7,7 +7,7 @@ module Commander
 
 module Prelude
 
-FILE_NAME = format "<%s>", __FILE__
+FILE_NAME = '<prelude>'
 
 START_LINE_NUM = __LINE__ + 2
 
