@@ -189,12 +189,14 @@ FILES = [
     'common/pretty-print.rb'
 ]
 
-MAIN =' ../../exe/umu'
+PROJECT = 'umu'
+
+MAIN = format '../../exe/%s', PROJECT
 
 RACC_SRC_FILES = ['concrete-syntax/grammar.ry']
 RACC_OBJ_FILES = RACC_SRC_FILES.map { |s| s.sub(/\.ry$/, '.tab.rb') }
 
-TAR_FILE = '../umu.tar'
+TAR_FILE = format '%s-%s.tar', PROJECT, Time.now.strftime('%Y%m%d')
 
 
 
@@ -215,12 +217,12 @@ end
 
 
 task :run => [MAIN] do
-    sh "#{MAIN} -i -d"
+    sh format '%s -i -d', MAIN
 end
 
 
 task :wc => FILES + RACC_SRC_FILES do
-    sh format "wc %s", (FILES + RACC_SRC_FILES).join(' ')
+    sh format 'wc %s', (FILES + RACC_SRC_FILES).join(' ')
 end
 
 
@@ -232,12 +234,12 @@ end
 
 
 task :clean do
-    sh format "rm -f %s", (RACC_OBJ_FILES + [TAR_FILE]).join(' ')
+    sh format 'rm -f %s', (RACC_OBJ_FILES + [TAR_FILE]).join(' ')
 end
 
 
 task :tar => FILES + RACC_SRC_FILES + ['Rakefile'] do |t|
-    sh format "tar cvf %s %s", TAR_FILE, t.prerequisites.join(' ')
+    sh format 'tar cvf %s %s', TAR_FILE, t.prerequisites.join(' ')
 end
 
 
@@ -247,5 +249,5 @@ file MAIN => FILES + ['concrete-syntax/grammar.tab.rb']
 file 'concrete-syntax/grammar.tab.rb' => ['concrete-syntax/grammar.ry'] do
     |t|
 
-    sh format "racc %s", t.prerequisites[0]
+    sh format 'racc %s', t.prerequisites[0]
 end
