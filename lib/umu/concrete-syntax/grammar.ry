@@ -57,9 +57,7 @@ modu_decl:
     result = CSMD.make_import kw.loc, id, opt_body
 }
 | core_decl {
-    decl = val[0]
-
-    result = CSMD.make_core decl.loc, decl
+    result = CSMD.make_core val[0].loc, val[0]
 }
 
 
@@ -239,11 +237,11 @@ recu_bind: ID '=' fun_body {
     hd_pat, tl_pats, expr, decls = body
 
     result = CSCD.make_recursive_function(
-        val[1].loc,
+        id.loc,
         CSCE.make_named_lambda(
-            val[0].loc,
+            id.loc,
             [hd_pat] + tl_pats, expr, decls,
-            val[0].sym
+            id.sym
         )
     )
 }
@@ -988,10 +986,7 @@ named_fld_pat: LABEL opt_var_pat {
 
 opt_last_pat:
   /* empty */   { result = nil }
-| '|' var_pat   {
-#   result = CSCP.make_variable val[1].loc, val[1].var_sym
-    result = val[1]
-}
+| '|' var_pat   { result = val[1] }
 
 
 # Variable pattern

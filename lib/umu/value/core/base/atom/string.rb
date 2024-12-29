@@ -48,9 +48,7 @@ class String < Abstract
 
 
     def meth_panic(loc, env, _event)
-        msg = self.val.gsub /%/, '%%'
-
-        raise X::Panic.new(loc, env, msg)
+        raise X::Panic.new(loc, env, self.to_s)
     end
 
 

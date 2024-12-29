@@ -160,9 +160,7 @@ SYMBOL_PATTERNS = [
 }.keys.sort { |x, y|
     y.length <=> x.length   # For longest-match
 }.map { |s|
-    Regexp.new(
-        s.each_char.map { |c| '\\' + c }.join
-    )
+    Regexp.new Regexp.escape(s)
 }
 
 
