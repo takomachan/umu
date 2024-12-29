@@ -11,8 +11,6 @@ module Context
 
 module Value
 
-module Bindings
-
 class Entry < Abstract
     attr_reader :bindings
     attr_reader :old_context
@@ -31,7 +29,7 @@ private
 
     def __extend__(sym, target)
         ASSERT.kind_of sym,     ::Symbol
-        ASSERT.kind_of target,  Bindings::Target::Abstract
+        ASSERT.kind_of target,  Target::Abstract
 
         if self.bindings.has_key? sym
             [{sym => target},                       self]
@@ -41,8 +39,6 @@ private
     end
 end
 
-end # Umu::Environment::Context::Value::Bindings
-
 
 
 module_function
@@ -51,7 +47,7 @@ module_function
         ASSERT.kind_of bindings,    ::Hash
         ASSERT.kind_of old_context, ECV::Abstract
 
-        Bindings::Entry.new(bindings.freeze, old_context).freeze
+        Entry.new(bindings.freeze, old_context).freeze
     end
 
 end # Umu::Environment::Context::Value

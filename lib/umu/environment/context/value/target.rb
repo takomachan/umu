@@ -11,8 +11,6 @@ module Context
 
 module Value
 
-module Bindings
-
 module Target
 
 class Abstract
@@ -74,9 +72,7 @@ class Recursive < Abstract
     end
 end
 
-end # Umu::Environment::Context::Value::Bindings::Target
-
-end # Umu::Environment::Context::Value::Bindings
+end # Umu::Environment::Context::Value::Target
 
 
 module_function
@@ -84,14 +80,14 @@ module_function
     def make_value_target(value)
         ASSERT.kind_of value, VC::Top
 
-        Bindings::Target::Value.new(value).freeze
+        Target::Value.new(value).freeze
     end
 
 
     def make_recursive_target(lam_expr)
         ASSERT.kind_of lam_expr, ASCEN::Lambda::Entry
 
-        Bindings::Target::Recursive.new(lam_expr).freeze
+        Target::Recursive.new(lam_expr).freeze
     end
 
 end # Umu::Environment::Context::Value

@@ -175,11 +175,10 @@ FILES	= version.rb \
 			environment/context/type/signature/method.rb \
 			environment/context/type/entry.rb \
 			environment/context/value.rb \
+			environment/context/value/target.rb \
 			environment/context/value/abstract.rb \
 			environment/context/value/initial.rb \
-			environment/context/value/bindings.rb \
-			environment/context/value/bindings/target.rb \
-			environment/context/value/bindings/entry.rb \
+			environment/context/value/entry.rb \
 			environment/entry.rb \
 			common.rb \
 			common/constant.rb \

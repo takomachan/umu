@@ -38,10 +38,10 @@ class Abstract < Abstraction::Collection
         ASSERT.kind_of env, E::Entry
 
         self.each do |context|
-            ASSERT.kind_of context, Bindings::Entry
+            ASSERT.kind_of context, Entry
 
             target = context.bindings[sym]
-            ASSERT.opt_kind_of target, Bindings::Target::Abstract
+            ASSERT.opt_kind_of target, Target::Abstract
 
             if target
                 got_value = target.get_value(context)
@@ -61,7 +61,7 @@ class Abstract < Abstraction::Collection
 
     def extend(sym, target)
         ASSERT.kind_of sym,     ::Symbol
-        ASSERT.kind_of target,  Bindings::Target::Abstract
+        ASSERT.kind_of target,  Target::Abstract
 
         pair = __extend__ sym, target
         ASSERT.tuple_of pair, [::Hash, Abstract]

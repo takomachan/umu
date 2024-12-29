@@ -17,7 +17,7 @@ private
 
     def __extend__(sym, target)
         ASSERT.kind_of sym,     ::Symbol
-        ASSERT.kind_of target,  Bindings::Target::Abstract
+        ASSERT.kind_of target,  Target::Abstract
 
         [{sym => target}, self]
     end
