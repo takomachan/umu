@@ -722,7 +722,7 @@ structure Umu = struct {
     structure Assert = struct {
         # unit : 'a -> ()
         fun unit = actual -> let {
-            assert (actual kind-of? Unit)   (msg () actual)
+            assert actual kind-of? Unit -> msg () actual
         in
             ()
         }
@@ -733,8 +733,8 @@ structure Umu = struct {
                 actual
                 (expect : Bool)
         -> let {
-            assert (actual kind-of? Bool)   "Bool"
-            assert (actual == expect)       (msg expect actual)
+            assert actual kind-of? Bool -> "Bool"
+            assert actual == expect     -> msg expect actual
         in
             actual
         }
@@ -767,8 +767,8 @@ structure Umu = struct {
                 actual
                 (expect : Int)
         -> let {
-            assert (actual kind-of? Int)    "Int"
-            assert (actual == expect)       (msg expect actual)
+            assert actual kind-of? Int -> "Int"
+            assert actual == expect    -> msg expect actual
         in
             actual
         }
@@ -794,8 +794,8 @@ structure Umu = struct {
                 (expect : Real)
                 (n      : Int)
         -> let {
-            assert (actual kind-of? Real)           "Real"
-            assert (Math::equal? actual expect n)   (msg expect actual)
+            assert actual kind-of? Real         -> "Real"
+            assert Math::equal? actual expect n -> msg expect actual
         in
             actual
         }
@@ -806,8 +806,8 @@ structure Umu = struct {
                 actual
                 (expect : Symbol)
         -> let {
-            assert (actual kind-of? Symbol) "Symbol"
-            assert (actual == expect)       (msg expect actual)
+            assert actual kind-of? Symbol -> "Symbol"
+            assert actual == expect       -> msg expect actual
         in
             actual
         }
@@ -818,8 +818,8 @@ structure Umu = struct {
                 actual
                 (expect : String)
         -> let {
-            assert (actual kind-of? String) "String"
-            assert (actual == expect)       (msg expect actual)
+            assert actual kind-of? String -> "String"
+            assert actual == expect       -> msg expect actual
         in
             actual
         }

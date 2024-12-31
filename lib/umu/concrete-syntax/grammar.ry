@@ -215,8 +215,8 @@ core_decl:
 
     result = CSCD.make_recursive kw.loc, [bind] + binds
 }
-| ASSERT atom_expr expr {
-    kw, head_expr, body_expr = val
+| ASSERT expr '->' expr {
+    kw, head_expr, _, body_expr = val
 
     result = CSCD.make_assert kw.loc, head_expr, body_expr
 }

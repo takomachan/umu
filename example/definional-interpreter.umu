@@ -231,7 +231,7 @@ else        -> ERROR::syntax "Unknown Expression: " exp
         #### <If> ####
         # parse-if : [Top] -> <COND>
         fun parse-if = args : List -> let {
-            assert (length args == 3)
+            assert length args == 3 ->
                 ERROR::syntax "For IF's arity, expected 3, but: " args
 
             val [prem, conc, altr] = args
@@ -242,16 +242,16 @@ else        -> ERROR::syntax "Unknown Expression: " exp
         #### <Lambda> ####
         # parse-lambda : [Top] -> <LAMBDA>
         fun parse-lambda = args : List -> let {
-            assert (length args == 2)
+            assert length args == 2 ->
                 ERROR::syntax 
                     "For LAMBDA's arity, expected 2, but: " args
 
             val [fps, body] = args
 
-            assert (fps kind-of? List)
+            assert fps kind-of? List ->
                 ERROR::syntax
                     "In LAMBDA, expected a List of <Var>, but: " fps
-            assert (length fps >= 1)
+            assert length fps >= 1 ->
                 ERROR::syntax
                     ("In LAMBDA, " ^
                         "expected length of <Var>s is 1 or more, but: ")
@@ -259,14 +259,14 @@ else        -> ERROR::syntax "Unknown Expression: " exp
 
             val [init-fp|fps'] = reverse fps
 
-            assert (var? init-fp)
+            assert var? init-fp ->
                 ERROR::syntax "In LAMBDA, expected a <Var>, but: " init-fp
 
             val init-body-exp = EXP::mk-lambda (parse init-fp, parse body)
         in
             fps' |> foldl init-body-exp { fp body-exp ->
                 let {
-                    assert (var? fp)
+                    assert var? fp ->
                         ERROR::syntax "In LAMBDA, expected a <Var>, but: "
                         fp
                 in
@@ -278,7 +278,7 @@ else        -> ERROR::syntax "Unknown Expression: " exp
         #### <Apply> ####
         # parse-apply : [Top] -> <APPL>
         fun parse-apply = args : List -> let {
-            assert (length args >= 2)
+            assert length args >= 2 ->
                 ERROR::syntax
                     "For APPLY's arity, expected 2 or more, but: " args
 
@@ -293,7 +293,7 @@ else        -> ERROR::syntax "Unknown Expression: " exp
         #### <Let> ####
         # parse-let : [Top] -> <APPL>
         fun parse-let = args : List -> let {
-            assert (length args >= 1)
+            assert length args >= 1 ->
                 ERROR::syntax
                     "For LET's arity, expected 1 or more, but: " args
 
@@ -301,14 +301,14 @@ else        -> ERROR::syntax "Unknown Expression: " exp
         in
             binds |> foldr (parse body) { bind body-exp ->
                 let {
-                    assert (bind kind-of? List && length bind == 2)
+                    assert bind kind-of? List && length bind == 2 ->
                         ERROR::syntax
                             "For LET's binding, expected pair List, but: "
                             bind
 
                     val [dvar, dexp] = bind
 
-                    assert (var? dvar)
+                    assert var? dvar ->
                         ERROR::syntax "In LET, expected VAR, but: " dvar
                 in
                     mk-let (parse dvar, parse dexp, body-exp)
@@ -324,7 +324,7 @@ else        -> ERROR::syntax "Unknown Expression: " exp
         #### <Letrec> ####
         # parse-letrec : [Top] -> <LETREC>
         fun parse-letrec = args : List -> let {
-            assert (length args >= 1)
+            assert length args >= 1 ->
                 ERROR::syntax
                     "For LETREC's arity, expected 1 or more, but: " args
 
@@ -332,7 +332,7 @@ else        -> ERROR::syntax "Unknown Expression: " exp
         in
             binds |> foldr (parse body) { bind body-exp ->
                 let {
-                    assert (bind kind-of? List && length bind >= 2)
+                    assert bind kind-of? List && length bind >= 2 ->
                         ERROR::syntax
                             ("For LETREC's binding, " ^
                                 "expected 2 or more List, but: ")
@@ -340,16 +340,16 @@ else        -> ERROR::syntax "Unknown Expression: " exp
 
                     val [dvar|dexp] = bind
 
-                    assert (var? dvar)
+                    assert var? dvar ->
                         ERROR::syntax "In LETREC, expected <VAR>, but: "
                         dvar
-                    assert (form? dexp)
+                    assert form? dexp ->
                         ERROR::syntax "In LETREC, expected <Form>, but: "
                         dexp
 
                     val [keyword|lam] = dexp
 
-                    assert (keyword == @LAMBDA)
+                    assert keyword == @LAMBDA ->
                         ERROR::syntax
                             "In LETREC, expected LAMBDA, but: " keyword
                 in
@@ -452,7 +452,7 @@ where {
 
             val va-opr : Datum = eval (opr, e)
 
-            assert (VAL::funval? va-opr)
+            assert VAL::funval? va-opr ->
                 ERROR::application
                     "In APPL, Expected a <FUNVAL>, but: " va-opr
 
@@ -476,7 +476,7 @@ where {
 
             val va-prem = eval (prem, e)
 
-            assert (VAL::boolean? va-prem)
+            assert VAL::boolean? va-prem ->
                 ERROR::type' "In COND, expected a <BOOLEAN>, but: " va-prem
         in
             if val-of va-prem then
@@ -489,7 +489,7 @@ where {
         fun eval-letrec =  (l : Datum, e : Fun) -> let {
             val (dvar : Datum, dexp : Datum, body : Datum) = val-of l
 
-            assert (EXP::lambda? dexp)
+            assert EXP::lambda? dexp ->
                 ERROR::failure "In LETREC, expected a LAMBDA, but: " r
         in
             eval (
@@ -560,10 +560,10 @@ val run-I : Fun = mk-runner interpret-I
 
 structure ASSERT = struct {
     fun integer = actual expect -> let {
-        assert (actual kind-of? Datum)              "Datum"
-        assert (tag-of actual == @Integer)          "@Integer"
-        assert (val-of actual kind-of? Int)         "Int"
-        assert (val-of actual == expect)            (inspect expect)
+        assert actual kind-of? Datum        -> "Datum"
+        assert tag-of actual == @Integer    -> "@Integer"
+        assert val-of actual kind-of? Int   -> "Int"
+        assert val-of actual == expect      -> inspect expect
     in
         ()
     }
@@ -572,18 +572,18 @@ structure ASSERT = struct {
     fun false = actual -> boolean actual FALSE
 
     fun funval = actual -> let {
-        assert (actual kind-of? Datum)              "Datum"
-        assert (tag-of actual == @Funval)           "@Funval"
-        assert (val-of actual kind-of? Fun)         "Fun"
+        assert actual kind-of? Datum        -> "Datum"
+        assert tag-of actual == @Funval     -> "@Funval"
+        assert val-of actual kind-of? Fun   -> "Fun"
     in
         ()
     }
 } where {
     fun boolean = actual expect -> let {
-        assert (actual kind-of? Datum)              "Datum"
-        assert (tag-of actual == @Boolean)          "@Boolean"
-        assert (val-of actual kind-of? Bool)        "Bool"
-        assert (val-of actual == expect)            (inspect expect)
+        assert actual kind-of? Datum        -> "Datum"
+        assert tag-of actual == @Boolean    -> "@Boolean"
+        assert val-of actual kind-of? Bool  -> "Bool"
+        assert val-of actual == expect      -> inspect expect
     in
         ()
     }
