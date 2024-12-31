@@ -1,12 +1,11 @@
 (#
- Implementation of REYNOLDS's Definional Interpretor
+ Implementation of REYNOLDS's Definional Interpreter
 
- 1971年に公開されたレイノルズ氏による意味定義用インタプリタを
- Umuで実装してみた
+レイノルズ氏による意味定義用インタプリタの実装
 
 
  Reynolds, J. C. :
-   Definitional Interpretors
+   Definitional Interpreters
    for Higher-Oreder Programming Languages,
    Higer-Order and Symbolic Computation, 11, 363-397 (1998),
    Proceedings of 25h ACM National Conference, 1971, pp. 717-740
@@ -14,17 +13,21 @@
  木村泉, 米澤明憲 :
    第9章 算法表現(プログラム)の意味論,
    算法表現論, 岩波講座情報科学12, 岩波書店, 1982
-
        上記論文のInterpreter I と II を元にして
        プログラミング言語の古典的な意味論を解説している
-       なお、現在のUmu言語処理系(インタプリタ)は
-       この Interpreter II を元に設計した
+
+
+The current Umu language processing system (interpreter) was
+designed based on this Interpreter II.
+
+現在のUmu言語処理系(インタプリタ)は
+この Interpreter II を元に設計された
 
 
  Exanple execution :
  実行例 :
-    $ ./umu -i example/reynolds.umu
-      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    $ ../exe/umu -i definional-interpreter.umu
+      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
     [CONSTANT]
     <SRC> : 100
     <EXP> : Const 100
@@ -65,7 +68,7 @@ structure ERROR = struct {
     fun type'       = msg x -> error ("Type Error",         msg, x)
 } where {
     fun error = (category, msg, x) ->
-        panic! ("[" ^ category ^ "] " ^ msg ^ inspect x)
+        panic! <| "[" ^ category ^ "] " ^ msg ^ inspect x
 }
 
 
@@ -438,7 +441,7 @@ where {
     else        -> ERROR::failure ("Unknown EXP: ", r)
     } where {
         # eval-const : <CONST> -> <INTEGER>
-        fun eval-const = c : Datum -> VAL::mk-integer (val-of c)
+        fun eval-const = c : Datum -> VAL::mk-integer <| val-of c
 
         # eval-var : (<VAR>, <ENV>) -> <VAL>
         fun eval-var = (v : Datum, e : Fun) -> ENV-I::lookup (e, v)
@@ -455,7 +458,7 @@ where {
 
             val va-opnd : Datum = eval (opnd, e)
         in
-            (val-of va-opr) va-opnd
+            val-of va-opr <| va-opnd
         }
 
         # eval-lambda : (<LAMBDA>, <ENV>) -> <FUNVAL>

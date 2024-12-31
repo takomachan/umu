@@ -4,12 +4,12 @@ FILES =	[
     'test.umu',
     'list.umu',
     'set.umu',
-    'j.c.reynolds1971.umu',
-    'c.j.date1981/date.umu',
-    'c.j.date1981/date-jp.umu',
-    'sicp-ch1.umu',
-    'sicp-ch2.umu',
-    'sicp-ch3.umu'
+    'definional-interpreter.umu',
+    'database/database-systems.umu',
+    'database/database-systems-jp.umu',
+    'sicp/sicp-ch1.umu',
+    'sicp/sicp-ch2.umu',
+    'sicp/sicp-ch3.umu'
 ]
 
 
