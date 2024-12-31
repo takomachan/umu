@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-make -C ../lib/umu -f Makefile files | \
+rake -C ../lib/umu -f Rakefile files | \
     awk 'BEGIN { printf "FILES = \\\n" }
          { printf "\t%s \\\n", $1 }
     ' > Make.FILES
