@@ -1,0 +1,30 @@
+(######## Value ########
+
+<VAL> = <INTEGER> + <BOOLEAN> + <FUNVAL>
+
+################)
+
+structure VAL = struct {
+    #### Constructor ####
+
+    # Int -> <INTEGER>
+    fun mk-integer = x : Int -> Datum @Integer x
+
+    # Bool -> <BOOLEAN>
+    fun mk-boolean = x : Bool -> Datum @Boolean x
+
+    # Fun -> <FUNVAL>
+    fun mk-funval  = x : Fun -> Datum @Funval x
+
+
+    #### Classifier ####
+
+    # <VAL> -> Bool
+    fun integer? = exp : Datum -> tag-of exp == @Integer
+
+    # <VAL> -> Bool
+    fun boolean? = exp : Datum -> tag-of exp == @Boolean
+
+    # <VAL> -> Bool
+    fun funval?  = exp : Datum -> tag-of exp == @Funval
+}

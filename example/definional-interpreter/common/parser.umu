@@ -1,0 +1,193 @@
+(######## Parser ########
+
+ <Exp> ::= <Const>  /* Undefined, Umu's Int */
+         | <Var>    /* Undefined, Umu's Symbol */
+         | <Form>
+
+
+ <Form> ::= <If> | <Lambda> | <Apply> | <Let> | <Letrec>
+
+
+
+ <If>     ::= "[" IF "," <Exp> "," <Exp> "," <Exp> "]"
+
+
+ <Lambda> ::= "[" LAMBDA "," "[" <Var1> "," ... "," <VarN> "]" "," <Exp> "]"
+                                                                /* N >= 1 */
+
+ <Apply>  ::= "[" <Exp1> "," ... "," <ExpN> "]"  /* N >= 2 */
+
+
+ <Let>    ::= "[" LET "," <Exp> "," <ValBind1> "," ... "," <ValBindN> "]"
+ <ValBind> ::= "[" <Var> "," <Exp> "]"                          /* N >= 0 */
+
+
+ <Letrec> ::= "[" LETREC "," <Exp> "," <LamBind1> "," ... "," <LamBindN> "]"
+ <LamBind> ::= "[" <Var> "|" <Lambda> "]"                       /* N >= 0 */
+
+########################)
+
+# parse : 'a -> <EXP>
+fun rec parse = exp : Top -> cond exp of {
+| const?    -> EXP::mk-const exp
+| var?      -> EXP::mk-var exp
+| form?     -> parse-form exp
+else        -> ERROR::syntax "Unknown Expression: " exp
+} where {
+    # const?    : Top -> Bool
+    fun const?  = exp -> exp kind-of? Int
+
+    # var?      : Top -> Bool
+    fun var?    = exp -> exp kind-of? Symbol
+
+    # form?     : Top -> Bool
+    fun form?   = exp -> exp kind-of? List && length exp >= 2
+
+
+    #### <Form> ####
+    # parse-form : [Top] -> <EXP>
+    fun parse-form = exp : List -> let {
+        val [keyword|args] = exp
+    in
+        if keyword kind-of? Symbol then
+            case keyword of {
+            | @IF       -> parse-if     args
+            | @LAMBDA   -> parse-lambda args
+            | @LET      -> parse-let    args
+            | @LETREC   -> parse-letrec args
+            else        -> parse-apply  exp
+            }
+        else
+            parse-apply exp
+    } where {
+        #### <If> ####
+        # parse-if : [Top] -> <COND>
+        fun parse-if = args : List -> let {
+            assert length args == 3 ->
+                ERROR::syntax "For IF's arity, expected 3, but: " args
+
+            val [prem, conc, altr] = args
+        in
+            EXP::mk-cond (parse prem, parse conc, parse altr)
+        }
+
+        #### <Lambda> ####
+        # parse-lambda : [Top] -> <LAMBDA>
+        fun parse-lambda = args : List -> let {
+            assert length args == 2 ->
+                ERROR::syntax 
+                    "For LAMBDA's arity, expected 2, but: " args
+
+            val [fps, body] = args
+
+            assert fps kind-of? List ->
+                ERROR::syntax
+                    "In LAMBDA, expected a List of <Var>, but: " fps
+            assert length fps >= 1 ->
+                ERROR::syntax
+                    ("In LAMBDA, " ^
+                        "expected length of <Var>s is 1 or more, but: ")
+                    fps
+
+            val [init-fp|fps'] = reverse fps
+
+            assert var? init-fp ->
+                ERROR::syntax "In LAMBDA, expected a <Var>, but: " init-fp
+
+            val init-body-exp = EXP::mk-lambda (parse init-fp, parse body)
+        in
+            fps' |> foldl init-body-exp { fp body-exp ->
+                let {
+                    assert var? fp ->
+                        ERROR::syntax "In LAMBDA, expected a <Var>, but: "
+                        fp
+                in
+                    EXP::mk-lambda (parse fp, body-exp)
+                }
+            }
+        }
+
+        #### <Apply> ####
+        # parse-apply : [Top] -> <APPL>
+        fun parse-apply = args : List -> let {
+            assert length args >= 2 ->
+                ERROR::syntax
+                    "For APPLY's arity, expected 2 or more, but: " args
+
+            val [opr, init-opnd|opnds] = args
+            val init-opr-exp = EXP::mk-appl (parse opr, parse init-opnd)
+        in
+            opnds |> foldl init-opr-exp { opnd opr-exp ->
+                EXP::mk-appl (opr-exp, parse opnd)
+            }
+        }
+
+        #### <Let> ####
+        # parse-let : [Top] -> <APPL>
+        fun parse-let = args : List -> let {
+            assert length args >= 1 ->
+                ERROR::syntax
+                    "For LET's arity, expected 1 or more, but: " args
+
+            val [body|binds] = args
+        in
+            binds |> foldr (parse body) { bind body-exp ->
+                let {
+                    assert bind kind-of? List && length bind == 2 ->
+                        ERROR::syntax
+                            "For LET's binding, expected pair List, but: "
+                            bind
+
+                    val [dvar, dexp] = bind
+
+                    assert var? dvar ->
+                        ERROR::syntax "In LET, expected VAR, but: " dvar
+                in
+                    mk-let (parse dvar, parse dexp, body-exp)
+                }
+            }
+        } where {
+            fun mk-let = (dvar, dexp, body) -> EXP::mk-appl (
+                EXP::mk-lambda (dvar, body),
+                dexp
+            )
+        }
+
+        #### <Letrec> ####
+        # parse-letrec : [Top] -> <LETREC>
+        fun parse-letrec = args : List -> let {
+            assert length args >= 1 ->
+                ERROR::syntax
+                    "For LETREC's arity, expected 1 or more, but: " args
+
+            val [body|binds] = args
+        in
+            binds |> foldr (parse body) { bind body-exp ->
+                let {
+                    assert bind kind-of? List && length bind >= 2 ->
+                        ERROR::syntax
+                            ("For LETREC's binding, " ^
+                                "expected 2 or more List, but: ")
+                            bind
+
+                    val [dvar|dexp] = bind
+
+                    assert var? dvar ->
+                        ERROR::syntax "In LETREC, expected <VAR>, but: "
+                        dvar
+                    assert form? dexp ->
+                        ERROR::syntax "In LETREC, expected <Form>, but: "
+                        dexp
+
+                    val [keyword|lam] = dexp
+
+                    assert keyword == @LAMBDA ->
+                        ERROR::syntax
+                            "In LETREC, expected LAMBDA, but: " keyword
+                in
+                    EXP::mk-letrec (parse dvar, parse-lambda lam, body-exp)
+                }
+            }
+        }
+    }
+}

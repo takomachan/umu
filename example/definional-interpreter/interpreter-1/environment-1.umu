@@ -1,0 +1,60 @@
+######## Environment I ########
+
+structure ENV-I = struct {
+    # initial : <ENV>   where { type <ENV> = <VAR> -> <VAL> }
+    val initial : Fun = initenv
+
+    # lookup : (<ENV>, <VAR>) -> <VAL>
+    fun lookup = (e :Fun, v : Datum) -> e v
+
+    # extend-value : (<ENV>, <VAR>, <VAL>) -> <ENV>
+    fun extend-value = (e : Fun, z : Datum, a : Datum) -> e'
+    where {
+        fun e'      = x : Datum -> if x == z then a    else e x
+    }
+
+    # extend-recursive : (<ENV>, <VAR>, Fun) -> <ENV>
+    fun extend-recursive = (e : Fun, z : Datum, f : Fun) -> e'
+    where {
+        fun rec e'  = x : Datum -> if x == z then f e' else e x
+    }
+} where {
+    fun initenv = x : Datum -> case val-of x of {
+    #### Constant
+    | @TRUE     -> VAL::mk-boolean  TRUE
+    | @FALSE    -> VAL::mk-boolean  FALSE
+
+    #### Number
+    | @NEG      -> mk-unop  negate  VAL::mk-integer
+    | @SUCC     -> mk-unop  (+ 1)   VAL::mk-integer
+    | @PRED     -> mk-unop  (- 1)   VAL::mk-integer
+    | @ADD      -> mk-binop (+)     VAL::mk-integer
+    | @SUB      -> mk-binop (-)     VAL::mk-integer
+    | @MUL      -> mk-binop (*)     VAL::mk-integer
+    | @DIV      -> mk-binop (/)     VAL::mk-integer
+    | @MOD      -> mk-binop (mod)   VAL::mk-integer
+
+    #### Relational
+    | @EQ       -> mk-binop (==)    VAL::mk-boolean
+    | @LT       -> mk-binop (<)     VAL::mk-boolean
+
+    else        -> ERROR::name "Unknown VAR: " x
+    } where {
+        # int : <VAL> -> Int
+        fun int = x : Datum ->
+            if VAL::integer? x then
+                val-of x
+            else
+                ERROR::type' "Expected a Int, but: " x
+
+        # mk-unop : (Int -> 'a) -> ('a -> <VAL>) -> <FUNVAL>
+        fun mk-unop = (unop : Fun) (mk : Fun) ->
+            VAL::mk-funval { x : Datum -> unop (int x) |> mk }
+
+        # mk-binop : (Int -> Int -> 'a) -> ('a -> <VAL>) -> <FUNVAL>
+        fun mk-binop = (binop : Fun) (mk : Fun) ->
+            VAL::mk-funval { x : Datum ->
+                VAL::mk-funval { y -> binop (int x) (int y) |> mk }
+            }
+    }
+}

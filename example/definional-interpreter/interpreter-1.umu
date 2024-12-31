@@ -1,0 +1,12 @@
+######## Interpreter-I ########
+
+# interpret-I : <EXP> -> <VAL>
+fun interpret-I = r : Datum -> EVAL-I::eval (r, ENV-I::initial)
+
+val test-I : Fun = TESTER::make-tester interpret-I
+val run-I  : Fun = make-runner         interpret-I
+
+
+;;
+
+test-I ()

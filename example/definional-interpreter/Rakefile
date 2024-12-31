@@ -1,0 +1,48 @@
+UMU = '../../exe/umu'
+
+COMMON_FILES =	[
+    'common/error.umu',
+    'common/expression.umu',
+    'common/value.umu',
+    'common/parser.umu',
+    'common/prelude.umu',
+    'common/test.umu'
+]
+
+INTERPRETER_1_FILES = [
+    'interpreter-1/environment-1.umu',
+    'interpreter-1/evaluator-1.umu',
+    'interpreter-1.umu'
+]
+
+FILES = COMMON_FILES + INTERPRETER_1_FILES
+
+
+
+task :default => :help
+
+
+task :help do
+	puts "[Making Rules]"
+	puts "    test : Run test scripts"
+	puts "    repl : Run in interactive mode"
+	puts "  files  : List script files"
+	puts
+end
+
+
+task :test => FILES do
+    sh format "%s %s", UMU, FILES.join(' ')
+end
+
+
+task :repl => FILES do
+    sh format "%s -i %s", UMU, FILES.join(' ')
+end
+
+
+task :files do
+    FILES.each do |file|
+        puts file
+    end
+end

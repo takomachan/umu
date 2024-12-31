@@ -1,0 +1,43 @@
+######## Prelude ########
+
+# Keyword
+val IF     = @IF
+val LAMBDA = @LAMBDA
+val LET    = @LET
+val LETREC = @LETREC
+
+# Primitive constant
+val T = @TRUE
+val F = @FALSE
+
+# Primitive numeric function
+val NEG  = @NEG
+val SUCC = @SUCC
+val PRED = @PRED
+val ADD  = @ADD
+val SUB  = @SUB
+val MUL  = @MUL
+val DIV  = @DIV
+val MOD  = @MOD
+
+# Primitive relational function
+val EQ = @EQ
+val LT = @LT
+
+# Built-in logical function
+val NOT = [LAMBDA, [@x], [IF, @x, F, T]]
+
+# Built-in relational function
+val NE = [LAMBDA, [@x, @y], [NOT, [EQ, @x, @y]]]
+val LE = [LAMBDA, [@x, @y], [NOT, [LT, @y, @x]]]
+val GT = [LAMBDA, [@x, @y],       [LT, @y, @x]]
+val GE = [LAMBDA, [@x, @y], [NOT, [LT, @x, @y]]]
+
+# Runner - Frontend of Interpreter ########
+fun make-runner = interpret : Fun ->
+       tee { src -> (puts "<SRC> : " ; pp src) }
+    >> parse
+    >> tee { exp -> (puts "<EXP> : " ; pp exp) }
+    >> interpret
+    >> tee { value -> (puts "-> <VAL> : " ; pp value) }
+

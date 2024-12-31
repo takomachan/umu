@@ -1,0 +1,57 @@
+(######## Expression (Abstract Syntax Tree, AST) ########
+
+<EXP> = <CONST> + <VAR> + <APPL> + <LAMBDA> + <COND> + <LETREC>
+
+<APPL>   = [opr: <EXP>, opnd: <EXP>]
+<LAMBDA> = [fp: <VAR>, body: <EXP>]
+<COND>   = [prem: <EXP>, conc: <EXP>, altr: <EXP>]
+<LETREC> = [dvar: <VAR>, dexp: <LAMBDA>, body: <EXP>]
+
+#########################################################)
+
+structure EXP = struct {
+    #### Constructor ####
+
+    # mk-const  : Int -> <CONST>
+    fun mk-const  = x : Int -> Datum @Const x
+
+    # mk-var    : Symbol -> <VAR>
+    fun mk-var    = x : Symbol -> Datum @Var x
+
+    # mk-appl   : (<EXP>, <EXP>) -> <APPL>
+    fun mk-appl   = (opr : Datum, opnd : Datum) ->
+                        Datum @Appl (opr, opnd)
+
+    # mk-lambda : (<VAR>, <EXP>) -> <LAMBDA>
+    fun mk-lambda = (fp : Datum, body : Datum) ->
+                        Datum @Lambda (fp, body)
+
+    # mk-cond   : (<EXP>, <EXP>, <EXP>) -> <COND>
+    fun mk-cond   = (prem : Datum, conc : Datum, altr : Datum) ->
+                        Datum @Cond (prem, conc, altr)
+
+    # mk-letrec : (<VAR>, <LAMBDA>, <EXP>) -> <LETREC>
+    fun mk-letrec = (dvar : Datum, dexp : Datum, body : Datum) ->
+                        Datum @Letrec (dvar, dexp, body)
+
+
+    #### Classifier ####
+
+    # const?    : <EXP> -> Bool
+    fun const?  = exp : Datum -> tag-of exp == @Const
+
+    # var?      : <EXP> -> Bool
+    fun var?    = exp : Datum -> tag-of exp == @Var
+
+    # appl?     : <EXP> -> Bool
+    fun appl?   = exp : Datum -> tag-of exp == @Appl
+
+    # lambda?   : <EXP> -> Bool
+    fun lambda? = exp : Datum -> tag-of exp == @Lambda
+
+    # cond?     : <EXP> -> Bool
+    fun cond?   = exp : Datum -> tag-of exp == @Cond
+
+    # letrec?   : <EXP> -> Bool
+    fun letrec? = exp : Datum -> tag-of exp == @Letrec
+}

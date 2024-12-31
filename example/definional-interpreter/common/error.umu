@@ -1,0 +1,21 @@
+######## Error ########
+
+structure ERROR = struct {
+    # failure       : String -> 'a -> ()
+    fun failure     = msg x -> error ("Assertion Failure",  msg, x)
+
+    # syntax        : String -> 'a -> ()
+    fun syntax      = msg x -> error ("Syntax Error",       msg, x)
+
+    # name          : String -> 'a -> ()
+    fun name        = msg x -> error ("Name Error",         msg, x)
+
+    # application   : String -> 'a -> ()
+    fun application = msg x -> error ("Application Error",  msg, x)
+
+    # type'         : String -> 'a -> ()
+    fun type'       = msg x -> error ("Type Error",         msg, x)
+} where {
+    fun error = (category, msg, x) ->
+        panic! <| "[" ^ category ^ "] " ^ msg ^ inspect x
+}
