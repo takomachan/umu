@@ -18,7 +18,7 @@ fun square = x -> x * x
 #### From SECTION 1.2.2
 
 ###     fib : Int -> Int
-fun rec fib = n -> case n {
+fun rec fib = n -> case n of {
 | 0  -> 0
 | 1  -> 1
 else -> fib (n - 1) + fib (n - 2)
@@ -29,8 +29,8 @@ else -> fib (n - 1) + fib (n - 2)
 
 ###     gcd : Int -> Int -> Int
 fun rec gcd = a b -> (
-    if (b == 0) a
-    else        gcd b (a mod b)
+    if b == 0 then a
+              else gcd b (a mod b)
 )
 
 
@@ -43,9 +43,12 @@ fun prime? = n -> (
     fun divides? = a b -> b mod a == 0
 
     fun rec find-divisor = n test-divisor -> (
-        if    (square test-divisor > n) n
-        elsif (divides? test-divisor n) test-divisor
-        else                            find-divisor n (test-divisor + 1)
+        if    square test-divisor > n then
+            n
+        elsif divides? test-divisor n then
+            test-divisor
+        else
+            find-divisor n (test-divisor + 1)
     )
 
     fun smallest-divisor = n -> find-divisor n 2
@@ -255,7 +258,7 @@ fun add-rat'' = x y -> (
 
 
 fun dispa-cons = x y -> dispatch where {
-    fun dispatch = m -> case m {
+    fun dispatch = m -> case m of {
     | 0  -> x
     | 1  -> y
     else -> panic! ("Argument not 0 or 1 -- CONS: " ^ (to-s m))
@@ -367,8 +370,8 @@ val one-through-four = [1, 2, 3, 4]
 
 
 fun rec list-ref = items n -> (
-    if (n == 0) head items
-    else        list-ref (tail items) (n - 1)
+    if n == 0 then head items
+              else list-ref (tail items) (n - 1)
 )
 
 val squares = [1, 4, 9, 16, 25]
@@ -378,7 +381,7 @@ val squares = [1, 4, 9, 16, 25]
 ;;
 
 
-fun rec length = items -> case items {
+fun rec length = items -> case items of {
 []   -> 0
 else -> 1 + length (tail items)
 }
@@ -393,7 +396,7 @@ val odds = [1, 3, 5, 7]
 fun length' = items -> (
     length-iter items 0
 ) where {
-    fun rec length-iter = a count -> case a {
+    fun rec length-iter = a count -> case a of {
     []   -> count
     else -> length-iter (tail a) (1 + count)
     }
@@ -404,7 +407,7 @@ fun length' = items -> (
 ;;
 
 
-fun rec append = list1 list2 -> case list1 {
+fun rec append = list1 list2 -> case list1 of {
 | []       -> list2
 | [x1|xs1] -> [x1 | append xs1 list2]
 }
@@ -420,7 +423,7 @@ fun rec append = list1 list2 -> case list1 {
 
 #### Mapping over lists ####
 
-fun rec scale-list = items factor -> case items {
+fun rec scale-list = items factor -> case items of {
 | []     -> []
 | [x|xs] -> [x * factor | scale-list xs factor]
 }
@@ -430,7 +433,7 @@ fun rec scale-list = items factor -> case items {
 ;;
 
 
-fun map = proc items -> case items {
+fun map = proc items -> case items of {
 | []     -> []
 | [x|xs] -> [proc x | map proc xs]
 }
@@ -463,8 +466,8 @@ fun scale-list' = items factor -> map { x -> x * factor } items
 
 
 fun rec count-leaves = xs -> (
-    if (xs kind-of? List)
-        case xs {
+    if xs kind-of? List then
+        case xs of {
         | []      -> 0
         | [x|xs'] -> count-leaves x + count-leaves xs'
         }
@@ -495,8 +498,8 @@ val x = [[1, 2] | [3, 4]]
 #### Mapping over trees ####
 
 fun rec scale-tree = tree factor -> (
-    if (tree kind-of? List)
-        case tree {
+    if tree kind-of? List then
+        case tree of {
         | []     -> []
         | [x|xs] -> [scale-tree x factor | scale-tree xs factor]
         }
@@ -510,8 +513,8 @@ fun rec scale-tree = tree factor -> (
 
 
 fun rec scale-tree' = tree factor -> map { sub-tree ->
-    if (sub-tree kind-of? List) scale-tree' sub-tree factor
-    else                        sub-tree * factor
+    if sub-tree kind-of? List then scale-tree' sub-tree factor
+                              else sub-tree * factor
 } tree
 
 ;; scale-tree' [1, [2, [3, 4], 5], [6, 7]] 10
@@ -528,13 +531,13 @@ fun rec scale-tree' = tree factor -> map { sub-tree ->
 
 ###     sum-odd-squares : [Int] -> Int
 fun rec sum-odd-squares = tree -> (
-    if (tree kind-of? List)
-        case tree {
+    if tree kind-of? List then
+        case tree of {
         | []     -> 0
         | [x|xs] -> sum-odd-squares x + sum-odd-squares xs
         }
     else
-        cond tree {
+        cond tree of {
         odd? -> square tree
         else -> 0
         }
@@ -544,13 +547,13 @@ fun rec sum-odd-squares = tree -> (
 fun even-fibs = n -> (
     next 0
 ) where {
-    fun rec next = k -> cond k {
+    fun rec next = k -> cond k of {
     (> n) -> []
     else  -> let {
                  val f = fib k
              in
-                 if (even? f) [f | next (k + 1)]
-                 else         next (k + 1)
+                 if even? f then [f | next (k + 1)]
+                            else next (k + 1)
              }
     }
 }
@@ -573,10 +576,10 @@ fun even-fibs = n -> (
 
 
 ###     filter : ('a -> Bool) -> ['a] -> ['a]    where 'a <- Top
-fun rec filter = predicate sequence -> case sequence {
+fun rec filter = predicate sequence -> case sequence of {
 | []     -> []
-| [x|xs] -> if (predicate x)    [x | filter predicate xs]
-            else                filter predicate xs
+| [x|xs] -> if predicate x then [x | filter predicate xs]
+                           else filter predicate xs
 }
 
 ;; filter odd? [1, 2, 3, 4, 5]
@@ -585,7 +588,7 @@ fun rec filter = predicate sequence -> case sequence {
 
 
 ###     accumulate : ('a -> 'b -> 'b) -> ['a] -> 'b   where ('a, 'b) <- Top
-fun rec accumulate = op initial sequence -> case sequence {
+fun rec accumulate = op initial sequence -> case sequence of {
 | []     -> initial
 | [x|xs] -> op x (accumulate op initial xs)
 }
@@ -602,8 +605,8 @@ fun rec accumulate = op initial sequence -> case sequence {
 
 
 fun rec enumerate-interval = low high -> (
-    if (low > high) []
-    else            [low | enumerate-interval (low + 1) high]
+    if low > high then []
+                  else [low | enumerate-interval (low + 1) high]
 )
 
 ;; enumerate-interval 2 7
@@ -612,8 +615,8 @@ fun rec enumerate-interval = low high -> (
 
 
 fun rec enumerate-tree = tree -> (
-    if (tree kind-of? List)
-        case tree {
+    if tree kind-of? List then
+        case tree of {
         | []     -> []
         | [x|xs] -> enumerate-tree x ++ enumerate-tree xs
         }
@@ -805,7 +808,7 @@ fun prime-sum-pairs = n -> (
 ;;
 
 
-fun rec permutations = s -> case s {
+fun rec permutations = s -> case s of {
 []   -> [[]]      ## IF empty set? THEN sequence containing empty set
 else -> flatmap { x ->
             map { p -> [x|p] } (permutations (remove x s))
@@ -866,7 +869,7 @@ else -> flatmap { x ->
 
 # (23 + 45) * (x + 9)
 
-# fun rec fact = n -> if (n == 1) 1 else fact (n - 1)
+# fun rec fact = n -> if n == 1 then 1 else fact (n - 1)
 
 
 val a = 1
@@ -890,10 +893,10 @@ val b = 2
 ;;
 
 
-fun rec memq = item sequence -> case sequence {
+fun rec memq = item sequence -> case sequence of {
 | []     -> NONE
-| [x|xs] -> if (item == x)  Some sequence
-            else            memq item xs
+| [x|xs] -> if item == x then Some sequence
+                         else memq item xs
 }
 
 ;; memq @apple [@pear, @banana, @prune]
@@ -940,9 +943,9 @@ fun multiplier = s -> s$2
 fun multiplicand = s -> s$3
 
 
-fun rec deriv = exp var -> cond exp {
+fun rec deriv = exp var -> cond exp of {
 | number?   -> 0
-| variable? -> if (same-variable? exp var) 1 else 0
+| variable? -> if same-variable? exp var then 1 else 0
 | sum?      -> make-sum
                     (deriv (addend exp) var)
                     (deriv (augend exp) var)
@@ -975,23 +978,26 @@ else        -> panic! ("unknown expression type -- DERIV: " ^ inspect exp)
 fun eq-number? = exp num -> number? exp && exp == num
 
 fun make-sum' = a1 a2 -> (
-    if    (eq-number? a1 0) a2
-    elsif (eq-number? a2 0) a1
-    elsif (number? a1 && number? a2) a1 + a2
-    else  (@"+", a1, a2)
+    if    eq-number? a1 0 then a2
+    elsif eq-number? a2 0 then a1
+    elsif number? a1 &&
+          number? a2      then a1 + a2
+    else                       (@"+", a1, a2)
 )
 
 fun make-product' = m1 m2 -> (
-    if    (eq-number? m1 0 || eq-number? m2 0) 0
-    elsif (eq-number? m1 1) m2
-    elsif (eq-number? m2 1) m1
-    elsif (number? m1 && number? m2) m1 * m2
-    else  (@"*", m1, m2)
+    if    eq-number? m1 0 ||
+          eq-number? m2 0 then 0
+    elsif eq-number? m1 1 then m2
+    elsif eq-number? m2 1 then m1
+    elsif number? m1 &&
+          number? m2      then m1 * m2
+    else                       (@"*", m1, m2)
 )
 
-fun rec deriv' = exp var -> cond exp {
+fun rec deriv' = exp var -> cond exp of {
 | number?   -> 0
-| variable? -> if (same-variable? exp var) 1 else 0
+| variable? -> if same-variable? exp var then 1 else 0
 | sum?      -> make-sum'
                     (deriv' (addend exp) var)
                     (deriv' (augend exp) var)
@@ -1026,24 +1032,24 @@ else        -> panic! ("unknown expression type -- DERIV: " ^ inspect exp)
 
 #### UNORDERED
 
-fun rec element-of-set? = e set -> case set {
+fun rec element-of-set? = e set -> case set of {
 | []     -> FALSE
-| [x|xs] -> if (e == x) TRUE
-            else        element-of-set? e xs
+| [x|xs] -> if e == x then TRUE
+                      else element-of-set? e xs
 }
 
 fun adjoin-set = e set -> (
-    if (element-of-set? e set)  set
-    else                        [e|set]
+    if element-of-set? e set then set
+                             else [e|set]
 )
 
 fun rec intersection-set = set1 set2 -> (
-    if (empty? set1 || empty? set2)
+    if empty? set1 || empty? set2 then
         []
     else let {
         val [x1|xs1] = set1
     in
-        if (element-of-set? x1 set2)
+        if element-of-set? x1 set2 then
             [x1 | intersection-set xs1 set2]
         else
             intersection-set xs1 set2
@@ -1057,9 +1063,9 @@ fun rec intersection-set = set1 set2 -> (
 
 #### ORDERED
 
-fun rec element-of-set?' = e set -> case set {
+fun rec element-of-set?' = e set -> case set of {
 | []     -> FALSE
-| [x|xs] -> cond e {
+| [x|xs] -> cond e of {
             | (== x) -> TRUE
             | (<  x) -> FALSE
             else     -> element-of-set?' e xs
@@ -1067,13 +1073,13 @@ fun rec element-of-set?' = e set -> case set {
 }
 
 fun rec intersection-set' = set1 set2 -> (
-    if (empty? set1 || empty? set2)
+    if empty? set1 || empty? set2 then
         []
     else let {
         val [x1|xs1] = set1
         val [x2|xs2] = set2
     in
-        cond x1 {
+        cond x1 of {
         | (== x2) -> [x1 | intersection-set' xs1  xs2]
         | (<  x2) ->       intersection-set' xs1  set2
         | (>  x2) ->       intersection-set' set1 xs2
@@ -1097,12 +1103,12 @@ fun right-branch = tree -> tree$3
 fun make-tree = entry left right -> (entry, left, right)
 
 fun rec element-of-set? = e set -> (
-    if (set kind-of? List && empty? set)
+    if set kind-of? List && empty? set then
         FALSE
     else let {
         val x = entry set
     in
-        cond e {
+        cond e of {
         | (== x)    -> TRUE
         | (<  x)    -> element-of-set? e (left-branch set)
         | (>  x)    -> element-of-set? e (right-branch set)
@@ -1111,12 +1117,12 @@ fun rec element-of-set? = e set -> (
 )
 
 fun rec adjoin-set = e set -> (
-    if (set kind-of? List && empty? set)
+    if set kind-of? List && empty? set then
         make-tree x [] []
     else let {
         val x = entry set
     in
-        cond e {
+        cond e of {
         | (== x)    -> set
         | (<  x)    -> make-tree
                         x
@@ -1187,9 +1193,10 @@ val s = (7, (3, (1, [], []), (5, [], [])), (9, [], (11, [], [])))
 #### INFORMATION RETRIEVAL
 
 (#
-fun lookup = given-key set-of-records -> case set-of-records {
+fun lookup = given-key set-of-records -> case set-of-records of {
 | []     -> FALSE
-| [x|xs] -> if (given-key == key x) x else lookup given-key xs
+| [x|xs] -> if given-key == key x then x
+                                  else lookup given-key xs
 }
 #)
 
@@ -1213,17 +1220,13 @@ fun weight-leaf = x -> x$3
 
 
 fun symbols = tree -> (
-    if (leaf? tree)
-        [symbol-leaf tree]
-    else
-        tree$3
+    if leaf? tree then [symbol-leaf tree]
+                  else tree$3
 )
 
 fun weight = tree -> (
-    if (leaf? tree)
-        weight-leaf tree
-    else
-        tree$4
+    if leaf? tree then weight-leaf tree
+                  else tree$4
 )
 
 fun make-code-tree = left right -> (
@@ -1243,17 +1246,17 @@ fun right-branch = tree -> tree$2
 fun decode = bits tree -> (
     decode1 bits tree
 ) where {
-    fun choose-branch = bit branch -> case bit {
+    fun choose-branch = bit branch -> case bit of {
     | 0  -> left-branch branch
     | 1  -> right-branch branch
     else -> panic! ("bad bit -- CHOOSE-BRANCH: " ^ inspect bit)
     }
 
-    fun rec decode1 = bits current-branch -> case bits {
+    fun rec decode1 = bits current-branch -> case bits of {
     | []     -> []
-    | [x|xs] -> if (leaf? next-branch)
+    | [x|xs] -> if leaf? next-branch then
                         [symbol-leaf next-branch | decode1 xs tree]
-                    else
+                else
                         decode1 xs next-branch
 
                 where val next-branch = choose-branch x current-branch
@@ -1483,28 +1486,28 @@ fun make-from-mag-ang-polar = r a -> (
 
 #### Generic selectors ####
 
-fun real-part = z -> cond z {
+fun real-part = z -> cond z of {
 | rectanglar? -> real-part-rectanglar (contents z)
 | polar?      -> real-part-polar      (contents z)
 else          -> panic! ("Unknown type -- REAL-PART: " ^ inspect z)
 }
 
 
-fun imag-part = z -> cond z {
+fun imag-part = z -> cond z of {
 | rectanglar? -> imag-part-rectanglar (contents z)
 | polar?      -> imag-part-polar      (contents z)
 else          -> panic! ("Unknown type -- IMAG-PART: " ^ inspect z)
 }
 
 
-fun magnitude = z -> cond z {
+fun magnitude = z -> cond z of {
 | rectanglar? -> magnitude-rectanglar (contents z)
 | polar?      -> magnitude-polar      (contents z)
 else          -> panic! ("Unknown type -- MAGNITUDE: " ^ inspect z)
 }
 
 
-fun angle = z -> cond z {
+fun angle = z -> cond z of {
 | rectanglar? -> angle-rectanglar (contents z)
 | polar?      -> angle-polar      (contents z)
 else          -> panic! ("Unknown type -- ANGLE: " ^ inspect z)

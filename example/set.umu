@@ -25,9 +25,9 @@ structure SetBasedOnList = struct {
     fun wrap = x -> Datum @Set x
 
     # _member? : 'a -> ['a] -> BOOL
-    fun rec _member? = x ys -> cond ys {
+    fun rec _member? = x ys -> cond ys of {
     empty? -> FALSE
-    else   -> if (x == y)
+    else   -> if x == y then
                   TRUE
               else
                   _member? x ys'
@@ -36,14 +36,14 @@ structure SetBasedOnList = struct {
     }
 
     # _cons : 'a -> ['a] ->['a]
-    fun _cons = x xs -> if (_member? x xs)
+    fun _cons = x xs -> if _member? x xs then
                             xs
                         else
                             [x|xs]
 
 
     # _make : ['a] -> ['a]
-    fun rec _make = xs -> cond xs {
+    fun rec _make = xs -> cond xs of {
     empty? -> []
     else   -> xs' |> _make |> _cons x
 
@@ -51,7 +51,7 @@ structure SetBasedOnList = struct {
     }
 
     # _union : ['a] -> ['a] -> ['a]
-    fun rec _union = xs ys -> cond xs {
+    fun rec _union = xs ys -> cond xs of {
     empty? -> ys
     else   -> _union xs' ys |> _cons x
 
@@ -59,11 +59,11 @@ structure SetBasedOnList = struct {
     }
 
     # _inter : ['a] -> ['a] -> ['a]
-    fun rec _inter = xs ys -> cond xs {
+    fun rec _inter = xs ys -> cond xs of {
     empty? -> []
     else   -> _inter xs' ys
               |> (
-                  if (_member? x ys)
+                  if _member? x ys then
                       _cons x
                   else
                       id

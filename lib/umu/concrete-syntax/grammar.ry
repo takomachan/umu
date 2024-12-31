@@ -291,16 +291,16 @@ expr:
 
     result = CSCE.make_if kw.loc, rule, rules, expr
 }
-| COND atom_expr '{' opt_vert cond_rule cond_rules '}' {
-    kw, expr, _, _, rule, rules_with_clause, _ = val
+| COND expr OF '{' opt_vert cond_rule cond_rules '}' {
+    kw, expr, _, _, _, rule, rules_with_clause, _ = val
     rules, else_expr, else_decls               = rules_with_clause
 
     result = CSCE.make_cond(
                 kw.loc, expr, rule, rules, else_expr, else_decls
             )
 }
-| CASE atom_expr '{' opt_vert case_rule case_rules '}' {
-    kw, expr, _, _, rule, rules_with_clause, _ = val
+| CASE expr OF '{' opt_vert case_rule case_rules '}' {
+    kw, expr, _, _, _, rule, rules_with_clause, _ = val
     rules, else_expr, else_decls               = rules_with_clause
 
     result = CSCE.make_case(
@@ -326,8 +326,8 @@ _elsif_rules:
   ELSIF if_rule                 { result = [val[1]] }
 | ELSIF if_rule _elsif_rules    { result = [val[1]] + val[2] }
 
-if_rule: atom_expr expr {
-    head_expr, body_expr = val
+if_rule: expr THEN expr {
+    head_expr, _, body_expr = val
 
     result = CSCE.make_if_rule head_expr.loc, head_expr, body_expr
 }

@@ -27,9 +27,11 @@ RESERVED_WORDS = [
     'kind-of?',
     'let',
     'mod',
+    'of',
     'pow',
     'rec',
     'struct',       'structure',
+    'then',
     'val',
     'where',
 

@@ -40,7 +40,7 @@ class Abstract < Expression::Abstract
 
 
     def to_s
-        format("%%%s %s { %s %s}",
+        format("%%%s %s %%OF { %s %s}",
             __keyword__.upcase,
 
             self.expr.to_s,
@@ -69,7 +69,7 @@ class Abstract < Expression::Abstract
     def pretty_print(q)
         q.text format("%%%s ", __keyword__.upcase)
         q.pp self.expr
-        q.text ' {'
+        q.text ' %OF {'
 
         q.breakable
 

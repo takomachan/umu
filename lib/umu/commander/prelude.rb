@@ -159,7 +159,7 @@ structure Umu = struct {
 
         # tab : Int -> ()
         fun rec tab = n ->
-            if (0.< n) (
+            if 0.< n then (
                 STDOUT.puts " " ;
                 tab (n.- 1)
             ) else
@@ -215,11 +215,11 @@ structure Umu = struct {
 
         # equal-with? : ('a -> 'b -> Bool) -> %['a] -> %['b] -> Bool
         fun rec equal-with? = eq? xs ys ->
-            if (xs kind-of? Morph)
-                if (ys kind-of? Morph)
-                    case xs {
+            if xs kind-of? Morph then
+                if ys kind-of? Morph then
+                    case xs of {
                     | []      -> empty? ys
-                    | [x|xs'] -> case ys {
+                    | [x|xs'] -> case ys of {
                         | []      -> FALSE
                         | [y|ys'] -> equal-with? eq? x   y &&
                                      equal-with? eq? xs' ys'
@@ -228,7 +228,7 @@ structure Umu = struct {
                 else
                     FALSE
             else
-                if (ys kind-of? Morph)
+                if ys kind-of? Morph then
                     FALSE
                 else
                     eq? xs ys
@@ -240,7 +240,7 @@ structure Umu = struct {
 
         # foldr : 'b -> ('a -> 'b -> 'b) -> %['a] -> 'b
         (#
-        fun rec foldr = a f xs -> case xs {
+        fun rec foldr = a f xs -> case xs of {
         | []      -> a
         | [x|xs'] -> f x (foldr a f xs')
         }
@@ -259,7 +259,7 @@ structure Umu = struct {
 
         # foldl : 'b -> ('a -> 'b -> 'b) -> %['a] -> 'b
         (#
-        fun rec foldl = a f xs -> case xs {
+        fun rec foldl = a f xs -> case xs of {
         | []      -> a
         | [x|xs'] -> foldl (f x a) f xs'
         }
@@ -287,11 +287,11 @@ structure Umu = struct {
 
 
         # max : %['a] -> 'a
-        val max = foldl1 { x y -> if (y.< x) x else y }
+        val max = foldl1 { x y -> if y.< x then x else y }
 
 
         # min : %['a] -> 'a
-        val min = foldl1 { x y -> if (x.< y) x else y }
+        val min = foldl1 { x y -> if x.< y then x else y }
 
 
         # for-each : ('a -> 'b) -> %['a] -> ()
@@ -304,7 +304,7 @@ structure Umu = struct {
 
 
         # select : ('a -> Bool) -> %['a] -> %['a]
-        # fun select = f -> foldr [] { x xs -> if (f x) [x|xs] else xs }
+        # fun select = f -> foldr [] { x xs -> if f x then [x|xs] else xs }
         fun select = (f : Fun) (xs : Morph) -> xs.select f
 
 
@@ -322,7 +322,7 @@ structure Umu = struct {
         where {
             fun e = _ -> []
 
-            fun g = x h ys -> case ys {
+            fun g = x h ys -> case ys of {
             | []      -> []
             | [y|ys'] -> [f x y | h ys']
             }
@@ -348,7 +348,7 @@ structure Umu = struct {
         fun partition = (f : Fun) (xs : Morph) -> foldr ([], []) {
             x (ys, zs)
         ->
-            if (f x)
+            if f x then
                 ([x|ys],    zs)
             else
                 (   ys,  [x|zs])
@@ -359,7 +359,7 @@ structure Umu = struct {
 
         # sort : %['a] -> %['a]
         (#
-        fun rec sort = xs -> case xs {
+        fun rec sort = xs -> case xs of {
         | []          -> []
         | [pivot|xs'] ->
                 concat [sort littles, [pivot], sort bigs]
@@ -384,9 +384,9 @@ structure Umu = struct {
 
         # join : String -> %[String] -> String
         (#
-        fun join = j xs -> case xs {
+        fun join = j xs -> case xs of {
         | []      -> ""
-        | [x|xs'] -> case xs' {
+        | [x|xs'] -> case xs' of {
               | [] -> x
               else -> x.^ (xs'.foldl "" { x' s -> s.^ j.^ x' })
             }
@@ -431,9 +431,9 @@ structure Umu = struct {
         fun (>=) = x y -> x.< y.not
 
         # (<=>)     : 'a -> 'a -> Int
-        fun (<=>) = x y -> if (x.< y)
+        fun (<=>) = x y -> if x.< y then
                                 -1
-                            elsif (x.== y)
+                            elsif x.== y then
                                 0
                             else
                                 1

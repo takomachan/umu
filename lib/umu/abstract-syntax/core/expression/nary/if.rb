@@ -31,14 +31,18 @@ class Rule < Abstraction::Model
 
 
     def to_s
-        format "%s %s", self.head_expr, self.body_expr
+        format "%s %%THEN %s", self.head_expr, self.body_expr
     end
 
 
     def pretty_print(q)
         q.pp self.head_expr
 
-        q.breakable
+        q.breakable ' '
+
+        q.text '%THEN'
+
+        q.breakable ' '
 
         q.pp self.body_expr
     end

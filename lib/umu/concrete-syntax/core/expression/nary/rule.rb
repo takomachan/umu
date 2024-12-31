@@ -96,13 +96,13 @@ class If < Abstraction::Abstract
 
 
     def to_s
-        format "%s %s", self.head_expr, self.body_expr
+        format "%s %%THEN %s", self.head_expr, self.body_expr
     end
 
 
     def pretty_print(q)
         q.pp self.head_expr
-        q.text ' '
+        q.text ' %THEN '
         q.pp self.body_expr
     end
 end

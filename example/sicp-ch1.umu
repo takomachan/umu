@@ -197,14 +197,14 @@ in
 print "\n\nSECTION 1.1.5" ;;
 
 ### abs : Real -> Real
-fun abs = x -> cond x {
+fun abs = x -> cond x of {
 | positive? -> x
 | zero?     -> 0.0
 | negative? -> negate x
 } ;;
 
 ### abs' : Real -> Real
-fun abs' = x -> cond x {
+fun abs' = x -> cond x of {
 negative? -> negate x
 else      -> x
 } ;;
@@ -226,20 +226,20 @@ fun (>=) = x y -> not (x < y) ;;
 
 print "\n\nSECTION 1.1.6" ;;
 
-fun abs = x -> cond x {
+fun abs = x -> cond x of {
 | (< 0)  -> x
 | (== 0) -> 0
 | (> 0)  -> negate 0
 }
 
-fun abs' = x -> cond x {
+fun abs' = x -> cond x of {
 (< 0) -> x
 else  -> x
 }
 
 fun abs'' = x -> (
-  if (x < 0) x
-  else       x
+  if x < 0 then x
+           else x
 )
 
 
@@ -272,8 +272,8 @@ fun improve = guess x -> average guess (x / guess)
 
 ###     sqrt-iter :  Real -> Real -> Real
 fun rec sqrt-iter = guess x -> (
-    if (good-enough? guess x)   guess
-    else                        sqrt-iter (improve guess x) x
+    if good-enough? guess x then guess
+                            else sqrt-iter (improve guess x) x
 )
 
 ### sqrt : Real -> Real
@@ -333,8 +333,8 @@ fun good-enough? = guess x -> abs ((square guess) - x) < 0.001
 fun improve = guess x -> average guess (x / guess)
 
 fun rec sqrt-iter = guess x -> (
-    if (good-enough? guess x)   guess
-    else                        sqrt-iter (improve guess x) x
+    if good-enough? guess x then guess
+                            else sqrt-iter (improve guess x) x
 )
 
 fun sqrt = x -> sqrt-iter 1.0 x ;;
@@ -353,8 +353,8 @@ fun sqrt' = x -> (
     fun improve = guess x -> average guess (x / guess)
 
     fun rec sqrt-iter = guess x ->
-        if (good-enough? guess x)   guess
-        else                        sqrt-iter (improve guess x) x
+        if good-enough? guess x then guess
+                                else sqrt-iter (improve guess x) x
 } ;;
 
 let {
@@ -376,8 +376,8 @@ fun sqrt'' = x -> (
     fun improve = guess -> average guess (x / guess)
 
     fun rec sqrt-iter = guess ->
-        if (good-enough? guess) guess
-        else                    sqrt-iter (improve guess)
+        if good-enough? guess then guess
+                              else sqrt-iter (improve guess)
 } ;;
 
 let {
@@ -409,8 +409,8 @@ print "\n\nSECTION 1.2.1" ;;
 
 ###     factorial : Int -> Int
 fun rec factorial = n -> (
-    if (n == 0) 1
-    else        n * factorial (n - 1)
+    if n == 0 then 1
+              else n * factorial (n - 1)
 ) ;;
 
 let {
@@ -425,7 +425,7 @@ in
 
 ###     fact-iter : Int -> Int -> Int -> Int
 fun rec fact-iter = product counter max-count -> (
-    if (counter > max-count)
+    if counter > max-count then
         product
     else
         fact-iter (counter * product)
@@ -451,7 +451,7 @@ fun factorial'' = n -> (
     iter 1 1
 ) where {
     fun rec iter = product counter ->
-        if (counter > n)
+        if counter > n then
             product
         else
             iter (counter * product)
@@ -475,7 +475,7 @@ print "\n\nSECTION 1.2.2" ;;
 #### Recursive ####
 
 ###     fib : Int -> Int
-fun rec fib = n -> case n {
+fun rec fib = n -> case n of {
 | 0  -> 0
 | 1  -> 1
 else -> fib (n - 1) + fib (n - 2)
@@ -494,8 +494,8 @@ in
 
 ###     fib-iter : Int -> Int -> Int -> Int
 fun rec fib-iter = a b count -> (
-    if (count == 0) b
-    else            fib-iter (a + b) a (count - 1)
+    if count == 0 then b
+                  else fib-iter (a + b) a (count - 1)
 )
 
 ### fib' : Int -> Int
@@ -513,7 +513,7 @@ in
 #### Counting change ####
 
 ### first-denomination : Int -> Int
-fun first-denomination = kinds-of-coins -> case kinds-of-coins {
+fun first-denomination = kinds-of-coins -> case kinds-of-coins of {
 | 1  -> 1
 | 2  -> 5
 | 3  -> 10
@@ -524,9 +524,9 @@ else -> panic! "first-denomination"
 
 ###     cc : Int -> Int -> Int
 fun rec cc = amount kinds-of-coins -> (
-    if (amount == 0)
+    if amount == 0 then
         1
-    elsif (amount < 0 || kinds-of-coins == 0)
+    elsif amount < 0 || kinds-of-coins == 0 then
         0
     else
         (
@@ -569,8 +569,8 @@ print "\n\nSECTION 1.2.4" ;;
 
 ###     expt : Int -> Int -> Int
 fun rec expt = b n -> (
-    if (n == 0) 1
-    else        b * expt b (n - 1)
+    if n == 0 then 1
+              else b * expt b (n - 1)
 )
 
 ;;
@@ -580,8 +580,8 @@ fun rec expt = b n -> (
 
 ###     expt-iter : 'a -> Int -> 'a -> 'a    where { 'a <- Number }
 fun rec expt-iter = b counter product -> (
-    if (counter == 0)   product
-    else                expt-iter b (counter - 1) (b * product)
+    if counter == 0 then product
+                    else expt-iter b (counter - 1) (b * product)
 )
 
 ### expt' : Int -> Int -> Int
@@ -595,7 +595,7 @@ fun expt' = b n -> expt-iter b n 1
 ### even? : Int -> Bool
 fun even? = n -> n mod 2 == 0
 
-fun rec fast-expt = b n -> cond n {
+fun rec fast-expt = b n -> cond n of {
 | zero? -> 1
 | even? -> square <| fast-expt b (n - 1)
 else    -> b * fast-expt b (n - 1)
@@ -612,8 +612,8 @@ print "\n\nSECTION 1.2.5" ;;
 
 ###     gdd : Int -> Int -> Int
 fun rec gcd = a b -> (
-    if (b == 0) a
-    else        gcd b (a mod b)
+    if b == 0 then a
+              else gcd b (a mod b)
 ) ;;
 
 let {
@@ -644,9 +644,9 @@ fun divides? = a b -> b mod a == 0
 
 ###     find-divisor : Int -> Int -> Int
 fun rec find-divisor = n test-divisor -> (
-    if    (square test-divisor > n) n
-    elsif (divides? test-divisor n) test-divisor
-    else                            find-divisor n (test-divisor + 1)
+    if    square test-divisor > n then n
+    elsif divides? test-divisor n then test-divisor
+    else                               find-divisor n (test-divisor + 1)
 )
 
 ### smallest-divisor : Int -> Int
@@ -668,7 +668,7 @@ in
 #### fast-prime? ####
 
 ###     expmod : Int -> Int -> Int -> Int
-fun rec expmod = base exp m -> cond exp {
+fun rec expmod = base exp m -> cond exp of {
 | zero? -> 1
 | even? -> square (expmod base (exp / 2) m) mod m
 else    -> (base * expmod base (exp - 1) m) mod m
@@ -683,9 +683,9 @@ fun fermat-test = n -> (
 
 ### fast-prime : Int -> Int -> Bool
 fun rec fast-prime? = n times -> (
-    if    (times == 0)      TRUE
-    elsif (fermat-test n)   fast-prime? n (times - 1)
-    else                    FALSE
+    if    times == 0    then TRUE
+    elsif fermat-test n then fast-prime? n (times - 1)
+    else                     FALSE
 ) ;;
 
 let {
@@ -716,8 +716,8 @@ print "\n\nSECTION 1.3.1" ;;
 
 ###     sum-integers : Int -> Int -> Int
 fun rec sum-integers = a b -> (
-    if (a > b)  0
-    else        a + sum-integers (a + 1) b
+    if a > b then 0
+             else a + sum-integers (a + 1) b
 ) ;;
 
 let {
@@ -729,8 +729,8 @@ in
 
 ###     sum-cubes : Int -> Int -> Int
 fun rec sum-cubes = a b -> (
-    if (a > b)  0
-    else        cube a + sum-cubes (a + 1) b
+    if a > b then 0
+             else cube a + sum-cubes (a + 1) b
 ) ;;
 
 let {
@@ -742,15 +742,15 @@ in
 
 ###     pi-sum : Real -> Real -> Real
 fun rec pi-sum = a b -> (
-    if (a > b)  0.0
-    else        1.0 / (a * (a + 2.0)) + pi-sum (a + 4.0) b
+    if a > b then  0.0
+             else 1.0 / (a * (a + 2.0)) + pi-sum (a + 4.0) b
 ) ;;
 
 ###     sum : ('a -> 'a) -> 'a -> ('a -> 'a) -> 'a -> 'a -> 'a
 ###                                                 where { 'a <- Number }
 fun rec sum = term a next b init -> (
-    if (a > b)  init
-    else        term a + sum term (next a) next b init
+    if a > b then init
+             else term a + sum term (next a) next b init
 ) ;;
 
 
@@ -944,12 +944,12 @@ fun close-enough? = x y -> abs (x - y) < 0.001
 fun rec search = f neg-point pos-point -> let {
     val midpoint = average neg-point pos-point
 in
-    if (close-enough? neg-point pos-point)
+    if close-enough? neg-point pos-point then
         midpoint
     else let {
         val test-value = f midpoint
     in
-        cond test-value {
+        cond test-value of {
         | positive? -> search f neg-point midpoint
         | negative? -> search f midpoint  pos-point
         else        -> midpoint
@@ -962,9 +962,9 @@ fun half-interval-method = f a b -> let {
     val a-value = f a
     val b-value = f b
 in
-    if    (negative? a-value && positive? b-value)
+    if    negative? a-value && positive? b-value then
         search f a b
-    elsif (negative? b-value && positive? a-value)
+    elsif negative? b-value && positive? a-value then
         search f b a
     else
         panic! <| "Values are not of opposite sign: " ^
@@ -1003,10 +1003,8 @@ fun fixed-point = f first-guess -> (
     fun rec try = guess -> let {
         val next = f guess
     in
-        if (close-enough? guess next)
-            next
-        else
-            try next
+        if close-enough? guess next then next
+                                    else try next
     }
 } ;;
 

@@ -193,7 +193,7 @@ structure VAL = struct {
 ########################)
 
 # parse : 'a -> <EXP>
-fun rec parse = exp : Top -> cond exp {
+fun rec parse = exp : Top -> cond exp of {
 | const?    -> EXP::mk-const exp
 | var?      -> EXP::mk-var exp
 | form?     -> parse-form exp
@@ -214,8 +214,8 @@ else        -> ERROR::syntax "Unknown Expression: " exp
     fun parse-form = exp : List -> let {
         val [keyword|args] = exp
     in
-        if (keyword kind-of? Symbol)
-            case keyword {
+        if keyword kind-of? Symbol then
+            case keyword of {
             | @IF       -> parse-if     args
             | @LAMBDA   -> parse-lambda args
             | @LET      -> parse-let    args
@@ -370,16 +370,16 @@ structure ENV-I = struct {
     # extend-value : (<ENV>, <VAR>, <VAL>) -> <ENV>
     fun extend-value = (e : Fun, z : Datum, a : Datum) -> e'
     where {
-        fun e'      = x : Datum -> if (x == z) a    else e x
+        fun e'      = x : Datum -> if x == z then a    else e x
     }
 
     # extend-recursive : (<ENV>, <VAR>, Fun) -> <ENV>
     fun extend-recursive = (e : Fun, z : Datum, f : Fun) -> e'
     where {
-        fun rec e'  = x : Datum -> if (x == z) f e' else e x
+        fun rec e'  = x : Datum -> if x == z then f e' else e x
     }
 } where {
-    fun initenv = x : Datum -> case (val-of x) {
+    fun initenv = x : Datum -> case val-of x of {
     #### Constant
     | @TRUE     -> VAL::mk-boolean  TRUE
     | @FALSE    -> VAL::mk-boolean  FALSE
@@ -402,7 +402,7 @@ structure ENV-I = struct {
     } where {
         # int : <VAL> -> Int
         fun int = x : Datum ->
-            if (VAL::integer? x)
+            if VAL::integer? x then
                 val-of x
             else
                 ERROR::type' "Expected a Int, but: " x
@@ -428,7 +428,7 @@ where {
     ######## Evaluator ########
 
     # eval : (<EXP>, <ENV>) -> <VAL>
-    fun rec eval = (r : Datum, e : Fun) -> case r {
+    fun rec eval = (r : Datum, e : Fun) -> case r of {
     | Const     -> eval-const r
     | Var       -> eval-var    (r, e)
     | Appl      -> eval-appl   (r, e)
@@ -476,7 +476,7 @@ where {
             assert (VAL::boolean? va-prem)
                 ERROR::type' "In COND, expected a <BOOLEAN>, but: " va-prem
         in
-            if (val-of va-prem)
+            if val-of va-prem then
                 eval (conc, e)
             else
                 eval (altr, e)

@@ -12,7 +12,7 @@ structure List = struct {
 
 
     # singleton? : ['a] -> BOOL
-    fun singleton? = xs -> case xs {
+    fun singleton? = xs -> case xs of {
     [_]  -> TRUE
     else -> FALSE
     }
@@ -27,11 +27,11 @@ structure List = struct {
         then TRUE, else FALSE
     #)
     fun rec equal? = eq? xs ys ->
-        if (xs kind-of? List && ys kind-of? List)
-            case xs {
+        if xs kind-of? List && ys kind-of? List then
+            case xs of {
             | []      -> empty? ys
             | [x|xs'] ->
-                case ys {
+                case ys of {
                 | []      -> FALSE
                 | [y|ys'] -> eq? x y && equal? eq? xs' ys'
                 }
@@ -41,28 +41,28 @@ structure List = struct {
 
 
     # fold : 'b -> ('a -> 'b -> 'b) -> ['a] -> 'b
-    fun rec fold = a f xs -> case xs {
+    fun rec fold = a f xs -> case xs of {
     | []      -> a
     | [x|xs'] -> fold (f x a) f xs'
     }
 
 
     # foldr : 'b -> ('a -> 'b -> 'b) -> ['a] -> 'b
-    fun rec foldr = a f xs -> case xs {
+    fun rec foldr = a f xs -> case xs of {
     | []      -> a
     | [x|xs'] -> f x (foldr a f xs')
     }
 
 
     # foldl : 'b -> ('b -> 'a -> 'b) -> ['a] -> 'b
-    fun rec foldl = a f xs -> case xs {
+    fun rec foldl = a f xs -> case xs of {
     | []      -> a
     | [x|xs'] -> foldl (f a x) f xs'
     }
 
 
     # length : ['a] -> INT
-    fun rec length = xs -> case xs {
+    fun rec length = xs -> case xs of {
     | []      -> 0
     | [x|xs'] -> length xs' + 1
     }
@@ -71,7 +71,7 @@ structure List = struct {
 
 
     # sum : [INT] -> INT
-    fun rec sum = xs -> case xs {
+    fun rec sum = xs -> case xs of {
     | []      -> 0
     | [x|xs'] -> x + sum xs'
     }
@@ -80,7 +80,7 @@ structure List = struct {
 
 
     # map : ('a -> 'b) -> ['a] -> ['b]
-    fun rec map = f xs -> case xs {
+    fun rec map = f xs -> case xs of {
     | []      -> []
     | [x|xs'] -> [f x | map f xs']
     }
@@ -89,18 +89,18 @@ structure List = struct {
 
 
     # select : ('a -> BOOL) -> ['a] -> ['a]
-    fun rec select = f xs -> case xs {
+    fun rec select = f xs -> case xs of {
     | []      -> []
-    | [x|xs'] -> if (f x) xs' else xs'
+    | [x|xs'] -> if f x then xs' else xs'
     }
 
-    fun select' = f -> foldr [] { x xs -> if (f x) xs' else xs }
+    fun select' = f -> foldr [] { x xs -> if f x then xs' else xs }
 
 
     # append : ['a] -> ['a] -> ['a]
-    fun rec append = xs ys -> case xs {
+    fun rec append = xs ys -> case xs of {
     | []   -> ys
-    | [x|xs'] -> case ys {
+    | [x|xs'] -> case ys of {
           | [] -> xs
           else -> [x | append xs' ys]
         }
@@ -111,7 +111,7 @@ structure List = struct {
 
 
     # concat : [['a]] -> ['a]
-    fun rec concat = xss -> case xss {
+    fun rec concat = xss -> case xss of {
     | []        -> []
     | [xs|xss'] -> xs ++ concat xss'
     }
@@ -121,9 +121,9 @@ structure List = struct {
 
 
     # join-string : String -> [String] -> String
-    fun join-string = j xs -> case xs {
+    fun join-string = j xs -> case xs of {
     | []      -> ""
-    | [x|xs'] -> case xs' {
+    | [x|xs'] -> case xs' of {
           | [] -> x
           else -> x ^ fold "" { x' s -> s ^ j ^ x' } xs'
         }
@@ -131,14 +131,14 @@ structure List = struct {
 
 
     # reverse : ['a] -> ['a]
-    fun rec reverse = xs -> case xs {
+    fun rec reverse = xs -> case xs of {
     | []      -> []
     | [x|xs'] -> reverse xs' ++ [x]
     }
 
     val reverse' = rev []
     where {
-        fun rec rev = a xs -> case xs {
+        fun rec rev = a xs -> case xs of {
         | []      -> a
         | [x|xs'] -> rev [x|a] xs'
         }
@@ -148,9 +148,9 @@ structure List = struct {
 
 
     # zip : ['a] -> ['b] -> [('a, 'b)]
-    fun rec zip = xs ys -> case xs {
+    fun rec zip = xs ys -> case xs of {
     | []      -> ys
-    | [x|xs'] -> case ys {
+    | [x|xs'] -> case ys of {
         | []      -> xs
         | [y|ys'] -> [(x, y) | zip xs' ys']
         }
@@ -158,7 +158,7 @@ structure List = struct {
 
     val zip' = foldr (const []) f
     where {
-        fun f = x g ys -> case ys {
+        fun f = x g ys -> case ys of {
         | []      -> []
         | [y|ys'] -> [(x, y) | g ys']
         }
@@ -166,7 +166,7 @@ structure List = struct {
 
 
     # unzip : [('a, 'b)] -> (['a], ['b])
-    fun rec unzip = xs -> case xs {
+    fun rec unzip = xs -> case xs of {
     | []         -> ([], [])
     | [pair|xs'] -> ([y|ys'], [z|zs'])
                     where val (y, z)     = pair
@@ -177,19 +177,19 @@ structure List = struct {
 
 
     # partition : ('a -> BOOL) -> ['a] -> (['a], ['a])
-    fun rec partition = f xs -> case xs {
+    fun rec partition = f xs -> case xs of {
     | []      -> ([], [])
-    | [x|xs'] -> if (f x) ([x|ys], zs) else (ys, [x|zs])
+    | [x|xs'] -> if f x then ([x|ys], zs) else (ys, [x|zs])
                  where val (ys, zs) = partition f xs'
     }
 
     fun partition' = f -> foldr ([], []) { x (ys, zs) ->
-        if (f x) ([x|ys], zs) else (ys, [x|zs])
+        if f x then ([x|ys], zs) else (ys, [x|zs])
     }
 
 
     # sort : ('a -> 'a -> BOOL) -> ['a] -> ['a]
-    fun rec sort = lt? xs -> case xs {
+    fun rec sort = lt? xs -> case xs of {
     | []          -> []
     | [pivot|xs'] -> sort lt? littles ++ [pivot] ++ sort lt? bigs
                      where val (littles, bigs) =

@@ -109,22 +109,18 @@
 ;;
 
 ###     assoc : Symbol -> [(Symbol, 'a)] -> Option (Symbol, 'a)
-fun rec assoc = key records -> case records {
+fun rec assoc = key records -> case records of {
 | []     -> NONE
-| [x|xs] -> if (key == fst x)
-                    Some x
-               else
-                    assoc key xs
+| [x|xs] -> if key == fst x then Some x
+                            else assoc key xs
 }
 
 ### lookup1 = Symbol -> <TABLE> [(Symbol, 'a)] -> Option 'a
 fun lookup1 = key table -> let {
     val opt-record = assoc key (val-of table)
 in
-    if (Some? opt-record)
-        Some (snd (val-of opt-record))
-    else
-        NONE
+    if Some? opt-record then Some (snd (val-of opt-record))
+                        else NONE
 }
 
 fun make-table = records -> Datum @Table records
@@ -158,15 +154,12 @@ fun make-table = records -> Datum @Table records
 fun lookup2 = key1 key2 table -> let {
     val opt-subtable = assoc key1 (val-of table)
 in
-    if (Some? opt-subtable) let {
+    if Some? opt-subtable then let {
         val opt-record = assoc key2 (snd (val-of opt-subtable))
     in
-        if (Some? opt-record)
-            Some (snd (val-of opt-record))
-        else
-            NONE
-    } else
-        NONE
+        if Some? opt-record then Some (snd (val-of opt-record))
+                            else NONE
+    } else NONE
 }
 
 
@@ -209,18 +202,15 @@ fun make-table' = records -> let {
     fun lookup = key1 key2 -> let {
         val opt-subtable = assoc key1 (val-of local-table)
     in
-        if (Some? opt-subtable) let {
+        if Some? opt-subtable then let {
             val opt-record = assoc key2 (snd (val-of opt-subtable))
         in
-            if (Some? opt-record)
-                Some (snd (val-of opt-record))
-            else
-                NONE
-        } else
-            NONE
+            if Some? opt-record then Some (snd (val-of opt-record))
+                                else NONE
+        } else NONE
     }
 
-    fun dispatch = m -> case m {
+    fun dispatch = m -> case m of {
     | @lookup-proc -> lookup
     else           -> panic! ("Unknown operation -- TABLE: " ^ inspect m)
     }
