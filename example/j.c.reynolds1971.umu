@@ -601,7 +601,7 @@ in (
         in
             ASSERT::integer result 100
         } ;
-        #[OUTPUT] -> 100
+        #[OUTPUT] --> 100
         nl () ;
 
         nl () ;
@@ -614,7 +614,7 @@ in (
         in
             ASSERT::true result
         } ;
-        #[OUTPUT] -> TRUE
+        #[OUTPUT] --> TRUE
         nl () ;
 
         #[INPUT] succ
@@ -623,7 +623,7 @@ in (
         in
             ASSERT::funval result
         } ;
-        #[OUTPUT] -> #<{x -> ... }>
+        #[OUTPUT] --> #<{x -> ... }>
         nl () ;
 
         nl () ;
@@ -636,7 +636,7 @@ in (
         in
             ASSERT::integer result 1
         } ;
-        #[OUTPUT] -> 1
+        #[OUTPUT] --> 1
         nl () ;
 
         #[INPUT] if FALSE then 1 else 2
@@ -645,7 +645,7 @@ in (
         in
             ASSERT::integer result 2
         } ;
-        #[OUTPUT] -> 2
+        #[OUTPUT] --> 2
         nl () ;
 
         nl () ;
@@ -679,7 +679,7 @@ in (
         #[OUTPUT] --> 3
         nl () ;
 
-        #[INPUT] 1 = 1
+        #[INPUT] 1 == 1
         let {
             val result = run [EQ, 1, 1]
         in
@@ -780,8 +780,8 @@ in (
         nl () ;
 
         #[INPUT]
-        #   letrec add = fn x y => x + y in
-        #   letrec mul = fn x y => x * y in
+        #   let rec add = fun x y -> x + y in
+        #   let rec mul = fun x y -> x * y in
         #   add (mul 2 3) (mul 4 5)
         let {
             val result = run [
@@ -796,7 +796,7 @@ in (
         nl () ;
 
         #[INPUT]
-        #   letrec fact = fun x ->
+        #   let rec fact = fun x ->
         #       if x <= 1 then 1 else x * fact (x - 1)
         #   in
         #       fact 4 
