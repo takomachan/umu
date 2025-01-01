@@ -248,15 +248,6 @@ structure Umu = struct {
         fun foldr = a (f : Fun) (xs : Morph) -> xs.foldr a f
 
 
-        # foldr1 : ('a -> 'a -> 'a) -> %['a] -> 'a
-        (#
-        fun foldr1 = f xs -> foldr x f xs'
-                            where { val [x|xs'] = xs }
-        #)
-        fun foldr1 = (f : Fun) (xs : Cons) -> xs'.foldr x f
-                            where { val [x|xs'] = xs }
-
-
         # foldl : 'b -> ('a -> 'b -> 'b) -> %['a] -> 'b
         (#
         fun rec foldl = a f xs -> case xs of {
@@ -265,15 +256,6 @@ structure Umu = struct {
         }
         #)
         fun foldl = a (f : Fun) (xs : Morph) -> xs.foldl a f
-
-
-        # foldl1 : ('a -> 'a -> 'a) -> %['a] -> 'a
-        (#
-        fun foldl1 = (f : Fun) (xs : Cons) -> foldl x f xs'
-                            where { val [x|xs'] = xs }
-        #)
-        fun foldl1 = (f : Fun) (xs : Cons) -> xs'.foldl x f
-                            where { val [x|xs'] = xs }
 
 
         # length : %['a] -> Int
@@ -287,11 +269,17 @@ structure Umu = struct {
 
 
         # max : %['a] -> 'a
-        val max = foldl1 { x y -> if y.< x then x else y }
+        fun max = xs : Morph -> case xs of {
+        [init|xs'] -> xs'.foldl init { x y -> if y.< x then x else y }
+        else       -> "max: Empty Error".panic!
+        }
 
 
         # min : %['a] -> 'a
-        val min = foldl1 { x y -> if x.< y then x else y }
+        fun min = xs : Morph -> case xs of {
+        [init|xs'] -> xs'.foldl init { x y -> if x.< y then x else y }
+        else       -> "min: Empty Error".panic!
+        }
 
 
         # for-each : ('a -> 'b) -> %['a] -> ()
@@ -632,14 +620,8 @@ structure Umu = struct {
         # foldr     : 'b -> ('a -> 'b -> 'b) -> %['a] -> 'b
         val foldr = Morph::foldr
 
-        # foldr1    : ('a -> 'a -> 'a) -> %['a] -> 'a
-        val foldr1 = Morph::foldr1
-
         # foldl     : 'b -> ('a -> 'b -> 'b) -> %['a] -> 'b
         val foldl = Morph::foldl
-
-        # foldl1    : ('a -> 'a -> 'a) -> %['a] -> 'a
-        val foldl1 = Morph::foldl1
 
         # length    : %['a] -> Int
         val length = Morph::length
