@@ -218,12 +218,12 @@ structure Umu = struct {
             if xs kind-of? Morph then
                 if ys kind-of? Morph then
                     case xs of {
-                    | []      -> empty? ys
-                    | [x|xs'] -> case ys of {
-                        | []      -> FALSE
-                        | [y|ys'] -> equal-with? eq? x   y &&
-                                     equal-with? eq? xs' ys'
+                    [x|xs'] -> case ys of {
+                        [y|ys'] -> equal-with? eq? x   y &&
+                                   equal-with? eq? xs' ys'
+                        else    -> FALSE
                         }
+                    else -> empty? ys
                     }
                 else
                     FALSE
@@ -241,8 +241,8 @@ structure Umu = struct {
         # foldr : 'b -> ('a -> 'b -> 'b) -> %['a] -> 'b
         (#
         fun rec foldr = a f xs -> case xs of {
-        | []      -> a
-        | [x|xs'] -> f x (foldr a f xs')
+        [x|xs'] -> f x (foldr a f xs')
+        else    -> a
         }
         #)
         fun foldr = a (f : Fun) (xs : Morph) -> xs.foldr a f
@@ -251,8 +251,8 @@ structure Umu = struct {
         # foldl : 'b -> ('a -> 'b -> 'b) -> %['a] -> 'b
         (#
         fun rec foldl = a f xs -> case xs of {
-        | []      -> a
-        | [x|xs'] -> foldl (f x a) f xs'
+        [x|xs'] -> foldl (f x a) f xs'
+        else    -> a
         }
         #)
         fun foldl = a (f : Fun) (xs : Morph) -> xs.foldl a f
@@ -311,8 +311,8 @@ structure Umu = struct {
             fun e = _ -> []
 
             fun g = x h ys -> case ys of {
-            | []      -> []
-            | [y|ys'] -> [f x y | h ys']
+            [y|ys'] -> [f x y | h ys']
+            else    -> []
             }
         }
 
@@ -348,10 +348,11 @@ structure Umu = struct {
         # sort : %['a] -> %['a]
         (#
         fun rec sort = xs -> case xs of {
-        | []          -> []
-        | [pivot|xs'] ->
-                concat [sort littles, [pivot], sort bigs]
+        [pivot|xs'] ->
+            concat [sort littles, [pivot], sort bigs]
+
             where val (littles, bigs) = partition (< pivot) xs'
+        else -> []
         }
         #)
         val sort = &(Morph.sort)
@@ -373,11 +374,11 @@ structure Umu = struct {
         # join : String -> %[String] -> String
         (#
         fun join = j xs -> case xs of {
-        | []      -> ""
-        | [x|xs'] -> case xs' of {
-              | [] -> x
-              else -> x.^ (xs'.foldl "" { x' s -> s.^ j.^ x' })
+        [x|xs'] -> case xs' of {
+            []   -> x
+            else -> x.^ (xs'.foldl "" { x' s -> s.^ j.^ x' })
             }
+        else -> ""
         }
         #)
         fun join = (sep : String) (xs : Morph) -> xs.(join:sep)
