@@ -84,9 +84,31 @@ class Int < Abstract
     end
 
 
-    def meth_to_by(_loc, _env, _event, stop_value, step_value)
+    def meth_to_by(loc, env, _event, stop_value, step_value)
         ASSERT.kind_of stop_value, VCBAN::Int
         ASSERT.kind_of step_value, VCBAN::Int
+
+        if self.val <= stop_value.val
+            unless step_value.val.positive?
+                raise X::ValueError.new(
+                    loc,
+                    env,
+                    "In upto-interval, the step value must be positive," +
+                        " but %d : Int",
+                    step_value.val
+                )
+            end
+        else
+            unless step_value.val.negative?
+                raise X::ValueError.new(
+                    loc,
+                    env,
+                    "In downto-interval, the step value must be negative," +
+                        " but %d : Int",
+                    step_value.val
+                )
+            end
+        end
 
         VC.make_interval self, stop_value, step_value
     end
