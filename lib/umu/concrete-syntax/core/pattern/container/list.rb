@@ -155,7 +155,6 @@ private
             ASSERT.kind_of pair_sym,    ::Symbol
             ASSERT.kind_of decls,       ::Array
             ASSERT.kind_of vpat,        ElementOfContainer::Variable
-            pp({vpat: vpat})
 
             loc             = vpat.loc
             next_seq_num    = seq_num + 1
