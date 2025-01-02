@@ -26,6 +26,8 @@ class Abstract < Morph::Abstract
     INSTANCE_METHOD_INFOS = [
         [ :meth_cons,           self,
             :cons,              VC::Top],
+        [:meth_tail,            VCBLM::List::Abstract,
+            :tail],
         [ :meth_map,            self,
             :map,               VC::Fun],
         [ :meth_select,         self,
@@ -121,10 +123,25 @@ NIL = Nil.new.freeze
 
 
 class Cons < Abstract
+    CLASS_METHOD_INFOS = [
+        [:meth_make,            self,
+            :make,              VC::Top, VCBLM::List::Abstract],
+        [:meth_make,            self,
+            :'head:tail:',      VC::Top, VCBLM::List::Abstract]
+    ]
+
     INSTANCE_METHOD_INFOS = [
-        [:meth_contents,    VCBLP::Tuple,
+        [:meth_contents,        VCBLP::Tuple,
             :contents]
     ]
+
+
+    def self.meth_make(_loc, _env, _event, head, tail)
+        ASSERT.kind_of head,    VC::Top
+        ASSERT.kind_of tail,    List::Abstract
+
+        VC.make_cons head, tail
+    end
 
 
     attr_reader :head, :tail
@@ -138,6 +155,16 @@ class Cons < Abstract
 
         @head   = head
         @tail   = tail
+    end
+
+
+    def meth_head(_loc, _env, _event)
+        self.head
+    end
+
+
+    def meth_tail(_loc, _env, _event)
+        self.tail
     end
 
 

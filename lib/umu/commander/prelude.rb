@@ -202,11 +202,11 @@ structure Umu = struct {
 
 
         # head : %['a] -> 'a
-        fun head = xs : Morph -> xs.des!$1
+        fun head = xs : Morph -> xs.head
 
 
         # tail : %['a] -> %['a]
-        fun tail = xs : Morph -> xs.des!$2
+        fun tail = xs : Morph -> xs.tail
 
 
         # to-list : %['a] -> ['a]

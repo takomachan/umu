@@ -28,6 +28,10 @@ class Interval < Abstract
     INSTANCE_METHOD_INFOS = [
         [ :meth_cons,           VCBLM::List::Abstract,
             :cons,              VC::Top],
+        [:meth_head,            VCBAN::Int,
+            :head],
+        [:meth_tail,            self,
+            :tail],
         [ :meth_map,            VCBLM::List::Abstract,
             :map,               VC::Fun],
         [ :meth_select,         VCBLM::List::Abstract,

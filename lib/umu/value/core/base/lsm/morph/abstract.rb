@@ -40,6 +40,10 @@ class Abstract < LSM::Abstract
             :des!],
         [ :meth_des,            VCBLU::Option::Abstract,
             :des],
+        [:meth_head,            VC::Top,
+            :head],
+        [:meth_tail,            self,
+            :tail],
         [ :meth_to_list,        VCBLM::List::Abstract,
             :'to-list'],
         [ :meth_foldr,          VC::Top,
@@ -154,6 +158,16 @@ class Abstract < LSM::Abstract
 
     def meth_contents(_loc, _env, _event)
         self.contents
+    end
+
+
+    def meth_head(loc, env, event)
+        self.meth_des!(loc, env, event).select_by_number(1, loc, env)
+    end
+
+
+    def meth_tail(loc, env, event)
+        self.meth_des!(loc, env, event).select_by_number(2, loc, env)
     end
 
 
