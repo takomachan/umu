@@ -20,9 +20,13 @@ class Interval < Abstract
         [:meth_make_empty,      self,
             :'empty'],
         [:meth_make,            self,
-            :'make-from:to',    VCBAN::Int, VCBAN::Int],
+            :'from:to:',        VCBAN::Int, VCBAN::Int],
         [:meth_make,            self,
-            :'make-from:to:by', VCBAN::Int, VCBAN::Int, VCBAN::Int]
+            :'from:to:by:',     VCBAN::Int, VCBAN::Int, VCBAN::Int],
+        [:meth_make,            self,
+            :make,              VCBAN::Int, VCBAN::Int],
+        [:meth_make,            self,
+            :'make-by',         VCBAN::Int, VCBAN::Int, VCBAN::Int]
     ]
 
     INSTANCE_METHOD_INFOS = [
