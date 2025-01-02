@@ -96,7 +96,7 @@ class Base < Abstract
 
         info = self.class_method_info_of_mess_sym[mess_sym]
         unless info
-            raise X::NoMethodError.new(
+            raise X::NoMessageError.new(
                 loc,
                 env,
                 "For class: %s, unknown class message: '%s'",
@@ -132,7 +132,7 @@ class Base < Abstract
 
         info = self.instance_method_info_of_mess_sym[mess_sym]
         unless info
-            raise X::NoMethodError.new(
+            raise X::NoMessageError.new(
                 loc,
                 env,
                 "For class: %s, unknown instance message: '%s'",

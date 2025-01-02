@@ -110,7 +110,7 @@ class ValueError            < Abstraction::RuntimeError; end
 class ArgumentError         < Abstraction::RuntimeError; end
 class ApplicationError      < Abstraction::RuntimeError; end
 class SelectionError        < Abstraction::RuntimeError; end
-class NoMethodError         < Abstraction::RuntimeError; end
+class NoMessageError        < Abstraction::RuntimeError; end
 class UnmatchError          < Abstraction::RuntimeError; end
 class ZeroDivisionError     < Abstraction::RuntimeError; end
 class EmptyError            < Abstraction::RuntimeError; end
