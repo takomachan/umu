@@ -34,7 +34,7 @@ CLASSES = ::ObjectSpace.each_object(::Class).select {
 }.freeze
 
 
-def update_method_info_of_symbol(info_of_symbol, infos, klass)
+def update_method_info_of_mess_sym(info_of_symbol, infos, klass)
     ASSERT.kind_of      info_of_symbol, ::Hash
     ASSERT.kind_of      infos,          ::Array
     ASSERT.subclass_of  klass,          VC::Top
@@ -43,24 +43,24 @@ def update_method_info_of_symbol(info_of_symbol, infos, klass)
         infos.inject({}) { |hash, info|
             ASSERT.kind_of info, ::Array
 
-            meth_sym, ret_class, sym, *_param_classes = info
+            meth_sym, ret_class, mess_sym, *_param_classes = info
             ASSERT.kind_of      meth_sym,   ::Symbol
             ASSERT.subclass_of  ret_class,  VC::Top
-            ASSERT.kind_of      sym,        ::Symbol
+            ASSERT.kind_of      mess_sym,   ::Symbol
 
-            hash.merge(sym => info) {
+            hash.merge(mess_sym => info) {
                 ASSERT.abort(
                     "In class: %s, " +
-                    "duplicated a method symbol: %s",
-                    klass.type_sym, meth_sym
+                    "duplicated a message symbol: %s",
+                    klass.type_sym, mess_sym
                 )
             }
         }
-    ) { |sym, sub_info, sup_info|
+    ) { |mess_sym, sub_info, sup_info|
         sub_meth_sym, sub_ret_class,
-            _sub_sym, *sub_param_classes = sub_info
+            _sub_mess_sym, *sub_param_classes = sub_info
         sup_meth_sym, sup_ret_class,
-            _sup_sym, *sup_param_classes = sup_info
+            _sup_mess_sym, *sup_param_classes = sup_info
 
         ASSERT.assert(sub_meth_sym == sup_meth_sym)
 
@@ -73,7 +73,7 @@ def update_method_info_of_symbol(info_of_symbol, infos, klass)
 
             [
                 format("Class: %s", klass.inspect),
-                format("  Method: %s", sym),
+                format("  Message: %s", mess_sym),
                 format("  Super:"),
                 format("    Return: %s", sup_ret_class),
                 format("    Param: [%s]",
@@ -105,14 +105,14 @@ def update_method_info_of_symbol(info_of_symbol, infos, klass)
     }
 end
 
-module_function :update_method_info_of_symbol
+module_function :update_method_info_of_mess_sym
 
 
-CLASS_SPECS = CLASSES.map { |klass|
+CLASS_SIGNAES = CLASSES.map { |klass|
     ASSERT.subclass_of  klass, VC::Top
 
-    class_method_info_of_symbol,
-    instance_method_info_of_symbol = if klass <= META_CLASS
+    class_method_info_of_mess_sym,
+    instance_method_info_of_mess_sym = if klass <= META_CLASS
         [{}, {}]
     else
         loop.inject(
@@ -125,11 +125,11 @@ CLASS_SPECS = CLASSES.map { |klass|
             end
 
             [
-                update_method_info_of_symbol(
+                update_method_info_of_mess_sym(
                     cmeth_info_of_sym, k.class_method_infos, k
                 ),
 
-                update_method_info_of_symbol(
+                update_method_info_of_mess_sym(
                     imeth_info_of_sym, k.instance_method_infos, k
                 ),
 
@@ -141,15 +141,15 @@ CLASS_SPECS = CLASSES.map { |klass|
     ECTS.make_class(
         klass,
         klass.type_sym,
-        class_method_info_of_symbol,
-        instance_method_info_of_symbol
+        class_method_info_of_mess_sym,
+        instance_method_info_of_mess_sym
     )
 }
-CLASS_SPECS.freeze
+CLASS_SIGNAES.freeze
 
 
 =begin
-CLASS_SPECS.each do |signat|
+CLASS_SIGNAES.each do |signat|
     printf "==== %s : %s ====\n", signat.symbol, signat.klass
     p signat
     puts
@@ -157,12 +157,12 @@ end
 exit
 =end
 
-SPEC_OF_CLASS, SPEC_OF_SYMBOL = CLASS_SPECS.inject(
+SIGNAE_OF_CLASS, SIGNAE_OF_CLASS_SYM = CLASS_SIGNAES.inject(
      [{},               {}]
     ) {
-    |(signat_of_class,  signat_of_symbol), signat|
+    |(signat_of_class,  signat_of_class_sym), signat|
     ASSERT.kind_of signat_of_class,     ::Hash
-    ASSERT.kind_of signat_of_symbol,    ::Hash
+    ASSERT.kind_of signat_of_class_sym, ::Hash
     ASSERT.kind_of signat,              ECTSC::Base
 
     [
@@ -170,13 +170,13 @@ SPEC_OF_CLASS, SPEC_OF_SYMBOL = CLASS_SPECS.inject(
             ASSERT.abort "Duplicated a class: %s", signat.klass.to_s
         },
 
-        signat_of_symbol.merge(signat.symbol => signat) {
+        signat_of_class_sym.merge(signat.symbol => signat) {
             ASSERT.abort "Duplicated a symbol: %s", signat.symbol.to_s
         }
     ]
 }
-SPEC_OF_CLASS.freeze
-SPEC_OF_SYMBOL.freeze
+SIGNAE_OF_CLASS.freeze
+SIGNAE_OF_CLASS_SYM.freeze
 
 
 SUPERCLASS_OF_SUBCLASS, SUBCLASSES_OF_SUPERCLASS = CLASSES.inject(
@@ -188,8 +188,8 @@ SUPERCLASS_OF_SUBCLASS, SUBCLASSES_OF_SUPERCLASS = CLASSES.inject(
     ASSERT.subclass_of  subclass,                   VC::Top
 
     if subclass < ROOT_CLASS
-        subsignat = SPEC_OF_CLASS[subclass]
-        supsignat = SPEC_OF_CLASS[subclass.superclass]
+        subsignat = SIGNAE_OF_CLASS[subclass]
+        supsignat = SIGNAE_OF_CLASS[subclass.superclass]
         ASSERT.kind_of subsignat, ECTSC::Base
         ASSERT.kind_of supsignat, ECTSC::Base
 
@@ -202,7 +202,9 @@ SUPERCLASS_OF_SUBCLASS, SUBCLASSES_OF_SUPERCLASS = CLASSES.inject(
                 )
             },
             
-            subsignats_of_supsignat.merge(supsignat => ECTS.make_set([subsignat])) {
+            subsignats_of_supsignat.merge(
+                supsignat => ECTS.make_set([subsignat])
+            ) {
                 |_, old_set_of_signat, new_set_of_signat|
 
                 old_set_of_signat.union new_set_of_signat
@@ -220,7 +222,7 @@ SUPERCLASS_OF_SUBCLASS.freeze
 SUBCLASSES_OF_SUPERCLASS.freeze
 
 
-ANCESTORS_OF_DESCENDANT, DESCENDANTS_OF_ANCESTOR = CLASS_SPECS.inject(
+ANCESTORS_OF_DESCENDANT, DESCENDANTS_OF_ANCESTOR = CLASS_SIGNAES.inject(
      [{},                       {}]
 ) {
     |(ancestors_of_descendant,  descendants_of_ancestor), descendant|
@@ -279,7 +281,7 @@ class Entry
 
 
     def class_signats
-        CLASS_SPECS
+        CLASS_SIGNAES
     end
 
 
@@ -299,7 +301,7 @@ class Entry
     def signat_of_class(klass)
         ASSERT.subclass_of klass, VC::Top
 
-        ASSERT.kind_of SPEC_OF_CLASS[klass], ECTSC::Base
+        ASSERT.kind_of SIGNAE_OF_CLASS[klass], ECTSC::Base
     end
 
 
@@ -308,22 +310,22 @@ class Entry
     end
 
 
-    def lookup(sym, loc, env)
-        ASSERT.kind_of sym, ::Symbol
-        ASSERT.kind_of loc, LOC::Entry
-        ASSERT.kind_of env, E::Entry
+    def lookup(class_sym, loc, env)
+        ASSERT.kind_of class_sym, ::Symbol
+        ASSERT.kind_of loc,       LOC::Entry
+        ASSERT.kind_of env,       E::Entry
 
-        signat = SPEC_OF_SYMBOL[sym]
+        class_signat = SIGNAE_OF_CLASS_SYM[class_sym]
 
-        unless signat
+        unless class_signat
             raise X::NameError.new(
                 loc,
                 env,
-                "Unbound type identifier: '%s'", sym.to_s
+                "Unbound type identifier: '%s'", class_sym.to_s
             )
         end
 
-        ASSERT.kind_of signat, ECTSC::Base
+          ASSERT.kind_of class_signat, ECTSC::Base
     end
 
 

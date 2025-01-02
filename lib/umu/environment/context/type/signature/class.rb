@@ -26,8 +26,8 @@ end
 class Base < Abstract
     attr_reader :klass
     attr_reader :symbol
-    attr_reader :class_method_info_of_symbol
-    attr_reader :instance_method_info_of_symbol
+    attr_reader :class_method_info_of_mess_sym
+    attr_reader :instance_method_info_of_mess_sym
 
     alias to_sym symbol
 
@@ -35,18 +35,18 @@ class Base < Abstract
     def initialize(
         klass,
         symbol,
-        class_method_info_of_symbol,
-        instance_method_info_of_symbol
+        class_method_info_of_mess_sym,
+        instance_method_info_of_mess_sym
     )
-        ASSERT.subclass_of  klass,                          VC::Top
-        ASSERT.kind_of      symbol,                         ::Symbol
-        ASSERT.kind_of      class_method_info_of_symbol,    ::Hash
-        ASSERT.kind_of      instance_method_info_of_symbol, ::Hash
+        ASSERT.subclass_of  klass,                            VC::Top
+        ASSERT.kind_of      symbol,                           ::Symbol
+        ASSERT.kind_of      class_method_info_of_mess_sym,    ::Hash
+        ASSERT.kind_of      instance_method_info_of_mess_sym, ::Hash
 
-        @klass                          = klass
-        @symbol                         = symbol
-        @class_method_info_of_symbol    = class_method_info_of_symbol
-        @instance_method_info_of_symbol = instance_method_info_of_symbol
+        @klass                            = klass
+        @symbol                           = symbol
+        @class_method_info_of_mess_sym    = class_method_info_of_mess_sym
+        @instance_method_info_of_mess_sym = instance_method_info_of_mess_sym
     end
 
 
@@ -74,7 +74,7 @@ class Base < Abstract
 
 
     def num_of_class_methods
-        self.class_method_info_of_symbol.size
+        self.class_method_info_of_mess_sym.size
     end
 
 
@@ -83,24 +83,24 @@ class Base < Abstract
 
         return enum_for(__method__, env) unless block_given?
 
-        self.class_method_info_of_symbol.each_value do |info|
+        self.class_method_info_of_mess_sym.each_value do |info|
             yield __make_method__(env, *info)
         end
     end
 
 
-    def lookup_class_method(sym, loc, env)
-        ASSERT.kind_of sym, ::Symbol
-        ASSERT.kind_of loc, LOC::Entry
-        ASSERT.kind_of env, E::Entry
+    def lookup_class_method(mess_sym, loc, env)
+        ASSERT.kind_of mess_sym, ::Symbol
+        ASSERT.kind_of loc,      LOC::Entry
+        ASSERT.kind_of env,      E::Entry
 
-        info = self.class_method_info_of_symbol[sym]
+        info = self.class_method_info_of_mess_sym[mess_sym]
         unless info
             raise X::NoMethodError.new(
                 loc,
                 env,
-                "For class: %s, unknown class method: '%s'",
-                    self.symbol, sym.to_s
+                "For class: %s, unknown class message: '%s'",
+                    self.symbol, mess_sym.to_s
             )
         end
         ASSERT.kind_of info, ::Array
@@ -110,7 +110,7 @@ class Base < Abstract
 
 
     def num_of_instance_methods
-        self.instance_method_info_of_symbol.size
+        self.instance_method_info_of_mess_sym.size
     end
 
 
@@ -119,23 +119,24 @@ class Base < Abstract
 
         return enum_for(__method__, env) unless block_given?
 
-        self.instance_method_info_of_symbol.each_value do |info|
+        self.instance_method_info_of_mess_sym.each_value do |info|
             yield __make_method__(env, *info)
         end
     end
 
 
-    def lookup_instance_method(sym, loc, env)
-        ASSERT.kind_of sym, ::Symbol
-        ASSERT.kind_of loc, LOC::Entry
-        ASSERT.kind_of env, E::Entry
+    def lookup_instance_method(mess_sym, loc, env)
+        ASSERT.kind_of mess_sym, ::Symbol
+        ASSERT.kind_of loc,      LOC::Entry
+        ASSERT.kind_of env,      E::Entry
 
-        info = self.instance_method_info_of_symbol[sym]
+        info = self.instance_method_info_of_mess_sym[mess_sym]
         unless info
             raise X::NoMethodError.new(
                 loc,
                 env,
-                "For class: %s, unknown method: '%s'", self.symbol, sym.to_s
+                "For class: %s, unknown instance message: '%s'",
+                    self.symbol, mess_sym.to_s
             )
         end
         ASSERT.kind_of info, ::Array
@@ -241,19 +242,19 @@ module_function
     def make_class(
         klass,
         symbol,
-        class_method_info_of_symbol,
-        instance_method_info_of_symbol
+        class_method_info_of_mess_sym,
+        instance_method_info_of_mess_sym
     )
-        ASSERT.subclass_of  klass,                          VC::Top
-        ASSERT.kind_of      symbol,                         ::Symbol
-        ASSERT.kind_of      class_method_info_of_symbol,    ::Hash
-        ASSERT.kind_of      instance_method_info_of_symbol, ::Hash
+        ASSERT.subclass_of  klass,                            VC::Top
+        ASSERT.kind_of      symbol,                           ::Symbol
+        ASSERT.kind_of      class_method_info_of_mess_sym,    ::Hash
+        ASSERT.kind_of      instance_method_info_of_mess_sym, ::Hash
 
         Class::Base.new(
             klass,
             symbol,
-            class_method_info_of_symbol.freeze,
-            instance_method_info_of_symbol.freeze
+            class_method_info_of_mess_sym.freeze,
+            instance_method_info_of_mess_sym.freeze
         ).freeze
     end
 
