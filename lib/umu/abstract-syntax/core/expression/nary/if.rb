@@ -149,8 +149,7 @@ class Entry < Expression::Abstract
                 raise X::TypeError.new(
                     rule.loc,
                     env,
-                    "Type error in if-expression, " +
-                            "expected a Bool, but %s : %s",
+                    "Expected a Bool, but %s : %s",
                         head_value.to_s,
                         head_value.type_sym.to_s
                 )

@@ -159,9 +159,7 @@ private
             ASCE.make_raise(
                 self.loc,
                 X::UnmatchError,
-                format("No rules matched in %s-expression",
-                        __keyword__
-                )
+                ASCE.make_string(self.loc, "No rules matched")
             )
         end
 

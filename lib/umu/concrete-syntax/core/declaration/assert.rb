@@ -27,7 +27,7 @@ class Assert < Declaration::Abstract
 
 
     def to_s
-        format("%%ASSERT (%s) %s",
+        format("%%ASSERT %s -> %s",
                 self.test_expr.to_s,
                 self.else_expr.to_s
         )
@@ -35,9 +35,9 @@ class Assert < Declaration::Abstract
 
 
     def pretty_print(q)
-        q.text '%ASSERT ('
+        q.text '%ASSERT '
         q.pp self.test_expr
-        PRT.group q, bb: ') ' do
+        PRT.group q, bb: ' -> ' do
             q.pp self.else_expr
         end
     end
@@ -69,12 +69,11 @@ private
                     )
                 ],
 
-                ASCE.make_send(
+                ASCE.make_raise(
                     self.else_expr.loc,
-                    self.else_expr.desugar(new_env),
-                    ASCE.make_method(self.else_expr.loc, :panic)
+                    X::AssertionFailure,
+                    self.else_expr.desugar(new_env)
                 )
-
             )
         )
     end
