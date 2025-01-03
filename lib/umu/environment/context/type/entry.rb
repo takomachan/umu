@@ -108,7 +108,7 @@ end
 module_function :update_method_info_of_mess_sym
 
 
-CLASS_SIGNAES = CLASSES.map { |klass|
+CLASS_SIGNATS = CLASSES.map { |klass|
     ASSERT.subclass_of  klass, VC::Top
 
     class_method_info_of_mess_sym,
@@ -145,11 +145,11 @@ CLASS_SIGNAES = CLASSES.map { |klass|
         instance_method_info_of_mess_sym
     )
 }
-CLASS_SIGNAES.freeze
+CLASS_SIGNATS.freeze
 
 
 =begin
-CLASS_SIGNAES.each do |signat|
+CLASS_SIGNATS.each do |signat|
     printf "==== %s : %s ====\n", signat.symbol, signat.klass
     p signat
     puts
@@ -157,7 +157,7 @@ end
 exit
 =end
 
-SIGNAE_OF_CLASS, SIGNAE_OF_CLASS_SYM = CLASS_SIGNAES.inject(
+SIGNAT_OF_CLASS, SIGNAT_OF_CLASS_SYM = CLASS_SIGNATS.inject(
      [{},               {}]
     ) {
     |(signat_of_class,  signat_of_class_sym), signat|
@@ -175,8 +175,8 @@ SIGNAE_OF_CLASS, SIGNAE_OF_CLASS_SYM = CLASS_SIGNAES.inject(
         }
     ]
 }
-SIGNAE_OF_CLASS.freeze
-SIGNAE_OF_CLASS_SYM.freeze
+SIGNAT_OF_CLASS.freeze
+SIGNAT_OF_CLASS_SYM.freeze
 
 
 SUPERCLASS_OF_SUBCLASS, SUBCLASSES_OF_SUPERCLASS = CLASSES.inject(
@@ -188,8 +188,8 @@ SUPERCLASS_OF_SUBCLASS, SUBCLASSES_OF_SUPERCLASS = CLASSES.inject(
     ASSERT.subclass_of  subclass,                   VC::Top
 
     if subclass < ROOT_CLASS
-        subsignat = SIGNAE_OF_CLASS[subclass]
-        supsignat = SIGNAE_OF_CLASS[subclass.superclass]
+        subsignat = SIGNAT_OF_CLASS[subclass]
+        supsignat = SIGNAT_OF_CLASS[subclass.superclass]
         ASSERT.kind_of subsignat, ECTSC::Base
         ASSERT.kind_of supsignat, ECTSC::Base
 
@@ -222,7 +222,7 @@ SUPERCLASS_OF_SUBCLASS.freeze
 SUBCLASSES_OF_SUPERCLASS.freeze
 
 
-ANCESTORS_OF_DESCENDANT, DESCENDANTS_OF_ANCESTOR = CLASS_SIGNAES.inject(
+ANCESTORS_OF_DESCENDANT, DESCENDANTS_OF_ANCESTOR = CLASS_SIGNATS.inject(
      [{},                       {}]
 ) {
     |(ancestors_of_descendant,  descendants_of_ancestor), descendant|
@@ -281,7 +281,7 @@ class Entry
 
 
     def class_signats
-        CLASS_SIGNAES
+        CLASS_SIGNATS
     end
 
 
@@ -301,7 +301,7 @@ class Entry
     def signat_of_class(klass)
         ASSERT.subclass_of klass, VC::Top
 
-        ASSERT.kind_of SIGNAE_OF_CLASS[klass], ECTSC::Base
+        ASSERT.kind_of SIGNAT_OF_CLASS[klass], ECTSC::Base
     end
 
 
@@ -315,7 +315,7 @@ class Entry
         ASSERT.kind_of loc,       LOC::Entry
         ASSERT.kind_of env,       E::Entry
 
-        class_signat = SIGNAE_OF_CLASS_SYM[class_sym]
+        class_signat = SIGNAT_OF_CLASS_SYM[class_sym]
 
         unless class_signat
             raise X::NameError.new(
