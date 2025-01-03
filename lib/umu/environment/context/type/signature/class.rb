@@ -190,12 +190,12 @@ private
 
     def __make_method__(
         env,
-        meth_sym, ret_class, method_sym, *param_classes
+        meth_sym, ret_class, mess_sym, *param_classes
     )
         ASSERT.kind_of      env,            E::Entry
         ASSERT.kind_of      meth_sym,       ::Symbol
         ASSERT.subclass_of  ret_class,      VC::Top
-        ASSERT.kind_of      method_sym,     ::Symbol
+        ASSERT.kind_of      mess_sym,       ::Symbol
         ASSERT.kind_of      param_classes,  ::Array
 
         ret_signat      = env.ty_signat_of_class ret_class
@@ -205,7 +205,7 @@ private
             env.ty_signat_of_class klass
         }
 
-        ECTS.make_method meth_sym, ret_signat, method_sym, param_signats
+        ECTS.make_method meth_sym, ret_signat, mess_sym, param_signats
     end
 end
 

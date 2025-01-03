@@ -76,7 +76,7 @@ class Generator < Abstract
 
             self.expr.desugar(env),
 
-            ASCE.make_method(
+            ASCE.make_message(
                 self.loc,
 
                 :'concat-map',

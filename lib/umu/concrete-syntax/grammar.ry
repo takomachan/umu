@@ -611,32 +611,32 @@ message:
 | '.' '(' ID atom_exprs ')' {
     kw, _, msg, exprs, _ = val
 
-    result = CSCE.make_method kw.loc, msg.sym, exprs
+    result = CSCE.make_message kw.loc, msg.sym, exprs
 }
 | MSG atom_exprs {
     msg, exprs = val
 
-    result = CSCE.make_method msg.loc, msg.sym, exprs
+    result = CSCE.make_message msg.loc, msg.sym, exprs
 }
 | '.' '(' norm_infix_opr atom_exprs ')' {
     kw, _, opr, exprs, _ = val
 
-    result = CSCE.make_method kw.loc, opr.sym, exprs
+    result = CSCE.make_message kw.loc, opr.sym, exprs
 }
 | '.' norm_infix_opr atom_exprs {
     kw, opr, exprs = val
 
-    result = CSCE.make_method kw.loc, opr.sym, exprs
+    result = CSCE.make_message kw.loc, opr.sym, exprs
 }
 | '.' '(' named_fld named_flds ')' {
     kw, _, fld, flds, _ = val
 
-    result = CSCE.make_keyword_method kw.loc, fld, flds
+    result = CSCE.make_keyword_message kw.loc, fld, flds
 }
 | '.' '[' expr com_exprs ']' {
     kw, _, expr, exprs, _ = val
 
-    result = CSCE.make_apply_method kw.loc, expr, exprs
+    result = CSCE.make_apply_message kw.loc, expr, exprs
 }
 
 
@@ -741,7 +741,7 @@ atom_expr:
 | '&(' ID ')' {
     bb, msg, _ = val
 
-    result = CSCE.make_functionalized_method(
+    result = CSCE.make_functionalized_message(
                     bb.loc,
                     CSCE.make_identifier(msg.loc, msg.sym)
                 )
@@ -749,7 +749,7 @@ atom_expr:
 | '&(' ID MSG ')' {
     bb, klass, msg, _ = val
 
-    result = CSCE.make_functionalized_method(
+    result = CSCE.make_functionalized_message(
                     bb.loc,
                     CSCE.make_identifier(msg.loc, msg.sym),
                     CSCE.make_identifier(klass.loc, klass.sym)
@@ -758,7 +758,7 @@ atom_expr:
 | '&(' norm_infix_opr ')' {
     bb, msg, _ = val
 
-    result = CSCE.make_functionalized_method(
+    result = CSCE.make_functionalized_message(
                     bb.loc,
                     CSCE.make_identifier(msg.loc, msg.sym)
                 )

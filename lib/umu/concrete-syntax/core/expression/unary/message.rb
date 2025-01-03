@@ -13,16 +13,16 @@ module Expression
 
 module Unary
 
-class Method < Abstract
-    alias       method_ident obj
+class Message < Abstract
+    alias       message_ident obj
     attr_reader :opt_recv_class_ident
 
 
-    def initialize(loc, method_ident, opt_recv_class_ident)
-        ASSERT.kind_of      method_ident,           CSCEU::Identifier::Short
+    def initialize(loc, message_ident, opt_recv_class_ident)
+        ASSERT.kind_of      message_ident,          CSCEU::Identifier::Short
         ASSERT.opt_kind_of  opt_recv_class_ident,   CSCEU::Identifier::Short
 
-        super(loc, method_ident)
+        super(loc, message_ident)
 
         @opt_recv_class_ident = opt_recv_class_ident
     end
@@ -36,7 +36,7 @@ class Method < Abstract
                     ''
                 end,
 
-                self.method_ident
+                self.message_ident
         )
     end
 
@@ -59,9 +59,9 @@ private
 
                 ASCE.make_identifier(self.loc, :'%x'),
 
-                ASCE.make_method(
-                    self.method_ident.loc,
-                    self.method_ident.sym
+                ASCE.make_message(
+                    self.message_ident.loc,
+                    self.message_ident.sym
                 ),
 
                 [],
@@ -73,7 +73,7 @@ private
                 end
             ),
 
-            self.method_ident.sym
+            self.message_ident.sym
         )
     end
 end
@@ -84,14 +84,14 @@ end # Umu::ConcreteSyntax::Core::Expression::Unary
 
 module_function
 
-    def make_functionalized_method(
-        loc, method_ident, opt_recv_class_ident = nil
+    def make_functionalized_message(
+        loc, message_ident, opt_recv_class_ident = nil
     )
         ASSERT.kind_of      loc,                    LOC::Entry
-        ASSERT.kind_of      method_ident,           CSCEU::Identifier::Short
+        ASSERT.kind_of      message_ident,          CSCEU::Identifier::Short
         ASSERT.opt_kind_of  opt_recv_class_ident,   CSCEU::Identifier::Short
 
-        Unary::Method.new(loc, method_ident, opt_recv_class_ident).freeze
+        Unary::Message.new(loc, message_ident, opt_recv_class_ident).freeze
     end
 
 end # Umu::ConcreteSyntax::Core::Expression

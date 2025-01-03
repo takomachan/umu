@@ -245,7 +245,7 @@ private
                     end
 
         ASCE.make_send(
-            loc, expr, ASCE.make_method(loc, :des!), [], type_sym
+            loc, expr, ASCE.make_message(loc, :des!), [], type_sym
         )
     end
 

@@ -194,7 +194,7 @@ end
 
 
 
-class Method < Abstraction::Abstract
+class Basic < Abstraction::Abstract
     attr_reader :sym, :exprs
 
 
@@ -349,9 +349,9 @@ class Method < Abstraction::Abstract
                         ASCE.make_send(
                             loc,
                             ASCE.make_identifier(loc, :'%r'),
-                            ASCE.make_method(
+                            ASCE.make_message(
                                 loc,
-                                method_signat.symbol,
+                                method_signat.mess_sym,
                                 free_idents + bound_idents
                             )
                         )
@@ -388,7 +388,7 @@ private
                     "For '%s's #%d argument, expected a %s, but %s : %s",
                         self.sym.to_s,
                         i + 1,
-                        param_signat.symbol,
+                        param_signat.mess_sym,
                         arg_value.to_s,
                         arg_value.type_sym
                 )
@@ -526,12 +526,12 @@ module_function
 
 
 
-    def make_method(loc, sym, exprs = [])
+    def make_message(loc, sym, exprs = [])
         ASSERT.kind_of loc,     LOC::Entry
         ASSERT.kind_of sym,     ::Symbol
         ASSERT.kind_of exprs,   ::Array
 
-        Binary::Send::Message::Method.new(loc, sym, exprs.freeze).freeze
+        Binary::Send::Message::Basic.new(loc, sym, exprs.freeze).freeze
     end
 
 

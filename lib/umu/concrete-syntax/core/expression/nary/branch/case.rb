@@ -138,7 +138,7 @@ private
                                 ASCE.make_identifier(source_expr.loc, :'%x')
                             end,
 
-                            ASCE.make_method(self.expr.loc, :contents)
+                            ASCE.make_message(self.expr.loc, :contents)
                         ),
                         env
                     )
@@ -174,7 +174,7 @@ private
                 ASCE.make_send(
                     source_expr.loc,
                     source_expr,
-                    ASCE.make_method(source_expr.loc, :tag),
+                    ASCE.make_message(source_expr.loc, :tag),
                     [],
                     :Datum
                 ),
@@ -196,7 +196,7 @@ private
                     ASCE.make_send(
                         source_expr.loc,
                         ASCE.make_identifier(source_expr.loc, :'%x'),
-                        ASCE.make_method(source_expr.loc, :tag)
+                        ASCE.make_message(source_expr.loc, :tag)
                     ),
                     :Symbol,
                     leafs,
@@ -282,7 +282,7 @@ private
                                 ASCE.make_identifier(source_expr.loc, :'%x')
                             end,
 
-                            ASCE.make_method(self.expr.loc, :contents)
+                            ASCE.make_message(self.expr.loc, :contents)
                         ),
                         env
                     )

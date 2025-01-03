@@ -151,7 +151,7 @@ end
 
 
 
-class Method < Abstract
+class BasicMessage < Abstract
     attr_reader :sym, :exprs
 
 
@@ -199,7 +199,7 @@ private
     def __desugar__(env, event)
         new_env = env.enter event
 
-        ASCE.make_method(
+        ASCE.make_message(
             self.loc,
             self.sym,
             self.exprs.map { |expr| expr.desugar(new_env) },
@@ -209,7 +209,7 @@ end
 
 
 
-class ApplyMethod < Abstract
+class ApplyMessage < Abstract
     attr_reader :head_expr, :tail_exprs
 
 
@@ -247,18 +247,18 @@ private
     def __desugar__(env, event)
         new_env = env.enter event
 
-        method = case self.tail_exprs.size
+        message = case self.tail_exprs.size
                 when 0
                     exprs = [self.head_expr.desugar(new_env)]
 
-                    ASCE.make_method self.loc, :apply, exprs
+                    ASCE.make_message self.loc, :apply, exprs
                 when 1
                     exprs = [
                         self.head_expr.desugar(new_env),
                         self.tail_exprs[0].desugar(new_env)
                     ]
 
-                    ASCE.make_method self.loc, :'apply-binary', exprs
+                    ASCE.make_message self.loc, :'apply-binary', exprs
                 else
                     second_expr, *tail_exprs = self.tail_exprs
                     exprs = [
@@ -272,16 +272,16 @@ private
                         )
                     ]
 
-                    ASCE.make_method self.loc, :'apply-nary', exprs
+                    ASCE.make_message self.loc, :'apply-nary', exprs
                 end
 
-        ASSERT.kind_of method, ASCE::Binary::Send::Message::Method
+        ASSERT.kind_of message, ASCE::Binary::Send::Message::Method
     end
 end
 
 
 
-class KeywordMethod < Abstract
+class KeywordMessage < Abstract
     attr_reader :head_field, :tail_fields
 
 
@@ -345,7 +345,7 @@ private
         }
         sym = labels.map { |lab| lab.sym.to_s + ':' }.join.to_sym
 
-        ASCE.make_method self.loc, sym, exprs
+        ASCE.make_message self.loc, sym, exprs
     end
 end
 
@@ -441,32 +441,34 @@ module_function
     end
 
 
-    def make_method(loc, sym, exprs = [])
+    def make_message(loc, sym, exprs = [])
         ASSERT.kind_of loc,     LOC::Entry
         ASSERT.kind_of sym,     ::Symbol
         ASSERT.kind_of exprs,   ::Array
 
-        Binary::Send::Message::Method.new(loc, sym, exprs.freeze).freeze
+        Binary::Send::Message::BasicMessage.new(
+            loc, sym, exprs.freeze
+        ).freeze
     end
 
 
-    def make_apply_method(loc, expr, exprs = [])
+    def make_apply_message(loc, expr, exprs = [])
         ASSERT.kind_of loc,     LOC::Entry
         ASSERT.kind_of expr,    CSCE::Abstract
         ASSERT.kind_of exprs,   ::Array
 
-        Binary::Send::Message::ApplyMethod.new(
+        Binary::Send::Message::ApplyMessage.new(
             loc, expr, exprs.freeze
         ).freeze
     end
 
 
-    def make_keyword_method(loc, field, fields = [])
+    def make_keyword_message(loc, field, fields = [])
         ASSERT.kind_of  loc,     LOC::Entry
         ASSERT.tuple_of field,   [CSCEU::Container::Named::Label, ::Object]
         ASSERT.kind_of  fields,  ::Array
 
-        Binary::Send::Message::KeywordMethod.new(
+        Binary::Send::Message::KeywordMessage.new(
             loc, field, fields.freeze
         ).freeze
     end
