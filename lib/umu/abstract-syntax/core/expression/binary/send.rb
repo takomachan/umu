@@ -242,8 +242,8 @@ class Method < Abstraction::Abstract
         ASSERT.kind_of env,         E::Entry
         ASSERT.kind_of event,       E::Tracer::Event
 
-        method_sym  = self.sym
-        arg_values  = self.exprs.map { |expr|
+        message_sym  = self.sym
+        arg_values   = self.exprs.map { |expr|
             result = expr.evaluate env
             ASSERT.kind_of result, ASR::Value
 
@@ -254,7 +254,7 @@ class Method < Abstraction::Abstract
         receiver_signat = env.ty_class_signat_of receiver
         ASSERT.kind_of receiver_signat, ECTSC::Abstract
         method_signat   = receiver_signat.lookup_instance_method(
-                                        method_sym, self.loc, env
+                                        message_sym, self.loc, env
                                     )
         ASSERT.kind_of method_signat, ECTS::Method
 

@@ -118,8 +118,8 @@ module_function
             )
         end
 
-        unless class_signat.num_of_class_methods == 0
-            printf "%sCLASS METHODS:\n", indent_0
+        unless class_signat.num_of_class_messages == 0
+            printf "%sCLASS MESSAGES:\n", indent_0
 
             class_signat.each_class_method(env).sort.each do
                 |meth_signat|
@@ -132,8 +132,8 @@ module_function
             end
         end
 
-        unless class_signat.num_of_instance_methods == 0
-            printf "%sINSTANCE METHODS:\n", indent_0
+        unless class_signat.num_of_instance_messages == 0
+            printf "%sINSTANCE MESSAGES:\n", indent_0
 
             class_signat.each_instance_method(env).sort.each do
                 |meth_signat|

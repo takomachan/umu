@@ -73,7 +73,7 @@ class Base < Abstract
     end
 
 
-    def num_of_class_methods
+    def num_of_class_messages
         self.class_method_info_of_mess_sym.size
     end
 
@@ -109,7 +109,7 @@ class Base < Abstract
     end
 
 
-    def num_of_instance_methods
+    def num_of_instance_messages
         self.instance_method_info_of_mess_sym.size
     end
 
