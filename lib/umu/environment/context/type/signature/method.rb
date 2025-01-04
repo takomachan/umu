@@ -13,38 +13,32 @@ module Type
 
 module Signature
 
-class Method
+module Method
+
+class Abstract
     attr_reader :meth_sym
-    attr_reader :ret_class_signat
     attr_reader :mess_sym
-    attr_reader :param_class_signats
 
     alias to_sym mess_sym
 
 
-    def initialize(
-        meth_sym, ret_class_signat, mess_sym, param_class_signats
-    )
-        ASSERT.kind_of meth_sym,            ::Symbol
-        ASSERT.kind_of ret_class_signat,    Class::Abstract
-        ASSERT.kind_of mess_sym,            ::Symbol
-        ASSERT.kind_of param_class_signats, ::Array
+    def initialize(meth_sym, mess_sym)
+        ASSERT.kind_of meth_sym,    ::Symbol
+        ASSERT.kind_of mess_sym,    ::Symbol
 
-        @meth_sym               = meth_sym
-        @ret_class_signat       = ret_class_signat
-        @mess_sym               = mess_sym
-        @param_class_signats    = param_class_signats
+        @meth_sym = meth_sym
+        @mess_sym = mess_sym
     end
 
 
     def ==(other)
-        other.kind_of?(Method) && self.mess_sym == other.mess_sym
+        other.kind_of?(Abstract) && self.mess_sym == other.mess_sym
     end
     alias eql? ==
 
 
     def <=>(other)
-        ASSERT.kind_of other, Method
+        ASSERT.kind_of other, Abstract
 
         self.mess_sym <=> other.mess_sym
     end
@@ -62,17 +56,27 @@ class Method
                     format "%s:%s", lab, typ.to_sym.to_s
                 }.join(' '),
 
-                self.ret_class_signat.to_sym.to_s
+                self.ret_class.to_sym.to_s
             )
         else
             format("%s : %s",
                 self.mess_sym.to_s,
 
                 (
-                    self.param_class_signats + [self.ret_class_signat]
+                    self.param_classes + [self.ret_class]
                 ).map(&:to_sym).map(&:to_s).join(' -> ')
             )
         end
+    end
+
+
+    def param_classes
+        raise X::InternalSubclassResponsibility
+    end
+
+
+    def ret_class
+        raise X::InternalSubclassResponsibility
     end
 
 
@@ -85,23 +89,59 @@ private
 
     def __extract_keywords__
         labels = self.mess_sym.to_s.split(':')
-        ASSERT.assert labels.size == self.param_class_signats.size
+        ASSERT.assert labels.size == self.param_classes.size
 
-        labels.zip self.param_class_signats
+        labels.zip self.param_classes
     end
 end
 
 
-module_function
 
-    def make_method(meth_sym, ret_class_signat, mess_sym, param_class_signats)
+class Entry < Abstract
+    attr_reader :param_class_signats
+    attr_reader :ret_class_signat
+
+
+    def initialize(
+        meth_sym, mess_sym, param_class_signats, ret_class_signat
+    )
         ASSERT.kind_of meth_sym,            ::Symbol
-        ASSERT.kind_of ret_class_signat,    Class::Abstract
         ASSERT.kind_of mess_sym,            ::Symbol
         ASSERT.kind_of param_class_signats, ::Array
+        ASSERT.kind_of ret_class_signat,    Class::Abstract
 
-        Method.new(
-            meth_sym, ret_class_signat, mess_sym, param_class_signats.freeze
+        super(meth_sym, mess_sym)
+
+        @param_class_signats    = param_class_signats
+        @ret_class_signat       = ret_class_signat
+    end
+
+
+    def param_classes
+        self.param_class_signats
+    end
+
+
+    def ret_class
+        self.ret_class_signat
+    end
+end
+
+end # Umu::Environment::Context::Type::Signature::Method
+
+
+module_function
+
+    def make_method_signat(
+        meth_sym, mess_sym, param_class_signats, ret_class_signat
+    )
+        ASSERT.kind_of meth_sym,            ::Symbol
+        ASSERT.kind_of mess_sym,            ::Symbol
+        ASSERT.kind_of param_class_signats, ::Array
+        ASSERT.kind_of ret_class_signat,    Class::Abstract
+
+        Method::Entry.new(
+            meth_sym, mess_sym, param_class_signats.freeze, ret_class_signat
         ).freeze
     end
 

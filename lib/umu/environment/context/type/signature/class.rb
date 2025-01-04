@@ -84,7 +84,7 @@ class Base < Abstract
         return enum_for(__method__, env) unless block_given?
 
         self.class_method_info_of_mess_sym.each_value do |info|
-            yield __make_method__(env, *info)
+            yield __make_method_signat__(env, *info)
         end
     end
 
@@ -105,7 +105,9 @@ class Base < Abstract
         end
         ASSERT.kind_of info, ::Array
 
-        ASSERT.kind_of __make_method__(env, *info), ECTS::Method
+        ASSERT.kind_of(
+             __make_method_signat__(env, *info), ECTS::Method::Entry
+        )
     end
 
 
@@ -120,7 +122,7 @@ class Base < Abstract
         return enum_for(__method__, env) unless block_given?
 
         self.instance_method_info_of_mess_sym.each_value do |info|
-            yield __make_method__(env, *info)
+            yield __make_method_signat__(env, *info)
         end
     end
 
@@ -141,7 +143,9 @@ class Base < Abstract
         end
         ASSERT.kind_of info, ::Array
 
-        ASSERT.kind_of __make_method__(env, *info), ECTS::Method
+        ASSERT.kind_of(
+             __make_method_signat__(env, *info), ECTS::Method::Entry
+        )
     end
 
 
@@ -188,7 +192,7 @@ class Base < Abstract
 
 private
 
-    def __make_method__(
+    def __make_method_signat__(
         env,
         meth_sym, ret_class, mess_sym, *param_classes
     )
@@ -205,7 +209,9 @@ private
             env.ty_signat_of_class klass
         }
 
-        ECTS.make_method meth_sym, ret_signat, mess_sym, param_signats
+        ECTS.make_method_signat(
+             meth_sym, mess_sym, param_signats, ret_signat
+        )
     end
 end
 
@@ -229,7 +235,7 @@ class Meta < Abstract
 
         method = self.base_class_signat.lookup_class_method(sym, loc, env)
 
-        ASSERT.kind_of method, ECTS::Method
+        ASSERT.kind_of method, ECTS::Method::Entry
     end
 end
 

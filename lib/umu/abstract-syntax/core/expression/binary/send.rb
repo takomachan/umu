@@ -256,7 +256,7 @@ class Basic < Abstraction::Abstract
         method_signat   = receiver_signat.lookup_instance_method(
                                         message_sym, self.loc, env
                                     )
-        ASSERT.kind_of method_signat, ECTS::Method
+        ASSERT.kind_of method_signat, ECTS::Method::Entry
 
         param_signats   = method_signat.param_class_signats
         param_num       = method_signat.param_class_signats.size
