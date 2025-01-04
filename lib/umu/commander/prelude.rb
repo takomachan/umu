@@ -159,9 +159,9 @@ structure Umu = struct {
 
         # tab : Int -> ()
         fun rec tab = n ->
-            if 0.< n then (
-                STDOUT.puts " " ;
-                tab (n.- 1)
+            if 0.< n then do (
+                ! STDOUT.puts " "
+                ! tab (n.- 1)
             ) else
                 ()
 
@@ -676,7 +676,7 @@ structure Umu = struct {
         fun const = x _ -> x
 
         ## tee      : ('a -> 'b) -> 'a -> 'a
-        fun tee = (f : Fun) x -> (f x ; x)
+        fun tee = (f : Fun) x -> let { val _ = f x in x }
 
         ## curry    : (('a, 'b) -> 'c) -> ('a -> 'b -> 'c)
         fun curry = (f : Fun) x y -> f (x, y)

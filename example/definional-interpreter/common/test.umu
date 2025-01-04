@@ -6,148 +6,148 @@ structure TESTER = struct {
     fun make-tester = interpret : Fun -> { () ->
         let {
             val run = make-runner interpret
-        in (
-            print "[CONSTANT]" ;
+        in do (
+            ! print "[CONSTANT]"
 
                 #[INPUT] 100
-                let {
+                ! let {
                     val result = run 100
                 in
                     ASSERT::integer result 100
-                } ;
+                }
                 #[OUTPUT] --> 100
-                nl () ;
+                ! nl ()
 
-                nl () ;
+                ! nl ()
 
-            print "[VARIABLE]" ;
+            ! print "[VARIABLE]"
 
                 #[INPUT] TRUE
-                let {
+                ! let {
                     val result = run T
                 in
                     ASSERT::true result
-                } ;
+                }
                 #[OUTPUT] --> TRUE
-                nl () ;
+                ! nl ()
 
                 #[INPUT] succ
-                let {
+                ! let {
                     val result = run SUCC
                 in
                     ASSERT::funval result
-                } ;
+                }
                 #[OUTPUT] --> #<{x -> ... }>
-                nl () ;
+                ! nl ()
 
-                nl () ;
+                ! nl ()
 
-            print "[CONDITIONAL]" ;
+            ! print "[CONDITIONAL]"
 
                 #[INPUT] if TRUE then 1 else 2
-                let {
+                ! let {
                     val result = run [IF, T, 1, 2]
                 in
                     ASSERT::integer result 1
-                } ;
+                }
                 #[OUTPUT] --> 1
-                nl () ;
+                ! nl ()
 
                 #[INPUT] if FALSE then 1 else 2
-                let {
+                ! let {
                     val result = run [IF, F, 1, 2]
                 in
                     ASSERT::integer result 2
-                } ;
+                }
                 #[OUTPUT] --> 2
-                nl () ;
+                ! nl ()
 
-                nl () ;
+                ! nl ()
 
-            print "[APPLY PRIMITIVE]" ;
+            ! print "[APPLY PRIMITIVE]"
 
                 #[INPUT] succ 2
-                let {
+                ! let {
                     val result = run [SUCC, 2]
                 in
                     ASSERT::integer result 3
-                } ;
+                }
                 #[OUTPUT] --> 3
-                nl () ;
+                ! nl ()
 
                 #[INPUT] succ (succ (succ 2))
-                let {
+                ! let {
                     val result = run [SUCC, [SUCC, [SUCC, 2]]]
                 in
                     ASSERT::integer result 5
-                } ;
+                }
                 #[OUTPUT] --> 5
-                nl () ;
+                ! nl ()
 
                 #[INPUT] 1 + 2
-                let {
+                ! let {
                     val result = run [ADD, 1, 2]
                 in
                     ASSERT::integer result 3
-                } ;
+                }
                 #[OUTPUT] --> 3
-                nl () ;
+                ! nl ()
 
                 #[INPUT] 1 == 1
-                let {
+                ! let {
                     val result = run [EQ, 1, 1]
                 in
                     ASSERT::true result
-                } ;
+                }
                 #[OUTPUT] --> TRUE
-                nl () ;
+                ! nl ()
 
-                nl () ;
+                ! nl ()
 
-            print "[APPLY LAMBDA]" ;
+            ! print "[APPLY LAMBDA]"
 
                 #[INPUT] (fun x -> succ x) 2
-                let {
+                ! let {
                     val result = run [
                         [LAMBDA, [@x], [SUCC, @x]],
                         2
                     ]
                 in
                     ASSERT::integer result 3
-                } ;
+                }
                 #[OUTPUT] --> 3
-                nl () ;
+                ! nl ()
 
                 #[INPUT] (fun x y z -> x - y - z) 10 1 2
-                let {
+                ! let {
                     val result = run [
                         [LAMBDA, [@x, @y, @z], [SUB, [SUB, @x, @y], @z]],
                         10, 1, 2
                     ]
                 in
                     ASSERT::integer result 7
-                } ;
+                }
                 #[OUTPUT] --> 7
-                nl () ;
+                ! nl ()
 
-                nl () ;
+                ! nl ()
 
-            print "[LET]" ;
+            ! print "[LET]"
 
                 #[INPUT] let x = 2 in succ x
-                let {
+                ! let {
                     val result = run [LET, [SUCC, @x], [@x, 2]]
                 in
                     ASSERT::integer result 3
-                } ;
+                }
                 #[OUTPUT] --> 3
-                nl () ;
+                ! nl ()
 
                 #[INPUT]
                 #   let x = 2 in
                 #   let y = 3 in
                 #   x * x + y * y
-                let {
+                ! let {
                     val result = run [
                         LET, [ADD, [MUL, @x, @x], [MUL, @y, @y]],
                         [@x, 2],
@@ -155,16 +155,16 @@ structure TESTER = struct {
                     ]
                 in
                     ASSERT::integer result 13
-                } ;
+                }
                 #[OUTPUT] --> 13
-                nl () ;
+                ! nl ()
 
                 #[INPUT]
                 #   let x = 1 in
                 #   let y = x in
                 #   let x = 2 in
                 #   x + y
-                let {
+                ! let {
                     val result = run [
                         LET, [ADD, @x, @y],
                         [@x, 1],
@@ -173,31 +173,31 @@ structure TESTER = struct {
                     ]
                 in
                     ASSERT::integer result 3
-                } ;
+                }
                 #[OUTPUT] --> 3
-                nl () ;
+                ! nl ()
 
-                nl () ;
+                ! nl ()
 
-            print "[LETREC]" ;
+            ! print "[LETREC]"
 
                 #[INPUT] let f = fun x -> succ x in f 2
-                let {
+                ! let {
                     val result = run [
                         LETREC, [@f, 2],
                         [@f, LAMBDA, [@x], [SUCC, @x]]
                     ]
                 in
                     ASSERT::integer result 3
-                } ;
+                }
                 #[OUTPUT] --> 3
-                nl () ;
+                ! nl ()
 
                 #[INPUT]
                 #   let rec add = fun x y -> x + y in
                 #   let rec mul = fun x y -> x * y in
                 #   add (mul 2 3) (mul 4 5)
-                let {
+                ! let {
                     val result = run [
                         LETREC, [@add, [@mul, 2, 3], [@mul, 4, 5]],
                         [@add, LAMBDA, [@x, @y], [ADD, @x, @y]],
@@ -205,16 +205,16 @@ structure TESTER = struct {
                     ]
                 in
                     ASSERT::integer result 26
-                } ;
+                }
                 #[OUTPUT] --> 26
-                nl () ;
+                ! nl ()
 
                 #[INPUT]
                 #   let rec fact = fun x ->
                 #       if x <= 1 then 1 else x * fact (x - 1)
                 #   in
                 #       fact 4 
-                let {
+                ! let {
                     val result = run [
                         LETREC, [@fact, 4],
                         [@fact, LAMBDA, [@x],
@@ -226,16 +226,16 @@ structure TESTER = struct {
                     ]
                 in
                     ASSERT::integer result 24
-                } ;
+                }
                 #[OUTPUT] --> 24
-                nl () ;
+                ! nl ()
 
                 #[INPUT] 
                 #   letrec gcd = fun a b ->
                 #       if b == 0 then a else gcd b (a mod b)
                 #   in
                 #      gcd 16 28
-                let {
+                ! let {
                     val result = run [
                         LETREC, [@gcd, 16, 28],
                         [@gcd, LAMBDA, [@a, @b],
@@ -247,11 +247,11 @@ structure TESTER = struct {
                     ]
                 in
                     ASSERT::integer result 4
-                } ;
+                }
                 #[OUTPUT] --> 4
-                nl () ;
+                ! nl ()
 
-                nl ()
+                ! nl ()
             )
         }
     }

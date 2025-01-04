@@ -35,9 +35,9 @@ val GE = [LAMBDA, [@x, @y], [NOT, [LT, @x, @y]]]
 
 # Runner - Frontend of Interpreter ########
 fun make-runner = interpret : Fun ->
-       tee { src -> (puts "<SRC> : " ; pp src) }
+       tee { src   -> do (! puts "<SRC> : " ! pp src) }
     >> parse
-    >> tee { exp -> (puts "<EXP> : " ; pp exp) }
+    >> tee { exp   -> do (! puts "<EXP> : " ! pp exp) }
     >> interpret
-    >> tee { value -> (puts "-> <VAL> : " ; pp value) }
+    >> tee { value -> do (! puts "-> <VAL> : " ! pp value) }
 

@@ -312,6 +312,11 @@ expr:
 
     result = CSCE.make_let kw.loc, decls, expr
 }
+| DO '(' effects ')' {
+    kw, _, exprs, _ = val
+
+    result = CSCE.make_sequential  kw.loc, exprs
+}
 
 opt_vert: /* empty */ | '|'
 
@@ -453,6 +458,17 @@ case_rule_head:
                         CSCE.make_identifier(bb.loc, :List)
                     )
 }
+
+
+# Seq of effect for DO-expression
+
+effects:
+  /* empty */ { result = [] }
+| _effects    { result = val[0] }
+
+_effects:
+  '!' expr            { result = [val[1]] }
+| '!' expr _effects   { result = [val[1]] + val[2] }
 
 
 # Pipe expression
@@ -733,11 +749,6 @@ atom_expr:
 
     result = CSCE.make_named_tuple bb.loc, [fld1, fld2] + flds
 }
-| '(' expr ';' expr sem_exprs ')' {
-    bb, expr1, _, expr2, exprs, _ = val
-
-    result = CSCE.make_sequential  bb.loc, [expr1, expr2] + exprs
-}
 | '&(' ID ')' {
     bb, msg, _ = val
 
@@ -814,17 +825,6 @@ path:
 
     result = [CSCE.make_identifier(dir.loc, dir.sym)] + path
 }
-
-
-# Semi-colon separated seq of expresseion
-
-sem_exprs:
-  /* empty */   { result = [] }
-| _sem_exprs    { result = val[0] }
-
-_sem_exprs:
-  ';' expr              { result = [val[1]] }
-| ';' expr _sem_exprs   { result = [val[1]] + val[2] }
 
 
 # Comma separated seq of expresseion

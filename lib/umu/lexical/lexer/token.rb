@@ -21,6 +21,7 @@ RESERVED_WORDS = [
     '__FILE__',     '__LINE__',
     'and',          'assert',
     'case',         'cond',
+    'do',
     'else',         'elsif',
     'fun',
     'if',           'import',           'in',
@@ -66,10 +67,7 @@ RESERVED_WORDS = [
     'delay', 'force', 'lazy',
 
     # For non-determinism
-    'none', 'or',
-
-    # For monad
-    'do'
+    'none', 'or'
 ].inject({}) { |hash, word|
     hash.merge(word => true) { |key, _, _|
         ASSERT.abort format("Duplicated reserved-word: '%s'", key)
@@ -77,7 +75,7 @@ RESERVED_WORDS = [
 }
 
 RESERVED_SYMBOLS = [
-    '=',    '$',    '_',    ',',
+    '=',    '$',    '!',    '_',    ',',
     '&',    '|',
     '&&',   '||',
     '.',    ':',    ';',

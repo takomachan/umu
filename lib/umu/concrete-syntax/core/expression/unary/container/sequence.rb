@@ -18,19 +18,21 @@ module Container
 class Sequential < Abstract
     def initialize(loc, exprs)
         ASSERT.kind_of  exprs, ::Array
-        ASSERT.assert   exprs.size >= 2
 
         super
     end
 
 
     def to_s
-        format "(%s)", self.map(&:to_s).join('; ')
+        format "%%DO (%s)", self.map { |expr| '!' + expr.to_s }.join(' ')
     end
 
 
     def pretty_print(q)
-        PRT.group_nary q, self, bb: '(', eb: ')', join: '; '
+        PRT.group_nary q, self, bb: '%DO (', eb: ')', join: ' ' do |expr|
+            q.text '!'
+            expr.pretty_print q
+        end
     end
 
 
@@ -39,19 +41,32 @@ private
     def __desugar__(env, event)
         new_env = env.enter event
 
-        *not_last_exprs, last_expr = self.exprs
+        expr = case self.exprs.size
+                when 0
+                    ASCE.make_unit self.loc
+                when 1
+                    self.exprs[0].desugar new_env
+                else
+                    *not_last_exprs, last_expr = self.exprs
 
-        decls = ASCD.make_seq_of_declaration(
-            self.loc,
+                    decls = ASCD.make_seq_of_declaration(
+                        self.loc,
 
-            not_last_exprs.map { |expr|
-                ASSERT.kind_of expr, CSCE::Abstract
+                        not_last_exprs.map { |expr|
+                            ASSERT.kind_of expr, CSCE::Abstract
 
-                ASCD.make_value expr.loc, WILDCARD, expr.desugar(new_env)
-            }
-        )
+                            ASCD.make_value(
+                                 expr.loc, WILDCARD, expr.desugar(new_env)
+                            )
+                        }
+                    )
 
-        ASCE.make_let self.loc, decls, last_expr.desugar(new_env)
+                    ASCE.make_let(
+                         self.loc, decls, last_expr.desugar(new_env)
+                    )
+                end
+
+        ASSERT.kind_of expr, ASCE::Abstract
     end
 end
 

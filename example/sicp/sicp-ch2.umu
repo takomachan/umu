@@ -122,11 +122,11 @@ fun numer = x -> fst x
 fun denom = x -> snd x
 
 ### print-rat : ('a, 'b) -> ()
-fun print-rat = x -> (
-    nl () ;
-    display (numer x) ;
-    display "/" ;
-    display (denom x)
+fun print-rat = x -> do (
+    ! nl ()
+    ! display (numer x)
+    ! display "/"
+    ! display (denom x)
 )
 
 
