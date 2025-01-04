@@ -15,7 +15,7 @@ module Unary
 
 module Container
 
-class Sequence < Abstract
+class Sequential < Abstract
     def initialize(loc, exprs)
         ASSERT.kind_of  exprs, ::Array
         ASSERT.assert   exprs.size >= 2
@@ -62,11 +62,11 @@ end # Umu::ConcreteSyntax::Core::Expression::Unary
 
 module_function
 
-    def make_sequence(loc, exprs)
+    def make_sequential (loc, exprs)
         ASSERT.kind_of loc,     LOC::Entry
         ASSERT.kind_of exprs,   ::Array
 
-        Unary::Container::Sequence.new(loc, exprs.freeze).freeze
+        Unary::Container::Sequential.new(loc, exprs.freeze).freeze
     end
 
 

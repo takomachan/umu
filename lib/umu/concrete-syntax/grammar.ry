@@ -736,7 +736,7 @@ atom_expr:
 | '(' expr ';' expr sem_exprs ')' {
     bb, expr1, _, expr2, exprs, _ = val
 
-    result = CSCE.make_sequence bb.loc, [expr1, expr2] + exprs
+    result = CSCE.make_sequential  bb.loc, [expr1, expr2] + exprs
 }
 | '&(' ID ')' {
     bb, msg, _ = val
