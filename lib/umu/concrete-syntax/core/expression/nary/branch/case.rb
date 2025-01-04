@@ -149,7 +149,7 @@ private
 
                         ASCD.make_seq_of_declaration(
                             rule.loc,
-                            [contents_decl] + rule.decls.desugar(env)
+                            [contents_decl] + rule.decls.desugar(env).to_a
                         ),
 
                         rule.body_expr.desugar(env)
