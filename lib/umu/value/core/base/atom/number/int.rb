@@ -18,40 +18,50 @@ module Number
 class Int < Abstract
     INSTANCE_METHOD_INFOS = [
         # Number
-        [:meth_is_odd,          VCBA::Bool,
-            :odd?],
-        [:meth_is_even,         VCBA::Bool,
-            :even?],
-        [:meth_absolute,        self,
-            :abs],
-        [:meth_negate,          self,
-            :negate],
-        [:meth_less_than,       VCBA::Bool,
-            :'<',               self],
-        [:meth_add, self,
-            :'+',               self],
-        [:meth_sub, self,
-            :'-',               self],
-        [:meth_multiply,        self,
-            :'*',               self],
-        [:meth_divide,          self,
-            :'/',               self],
-        [:meth_modulo,          self,
-            :mod,               self],
-        [:meth_power,           self,
-            :pow,               self],
-        [:meth_to,              VCBLM::Interval,
-            :to,                self],
-        [:meth_to,              VCBLM::Interval,
-            :'to:',             self],
-        [:meth_to_by,           VCBLM::Interval,
-            :'to-by',           self, self],
-        [:meth_to_by,           VCBLM::Interval,
-            :'to:by:',          self, self],
+        [:meth_is_odd,          :odd?, [],
+            [], VCBA::Bool
+        ],
+        [:meth_is_even,         :even?, [],
+            [], VCBA::Bool
+        ],
+        [:meth_absolute,        :abs, [],
+            [], self
+        ],
+        [:meth_negate,          :negate, [],
+            [], self
+        ],
+        [:meth_less_than,       :'<', [],
+            [self], VCBA::Bool
+        ],
+        [:meth_add,             :'+', [],
+            [self], self
+        ],
+        [:meth_sub,             :'-', [],
+            [self], self
+        ],
+        [:meth_multiply,        :'*', [],
+            [self], self
+        ],
+        [:meth_divide,          :'/', [],
+            [self], self
+        ],
+        [:meth_modulo,          :mod, [],
+            [self], self
+        ],
+        [:meth_power,           :pow, [],
+            [self], self
+        ],
+        [:meth_to,              :to, [:'to:'],
+            [self], VCBLM::Interval
+        ],
+        [:meth_to_by,           :'to-by', [:'to:by:'],
+            [self], VCBLM::Interval
+         ],
 
         # I/O
-        [:meth_random,          self,
-            :'random']
+        [:meth_random,          :'random', [],
+            [], self
+        ]
     ]
 
 

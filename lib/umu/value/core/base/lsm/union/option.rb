@@ -19,10 +19,12 @@ module Option
 
 class Abstract < Union::Abstract
     INSTANCE_METHOD_INFOS = [
-        [:meth_is_none,     VCBA::Bool,
-            :none?],
-        [:meth_is_some,     VCBA::Bool,
-            :some?]
+        [:meth_is_none,     :none?, [],
+            [], VCBA::Bool
+        ],
+        [:meth_is_some,     :some?, [],
+            [], VCBA::Bool
+        ]
     ]
 
 
@@ -41,13 +43,15 @@ end
 
 class None < Abstract
     CLASS_METHOD_INFOS = [
-        [:meth_make,        self,
-            :'make']
+        [:meth_make,        :'make', [],
+            [], self
+        ]
     ]
 
     INSTANCE_METHOD_INFOS = [
-        [:meth_contents,    VC::Unit,
-            :contents]
+        [:meth_contents,    :contents, [],
+            [], VC::Unit
+        ]
     ]
 
 
@@ -67,8 +71,9 @@ NONE = None.new.freeze
 
 class Some < Abstract
     CLASS_METHOD_INFOS = [
-        [:meth_make,        self,
-            :'make',        VC::Top]
+        [:meth_make,    :'make', [],
+            [VC::Top], self
+        ]
     ]
 
 

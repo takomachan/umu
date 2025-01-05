@@ -17,43 +17,54 @@ module Morph
 
 class Interval < Abstract
     CLASS_METHOD_INFOS = [
-        [:meth_make_empty,      self,
-            :'empty'],
-        [:meth_make,            self,
-            :'from:to:',        VCBAN::Int, VCBAN::Int],
-        [:meth_make,            self,
-            :'from:to:by:',     VCBAN::Int, VCBAN::Int, VCBAN::Int],
-        [:meth_make,            self,
-            :make,              VCBAN::Int, VCBAN::Int],
-        [:meth_make,            self,
-            :'make-by',         VCBAN::Int, VCBAN::Int, VCBAN::Int]
+        [:meth_make_empty,      :'empty', [],
+            [], self  # --> NotConstractible
+        ],
+        [:meth_make,            :make, [:'from:to:'],
+            [VCBAN::Int, VCBAN::Int], self
+        ],
+        [:meth_make,            :'make-by', [:'from:to:by:'],
+            [VCBAN::Int, VCBAN::Int, VCBAN::Int], self
+        ]
     ]
 
     INSTANCE_METHOD_INFOS = [
-        [ :meth_cons,           VCBLM::List::Abstract,
-            :cons,              VC::Top],
-        [:meth_head,            VCBAN::Int,
-            :head],
-        [:meth_tail,            self,
-            :tail],
-        [ :meth_map,            VCBLM::List::Abstract,
-            :map,               VC::Fun],
-        [ :meth_select,         VCBLM::List::Abstract,
-            :select,            VC::Fun],
-        [ :meth_append,         VCBLM::List::Abstract,
-            :'++',              VCBLM::Abstract],
-        [ :meth_concat,         VCBLM::List::Abstract,
-            :concat],
-        [ :meth_concat_map,     VCBLM::List::Abstract,
-            :'concat-map',      VC::Fun],
-        [ :meth_zip,            VCBLM::List::Abstract,
-            :zip,               VCBLM::Abstract],
-        [ :meth_uniq,           VCBLM::List::Abstract,
-            :uniq],
-        [ :meth_sort,           VCBLM::List::Abstract,
-            :sort],
-        [ :meth_sort,           VCBLM::List::Abstract,
-            :'sort-with',       VC::Fun],
+        [ :meth_cons,           :cons, [],
+            [VC::Top], VCBLM::List::Abstract  # --> NotConstractible
+        ],
+        [:meth_head,            :head, [],
+            [], VCBAN::Int
+        ],
+        [:meth_tail,            :tail, [],
+            [], self
+        ],
+        [:meth_map,             :map, [],
+            [VC::Fun], VCBLM::List::Abstract
+        ],
+        [:meth_select,          :select, [],
+            [VC::Fun], VCBLM::List::Abstract
+        ],
+        [:meth_append,          :'++', [],
+            [VCBLM::Abstract], VCBLM::List::Abstract
+        ],
+        [:meth_concat,          :concat, [],
+            [], VCBLM::List::Abstract
+        ],
+        [:meth_concat_map,      :'concat-map', [],
+            [VC::Fun], VCBLM::List::Abstract
+        ],
+        [:meth_zip,             :zip, [],
+            [VCBLM::Abstract], VCBLM::List::Abstract
+        ],
+        [:meth_uniq,            :uniq, [],
+            [], VCBLM::List::Abstract
+        ],
+        [:meth_sort,            :sort, [],
+            [], VCBLM::List::Abstract
+        ],
+        [:meth_sort,            :'sort-with', [],
+            [VC::Fun], VCBLM::List::Abstract
+        ]
     ]
 
 

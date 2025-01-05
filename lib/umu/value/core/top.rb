@@ -12,31 +12,68 @@ module Core
 class Top < ::Object
     INSTANCE_METHOD_INFOS = [
         # String
-        [:meth_inspect,     VCBA::String,
-            :inspect],
-        [:meth_to_string,   VCBA::String,
-            :'to-s'],
+        [:meth_inspect,     :inspect, [],
+            [], VCBA::String
+        ],
+        [:meth_to_string,   :'to-s', [],
+            [], VCBA::String
+        ],
 
         # Relational
-        [:meth_equal,       VCBA::Bool,
-            :'==',          self],
-        [:meth_less_than,   VCBA::Bool,
-            :'<',           self]
+        [:meth_equal,       :'==', [],
+            [self], VCBA::Bool
+        ],
+        [:meth_less_than,   :'<', [],
+            [self], VCBA::Bool
+        ]
     ]
 
 
     def self.class_method_infos
-        begin
-            self.const_get :CLASS_METHOD_INFOS, false
-        rescue ::NameError
-            []
-        end
+        self.__get__method_infos__ :CLASS_METHOD_INFOS
     end
 
 
     def self.instance_method_infos
+        self.__get__method_infos__ :INSTANCE_METHOD_INFOS
+    end
+
+
+    def self.__get__method_infos__(infos_sym)
+        ASSERT.kind_of infos_sym, ::Symbol
+
+        # printf "%s of %s\n", infos_sym, self
+
         begin
-            self.const_get :INSTANCE_METHOD_INFOS, false
+            self.const_get(infos_sym, false).map {
+                |
+                    meth_sym, hd_mess_sym, tl_mess_syms,
+                    param_class_types, ret_class_type
+                |
+=begin
+                pp [
+                    meth_sym, hd_mess_sym, tl_mess_syms,
+                    param_class_types, ret_class_type
+                ]
+=end
+                ASSERT.kind_of meth_sym,           ::Symbol
+                ASSERT.kind_of hd_mess_sym,        ::Symbol
+                tl_mess_syms.each do |mess_alias_sym|
+                    ASSERT.kind_of mess_alias_sym, ::Symbol
+                end
+                ASSERT.kind_of param_class_types,  ::Array
+                param_class_types.each do |param_class_type|
+                    ASSERT.subclass_of param_class_type, VC::Top
+                end
+                ASSERT.subclass_of ret_class_type, VC::Top
+
+                ([hd_mess_sym] + tl_mess_syms).map { |message_sym|
+                    [
+                        meth_sym, ret_class_type, message_sym,
+                        param_class_types
+                    ]
+                }
+            }.inject([]) { |infos, xs| infos + xs }
         rescue ::NameError
             []
         end

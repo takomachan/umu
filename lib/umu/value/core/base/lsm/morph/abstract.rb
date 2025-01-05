@@ -27,57 +27,81 @@ class Abstract < LSM::Abstract
 =end
 
     CLASS_METHOD_INFOS = [
-        [:meth_make_empty,      self,
-            :'empty']
+        [:meth_make_empty,      :'empty', [],
+            [], self
+        ]
     ]
 
     INSTANCE_METHOD_INFOS = [
-        [ :meth_cons,           self,
-            :cons,              VC::Top],
-        [ :meth_is_empty,       VCBA::Bool,
-            :empty?],
-        [ :meth_des!,           VCBLP::Tuple,
-            :des!],
-        [ :meth_des,            VCBLU::Option::Abstract,
-            :des],
-        [:meth_head,            VC::Top,
-            :head],
-        [:meth_tail,            self,
-            :tail],
-        [ :meth_to_list,        VCBLM::List::Abstract,
-            :'to-list'],
-        [ :meth_foldr,          VC::Top,
-            :foldr,             VC::Top, VC::Fun],
-        [ :meth_foldl,          VC::Top,
-            :foldl,             VC::Top, VC::Fun],
-        [ :meth_for_each,       VC::Unit,
-            :'for-each',        VC::Fun],
-        [ :meth_map,            self,
-            :map,               VC::Fun],
-        [ :meth_select,         self,
-            :select,            VC::Fun],
-        [ :meth_append,         self,
-            :'++',              VCBLM::Abstract],
-        [ :meth_concat,         self,
-            :concat],
-        [ :meth_concat_map,     self,
-            :'concat-map',      VC::Fun],
-        [ :meth_join,           VCBA::String,
-            :join],
-        [ :meth_join,           VCBA::String,
-            :'join:',           VCBA::String],
-        [ :meth_zip,            self,
-            :zip,               VCBLM::Abstract],
-        [ :meth_unzip,          VCBLP::Tuple,
-            :unzip],
-        [ :meth_uniq,           self,
-            :uniq],
-        [ :meth_partition,      VCBLP::Tuple,
-            :partition,         VC::Fun],
-        [ :meth_sort,           self,
-            :sort],
-        [ :meth_sort,           self,
-            :'sort-with',       VC::Fun],
+        [:meth_cons,            :cons, [],
+            [VC::Top], self
+        ],
+        [:meth_is_empty,        :empty?, [],
+            [], VCBA::Bool
+        ],
+        [:meth_des!,            :des!, [],
+            [], VCBLP::Tuple
+        ],
+        [:meth_des,             :des, [],
+            [], VCBLU::Option::Abstract
+        ],
+        [:meth_head,            :head, [],
+            [], VC::Top
+        ],
+        [:meth_tail,            :tail, [],
+            [], self
+        ],
+        [:meth_to_list,         :'to-list', [],
+            [], VCBLM::List::Abstract
+        ],
+        [:meth_foldr,           :foldr, [],
+            [VC::Top, VC::Fun], VC::Top
+        ],
+        [:meth_foldl,           :foldl, [],
+            [VC::Top, VC::Fun], VC::Top
+        ],
+        [:meth_for_each,        :'for-each', [],
+            [VC::Fun], VC::Unit
+        ],
+        [:meth_map,             :map, [],
+            [VC::Fun], self
+        ],
+        [:meth_select,          :select, [],
+            [VC::Fun], self
+        ],
+        [:meth_append,          :'++', [],
+            [self], self
+        ],
+        [:meth_concat,          :concat, [],
+            [], self
+        ],
+        [:meth_concat_map,      :'concat-map', [],
+            [VC::Fun], self
+        ],
+        [:meth_join,            :join, [],
+            [], VCBA::String
+        ],
+        [:meth_join,            :'join:', [],
+            [VCBA::String], VCBA::String
+        ],
+        [:meth_zip,             :zip, [],
+            [self], self
+        ],
+        [:meth_unzip,           :unzip, [],
+            [], VCBLP::Tuple
+        ],
+        [:meth_uniq,            :uniq, [],
+            [], self
+        ],
+        [:meth_partition,       :partition, [],
+            [VC::Fun], VCBLP::Tuple
+        ],
+        [:meth_sort,            :sort, [],
+            [], self
+        ],
+        [:meth_sort,            :'sort-with', [],
+            [VC::Fun], self
+        ]
     ]
 
 

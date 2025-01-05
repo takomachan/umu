@@ -15,19 +15,23 @@ module Atom
 
 class Bool < Abstract
     CLASS_METHOD_INFOS = [
-        [:meth_make_true,       self,
-            :'true'],
-        [:meth_make_false,      self,
-            :'false']
+        [:meth_make_true,   :'true', [],
+            [], self
+        ],
+        [:meth_make_false,  :'false', [],
+            [], self
+        ]
     ]
 
 
     INSTANCE_METHOD_INFOS = [
-        [:meth_less_than,   self,
-            :'<',           self],
+        [:meth_less_than,   :'<', [],
+            [self], self
+        ],
 
-        [:meth_not,         self,
-            :not],
+        [:meth_not,         :not, [],
+            [], self
+        ],
     ]
 
 

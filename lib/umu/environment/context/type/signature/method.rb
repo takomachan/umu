@@ -127,6 +127,43 @@ class Entry < Abstract
     end
 end
 
+
+
+class Info < Abstract
+    attr_reader :param_class_types
+    attr_reader :ret_class_type
+
+
+    def initialize(
+        meth_sym, mess_sym, param_class_types, ret_class_type
+    )
+        ASSERT.kind_of meth_sym,          ::Symbol
+        ASSERT.kind_of mess_sym,          ::Symbol
+        ASSERT.kind_of param_class_types, ::Array
+        ASSERT.kind_of ret_class_type,    Class::Abstract
+
+        super(meth_sym, mess_sym)
+
+        @param_class_types    = param_class_types
+        @ret_class_type       = ret_class_type
+    end
+
+
+    def param_classes
+        self.param_class_types
+    end
+
+
+    def ret_class
+        self.ret_class_type
+    end
+
+
+    def to_a
+        [meth_sym, ret_class_type, mess_sym, param_class_types].freeze
+    end
+end
+
 end # Umu::Environment::Context::Type::Signature::Method
 
 
@@ -142,6 +179,20 @@ module_function
 
         Method::Entry.new(
             meth_sym, mess_sym, param_class_signats.freeze, ret_class_signat
+        ).freeze
+    end
+
+
+    def make_method_info(
+        meth_sym, mess_sym, param_class_types, ret_class_type
+    )
+        ASSERT.kind_of meth_sym,          ::Symbol
+        ASSERT.kind_of mess_sym,          ::Symbol
+        ASSERT.kind_of param_class_types, ::Array
+        ASSERT.kind_of ret_class_type,    Class::Abstract
+
+        Method::Entry.new(
+            meth_sym, mess_sym, param_class_types.freeze, ret_class_type
         ).freeze
     end
 

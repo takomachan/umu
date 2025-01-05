@@ -43,7 +43,7 @@ def update_method_info_of_mess_sym(info_of_symbol, infos, klass)
         infos.inject({}) { |hash, info|
             ASSERT.kind_of info, ::Array
 
-            meth_sym, ret_class, mess_sym, *_param_classes = info
+            meth_sym, ret_class, mess_sym, _param_classes = info
             ASSERT.kind_of      meth_sym,   ::Symbol
             ASSERT.subclass_of  ret_class,  VC::Top
             ASSERT.kind_of      mess_sym,   ::Symbol
@@ -58,9 +58,9 @@ def update_method_info_of_mess_sym(info_of_symbol, infos, klass)
         }
     ) { |mess_sym, sub_info, sup_info|
         sub_meth_sym, sub_ret_class,
-            _sub_mess_sym, *sub_param_classes = sub_info
+            _sub_mess_sym, sub_param_classes = sub_info
         sup_meth_sym, sup_ret_class,
-            _sup_mess_sym, *sup_param_classes = sup_info
+            _sup_mess_sym, sup_param_classes = sup_info
 
         ASSERT.assert(sub_meth_sym == sup_meth_sym)
 

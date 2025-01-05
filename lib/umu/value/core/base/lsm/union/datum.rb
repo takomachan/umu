@@ -17,16 +17,15 @@ module Union
 
 class Datum < Abstract
     CLASS_METHOD_INFOS = [
-        [:meth_make,    self,
-            :'make',    VCBA::Symbol, VC::Top],
-        [:meth_make,    self,
-            :'tag:contents:',
-                        VCBA::Symbol, VC::Top]
+        [:meth_make,    :'make', [:'tag:contents:'],
+            [VCBA::Symbol, VC::Top], self
+        ]
     ]
 
     INSTANCE_METHOD_INFOS = [
-        [:meth_tag,     VCBA::Symbol,
-            :tag]
+        [:meth_tag,     :tag, [],
+            [], VCBA::Symbol
+        ]
     ]
 
 

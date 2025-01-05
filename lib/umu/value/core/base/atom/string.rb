@@ -15,13 +15,16 @@ module Atom
 
 class String < Abstract
     INSTANCE_METHOD_INFOS = [
-        [:meth_less_than,   VCBA::Bool,
-            :'<',           self],
+        [:meth_less_than,   :'<', [],
+            [self], VCBA::Bool
+        ],
 
-        [:meth_panic,       VC::Unit,
-            :'panic!'],
-        [:meth_append,      self,
-            :'^',           self]
+        [:meth_panic,       :'panic!', [],
+            [], VC::Unit
+        ],
+        [:meth_append,      :'^', [],
+            [self], self
+        ]
     ]
 
 

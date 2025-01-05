@@ -18,36 +18,50 @@ module Number
 class Abstract < Atom::Abstract
     INSTANCE_METHOD_INFOS = [
         # Number
-        [:meth_is_positive, VCBA::Bool,
-            :positive?],
-        [:meth_is_negative, VCBA::Bool,
-            :negative?],
-        [:meth_is_zero,     VCBA::Bool,
-            :zero?],
-        [:meth_negate,      self,
-            :negate],
-        [:meth_absolute,    self,
-            :abs],
-        [:meth_to_int,      VCBAN::Int,
-            :'to-i'],
-        [:meth_to_real,     VCBAN::Real,
-            :'to-r'],
-        [:meth_add,         self,
-            :'+',           self],
-        [:meth_sub,         self,
-            :'-',           self],
-        [:meth_multiply,    self,
-            :'*',           self],
-        [:meth_divide,      self,
-            :'/',           self],
-        [:meth_modulo,      self,
-            :mod,           self],
-        [:meth_power,       self,
-            :pow,           self],
+        [:meth_is_positive, :positive?, [],
+            [], VCBA::Bool
+        ],
+        [:meth_is_negative, :negative?, [],
+            [], VCBA::Bool
+        ],
+        [:meth_is_zero,     :zero?, [],
+            [], VCBA::Bool
+        ],
+        [:meth_negate,      :negate, [],
+            [], self,
+        ],
+        [:meth_absolute,    :abs, [],
+            [], self,
+        ],
+        [:meth_to_int,      :'to-i', [],
+            [], VCBAN::Int
+        ],
+        [:meth_to_real,     :'to-r', [],
+            [], VCBAN::Real
+        ],
+        [:meth_add,         :'+', [],
+            [self], self
+        ],
+        [:meth_sub,         :'-', [],
+            [self], self
+        ],
+        [:meth_multiply,    :'*', [],
+            [self], self
+        ],
+        [:meth_divide,      :'/', [],
+            [self], self
+        ],
+        [:meth_modulo,      :mod, [],
+            [self], self
+        ],
+        [:meth_power,       :pow, [],
+            [self], self
+        ],
 
         # I/O
-        [:meth_random,      self,
-            :'random']
+        [:meth_random,      :'random', [],
+            [], self
+        ]
     ]
 
 

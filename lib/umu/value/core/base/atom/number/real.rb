@@ -17,89 +17,126 @@ module Number
 
 class Real < Abstract
     CLASS_METHOD_INFOS = [
-        [:meth_make_nan,        self,
-            :'nan'],
-        [:meth_make_infinity,   self,
-            :'infinity'],
-        [:meth_make_pi,         self,
-            :'pi'],
-        [:meth_make_e,          self,
-            :'e']
+        [:meth_make_nan,        :'nan', [],
+            [], self
+        ],
+        [:meth_make_infinity,   :'infinity', [],
+            [], self
+        ],
+        [:meth_make_pi,         :'pi', [],
+            [], self
+        ],
+        [:meth_make_e,          :'e', [],
+            [], self
+        ]
     ]
 
 
     INSTANCE_METHOD_INFOS = [
         # Number
-        [:meth_absolute,        self,
-            :abs],
-        [:meth_negate,          self,
-            :negate],
-        [:meth_less_than,       VCBA::Bool,
-            :'<',               self],
-        [:meth_add,             self,
-            :'+',               self],
-        [:meth_sub,             self,
-            :'-',               self],
-        [:meth_multiply,        self,
-            :'*',               self],
-        [:meth_divide,          self,
-            :'/',               self],
-        [:meth_modulo,          self,
-            :mod,               self],
-        [:meth_power,           self,
-            :pow,               self],
+        [:meth_absolute,        :abs, [],
+            [], self
+        ],
+        [:meth_negate,          :negate, [],
+            [], self
+        ],
+        [:meth_less_than,       :'<', [],
+            [self], VCBA::Bool
+        ],
+        [:meth_add,             :'+', [],
+            [self], self
+        ],
+        [:meth_sub,             :'-', [],
+            [self], self
+        ],
+        [:meth_multiply,        :'*', [],
+            [self], self
+        ],
+        [:meth_divide,          :'/', [],
+            [self], self
+        ],
+        [:meth_modulo,          :mod, [],
+            [self], self
+        ],
+        [:meth_power,           :pow, [],
+            [self], self
+        ],
 
         # Math
-        [:meth_is_nan,          VCBA::Bool,
-            :nan?],
-        [:meth_is_infinite,     VCBA::Bool,
-            :infinite?],
-        [:meth_is_finite,       VCBA::Bool,
-            :finite?],
-        [:meth_sin,             self,
-            :sin],
-        [:meth_cos,             self,
-            :cos],
-        [:meth_tan,             self,
-            :tan],
-        [:meth_asin,            self,
-            :asin],
-        [:meth_acos,            self,
-            :acos],
-        [:meth_atan,            self,
-            :atan],
-        [:meth_atan2,           self,
-            :atan2,             self],
-        [:meth_sinh,            self,
-            :sinh],
-        [:meth_cosh,            self,
-            :cosh],
-        [:meth_tanh,            self,
-            :tanh],
-        [:meth_exp,             self,
-            :exp],
-        [:meth_log,             self,
-            :log],
-        [:meth_log10,           self,
-            :log10],
-        [:meth_sqrt,            self,
-            :sqrt],
-        [:meth_truncate,        self,
-            :truncate,          VCBAN::Int],
-        [:meth_ceil,            self,
-            :ceil,              VCBAN::Int],
-        [:meth_floor,           self,
-            :floor,             VCBAN::Int],
-        [:meth_ldexp,           self,
-            :ldexp,             VCBAN::Int],
-        [:meth_frexp,           VCBLP::Tuple,
-            :frexp],
-        [:meth_divmod,          VCBLP::Tuple,
-            :divmod,            self],
+        [:meth_is_nan,          :nan?, [],
+            [], VCBA::Bool
+        ],
+        [:meth_is_infinite,     :infinite?, [],
+            [], VCBA::Bool
+        ],
+        [:meth_is_finite,       :finite?, [],
+            [], VCBA::Bool
+        ],
+        [:meth_sin,             :sin, [],
+            [], self
+        ],
+        [:meth_cos,             :cos, [],
+            [], self
+        ],
+        [:meth_tan,             :tan, [],
+            [], self
+        ],
+        [:meth_asin,            :asin, [],
+            [], self
+        ],
+        [:meth_acos,            :acos, [],
+            [], self
+        ],
+        [:meth_atan,            :atan, [],
+            [], self
+        ],
+        [:meth_atan2,           :atan2, [],
+            [self], self
+        ],
+        [:meth_sinh,            :sinh, [],
+            [], self
+        ],
+        [:meth_cosh,            :cosh, [],
+            [], self
+        ],
+        [:meth_tanh,            :tanh, [],
+            [], self
+        ],
+        [:meth_exp,             :exp, [],
+            [], self
+        ],
+        [:meth_log,             :log, [],
+            [], self
+        ],
+        [:meth_log10,           :log10, [],
+            [], self
+        ],
+        [:meth_sqrt,            :sqrt, [],
+            [], self
+        ],
+        [:meth_truncate,        :truncate, [],
+            [VCBAN::Int], self
+        ],
+        [:meth_ceil,            :ceil, [],
+            [VCBAN::Int], self
+        ],
+        [:meth_floor,           :floor, [],
+            [VCBAN::Int], self
+        ],
+        [:meth_ldexp,           :ldexp, [],
+            [VCBAN::Int], self
+        ],
+        [:meth_frexp,           :frexp, [],
+            [], VCBLP::Tuple
+        ],
+        [:meth_divmod,          :divmod, [],
+            [self], VCBLP::Tuple
+        ],
 
         # I/O
-        [:meth_random,      self,
-            :'random']
+        [:meth_random,          :'random', [],
+            [], self
+        ]
     ]
 
 

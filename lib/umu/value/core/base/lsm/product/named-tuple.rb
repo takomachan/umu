@@ -17,8 +17,9 @@ module Product
 
 class Named < Abstract
     INSTANCE_METHOD_INFOS = [
-        [:meth_less_than,   VCBA::Bool,
-            :'<',           self]
+        [:meth_less_than,   :'<', [],
+            [self], VCBA::Bool
+        ]
     ]
 
 

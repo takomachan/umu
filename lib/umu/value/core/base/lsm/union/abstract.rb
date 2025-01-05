@@ -17,8 +17,9 @@ module Union
 
 class Abstract < LSM::Abstract
     INSTANCE_METHOD_INFOS = [
-        [:meth_contents,    VC::Top,
-            :contents]
+        [:meth_contents,    :contents, [],
+            [], VC::Top
+        ]
     ]
 
 

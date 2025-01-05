@@ -19,33 +19,45 @@ module List
 
 class Abstract < Morph::Abstract
     CLASS_METHOD_INFOS = [
-        [:meth_make_empty,      self,
-            :'empty']
+        [:meth_make_empty,      :'empty', [],
+            [], self
+        ]
     ]
 
     INSTANCE_METHOD_INFOS = [
-        [ :meth_cons,           self,
-            :cons,              VC::Top],
-        [:meth_tail,            VCBLM::List::Abstract,
-            :tail],
-        [ :meth_map,            self,
-            :map,               VC::Fun],
-        [ :meth_select,         self,
-            :select,            VC::Fun],
-        [ :meth_append,         self,
-            :'++',              VCBLM::Abstract],
-        [ :meth_concat,         self,
-            :concat],
-        [ :meth_concat_map,     self,
-            :'concat-map',      VC::Fun],
-        [ :meth_zip,            self,
-            :zip,               VCBLM::Abstract],
-        [ :meth_uniq,           self,
-            :uniq],
-        [ :meth_sort,           self,
-            :sort],
-        [ :meth_sort,           self,
-            :'sort-with',       VC::Fun],
+        [:meth_cons,            :cons, [],
+            [VC::Top], self
+        ],
+        [:meth_tail,            :tail, [],
+            [], VCBLM::List::Abstract
+        ],
+        [:meth_map,             :map, [],
+            [VC::Fun], self
+        ],
+        [:meth_select,          :select, [],
+            [VC::Fun], self
+        ],
+        [:meth_append,          :'++', [],
+            [VCBLM::Abstract], self
+        ],
+        [:meth_concat,          :concat, [],
+            [], self
+        ],
+        [:meth_concat_map,      :'concat-map', [],
+            [VC::Fun], self
+        ],
+        [:meth_zip,             :zip, [],
+            [VCBLM::Abstract], self
+        ],
+        [:meth_uniq,            :uniq, [],
+            [], self
+        ],
+        [:meth_sort,            :sort, [],
+            [], self
+        ],
+        [:meth_sort,            :'sort-with', [],
+            [VC::Fun], self
+        ]
     ]
 
 
@@ -98,8 +110,9 @@ end
 
 class Nil < Abstract
     INSTANCE_METHOD_INFOS = [
-        [:meth_contents,    VC::Unit,
-            :contents]
+        [:meth_contents,        :contents, [],
+            [], VC::Unit
+        ]
     ]
 
 
@@ -124,15 +137,15 @@ NIL = Nil.new.freeze
 
 class Cons < Abstract
     CLASS_METHOD_INFOS = [
-        [:meth_make,            self,
-            :make,              VC::Top, VCBLM::List::Abstract],
-        [:meth_make,            self,
-            :'head:tail:',      VC::Top, VCBLM::List::Abstract]
+        [:meth_make,            :make, [:'head:tail:'],
+            [VC::Top, VCBLM::List::Abstract], self
+        ]
     ]
 
     INSTANCE_METHOD_INFOS = [
-        [:meth_contents,        VCBLP::Tuple,
-            :contents]
+        [:meth_contents,        :contents, [],
+            [], VCBLP::Tuple
+        ]
     ]
 
 

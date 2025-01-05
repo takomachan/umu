@@ -11,22 +11,28 @@ module Core
 
 class IO < Top
     CLASS_METHOD_INFOS = [
-        [:meth_make_stdin,      self,
-            :'stdin'],
-        [:meth_make_stdout,     self,
-            :'stdout'],
-        [:meth_make_stderr,     self,
-            :'stderr']
+        [:meth_make_stdin,      :'stdin', [],
+            [], self
+        ],
+        [:meth_make_stdout,     :'stdout', [],
+            [], self
+        ],
+        [:meth_make_stderr,     :'stderr', [],
+            [], self
+        ]
     ]
 
 
     INSTANCE_METHOD_INFOS = [
-        [:meth_get_string,   VCBLU::Option::Abstract,
-            :'gets'],
-        [:meth_put_string,   VC::Unit,
-            :'puts',         VCBA::String],
-        [:meth_pretty_print, VC::Unit,
-            :'pp',           VC::Top]
+        [:meth_get_string,      :'gets', [],
+            [], VCBLU::Option::Abstract
+        ],
+        [:meth_put_string,      :'puts', [],
+            [VCBA::String], VC::Unit
+        ],
+        [:meth_pretty_print,    :'pp', [],
+            [VC::Top], VC::Unit
+        ]
     ]
 
 

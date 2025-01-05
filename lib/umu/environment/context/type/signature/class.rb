@@ -194,7 +194,7 @@ private
 
     def __make_method_signat__(
         env,
-        meth_sym, ret_class, mess_sym, *param_classes
+        meth_sym, ret_class, mess_sym, param_classes
     )
         ASSERT.kind_of      env,            E::Entry
         ASSERT.kind_of      meth_sym,       ::Symbol

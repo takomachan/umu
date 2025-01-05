@@ -11,12 +11,15 @@ module Core
 
 class Fun < Top
     INSTANCE_METHOD_INFOS = [
-        [:meth_apply,           VC::Top,
-            :apply,             VC::Top],
-        [:meth_apply_binary,    VC::Top,
-            :'apply-binary',    VC::Top, VC::Top],
-        [:meth_apply_nary,      VC::Top,
-            :'apply-nary',      VC::Top, VC::Top, VCBLM::Abstract]
+        [:meth_apply,           :apply, [],
+            [VC::Top], VC::Top
+        ],
+        [:meth_apply_binary,    :'apply-binary', [],
+            [VC::Top, VC::Top], VC::Top
+        ],
+        [:meth_apply_nary,      :'apply-nary', [],
+            [VC::Top, VC::Top, VCBLM::Abstract], VC::Top
+        ]
     ]
 
     attr_reader :lam, :va_context
