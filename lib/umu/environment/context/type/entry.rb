@@ -41,57 +41,24 @@ def update_method_info_of_mess_sym(info_of_symbol, infos, klass)
 
     info_of_symbol.merge(
         infos.inject({}) { |hash, info|
-            ASSERT.kind_of info, ::Array
+            ASSERT.kind_of info, ECTS::Method::Info
 
-            meth_sym, ret_class, mess_sym, _param_classes = info
-            ASSERT.kind_of      meth_sym,   ::Symbol
-            ASSERT.subclass_of  ret_class,  VC::Top
-            ASSERT.kind_of      mess_sym,   ::Symbol
-
-            hash.merge(mess_sym => info) {
+            hash.merge(info.mess_sym => info) {
                 ASSERT.abort(
                     "In class: %s, " +
                     "duplicated a message symbol: %s",
-                    klass.type_sym, mess_sym
+                    klass.type_sym, info.mess_sym
                 )
             }
         }
     ) { |mess_sym, sub_info, sup_info|
-        sub_meth_sym, sub_ret_class,
-            _sub_mess_sym, sub_param_classes = sub_info
-        sup_meth_sym, sup_ret_class,
-            _sup_mess_sym, sup_param_classes = sup_info
-
-        ASSERT.assert(sub_meth_sym == sup_meth_sym)
+        ASSERT.assert(sub_info.meth_sym == sup_info.meth_sym)
 
         ASSERT.assert(
-            sub_param_classes.size == sup_param_classes.size
+            sub_info.param_classes.size == sup_info.param_classes.size
         )
 
-        ASSERT.assert(
-            sub_ret_class <= sup_ret_class,
-
-            [
-                format("Class: %s", klass.inspect),
-                format("  Message: %s", mess_sym),
-                format("  Super:"),
-                format("    Return: %s", sup_ret_class),
-                format("    Param: [%s]",
-                        sup_param_classes.map(
-                            &:inspect
-                        ).join(', ')
-                    ),
-                format("  Sub:"),
-                format("    Return: %s", sub_ret_class),
-                format("    Param: [%s]",
-                        sub_param_classes.map(
-                            &:inspect
-                        ).join(', ')
-                    ),
-            ].join("\n")
-        )
-
-        sub_param_classes.zip(sup_param_classes).each do
+        sub_info.param_classes.zip(sup_info.param_classes).each do
             |sub_param_class, sup_param_class|
             ASSERT.subclass_of sub_param_class, VC::Top
             ASSERT.subclass_of sup_param_class, VC::Top
@@ -100,6 +67,29 @@ def update_method_info_of_mess_sym(info_of_symbol, infos, klass)
                 sub_param_class <= sup_param_class
             )
         end
+
+        ASSERT.assert(
+            sub_info.ret_class <= sup_info.ret_class,
+
+            [
+                format("Class: %s", klass.inspect),
+                format("  Message: %s", mess_sym),
+                format("  Super:"),
+                format("    Return: %s", sup_info.ret_class),
+                format("    Param: [%s]",
+                        sup_info.param_classes.map(
+                            &:inspect
+                        ).join(', ')
+                    ),
+                format("  Sub:"),
+                format("    Return: %s", sub_info.ret_class),
+                format("    Param: [%s]",
+                        sub_info.param_classes.map(
+                            &:inspect
+                        ).join(', ')
+                    ),
+            ].join("\n")
+        )
 
         sub_info
     }

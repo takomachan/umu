@@ -64,7 +64,7 @@ class Abstract
 
                 (
                     self.param_classes + [self.ret_class]
-                ).map(&:to_sym).map(&:to_s).join(' -> ')
+                ).map(&:to_s).join(' -> ')
             )
         end
     end
@@ -137,10 +137,10 @@ class Info < Abstract
     def initialize(
         meth_sym, mess_sym, param_class_types, ret_class_type
     )
-        ASSERT.kind_of meth_sym,          ::Symbol
-        ASSERT.kind_of mess_sym,          ::Symbol
-        ASSERT.kind_of param_class_types, ::Array
-        ASSERT.kind_of ret_class_type,    Class::Abstract
+        ASSERT.kind_of     meth_sym,          ::Symbol
+        ASSERT.kind_of     mess_sym,          ::Symbol
+        ASSERT.kind_of     param_class_types, ::Array
+        ASSERT.subclass_of ret_class_type,    VC::Top
 
         super(meth_sym, mess_sym)
 
@@ -159,8 +159,24 @@ class Info < Abstract
     end
 
 
+=begin
     def to_a
         [meth_sym, ret_class_type, mess_sym, param_class_types].freeze
+    end
+=end
+
+
+    def to_signat(env)
+        ret_signat    = env.ty_signat_of_class self.ret_class_type
+        param_signats = self.param_class_types.map { |klass|
+            ASSERT.subclass_of klass, VC::Top
+
+            env.ty_signat_of_class klass
+        }
+
+        ECTS.make_method_signat(
+             self.meth_sym, self.mess_sym, param_signats, ret_signat
+        )
     end
 end
 
@@ -186,12 +202,12 @@ module_function
     def make_method_info(
         meth_sym, mess_sym, param_class_types, ret_class_type
     )
-        ASSERT.kind_of meth_sym,          ::Symbol
-        ASSERT.kind_of mess_sym,          ::Symbol
-        ASSERT.kind_of param_class_types, ::Array
-        ASSERT.kind_of ret_class_type,    Class::Abstract
+        ASSERT.kind_of     meth_sym,          ::Symbol
+        ASSERT.kind_of     mess_sym,          ::Symbol
+        ASSERT.kind_of     param_class_types, ::Array
+        ASSERT.subclass_of ret_class_type,    VC::Top
 
-        Method::Entry.new(
+        Method::Info.new(
             meth_sym, mess_sym, param_class_types.freeze, ret_class_type
         ).freeze
     end

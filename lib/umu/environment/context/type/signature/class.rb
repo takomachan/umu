@@ -50,6 +50,11 @@ class Base < Abstract
     end
 
 
+    def to_s
+        self.symbol.to_s
+    end
+
+
     def ==(other)
         other.kind_of?(Abstract) && self.symbol == other.symbol
     end
@@ -84,7 +89,7 @@ class Base < Abstract
         return enum_for(__method__, env) unless block_given?
 
         self.class_method_info_of_mess_sym.each_value do |info|
-            yield __make_method_signat__(env, *info)
+            yield info.to_signat(env)
         end
     end
 
@@ -103,11 +108,9 @@ class Base < Abstract
                     self.symbol, mess_sym.to_s
             )
         end
-        ASSERT.kind_of info, ::Array
+        ASSERT.kind_of info, ECTS::Method::Info
 
-        ASSERT.kind_of(
-             __make_method_signat__(env, *info), ECTS::Method::Entry
-        )
+        info.to_signat(env)
     end
 
 
@@ -122,7 +125,7 @@ class Base < Abstract
         return enum_for(__method__, env) unless block_given?
 
         self.instance_method_info_of_mess_sym.each_value do |info|
-            yield __make_method_signat__(env, *info)
+            yield info.to_signat(env)
         end
     end
 
@@ -141,11 +144,9 @@ class Base < Abstract
                     self.symbol, mess_sym.to_s
             )
         end
-        ASSERT.kind_of info, ::Array
+        ASSERT.kind_of info, ECTS::Method::Info
 
-        ASSERT.kind_of(
-             __make_method_signat__(env, *info), ECTS::Method::Entry
-        )
+        info.to_signat(env)
     end
 
 
@@ -187,31 +188,6 @@ class Base < Abstract
                         end
 
         ASSERT.kind_of descendants, ECTS::SetOfClass
-    end
-
-
-private
-
-    def __make_method_signat__(
-        env,
-        meth_sym, ret_class, mess_sym, param_classes
-    )
-        ASSERT.kind_of      env,            E::Entry
-        ASSERT.kind_of      meth_sym,       ::Symbol
-        ASSERT.subclass_of  ret_class,      VC::Top
-        ASSERT.kind_of      mess_sym,       ::Symbol
-        ASSERT.kind_of      param_classes,  ::Array
-
-        ret_signat      = env.ty_signat_of_class ret_class
-        param_signats   = param_classes.map { |klass|
-            ASSERT.subclass_of klass, VC::Top
-
-            env.ty_signat_of_class klass
-        }
-
-        ECTS.make_method_signat(
-             meth_sym, mess_sym, param_signats, ret_signat
-        )
     end
 end
 

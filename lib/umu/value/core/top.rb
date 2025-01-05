@@ -68,10 +68,10 @@ class Top < ::Object
                 ASSERT.subclass_of ret_class_type, VC::Top
 
                 ([hd_mess_sym] + tl_mess_syms).map { |message_sym|
-                    [
-                        meth_sym, ret_class_type, message_sym,
-                        param_class_types
-                    ]
+                    ECTS.make_method_info(
+                        meth_sym, message_sym,
+                        param_class_types, ret_class_type
+                    )
                 }
             }.inject([]) { |infos, xs| infos + xs }
         rescue ::NameError
