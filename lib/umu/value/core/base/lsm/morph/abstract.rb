@@ -254,7 +254,38 @@ class Abstract < LSM::Abstract
                 raise X::TypeError.new(
                     loc,
                     env,
-                    "select: expected a Bool, but %s : %s",
+                    "Expected a Bool, but %s : %s",
+                    value.to_s,
+                    value.type_sym.to_s
+                )
+            end
+
+            value.true?
+        }
+
+        self.class.make ys
+    end
+
+
+    define_instance_method(
+        :meth_reject,
+        :reject, [],
+        [VC::Fun], self
+    )
+    def meth_reject(loc, env, event, func)
+        ASSERT.kind_of func, VC::Fun
+
+        new_env = env.enter event
+
+        ys = self.reject { |x|
+            value = func.apply x, [], loc, new_env
+            ASSERT.kind_of value, VC::Top
+
+            unless value.kind_of? VCBA::Bool
+                raise X::TypeError.new(
+                    loc,
+                    env,
+                    "Expected a Bool, but %s : %s",
                     value.to_s,
                     value.type_sym.to_s
                 )

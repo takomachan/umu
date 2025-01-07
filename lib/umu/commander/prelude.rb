@@ -291,9 +291,9 @@ structure Umu = struct {
         fun map = (f : Fun) (xs : Morph) -> xs.map f
 
 
-        # select : ('a -> Bool) -> %['a] -> %['a]
-        # fun select = f -> foldr [] { x xs -> if f x then [x|xs] else xs }
-        fun select = (f : Fun) (xs : Morph) -> xs.select f
+        # filter : ('a -> Bool) -> %['a] -> %['a]
+        # fun filter = f -> foldr [] { x xs -> if f x then [x|xs] else xs }
+        fun filter = (f : Fun) (xs : Morph) -> xs.select f
 
 
         # concat : %[%['a]] -> %['a]
@@ -639,8 +639,8 @@ structure Umu = struct {
         # map       : ('a -> 'b) -> %['a] -> %['b]
         val map = Morph::map
 
-        # select    : ('a -> Bool) -> %['a] -> %['a]
-        val select = Morph::select
+        # filter    : ('a -> Bool) -> %['a] -> %['a]
+        val filter = Morph::filter
 
         # concat    : %[%['a]] -> %['a]
         val concat = Morph::concat
