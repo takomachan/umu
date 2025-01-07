@@ -14,20 +14,6 @@ module Base
 module Atom
 
 class String < Abstract
-    INSTANCE_METHOD_INFOS = [
-        [:meth_less_than,   :'<', [],
-            [self], VCBA::Bool
-        ],
-
-        [:meth_panic,       :'panic!', [],
-            [], VC::Unit
-        ],
-        [:meth_append,      :'^', [],
-            [self], self
-        ]
-    ]
-
-
     def initialize(val)
         ASSERT.kind_of val, ::String
 
@@ -50,17 +36,35 @@ class String < Abstract
     end
 
 
+    define_instance_method(
+        :meth_less_than,
+        :'<', [],
+        [self], VCBA::Bool
+    )
+
+
+    define_instance_method(
+        :meth_panic,
+        :panic!, [],
+        [], VC::Unit
+    )
     def meth_panic(loc, env, _event)
         raise X::Panic.new(loc, env, self.to_s)
     end
 
 
+    define_instance_method(
+        :meth_append,
+        :'^', [],
+        [self], self
+    )
     def meth_append(_loc, _env, _event, other)
         ASSERT.kind_of other, String
 
         VC.make_string self.val + other.val
     end
 end
+String.freeze
 
 
 end # Umu::Value::Core::Base::Atom

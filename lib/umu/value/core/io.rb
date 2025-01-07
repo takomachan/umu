@@ -10,30 +10,34 @@ module Value
 module Core
 
 class IO < Top
-    CLASS_METHOD_INFOS = [
-        [:meth_make_stdin,      :'stdin', [],
-            [], self
-        ],
-        [:meth_make_stdout,     :'stdout', [],
-            [], self
-        ],
-        [:meth_make_stderr,     :'stderr', [],
-            [], self
-        ]
-    ]
+    define_class_method(
+        :meth_make_stdin,
+        :stdin, [],
+        [], self
+    )
+    def self.meth_make_stdin(_loc, _env, _event)
+        VC.make_stdin
+    end
 
 
-    INSTANCE_METHOD_INFOS = [
-        [:meth_get_string,      :'gets', [],
-            [], VCBLU::Option::Abstract
-        ],
-        [:meth_put_string,      :'puts', [],
-            [VCBA::String], VC::Unit
-        ],
-        [:meth_pretty_print,    :'pp', [],
-            [VC::Top], VC::Unit
-        ]
-    ]
+    define_class_method(
+        :meth_make_stdout,
+        :stdout, [],
+        [], self
+    )
+    def self.meth_make_stdout(_loc, _env, _event)
+        VC.make_stdout
+    end
+
+
+    define_class_method(
+        :meth_make_stderr,
+        :stderr, [],
+        [], self
+    )
+    def self.meth_make_stderr(_loc, _env, _event)
+        VC.make_stderr
+    end
 
 
     attr_reader :io
@@ -48,26 +52,16 @@ class IO < Top
     end
 
 
-    def self.meth_make_stdin(_loc, _env, _event)
-        VC.make_stdin
-    end
-
-
-    def self.meth_make_stdout(_loc, _env, _event)
-        VC.make_stdout
-    end
-
-
-    def self.meth_make_stderr(_loc, _env, _event)
-        VC.make_stderr
-    end
-
-
     def to_s
         self.io.inspect
     end
 
 
+    define_instance_method(
+        :meth_get_string,
+        :gets, [],
+        [], VCBLU::Option::Abstract
+    )
     def meth_get_string(_loc, _env, _event)
         s = self.io.gets
 
@@ -79,6 +73,11 @@ class IO < Top
     end
 
 
+    define_instance_method(
+        :meth_put_string,
+        :puts, [],
+        [VCBA::String], VC::Unit
+    )
     def meth_put_string(_loc, _env, event, value)
         ASSERT.kind_of value, VCBA::String
 
@@ -88,6 +87,11 @@ class IO < Top
     end
 
 
+    define_instance_method(
+        :meth_pretty_print,
+        :pp, [],
+        [VC::Top], VC::Unit
+    )
     def meth_pretty_print(_loc, _env, event, value)
         ASSERT.kind_of value, VC::Top
 
@@ -96,6 +100,7 @@ class IO < Top
         VC.make_unit
     end
 end
+IO.freeze
 
 STDIN   = IO.new(::STDIN).freeze
 STDOUT  = IO.new(::STDOUT).freeze

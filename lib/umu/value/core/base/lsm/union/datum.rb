@@ -16,19 +16,6 @@ module LSM
 module Union
 
 class Datum < Abstract
-    CLASS_METHOD_INFOS = [
-        [:meth_make,    :'make', [:'tag:contents:'],
-            [VCBA::Symbol, VC::Top], self
-        ]
-    ]
-
-    INSTANCE_METHOD_INFOS = [
-        [:meth_tag,     :tag, [],
-            [], VCBA::Symbol
-        ]
-    ]
-
-
     attr_reader :tag_sym, :contents
 
 
@@ -43,6 +30,11 @@ class Datum < Abstract
     end
 
 
+    define_class_method(
+        :meth_make,
+        :make, [:'tag:contents:'],
+        [VCBA::Symbol, VC::Top], self
+    )
     def self.meth_make(_loc, _env, _event, tag, contents)
         ASSERT.kind_of tag,         VCBA::Symbol
         ASSERT.kind_of contents,    VC::Top
@@ -87,6 +79,11 @@ class Datum < Abstract
     end
 
 
+    define_instance_method(
+        :meth_tag,
+        :tag, [],
+        [], VCBA::Symbol
+    )
     def meth_tag(_loc, _env, _event)
         VC.make_symbol self.tag_sym
     end
@@ -96,6 +93,7 @@ class Datum < Abstract
         self.contents
     end
 end
+Datum.freeze
 
 end # Umu::Core::Base::LSM::Union
 

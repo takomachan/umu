@@ -16,13 +16,6 @@ module LSM
 module Product
 
 class Tuple < Abstract
-    INSTANCE_METHOD_INFOS = [
-        [:meth_less_than,   :'<', [],
-            [self], VCBA::Bool
-        ]
-    ]
-
-
     alias values objs
 
 
@@ -73,6 +66,11 @@ class Tuple < Abstract
     end
 
 
+    define_instance_method(
+        :meth_less_than,
+        :'<', [],
+        [self], VCBA::Bool
+    )
     def meth_less_than(loc, env, event, other)
         ASSERT.kind_of other, VCBLP::Tuple
 
@@ -127,6 +125,7 @@ class Tuple < Abstract
         ASSERT.kind_of result, VCBA::Bool
     end
 end
+Tuple.freeze
 
 end # Umu::Value::Core::LSM::Base::Product
 

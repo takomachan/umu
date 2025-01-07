@@ -16,130 +16,6 @@ module Atom
 module Number
 
 class Real < Abstract
-    CLASS_METHOD_INFOS = [
-        [:meth_make_nan,        :'nan', [],
-            [], self
-        ],
-        [:meth_make_infinity,   :'infinity', [],
-            [], self
-        ],
-        [:meth_make_pi,         :'pi', [],
-            [], self
-        ],
-        [:meth_make_e,          :'e', [],
-            [], self
-        ]
-    ]
-
-
-    INSTANCE_METHOD_INFOS = [
-        # Number
-        [:meth_absolute,        :abs, [],
-            [], self
-        ],
-        [:meth_negate,          :negate, [],
-            [], self
-        ],
-        [:meth_less_than,       :'<', [],
-            [self], VCBA::Bool
-        ],
-        [:meth_add,             :'+', [],
-            [self], self
-        ],
-        [:meth_sub,             :'-', [],
-            [self], self
-        ],
-        [:meth_multiply,        :'*', [],
-            [self], self
-        ],
-        [:meth_divide,          :'/', [],
-            [self], self
-        ],
-        [:meth_modulo,          :mod, [],
-            [self], self
-        ],
-        [:meth_power,           :pow, [],
-            [self], self
-        ],
-
-        # Math
-        [:meth_is_nan,          :nan?, [],
-            [], VCBA::Bool
-        ],
-        [:meth_is_infinite,     :infinite?, [],
-            [], VCBA::Bool
-        ],
-        [:meth_is_finite,       :finite?, [],
-            [], VCBA::Bool
-        ],
-        [:meth_sin,             :sin, [],
-            [], self
-        ],
-        [:meth_cos,             :cos, [],
-            [], self
-        ],
-        [:meth_tan,             :tan, [],
-            [], self
-        ],
-        [:meth_asin,            :asin, [],
-            [], self
-        ],
-        [:meth_acos,            :acos, [],
-            [], self
-        ],
-        [:meth_atan,            :atan, [],
-            [], self
-        ],
-        [:meth_atan2,           :atan2, [],
-            [self], self
-        ],
-        [:meth_sinh,            :sinh, [],
-            [], self
-        ],
-        [:meth_cosh,            :cosh, [],
-            [], self
-        ],
-        [:meth_tanh,            :tanh, [],
-            [], self
-        ],
-        [:meth_exp,             :exp, [],
-            [], self
-        ],
-        [:meth_log,             :log, [],
-            [], self
-        ],
-        [:meth_log10,           :log10, [],
-            [], self
-        ],
-        [:meth_sqrt,            :sqrt, [],
-            [], self
-        ],
-        [:meth_truncate,        :truncate, [],
-            [VCBAN::Int], self
-        ],
-        [:meth_ceil,            :ceil, [],
-            [VCBAN::Int], self
-        ],
-        [:meth_floor,           :floor, [],
-            [VCBAN::Int], self
-        ],
-        [:meth_ldexp,           :ldexp, [],
-            [VCBAN::Int], self
-        ],
-        [:meth_frexp,           :frexp, [],
-            [], VCBLP::Tuple
-        ],
-        [:meth_divmod,          :divmod, [],
-            [self], VCBLP::Tuple
-        ],
-
-        # I/O
-        [:meth_random,          :'random', [],
-            [], self
-        ]
-    ]
-
-
     def initialize(val)
         ASSERT.kind_of val, ::Float
 
@@ -166,71 +42,209 @@ class Real < Abstract
     end
 
 
+    define_class_method(
+        :meth_make_nan,
+        :nan, [],
+        [], self
+    )
     def self.meth_make_nan(_loc, _env, _event)
         VC.make_nan
     end
 
 
+    define_class_method(
+        :meth_make_infinity,
+        :infinity, [],
+        [], self
+    )
     def self.meth_make_infinity(_loc, _env, _event)
         VC.make_infinity
     end
 
 
+    define_class_method(
+        :meth_make_pi,
+        :pi, [],
+        [], self
+    )
     def self.meth_make_pi(_loc, _env, _event)
         VC.make_real Math::PI
     end
 
 
+    define_class_method(
+        :meth_make_e,
+        :e, [],
+        [], self
+    )
     def self.meth_make_e(_loc, _env, _event)
         VC.make_real Math::E
     end
 
 
+    define_instance_method(
+        :meth_absolute,
+        :abs, [],
+        [], self
+    )
+
+
+    define_instance_method(
+        :meth_negate,
+        :negate, [],
+        [], self
+    )
+
+
+    def meth_to_real(_loc, _env, _event)
+        self
+    end
+
+
+    define_instance_method(
+        :meth_less_than,
+        :'<', [],
+        [self], VCBA::Bool
+    )
+
+
+    define_instance_method(
+        :meth_add,
+        :'+', [],
+        [self], self
+    )
+
+
+    define_instance_method(
+        :meth_sub,
+        :'-', [],
+        [self], self
+    )
+
+
+    define_instance_method(
+        :meth_multiply,
+        :'*', [],
+        [self], self
+    )
+
+
+    define_instance_method(
+        :meth_divide,
+        :'/', [],
+        [self], self
+    )
+
+
+    define_instance_method(
+        :meth_modulo,
+        :mod, [],
+        [self], self
+    )
+
+
+    define_instance_method(
+        :meth_power,
+        :pow, [],
+        [self], self
+    )
+
+
+    define_instance_method(
+        :meth_is_nan,
+        :nan?, [],
+        [], VCBA::Bool
+    )
     def meth_is_nan(_loc, _env, _event)
         VC.make_bool self.val.nan?
     end
 
 
+    define_instance_method(
+        :meth_is_infinite,
+        :infinite?, [],
+        [], VCBA::Bool
+    )
     def meth_is_infinite(_loc, _env, _event)
         VC.make_bool self.val.infinite?.kind_of?(::Integer)
     end
 
 
+    define_instance_method(
+        :meth_is_finite,
+        :finite?, [],
+        [], VCBA::Bool
+    )
     def meth_is_finite(_loc, _env, _event)
         VC.make_bool self.val.finite?
     end
 
 
+    define_instance_method(
+        :meth_sin,
+        :sin, [],
+        [], self
+    )
     def meth_sin(_loc, _env, _event)
         VC.make_real Math.sin(self.val)
     end
 
 
+    define_instance_method(
+        :meth_cos,
+        :cos, [],
+        [], self
+    )
     def meth_cos(_loc, _env, _event)
         VC.make_real Math.cos(self.val)
     end
 
 
+    define_instance_method(
+        :meth_tan,
+        :tan, [],
+        [], self
+    )
     def meth_tan(_loc, _env, _event)
         VC.make_real Math.tan(self.val)
     end
 
 
+    define_instance_method(
+        :meth_asin,
+        :asin, [],
+        [], self
+    )
     def meth_asin(_loc, _env, _event)
         VC.make_real Math.asin(self.val)
     end
 
 
+    define_instance_method(
+        :meth_acos,
+        :acos, [],
+        [], self
+    )
     def meth_acos(_loc, _env, _event)
         VC.make_real Math.acos(self.val)
     end
 
 
+    define_instance_method(
+        :meth_atan,
+        :atan, [],
+        [], self
+    )
     def meth_atan(_loc, _env, _event)
         VC.make_real Math.atan(self.val)
     end
 
 
+    define_instance_method(
+        :meth_atan2,
+        :atan2, [],
+        [self], self
+    )
     def meth_atan2(_loc, _env, _event, other)
         ASSERT.kind_of other, Real
 
@@ -238,41 +252,81 @@ class Real < Abstract
     end
 
 
+    define_instance_method(
+        :meth_sinh,
+        :sinh, [],
+        [], self
+    )
     def meth_sinh(_loc, _env, _event)
         VC.make_real Math.sinh(self.val)
     end
 
 
+    define_instance_method(
+        :meth_cosh,
+        :cosh, [],
+        [], self
+    )
     def meth_cosh(_loc, _env, _event)
         VC.make_real Math.cosh(self.val)
     end
 
 
+    define_instance_method(
+        :meth_tanh,
+        :tanh, [],
+        [], self
+    )
     def meth_tanh(_loc, _env, _event)
         VC.make_real Math.tanh(self.val)
     end
 
 
+    define_instance_method(
+        :meth_exp,
+        :exp, [],
+        [], self
+    )
     def meth_exp(_loc, _env, _event)
         VC.make_real Math.exp(self.val)
     end
 
 
+    define_instance_method(
+        :meth_log,
+        :log, [],
+        [], self
+    )
     def meth_log(_loc, _env, _event)
         VC.make_real Math.log(self.val)
     end
 
 
+    define_instance_method(
+        :meth_log10,
+        :log10, [],
+        [], self
+    )
     def meth_log10(_loc, _env, _event)
         VC.make_real Math.log10(self.val)
     end
 
 
+    define_instance_method(
+        :meth_sqrt,
+        :sqrt, [],
+        [], self
+    )
     def meth_sqrt(_loc, _env, _event)
         VC.make_real Math.sqrt(self.val)
     end
 
 
+    define_instance_method(
+        :meth_truncate,
+        :truncate, [],
+        [VCBAN::Int], self
+    )
     def meth_truncate(loc, env, _event, ndigits)
         ASSERT.kind_of ndigits, VCBAN::Int
 
@@ -289,6 +343,11 @@ class Real < Abstract
     end
 
 
+    define_instance_method(
+        :meth_ceil,
+        :ceil, [],
+        [VCBAN::Int], self
+    )
     def meth_ceil(loc, env, _event, ndigits)
         ASSERT.kind_of ndigits, VCBAN::Int
 
@@ -305,6 +364,11 @@ class Real < Abstract
     end
 
 
+    define_instance_method(
+        :meth_floor,
+        :floor, [],
+        [VCBAN::Int], self
+    )
     def meth_floor(loc, env, _event, ndigits)
         ASSERT.kind_of ndigits, VCBAN::Int
 
@@ -321,6 +385,11 @@ class Real < Abstract
     end
 
 
+    define_instance_method(
+        :meth_ldexp,
+        :ldexp, [],
+        [VCBAN::Int], self
+    )
     def meth_ldexp(_loc, _env, _event, other)
         ASSERT.kind_of other, VCBAN::Int
 
@@ -328,6 +397,11 @@ class Real < Abstract
     end
 
 
+    define_instance_method(
+        :meth_frexp,
+        :frexp, [],
+        [], VCBLP::Tuple
+    )
     def meth_frexp(_loc, _env, _event)
         fract, expon = Math.frexp self.val
 
@@ -340,6 +414,11 @@ class Real < Abstract
     end
 
 
+    define_instance_method(
+        :meth_divmod,
+        :divmod, [],
+        [self], VCBLP::Tuple
+    )
     def meth_divmod(_loc, _env, _event, other)
         ASSERT.kind_of other, VCBAN::Real
 
@@ -354,10 +433,13 @@ class Real < Abstract
     end
 
 
-    def meth_to_real(_loc, _env, _event)
-        self
-    end
+    define_instance_method(
+        :meth_random,
+        :random, [],
+        [], self
+    )
 end
+Real.freeze
 
 NAN         = Atom::Number::Real.new(::Float::NAN).freeze
 INFINITY    = Atom::Number::Real.new(::Float::INFINITY).freeze

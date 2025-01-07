@@ -16,55 +16,6 @@ module Atom
 module Number
 
 class Abstract < Atom::Abstract
-    INSTANCE_METHOD_INFOS = [
-        # Number
-        [:meth_is_positive, :positive?, [],
-            [], VCBA::Bool
-        ],
-        [:meth_is_negative, :negative?, [],
-            [], VCBA::Bool
-        ],
-        [:meth_is_zero,     :zero?, [],
-            [], VCBA::Bool
-        ],
-        [:meth_negate,      :negate, [],
-            [], self,
-        ],
-        [:meth_absolute,    :abs, [],
-            [], self,
-        ],
-        [:meth_to_int,      :'to-i', [],
-            [], VCBAN::Int
-        ],
-        [:meth_to_real,     :'to-r', [],
-            [], VCBAN::Real
-        ],
-        [:meth_add,         :'+', [],
-            [self], self
-        ],
-        [:meth_sub,         :'-', [],
-            [self], self
-        ],
-        [:meth_multiply,    :'*', [],
-            [self], self
-        ],
-        [:meth_divide,      :'/', [],
-            [self], self
-        ],
-        [:meth_modulo,      :mod, [],
-            [self], self
-        ],
-        [:meth_power,       :pow, [],
-            [self], self
-        ],
-
-        # I/O
-        [:meth_random,      :'random', [],
-            [], self
-        ]
-    ]
-
-
     def initialize(val)
         ASSERT.kind_of val, ::Numeric
 
@@ -83,31 +34,61 @@ class Abstract < Atom::Abstract
     end
 
 
+    define_instance_method(
+        :meth_is_positive,
+        :positive?, [],
+        [], VCBA::Bool
+    )
     def meth_is_positive(_loc, _env, _event)
         VC.make_bool(self.val > 0)
     end
 
 
+    define_instance_method(
+        :meth_is_negative,
+        :negative?, [],
+        [], VCBA::Bool
+    )
     def meth_is_negative(_loc, _env, _event)
         VC.make_bool(self.val < 0)
     end
 
 
+    define_instance_method(
+        :meth_is_zero,
+        :zero?, [],
+        [], VCBA::Bool
+    )
     def meth_is_zero(_loc, _env, _event)
         VC.make_bool self.val.zero?
     end
 
 
+    define_instance_method(
+        :meth_negate,
+        :negate, [],
+        [], self
+    )
     def meth_negate(_loc, _env, _event)
         VC.make_number self.class, - self.val
     end
 
 
+    define_instance_method(
+        :meth_absolute,
+        :absolute, [],
+        [], self
+    )
     def meth_absolute(_loc, _env, _event)
         VC.make_number self.class, self.val.abs
     end
 
 
+    define_instance_method(
+        :meth_to_int,
+        :'to-i', [],
+        [], VCBAN::Int
+    )
     def meth_to_int(loc, env, _event)
         begin
             VC.make_integer self.val.to_i
@@ -123,6 +104,11 @@ class Abstract < Atom::Abstract
     end
 
 
+    define_instance_method(
+        :meth_to_real,
+        :'to-r', [],
+        [], VCBAN::Real
+    )
     def meth_to_real(_loc, _env, _event)
         VC.make_real self.val.to_f
     end
@@ -135,6 +121,11 @@ class Abstract < Atom::Abstract
     end
 
 
+    define_instance_method(
+        :meth_add,
+        :'+', [],
+        [self], self
+    )
     def meth_add(_loc, _env, _event, other)
         ASSERT.kind_of other, Number::Abstract
 
@@ -142,6 +133,11 @@ class Abstract < Atom::Abstract
     end
 
 
+    define_instance_method(
+        :meth_sub,
+        :'-', [],
+        [self], self
+    )
     def meth_sub(_loc, _env, _event, other)
         ASSERT.kind_of other, Number::Abstract
 
@@ -149,6 +145,11 @@ class Abstract < Atom::Abstract
     end
 
 
+    define_instance_method(
+        :meth_multiply,
+        :'*', [],
+        [self], self
+    )
     def meth_multiply(_loc, _env, _event, other)
         ASSERT.kind_of other, Number::Abstract
 
@@ -156,6 +157,11 @@ class Abstract < Atom::Abstract
     end
 
 
+    define_instance_method(
+        :meth_divide,
+        :'/', [],
+        [self], self
+    )
     def meth_divide(loc, env, _event, other)
         ASSERT.kind_of other, Number::Abstract
 
@@ -171,6 +177,11 @@ class Abstract < Atom::Abstract
     end
 
 
+    define_instance_method(
+        :meth_modulo,
+        :mod, [],
+        [self], self
+    )
     def meth_modulo(loc, env, _event, other)
         ASSERT.kind_of other, Number::Abstract
 
@@ -186,6 +197,11 @@ class Abstract < Atom::Abstract
     end
 
 
+    define_instance_method(
+        :meth_power,
+        :pow, [],
+        [self], self
+    )
     def meth_power(loc, env, _event, other)
         ASSERT.kind_of other, Number::Abstract
 
@@ -201,6 +217,11 @@ class Abstract < Atom::Abstract
     end
 
 
+    define_instance_method(
+        :meth_random,
+        :random, [],
+        [], self
+    )
     def meth_random(loc, env, _event)
         value = if self.val > 0
                 begin
@@ -229,6 +250,7 @@ class Abstract < Atom::Abstract
         ASSERT.kind_of value, Number::Abstract
     end
 end
+Abstract.freeze
 
 end # Umu::Value::Core::Atom::Base::Number
 

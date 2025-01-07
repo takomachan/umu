@@ -16,58 +16,6 @@ module LSM
 module Morph
 
 class Interval < Abstract
-    CLASS_METHOD_INFOS = [
-        [:meth_make_empty,      :'empty', [],
-            [], self  # --> NotConstractible
-        ],
-        [:meth_make,            :make, [:'from:to:'],
-            [VCBAN::Int, VCBAN::Int], self
-        ],
-        [:meth_make,            :'make-by', [:'from:to:by:'],
-            [VCBAN::Int, VCBAN::Int, VCBAN::Int], self
-        ]
-    ]
-
-    INSTANCE_METHOD_INFOS = [
-        [ :meth_cons,           :cons, [],
-            [VC::Top], VCBLM::List::Abstract  # --> NotConstractible
-        ],
-        [:meth_head,            :head, [],
-            [], VCBAN::Int
-        ],
-        [:meth_tail,            :tail, [],
-            [], self
-        ],
-        [:meth_map,             :map, [],
-            [VC::Fun], VCBLM::List::Abstract
-        ],
-        [:meth_select,          :select, [],
-            [VC::Fun], VCBLM::List::Abstract
-        ],
-        [:meth_append,          :'++', [],
-            [VCBLM::Abstract], VCBLM::List::Abstract
-        ],
-        [:meth_concat,          :concat, [],
-            [], VCBLM::List::Abstract
-        ],
-        [:meth_concat_map,      :'concat-map', [],
-            [VC::Fun], VCBLM::List::Abstract
-        ],
-        [:meth_zip,             :zip, [],
-            [VCBLM::Abstract], VCBLM::List::Abstract
-        ],
-        [:meth_uniq,            :uniq, [],
-            [], VCBLM::List::Abstract
-        ],
-        [:meth_sort,            :sort, [],
-            [], VCBLM::List::Abstract
-        ],
-        [:meth_sort,            :'sort-with', [],
-            [VC::Fun], VCBLM::List::Abstract
-        ]
-    ]
-
-
     def self.make(xs)
         ASSERT.kind_of xs, ::Array
 
@@ -75,6 +23,11 @@ class Interval < Abstract
     end
 
 
+    define_class_method(
+        :meth_make_empty,
+        :empty, [],
+        [], self  # --> NotConstractible
+    )
     def self.meth_make_empty(loc, env, _event)
         raise X::NotImplemented.new(
             loc,
@@ -84,6 +37,16 @@ class Interval < Abstract
     end
 
 
+    define_class_method(
+        :meth_make,
+        :make, [:'from:to:'],
+        [VCBAN::Int, VCBAN::Int], self
+    )
+    define_class_method(
+        :meth_make,
+        :'make-by', [:'from:to:by:'],
+        [VCBAN::Int, VCBAN::Int, VCBAN::Int], self
+    )
     def self.meth_make(
         _loc, _env, _event,
         start_value,
@@ -112,6 +75,11 @@ class Interval < Abstract
     end
 
 
+    define_instance_method(
+        :meth_cons,
+        :cons, [],
+        [VC::Top], VCBLM::List::Abstract  # --> NotConstractible
+    )
     def meth_cons(loc, env, _event, _value)
         raise X::NotImplemented.new(
             loc,
@@ -153,6 +121,76 @@ class Interval < Abstract
     end
 
 
+    define_instance_method(
+        :meth_tail,
+        :tail, [],
+        [], self
+    )
+
+
+    define_instance_method(
+        :meth_map,
+        :map, [],
+        [VC::Fun], VCBLM::List::Abstract
+    )
+
+
+    define_instance_method(
+        :meth_select,
+        :select, [],
+        [VC::Fun], VCBLM::List::Abstract
+    )
+
+
+    define_instance_method(
+        :meth_append,
+        :'++', [],
+        [VCBLM::Abstract], VCBLM::List::Abstract
+    )
+
+
+    define_instance_method(
+        :meth_concat,
+        :concat, [],
+        [], VCBLM::List::Abstract
+    )
+
+
+    define_instance_method(
+        :meth_concat_map,
+        :'concat-map', [],
+        [VC::Fun], VCBLM::List::Abstract
+    )
+
+
+    define_instance_method(
+        :meth_zip,
+        :zip, [],
+        [VCBLM::Abstract], VCBLM::List::Abstract
+    )
+
+
+    define_instance_method(
+        :meth_uniq,
+        :uniq, [],
+        [], VCBLM::List::Abstract
+    )
+
+
+    define_instance_method(
+        :meth_sort,
+        :sort, [],
+        [], VCBLM::List::Abstract
+    )
+
+
+    define_instance_method(
+        :meth_sort,
+        :'sort-with', [],
+        [VC::Fun], VCBLM::List::Abstract
+    )
+
+
 private
 
     def __empty__?
@@ -163,6 +201,7 @@ private
         end
     end
 end
+Interval.freeze
 
 
 end # Umu::Value::Core::Base::LSM::Morph

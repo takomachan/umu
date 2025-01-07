@@ -14,13 +14,6 @@ module Base
 module Atom
 
 class Symbol < Abstract
-    INSTANCE_METHOD_INFOS = [
-        [:meth_less_than,   :'<', [],
-            [self], VCBA::Bool
-        ]
-    ]
-
-
     def initialize(val)
         ASSERT.kind_of val, ::Symbol
 
@@ -36,7 +29,15 @@ class Symbol < Abstract
     def meth_to_string(_loc, _env, _event)
         VC.make_string self.val.to_s
     end
+
+
+    define_instance_method(
+        :meth_less_than,
+        :'<', [],
+        [self], VCBA::Bool
+    )
 end
+Symbol.freeze
 
 end # Umu::Value::Core::Base::Atom
 

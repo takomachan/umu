@@ -16,13 +16,6 @@ module LSM
 module Union
 
 class Abstract < LSM::Abstract
-    INSTANCE_METHOD_INFOS = [
-        [:meth_contents,    :contents, [],
-            [], VC::Top
-        ]
-    ]
-
-
     def to_s
         format("&%s %s", self.type_sym, self.contents.to_s)
     end
@@ -53,10 +46,16 @@ class Abstract < LSM::Abstract
     end
 
 
+    define_instance_method(
+        :meth_contents,
+        :contents, [],
+        [], VC::Top
+    )
     def meth_contents(_loc, _env, _event)
         self.contents
     end
 end
+Abstract.freeze
 
 end # Umu::Value::Core::Base::LSM::Union
 

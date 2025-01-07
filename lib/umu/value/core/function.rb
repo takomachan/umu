@@ -10,18 +10,6 @@ module Value
 module Core
 
 class Fun < Top
-    INSTANCE_METHOD_INFOS = [
-        [:meth_apply,           :apply, [],
-            [VC::Top], VC::Top
-        ],
-        [:meth_apply_binary,    :'apply-binary', [],
-            [VC::Top, VC::Top], VC::Top
-        ],
-        [:meth_apply_nary,      :'apply-nary', [],
-            [VC::Top, VC::Top, VCBLM::Abstract], VC::Top
-        ]
-    ]
-
     attr_reader :lam, :va_context
 
 
@@ -89,6 +77,11 @@ class Fun < Top
     end
 
 
+    define_instance_method(
+        :meth_apply,
+        :apply, [],
+        [VC::Top], VC::Top
+    )
     def meth_apply(loc, env, event, value)
         ASSERT.kind_of value, VC::Top
 
@@ -96,6 +89,11 @@ class Fun < Top
     end
 
 
+    define_instance_method(
+        :meth_apply_binary,
+        :'apply-binary', [],
+        [VC::Top, VC::Top], VC::Top
+    )
     def meth_apply_binary(loc, env, event, fst_value, snd_value)
         ASSERT.kind_of fst_value, VC::Top
         ASSERT.kind_of snd_value, VC::Top
@@ -104,6 +102,11 @@ class Fun < Top
     end
 
 
+    define_instance_method(
+        :meth_apply_nary,
+        :'apply-nary', [],
+        [VC::Top, VC::Top, VCBLM::Abstract], VC::Top
+    )
     def meth_apply_nary(loc, env, event, fst_value, snd_value, tail_values)
         ASSERT.kind_of fst_value,   VC::Top
         ASSERT.kind_of snd_value,   VC::Top
@@ -238,6 +241,7 @@ private
         ASSERT.tuple_of tuple, [::Array, ::Array, E::Entry]
     end
 end
+Fun.freeze
 
 
 module_function

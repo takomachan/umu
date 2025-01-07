@@ -14,13 +14,6 @@ module Base
 module Atom
 
 class Abstract < Base::Abstract
-    INSTANCE_METHOD_INFOS = [
-        [:meth_less_than,   :'<', [],
-            [self], VCBA::Bool
-        ]
-    ]
-
-
     attr_reader :val
 
 
@@ -42,12 +35,18 @@ class Abstract < Base::Abstract
     end
 
 
+    define_instance_method(
+        :meth_less_than,
+        :'<', [],
+        [self], VCBA::Bool
+    )
     def meth_less_than(_loc, _env, _event, other)
         ASSERT.kind_of other, Atom::Abstract
 
         VC.make_bool self.val < other.val
     end
 end
+Abstract.freeze
 
 end # Umu::Value::Core::Base::Atom
 

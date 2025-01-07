@@ -16,13 +16,6 @@ module LSM
 module Product
 
 class Named < Abstract
-    INSTANCE_METHOD_INFOS = [
-        [:meth_less_than,   :'<', [],
-            [self], VCBA::Bool
-        ]
-    ]
-
-
     alias values objs
     attr_reader :index_by_label
 
@@ -136,6 +129,11 @@ class Named < Abstract
     end
 
 
+    define_instance_method(
+        :meth_less_than,
+        :'<', [],
+        [self], VCBA::Bool
+    )
     def meth_less_than(loc, env, event, other)
         ASSERT.kind_of other, VCBLP::Named
 
@@ -217,6 +215,7 @@ class Named < Abstract
         ASSERT.kind_of result, VCBA::Bool
     end
 end
+Named.freeze
 
 end # Umu::Value::Core::LSM::Base::Product
 

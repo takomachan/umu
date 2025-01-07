@@ -18,65 +18,63 @@ module Union
 module Option
 
 class Abstract < Union::Abstract
-    INSTANCE_METHOD_INFOS = [
-        [:meth_is_none,     :none?, [],
-            [], VCBA::Bool
-        ],
-        [:meth_is_some,     :some?, [],
-            [], VCBA::Bool
-        ]
-    ]
-
-
-
+    define_instance_method(
+        :meth_is_none,
+        :none?, [],
+        [], VCBA::Bool
+    )
     def meth_is_none(_loc, _env, event)
         VC.make_false
     end
 
 
+    define_instance_method(
+        :meth_is_some,
+        :some?, [],
+        [], VCBA::Bool
+    )
     def meth_is_some(_loc, _env, event)
         VC.make_false
     end
 end
+Abstract.freeze
 
 
 
 class None < Abstract
-    CLASS_METHOD_INFOS = [
-        [:meth_make,        :'make', [],
-            [], self
-        ]
-    ]
-
-    INSTANCE_METHOD_INFOS = [
-        [:meth_contents,    :contents, [],
-            [], VC::Unit
-        ]
-    ]
-
-
+    define_class_method(
+        :meth_make,
+        :make, [],
+        [], self
+    )
     def self.meth_make(_loc, _env, _event)
         VC.make_none
     end
 
 
-    def meth_none?(_loc, _env, _event)
+    def meth_is_none(_loc, _env, _event)
         VC.make_true
     end
+
+
+    define_instance_method(
+        :meth_contents,
+        :contents, [],
+        [], VC::Unit
+    )
 end
+None.freeze
 
 NONE = None.new.freeze
 
 
 
 class Some < Abstract
-    CLASS_METHOD_INFOS = [
-        [:meth_make,    :'make', [],
-            [VC::Top], self
-        ]
-    ]
-
-
+    define_class_method(
+        :meth_make,
+        :make, [],
+        [VC::Top], self
+    )
     def self.meth_make(_loc, _env, _event, contents)
         ASSERT.kind_of contents, VC::Top
 
@@ -96,10 +94,11 @@ class Some < Abstract
     end
 
 
-    def meth_some?(_loc, _env, event)
+    def meth_is_some(_loc, _env, event)
         VC.make_true
     end
 end
+Some.freeze
 
 end # Umu::Core::Base::LSM::Union::Option
 

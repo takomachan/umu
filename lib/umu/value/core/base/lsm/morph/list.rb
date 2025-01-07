@@ -18,49 +18,6 @@ module Morph
 module List
 
 class Abstract < Morph::Abstract
-    CLASS_METHOD_INFOS = [
-        [:meth_make_empty,      :'empty', [],
-            [], self
-        ]
-    ]
-
-    INSTANCE_METHOD_INFOS = [
-        [:meth_cons,            :cons, [],
-            [VC::Top], self
-        ],
-        [:meth_tail,            :tail, [],
-            [], VCBLM::List::Abstract
-        ],
-        [:meth_map,             :map, [],
-            [VC::Fun], self
-        ],
-        [:meth_select,          :select, [],
-            [VC::Fun], self
-        ],
-        [:meth_append,          :'++', [],
-            [VCBLM::Abstract], self
-        ],
-        [:meth_concat,          :concat, [],
-            [], self
-        ],
-        [:meth_concat_map,      :'concat-map', [],
-            [VC::Fun], self
-        ],
-        [:meth_zip,             :zip, [],
-            [VCBLM::Abstract], self
-        ],
-        [:meth_uniq,            :uniq, [],
-            [], self
-        ],
-        [:meth_sort,            :sort, [],
-            [], self
-        ],
-        [:meth_sort,            :'sort-with', [],
-            [VC::Fun], self
-        ]
-    ]
-
-
     def self.make(xs)
         ASSERT.kind_of xs, ::Array
 
@@ -68,16 +25,33 @@ class Abstract < Morph::Abstract
     end
 
 
+    define_class_method(
+        :meth_make_empty,
+        :empty, [],
+        [], self
+    )
     def self.meth_make_empty(_loc, _env, _event)
         VC.make_nil
     end
 
 
+    define_instance_method(
+        :meth_cons,
+        :cons, [],
+        [VC::Top], self
+    )
     def meth_cons(_loc, _env, _event, value)
         ASSERT.kind_of value, VC::Top
 
         VC.make_cons value, self
     end
+
+
+    define_instance_method(
+        :meth_tail,
+        :tail, [],
+        [], VCBLM::List::Abstract
+    )
 
 
     def to_s
@@ -104,18 +78,75 @@ class Abstract < Morph::Abstract
     def meth_to_list(loc, env, event)
         self
     end
+
+
+    define_instance_method(
+        :meth_map,
+        :map, [],
+        [VC::Fun], self
+    )
+
+
+    define_instance_method(
+        :meth_select,
+        :select, [],
+        [VC::Fun], self
+    )
+
+
+    define_instance_method(
+        :meth_append,
+        :'++', [],
+        [VCBLM::Abstract], self
+    )
+
+
+    define_instance_method(
+        :meth_concat,
+        :concat, [],
+        [], self
+    )
+
+
+    define_instance_method(
+        :meth_concat_map,
+        :'concat-map', [],
+        [VC::Fun], self
+    )
+
+
+    define_instance_method(
+        :meth_zip,
+        :zip, [],
+        [VCBLM::Abstract], self
+    )
+
+
+    define_instance_method(
+        :meth_uniq,
+        :uniq, [],
+        [], self
+    )
+
+
+    define_instance_method(
+        :meth_sort,
+        :sort, [],
+        [], self
+    )
+
+
+    define_instance_method(
+        :meth_sort,
+        :'sort-with', [],
+        [VC::Fun], self
+    )
 end
+Abstract.freeze
 
 
 
 class Nil < Abstract
-    INSTANCE_METHOD_INFOS = [
-        [:meth_contents,        :contents, [],
-            [], VC::Unit
-        ]
-    ]
-
-
     def meth_is_empty(_loc, _env, _event)
         VC.make_true
     end
@@ -126,29 +157,29 @@ class Nil < Abstract
     end
 
 
+    define_instance_method(
+        :meth_contents,
+        :contents, [],
+        [], VC::Unit
+    )
+
+
     def contents
         VC.make_unit
     end
 end
+Nil.freeze
 
 NIL = Nil.new.freeze
 
 
 
 class Cons < Abstract
-    CLASS_METHOD_INFOS = [
-        [:meth_make,            :make, [:'head:tail:'],
-            [VC::Top, VCBLM::List::Abstract], self
-        ]
-    ]
-
-    INSTANCE_METHOD_INFOS = [
-        [:meth_contents,        :contents, [],
-            [], VCBLP::Tuple
-        ]
-    ]
-
-
+    define_class_method(
+        :meth_make,
+        :make, [:'head:tail:'],
+        [VC::Top, VCBLM::List::Abstract], self
+    )
     def self.meth_make(_loc, _env, _event, head, tail)
         ASSERT.kind_of head,    VC::Top
         ASSERT.kind_of tail,    List::Abstract
@@ -191,8 +222,14 @@ class Cons < Abstract
     end
 
 
+    define_instance_method(
+        :meth_contents,
+        :contents, [],
+        [], VCBLP::Tuple
+    )
     alias meth_contents meth_des!
 end
+Cons.freeze
 
 end # Umu::Value::Core::LSM::Base::Morph::List
 

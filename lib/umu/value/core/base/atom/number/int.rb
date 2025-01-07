@@ -16,55 +16,6 @@ module Atom
 module Number
 
 class Int < Abstract
-    INSTANCE_METHOD_INFOS = [
-        # Number
-        [:meth_is_odd,          :odd?, [],
-            [], VCBA::Bool
-        ],
-        [:meth_is_even,         :even?, [],
-            [], VCBA::Bool
-        ],
-        [:meth_absolute,        :abs, [],
-            [], self
-        ],
-        [:meth_negate,          :negate, [],
-            [], self
-        ],
-        [:meth_less_than,       :'<', [],
-            [self], VCBA::Bool
-        ],
-        [:meth_add,             :'+', [],
-            [self], self
-        ],
-        [:meth_sub,             :'-', [],
-            [self], self
-        ],
-        [:meth_multiply,        :'*', [],
-            [self], self
-        ],
-        [:meth_divide,          :'/', [],
-            [self], self
-        ],
-        [:meth_modulo,          :mod, [],
-            [self], self
-        ],
-        [:meth_power,           :pow, [],
-            [self], self
-        ],
-        [:meth_to,              :to, [:'to:'],
-            [self], VCBLM::Interval
-        ],
-        [:meth_to_by,           :'to-by', [:'to:by:'],
-            [self], VCBLM::Interval
-         ],
-
-        # I/O
-        [:meth_random,          :'random', [],
-            [], self
-        ]
-    ]
-
-
     def initialize(val)
         ASSERT.kind_of val, ::Integer
 
@@ -72,14 +23,38 @@ class Int < Abstract
     end
 
 
+    define_instance_method(
+        :meth_is_odd,
+        :odd?, [],
+        [], VCBA::Bool
+    )
     def meth_is_odd(_loc, _env, _event)
         VC.make_bool self.val.odd?
     end
 
 
+    define_instance_method(
+        :meth_is_even,
+        :even?, [],
+        [], VCBA::Bool
+    )
     def meth_is_even(_loc, _env, _event)
         VC.make_bool self.val.even?
     end
+
+
+    define_instance_method(
+        :meth_negate,
+        :negate, [],
+        [], self
+    )
+
+
+    define_instance_method(
+        :meth_absolute,
+        :abs, [],
+        [], self
+    )
 
 
     def meth_to_int(_loc, _env, _event)
@@ -87,6 +62,60 @@ class Int < Abstract
     end
 
 
+    define_instance_method(
+        :meth_less_than,
+        :'<', [],
+        [self], VCBA::Bool
+    )
+
+
+    define_instance_method(
+        :meth_add,
+        :'+', [],
+        [self], self
+    )
+
+
+    define_instance_method(
+        :meth_sub,
+        :'-', [],
+        [self], self
+    )
+
+
+    define_instance_method(
+        :meth_multiply,
+        :'*', [],
+        [self], self
+    )
+
+
+    define_instance_method(
+        :meth_divide,
+        :'/', [],
+        [self], self
+    )
+
+
+    define_instance_method(
+        :meth_modulo,
+        :mod, [],
+        [self], self
+    )
+
+
+    define_instance_method(
+        :meth_power,
+        :pow, [],
+        [self], self
+    )
+
+
+    define_instance_method(
+        :meth_to,
+        :to, [:'to:'],
+        [self], VCBLM::Interval
+    )
     def meth_to(_loc, _env, _event, stop_value)
         ASSERT.kind_of stop_value, VCBAN::Int
 
@@ -94,6 +123,11 @@ class Int < Abstract
     end
 
 
+    define_instance_method(
+        :meth_to_by,
+        :'to-by', [:'to:by:'],
+        [self, self], VCBLM::Interval
+    )
     def meth_to_by(loc, env, _event, stop_value, step_value)
         ASSERT.kind_of stop_value, VCBAN::Int
         ASSERT.kind_of step_value, VCBAN::Int
@@ -122,7 +156,15 @@ class Int < Abstract
 
         VC.make_interval self, stop_value, step_value
     end
+
+
+    define_instance_method(
+        :meth_random,
+        :random, [],
+        [], self
+    )
 end
+Int.freeze
 
 end # Umu::Value::Core::Atom::Base::Number
 

@@ -26,90 +26,17 @@ class Abstract < LSM::Abstract
     * #contents -> VC::Top
 =end
 
-    CLASS_METHOD_INFOS = [
-        [:meth_make_empty,      :'empty', [],
-            [], self
-        ]
-    ]
-
-    INSTANCE_METHOD_INFOS = [
-        [:meth_cons,            :cons, [],
-            [VC::Top], self
-        ],
-        [:meth_is_empty,        :empty?, [],
-            [], VCBA::Bool
-        ],
-        [:meth_des!,            :des!, [],
-            [], VCBLP::Tuple
-        ],
-        [:meth_des,             :des, [],
-            [], VCBLU::Option::Abstract
-        ],
-        [:meth_head,            :head, [],
-            [], VC::Top
-        ],
-        [:meth_tail,            :tail, [],
-            [], self
-        ],
-        [:meth_to_list,         :'to-list', [],
-            [], VCBLM::List::Abstract
-        ],
-        [:meth_foldr,           :foldr, [],
-            [VC::Top, VC::Fun], VC::Top
-        ],
-        [:meth_foldl,           :foldl, [],
-            [VC::Top, VC::Fun], VC::Top
-        ],
-        [:meth_for_each,        :'for-each', [],
-            [VC::Fun], VC::Unit
-        ],
-        [:meth_map,             :map, [],
-            [VC::Fun], self
-        ],
-        [:meth_select,          :select, [],
-            [VC::Fun], self
-        ],
-        [:meth_append,          :'++', [],
-            [self], self
-        ],
-        [:meth_concat,          :concat, [],
-            [], self
-        ],
-        [:meth_concat_map,      :'concat-map', [],
-            [VC::Fun], self
-        ],
-        [:meth_join,            :join, [],
-            [], VCBA::String
-        ],
-        [:meth_join,            :'join:', [],
-            [VCBA::String], VCBA::String
-        ],
-        [:meth_zip,             :zip, [],
-            [self], self
-        ],
-        [:meth_unzip,           :unzip, [],
-            [], VCBLP::Tuple
-        ],
-        [:meth_uniq,            :uniq, [],
-            [], self
-        ],
-        [:meth_partition,       :partition, [],
-            [VC::Fun], VCBLP::Tuple
-        ],
-        [:meth_sort,            :sort, [],
-            [], self
-        ],
-        [:meth_sort,            :'sort-with', [],
-            [VC::Fun], self
-        ]
-    ]
-
 
     def self.make(xs)
         raise X::InternalSubclassResponsibility
     end
 
 
+    define_class_method(
+        :meth_make_empty,
+        :empty, [],
+        [], self
+    )
     def self.meth_make_empty(_loc, _env, _event)
         raise X::InternalSubclassResponsibility
     end
@@ -136,6 +63,11 @@ class Abstract < LSM::Abstract
     end
 
 
+    define_instance_method(
+        :meth_cons,
+        :cons, [],
+        [VC::Top], self
+    )
     def meth_cons(_loc, _env, _event, value)
         ASSERT.kind_of value, VC::Top
 
@@ -143,6 +75,11 @@ class Abstract < LSM::Abstract
     end
 
 
+    define_instance_method(
+        :meth_is_empty,
+        :empty?, [],
+        [], VCBA::Bool
+    )
     def meth_is_empty(_loc, _env, _event)
         raise X::InternalSubclassResponsibility
     end
@@ -153,6 +90,11 @@ class Abstract < LSM::Abstract
     end
 
 
+    define_instance_method(
+        :meth_des!,
+        :des!, [],
+        [], VCBLP::Tuple
+    )
     def meth_des!(loc, env, _event)
         begin
             self.des!
@@ -160,12 +102,17 @@ class Abstract < LSM::Abstract
             raise X::EmptyError.new(
                         loc,
                         env,
-                        "Empty error on list des(truction)"
+                        "Empty morph cannot be destructible"
                     )
         end
     end
 
 
+    define_instance_method(
+        :meth_des,
+        :des, [],
+        [], VCBLU::Option::Abstract
+    )
     def meth_des(loc, env, event)
         if self.meth_is_empty(loc, env, event).true?
             VC.make_none
@@ -185,16 +132,31 @@ class Abstract < LSM::Abstract
     end
 
 
+    define_instance_method(
+        :meth_head,
+        :head, [],
+        [], VC::Top
+    )
     def meth_head(loc, env, event)
         self.meth_des!(loc, env, event).select_by_number(1, loc, env)
     end
 
 
+    define_instance_method(
+        :meth_tail,
+        :tail, [],
+        [], self
+    )
     def meth_tail(loc, env, event)
         self.meth_des!(loc, env, event).select_by_number(2, loc, env)
     end
 
 
+    define_instance_method(
+        :meth_to_list,
+        :'to-list', [],
+        [], VCBLM::List::Abstract
+    )
     def meth_to_list(loc, env, event)
         self.reverse_each.inject(VC.make_nil) { |xs, x|
              xs.meth_cons loc, env, event, x
@@ -202,6 +164,11 @@ class Abstract < LSM::Abstract
     end
 
 
+    define_instance_method(
+        :meth_foldr,
+        :foldr, [],
+        [VC::Top, VC::Fun], VC::Top
+    )
     def meth_foldr(loc, env, event, init, func)
         ASSERT.kind_of init,    VC::Top
         ASSERT.kind_of func,    VC::Fun
@@ -216,6 +183,11 @@ class Abstract < LSM::Abstract
     end
 
 
+    define_instance_method(
+        :meth_foldl,
+        :foldl, [],
+        [VC::Top, VC::Fun], VC::Top
+    )
     def meth_foldl(loc, env, event, init, func)
         ASSERT.kind_of init,    VC::Top
         ASSERT.kind_of func,    VC::Fun
@@ -230,6 +202,11 @@ class Abstract < LSM::Abstract
     end
 
 
+    define_instance_method(
+        :meth_for_each,
+        :'for-each', [],
+        [VC::Fun], VC::Unit
+    )
     def meth_for_each(loc, env, event, func)
         ASSERT.kind_of func, VC::Fun
 
@@ -243,6 +220,11 @@ class Abstract < LSM::Abstract
     end
 
 
+    define_instance_method(
+        :meth_map,
+        :map, [],
+        [VC::Fun], self
+    )
     def meth_map(loc, env, event, func)
         ASSERT.kind_of func, VC::Fun
 
@@ -254,6 +236,11 @@ class Abstract < LSM::Abstract
     end
 
 
+    define_instance_method(
+        :meth_select,
+        :select, [],
+        [VC::Fun], self
+    )
     def meth_select(loc, env, event, func)
         ASSERT.kind_of func, VC::Fun
 
@@ -280,6 +267,11 @@ class Abstract < LSM::Abstract
     end
 
 
+    define_instance_method(
+        :meth_append,
+        :'++', [],
+        [self], self
+    )
     def meth_append(loc, env, event, ys)
         ASSERT.kind_of ys, Abstract
 
@@ -287,6 +279,11 @@ class Abstract < LSM::Abstract
     end
 
 
+    define_instance_method(
+        :meth_concat,
+        :concat, [],
+        [], self
+    )
     def meth_concat(loc, env, event)
         mut_ys = []
         self.each do |xs|
@@ -309,6 +306,11 @@ class Abstract < LSM::Abstract
     end
 
 
+    define_instance_method(
+        :meth_concat_map,
+        :'concat-map', [],
+        [VC::Fun], self
+    )
     def meth_concat_map(loc, env, event, func)
         ASSERT.kind_of func, VC::Fun
 
@@ -336,6 +338,16 @@ class Abstract < LSM::Abstract
     end
 
 
+    define_instance_method(
+        :meth_join,
+        :join, [],
+        [], self
+    )
+    define_instance_method(
+        :meth_join,
+        :'join:', [],
+        [VCBA::String], self
+    )
     def meth_join(loc, env, event, sep_value = nil)
         ASSERT.opt_kind_of sep_value, VCBA::String
 
@@ -367,6 +379,11 @@ class Abstract < LSM::Abstract
     end
 
 
+    define_instance_method(
+        :meth_zip,
+        :zip, [],
+        [self], self
+    )
     def meth_zip(loc, env, event, ys)
         ASSERT.kind_of ys, Abstract
 
@@ -384,6 +401,11 @@ class Abstract < LSM::Abstract
     end
 
 
+    define_instance_method(
+        :meth_unzip,
+        :unzip, [],
+        [], VCBLP::Tuple
+    )
     def meth_unzip(loc, env, event)
         result_value = self.reverse_each.inject(
             VC.make_tuple([
@@ -422,32 +444,11 @@ class Abstract < LSM::Abstract
     end
 
 
-    def meth_partition(loc, env, event, func)
-        ASSERT.kind_of func, VC::Fun
-
-        new_env = env.enter event
-
-        xs, ys = self.partition { |x|
-            value = func.apply(x, [], loc, new_env)
-            ASSERT.kind_of value, VC::Top
-
-            unless value.kind_of? VCBA::Bool
-                raise X::TypeError.new(
-                    loc,
-                    env,
-                    "partition: expected a Bool, but %s : %s",
-                    value.to_s,
-                    value.type_sym.to_s
-                )
-            end
-
-            value.true?
-        }
-        
-        VC.make_tuple [self.class.make(xs), self.class.make(ys)]
-    end
-
-
+    define_instance_method(
+        :meth_uniq,
+        :uniq, [],
+        [], self
+    )
     def meth_uniq(loc, env, event)
         if self.meth_is_empty(loc, env, event).true?
             self
@@ -477,6 +478,47 @@ class Abstract < LSM::Abstract
     end
 
 
+    define_instance_method(
+        :meth_partition,
+        :partition, [],
+        [VC::Fun], VCBLP::Tuple
+    )
+    def meth_partition(loc, env, event, func)
+        ASSERT.kind_of func, VC::Fun
+
+        new_env = env.enter event
+
+        xs, ys = self.partition { |x|
+            value = func.apply(x, [], loc, new_env)
+            ASSERT.kind_of value, VC::Top
+
+            unless value.kind_of? VCBA::Bool
+                raise X::TypeError.new(
+                    loc,
+                    env,
+                    "partition: expected a Bool, but %s : %s",
+                    value.to_s,
+                    value.type_sym.to_s
+                )
+            end
+
+            value.true?
+        }
+        
+        VC.make_tuple [self.class.make(xs), self.class.make(ys)]
+    end
+
+
+    define_instance_method(
+        :meth_sort,
+        :sort, [],
+        [], self
+    )
+    define_instance_method(
+        :meth_sort,
+        :'sort-with', [],
+        [VC::Fun], self
+    )
     def meth_sort(loc, env, event, opt_func = nil)
         ASSERT.opt_kind_of opt_func, VC::Fun
 
@@ -521,6 +563,7 @@ class Abstract < LSM::Abstract
         self.class.make xs
     end
 end
+Abstract.freeze
 
 end # Umu::Value::Core::LSM::Base::Morph
 

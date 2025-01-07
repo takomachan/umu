@@ -14,32 +14,21 @@ module Base
 module Atom
 
 class Bool < Abstract
-    CLASS_METHOD_INFOS = [
-        [:meth_make_true,   :'true', [],
-            [], self
-        ],
-        [:meth_make_false,  :'false', [],
-            [], self
-        ]
-    ]
-
-
-    INSTANCE_METHOD_INFOS = [
-        [:meth_less_than,   :'<', [],
-            [self], self
-        ],
-
-        [:meth_not,         :not, [],
-            [], self
-        ],
-    ]
-
-
+    define_class_method(
+        :meth_make_true,
+        :true, [],
+        [], VCBA::Bool
+    )
     def self.meth_make_true(_loc, _env, _event)
         VC.make_true
     end
 
 
+    define_class_method(
+        :meth_make_false,
+        :false, [],
+        [], VCBA::Bool
+    )
     def self.meth_make_false(_loc, _env, _event)
         VC.make_false
     end
@@ -62,6 +51,11 @@ class Bool < Abstract
     end
 
 
+    define_instance_method(
+        :meth_less_than,
+        :'<', [],
+        [self], self
+    )
     def meth_less_than(_loc, _env, _event, other)
         ASSERT.kind_of other, Bool
 
@@ -75,10 +69,16 @@ class Bool < Abstract
     end
 
 
+    define_instance_method(
+        :meth_not,
+        :not, [],
+        [], self
+    )
     def meth_not(_loc, _env, _event)
         VC.make_bool(! self.val)
     end
 end
+Bool.freeze
 
 TRUE    = Bool.new(true).freeze
 FALSE   = Bool.new(false).freeze

@@ -10,72 +10,100 @@ module Value
 module Core
 
 class Top < ::Object
-    INSTANCE_METHOD_INFOS = [
-        # String
-        [:meth_inspect,     :inspect, [],
-            [], VCBA::String
-        ],
-        [:meth_to_string,   :'to-s', [],
-            [], VCBA::String
-        ],
-
-        # Relational
-        [:meth_equal,       :'==', [],
-            [self], VCBA::Bool
-        ],
-        [:meth_less_than,   :'<', [],
-            [self], VCBA::Bool
-        ]
-    ]
-
-
     def self.class_method_infos
-        self.__get__method_infos__ :CLASS_METHOD_INFOS
+        infos = @class_method_infos
+
+        (infos ? infos : []).map {
+            |
+                meth_sym, mess_sym,
+                param_class_types, ret_class_type
+            |
+
+            ECTS.make_method_info(
+                meth_sym, mess_sym,
+                param_class_types, ret_class_type
+            )
+        }
     end
 
 
     def self.instance_method_infos
-        self.__get__method_infos__ :INSTANCE_METHOD_INFOS
+        infos = @instance_method_infos
+
+        (infos ? infos : []).map {
+            |
+                meth_sym, message_sym,
+                param_class_types, ret_class_type
+            |
+
+            ECTS.make_method_info(
+                meth_sym, message_sym,
+                param_class_types, ret_class_type
+            )
+        }
     end
 
 
-    def self.__get__method_infos__(infos_sym)
-        ASSERT.kind_of infos_sym, ::Symbol
+    def self.define_class_method(
+        meth_sym, hd_mess_sym, tl_mess_syms,
+        param_class_types, ret_class_type
+    )
+        # printf "CLASS METHOD OF %s\n", self
 
-        # printf "%s of %s\n", infos_sym, self
+        @class_method_infos ||= []
 
-        begin
-            self.const_get(infos_sym, false).map {
-                |
-                    meth_sym, hd_mess_sym, tl_mess_syms,
-                    param_class_types, ret_class_type
-                |
+        self.__define_method__(
+            @class_method_infos,
+            meth_sym, hd_mess_sym, tl_mess_syms,
+            param_class_types, ret_class_type
+        )
+    end
+
+
+    def self.define_instance_method(
+        meth_sym, hd_mess_sym, tl_mess_syms,
+        param_class_types, ret_class_type
+    )
+        # printf "INSTANCE METHOD OF %s\n", self
+
+        @instance_method_infos ||= []
+
+        self.__define_method__(
+            @instance_method_infos,
+            meth_sym, hd_mess_sym, tl_mess_syms,
+            param_class_types, ret_class_type
+        )
+    end
+
+
+    def self.__define_method__(
+        infos,
+        meth_sym, hd_mess_sym, tl_mess_syms,
+        param_class_types, ret_class_type
+    )
 =begin
-                pp [
-                    meth_sym, hd_mess_sym, tl_mess_syms,
+        pp [
+            meth_sym, hd_mess_sym, tl_mess_syms,
+            param_class_types, ret_class_type
+        ]
+=end
+        ASSERT.kind_of infos,              ::Array
+        ASSERT.kind_of meth_sym,           ::Symbol
+        ASSERT.kind_of hd_mess_sym,        ::Symbol
+        tl_mess_syms.each do |mess_alias_sym|
+            ASSERT.kind_of mess_alias_sym, ::Symbol
+        end
+        ASSERT.kind_of param_class_types,  ::Array
+        param_class_types.each do |param_class_type|
+            ASSERT.subclass_of param_class_type, VC::Top
+        end
+        ASSERT.subclass_of ret_class_type, VC::Top
+
+        ([hd_mess_sym] + tl_mess_syms).each do |message_sym|
+            infos << [
+                    meth_sym, message_sym,
                     param_class_types, ret_class_type
                 ]
-=end
-                ASSERT.kind_of meth_sym,           ::Symbol
-                ASSERT.kind_of hd_mess_sym,        ::Symbol
-                tl_mess_syms.each do |mess_alias_sym|
-                    ASSERT.kind_of mess_alias_sym, ::Symbol
-                end
-                ASSERT.kind_of param_class_types,  ::Array
-                param_class_types.each do |param_class_type|
-                    ASSERT.subclass_of param_class_type, VC::Top
-                end
-                ASSERT.subclass_of ret_class_type, VC::Top
-
-                ([hd_mess_sym] + tl_mess_syms).map { |message_sym|
-                    ECTS.make_method_info(
-                        meth_sym, message_sym,
-                        param_class_types, ret_class_type
-                    )
-                }
-            }.inject([]) { |infos, xs| infos + xs }
-        rescue ::NameError
-            []
         end
     end
 
@@ -167,14 +195,29 @@ class Top < ::Object
     end
 
 
+    define_instance_method(
+        :meth_inspect,
+        :inspect, [],
+        [], VCBA::String
+    )
     def meth_inspect(_loc, _env, _event)
         VC.make_string self.to_s
     end
 
 
+    define_instance_method(
+        :meth_to_string,
+        :'to-s', [],
+        [], VCBA::String
+    )
     alias meth_to_string meth_inspect
 
 
+    define_instance_method(
+        :meth_equal,
+        :'==', [],
+        [self], VCBA::Bool
+    )
     def meth_equal(loc, env, _event, _other)
         raise X::EqualityError.new(
             loc,
@@ -186,6 +229,11 @@ class Top < ::Object
     end
 
 
+    define_instance_method(
+        :meth_less_than,
+        :'<', [],
+        [self], VCBA::Bool
+    )
     def meth_less_than(loc, env, _event, _other)
         raise X::OrderError.new(
             loc,
@@ -208,7 +256,9 @@ private
 
         self.send meth_sym, loc, env, event, *arg_values
     end
+
 end
+Top.freeze
 
 end # Umu::Value::Core
 
