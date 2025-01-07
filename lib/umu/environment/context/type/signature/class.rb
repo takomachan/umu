@@ -108,7 +108,7 @@ class Base < Abstract
                     self.symbol, mess_sym.to_s
             )
         end
-        ASSERT.kind_of info, ECTS::Method::Info
+        ASSERT.kind_of info, ECTSM::Info
 
         info.to_signat(env)
     end
@@ -144,7 +144,7 @@ class Base < Abstract
                     self.symbol, mess_sym.to_s
             )
         end
-        ASSERT.kind_of info, ECTS::Method::Info
+        ASSERT.kind_of info, ECTSM::Info
 
         info.to_signat(env)
     end
@@ -211,7 +211,7 @@ class Meta < Abstract
 
         method = self.base_class_signat.lookup_class_method(sym, loc, env)
 
-        ASSERT.kind_of method, ECTS::Method::Entry
+        ASSERT.kind_of method, ECTSM::Entry
     end
 end
 

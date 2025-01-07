@@ -135,7 +135,7 @@ class Top < ::Object
 
 
     def invoke(method_signat, loc, env, _event, *arg_values)
-        ASSERT.kind_of method_signat,   ECTS::Method::Entry
+        ASSERT.kind_of method_signat,   ECTSM::Entry
         ASSERT.kind_of loc,             LOC::Entry
         ASSERT.kind_of env,             E::Entry
         ASSERT.kind_of arg_values,      ::Array

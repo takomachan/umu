@@ -41,7 +41,7 @@ def update_method_info_of_mess_sym(info_of_symbol, infos, klass)
 
     info_of_symbol.merge(
         infos.inject({}) { |hash, info|
-            ASSERT.kind_of info, ECTS::Method::Info
+            ASSERT.kind_of info, ECTSM::Info
 
             hash.merge(info.mess_sym => info) {
                 ASSERT.abort(

@@ -87,6 +87,7 @@ module Umu
             module Type
                 module Signature
                     module Class; end
+                    module Method; end
                 end
             end
             module Value; end
@@ -136,6 +137,7 @@ module Umu
     ECT     = Environment::Context::Type
     ECTS    = Environment::Context::Type::Signature
     ECTSC   = Environment::Context::Type::Signature::Class
+    ECTSM   = Environment::Context::Type::Signature::Method
     ECV     = Environment::Context::Value
 
     ASSERT  = Assertion
