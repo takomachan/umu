@@ -203,6 +203,48 @@ class Abstract < LSM::Abstract
 
 
     define_instance_method(
+        :meth_count,
+        :count, [],
+        [], VCBAN::Int
+    )
+    def meth_count(loc, env, event)
+        VC.make_integer self.count
+    end
+
+
+    define_instance_method(
+        :meth_is_all,
+        :all?, [],
+        [VC::Fun], VCBA::Bool
+    )
+    def meth_is_all(loc, env, event, func)
+        ASSERT.kind_of func, VC::Fun
+
+        new_env = env.enter event
+
+        VC.make_bool self.all? { |x|
+             func.apply(x, [], loc, new_env).true?
+        }
+    end
+
+
+    define_instance_method(
+        :meth_is_any,
+        :any?, [],
+        [VC::Fun], VCBA::Bool
+    )
+    def meth_is_any(loc, env, event, func)
+        ASSERT.kind_of func, VC::Fun
+
+        new_env = env.enter event
+
+        VC.make_bool self.any? { |x|
+             func.apply(x, [], loc, new_env).true?
+        }
+    end
+
+
+    define_instance_method(
         :meth_for_each,
         :'for-each', [],
         [VC::Fun], VC::Unit

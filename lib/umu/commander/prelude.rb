@@ -258,14 +258,18 @@ structure Umu = struct {
         fun foldl = a (f : Fun) (xs : Morph) -> xs.foldl a f
 
 
-        # length : %['a] -> Int
-        # val length = foldl 0 { _ len -> len.+ 1 }
-        fun length = xs : Morph -> xs.foldl 0 { _ len -> len.+ 1 }
+        # count : %['a] -> Int
+        # val count = foldl 0 { _ len -> len.+ 1 }
+        # fun count = xs : Morph -> xs.foldl 0 { _ len -> len.+ 1 }
+        fun count = xs : Morph -> xs.count
 
 
-        # reverse : %['a] -> %['a]
-        # val reverse = foldl [] cons
-        fun reverse = xs : Morph -> xs.foldl [] cons
+        # all? : ('a -> Bool) -> %['a] -> Bool
+        fun all? = (f : Fun) (xs : Morph) -> xs.all? f
+
+
+        # any? : ('a -> Bool) -> %['a] -> Bool
+        fun any? = (f : Fun) (xs : Morph) -> xs.any? f
 
 
         # max : %['a] -> 'a
@@ -280,6 +284,11 @@ structure Umu = struct {
         [init|xs'] -> xs'.foldl init { x y -> if x.< y then x else y }
         else       -> "min: Empty Error".panic!
         }
+
+
+        # reverse : %['a] -> %['a]
+        # val reverse = foldl [] cons
+        fun reverse = xs : Morph -> xs.foldl [] cons
 
 
         # for-each : ('a -> 'b) -> %['a] -> ()
@@ -625,16 +634,22 @@ structure Umu = struct {
         val foldl = Morph::foldl
 
         # length    : %['a] -> Int
-        val length = Morph::length
+        val length = Morph::count
 
-        # reverse   : %['a] -> ['a]
-        val reverse = Morph::reverse
+        # all? : ('a -> Bool) -> %['a] -> Bool
+        val all? = Morph::all?
+
+        # any? : ('a -> Bool) -> %['a] -> Bool
+        val any? = Morph::any?
 
         # max       : %['a] -> 'a
         val max = Morph::max
 
         # min       : %['a] -> 'a
         val min = Morph::min
+
+        # reverse   : %['a] -> ['a]
+        val reverse = Morph::reverse
 
         # map       : ('a -> 'b) -> %['a] -> %['b]
         val map = Morph::map
