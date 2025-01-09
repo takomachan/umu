@@ -299,8 +299,8 @@ import RELATIONAL-DATA-MODEL-4 {
 # 7.2 RETRIEVAL OPERATIONS -- p117
 # 7.2 検索操作 -- p121
 
-# Get supplier numbers and status for suppliers in Paris
-# Paris の納入業者について納入業者番号と状態を求めよ
+# Get supplier numbers and status for suppliers in Paris.
+# Paris の納入業者について納入業者番号と状態を求めよ。
 (#
     SELECT S#, STATUS
     FROM   S
@@ -399,8 +399,8 @@ pp (
 nl () ;;
 
 
-# 7.2.5 Retrieval with ordring: Get supplier numbers and status for 
-#       suppliers in Paris, in descending order of status.
+# 7.2.5 Retrieval from more than one table: For each part supplied,
+#       get part number and names of all cities supplying the part.
 # 7.2.5 2個以上の表からの検索: 納入された各部品について、部品番号および
 #       その部品を納入しているすべての都市の名前を求める。
 (#
@@ -429,4 +429,420 @@ pp (
 #   (pno:@P5 city:"London"),
 #   (pno:@P6 city:"London")
 # ]
+nl () ;;
+
+
+# 7.2.6 Retrieval involving a join of a table with itself:
+#       Get all parts of supplier numbers such that the two suppliers are
+#       located in the same city.
+# 7.2.6 表のそれ自身との結合を含む検索：２つの納入業者が同じ都市に
+#       あるような納入業者番号のすべての対を求める。
+(#
+    SELECT FIRST.S#, SECOND.S#
+    FROM   S FIRST, S SECOND
+    WHERE  FIRST.CITY = SECOND.CITY
+    AND    FIRST.S# < SECOND.S#
+#)
+
+print "#### 7.2.6 ####" ;;
+pp (
+     [|first$sno, second$sno|
+        val first  <- S::rows
+        val second <- S::rows
+
+        if first$city == second$city &&
+           first$sno < second$sno
+     ]
+) ;;
+# --> [(@S1, @S4), (@S2, @S3)]
+nl () ;;
+
+
+# 7.2.7 Retrieval using ANY:
+#       Get supplier names for suppliers who supply Part P2.
+# 7.2.7 ANYを使用する検索：
+#       部品P2を納入する納入業者についてその名前を求める。
+(#
+    SELECT UNIQUE SNAME
+    FROM   S, SP
+    WHERE  S.S# = SP.S#
+    AND    SP.P# = 'P2'
+#)
+
+print "#### 7.2.7 (1) Using JOIN ####" ;;
+pp (
+     [|sname|
+        val (sno: s-sno  sname:) <- S::rows
+        val (sno: sp-sno pno:)   <- SP::rows
+
+        if s-sno == sp-sno &&
+           pno == @P2
+     ]
+) ;;
+# --> ["Smith", "Jones", "Blake", "Clark"]
+nl () ;;
+
+print "#### 7.2.7 (2) Using subquery ####" ;;
+pp (
+     [|sname|
+        val (sno: sname:) <- S::rows
+
+        if any?
+            (== sno)
+            [|sno| val (sno: pno:) <- SP::rows
+                   if pno == @P2
+            ]
+     ]
+) ;;
+# --> ["Smith", "Jones", "Blake", "Clark"]
+nl () ;;
+
+
+# 7.2.8 Retrieval using < ANY:
+#       Get supplier numbers for suppliers with status value
+#       less than the current maximum status value in the S table.
+# 7.2.8 < ANYを使用する検索：
+#       S表において状態値が現在の最大状態値より小さいような納入業者について
+#       納入業者番号を求める。
+(#
+    SELECT S#
+    FROM   S
+    WHERE  STATUS < ANY (SELECT STATUS
+                         FROM   S)
+#)
+
+print "#### 7.2.8 ####" ;;
+pp (
+     [|sno|
+        val (sno: status:) <- S::rows
+
+        if any?
+            { x -> status < x }
+            [|status| val (status:) <- S::rows]
+     ]
+) ;;
+# --> [@S1, @S2, @S4]
+nl () ;;
+
+
+# 7.2.9 Retrieval using IN:
+#       Get supplier names for suppliers who supply part P2
+#       (the same as Example 7.2.7).
+# 7.2.9 INを使用する検索：
+#       部品P2を納入する納入業者について納入業者の名前を求める
+#       (例7.2.7と同じ)。
+(#
+    SELECT SNAME
+    FROM   S
+    WHERE  S# IN
+          (SELECT S#
+           FROM   SP
+           WHERE  P# = 'P2')
+#)
+
+print "#### 7.2.9 ####" ;;
+pp (
+     [|sname|
+        val (sno: sname:) <- S::rows
+
+        if include?
+            sno
+            [|sno| val (sno: pno:) <- SP::rows
+                   if pno == @P2
+            ]
+     ]
+) ;;
+# --> ["Smith", "Jones", "Blake", "Clark"]
+nl () ;;
+
+
+# 7.2.10 Retrieval with multiple levels of nesting:
+#       Get supplier names for suppliers who supply at least one red part.
+# 7.2.10 多重入れ子構成を含む検索：
+#       赤色の部品を少なくとも１個納入している納入業者について
+#       その名前を求める。
+(#
+    SELECT SNAME
+    FROM   S
+    WHERE  S# IN
+          (SELECT S#
+           FROM   SP
+           WHERE  P# IN
+                 (SELECT P#
+                  FROM   P
+                  WEHERE COLOR = 'RED'))
+#)
+
+print "#### 7.2.10 ####" ;;
+pp (
+     [|sname|
+        val (sno: sname:) <- S::rows
+
+        if include?
+            sno
+            [|sno| val (sno: pno:) <- SP::rows
+
+                   if include?
+                       pno
+                       [|pno| val (pno: color:) <- P::rows
+                           if color == "Red"
+                       ]
+            ]
+     ]
+) ;;
+# --> ["Smith", "Jones", "Clark"]
+nl () ;;
+
+
+# 7.2.11 Retrieval with a subquery, with interblock reference:
+#       Get supplier names for suppliers who supply part P2
+#       (the same as Example 7.2.7 and 7.2.9).
+# 7.2.11 副次問合せを含み、ブロックにまたがる参照を含む検索：
+#       部品P2を納入する納入業者についてその名前を求める
+#       (例7.2.7および例7.2.9と同じ)。
+(#
+    SELECT SNAME
+    FROM   S
+    WHERE  'P2' IN
+          (SELECT P#
+           FROM   SP
+           WHERE  S# = S.S#)
+#)
+
+print "#### 7.2.11 ####" ;;
+pp (
+     [|sname|
+        val (sno:s-sno sname:) <- S::rows
+
+        if include?
+            @P2
+            [|pno| val (sno: pno:) <- SP::rows
+                   if sno == s-sno
+            ]
+     ]
+) ;;
+# --> ["Smith", "Jones", "Blake", "Clark"]
+nl () ;;
+
+
+# 7.2.12 Retrieval with a subquery, with same table involved in both blocks:
+#       Get supplier numbers for suppliers who supply at least one part
+#       supplied by supplier S2.
+# 7.2.12 副次問合せを含み、両方のブロックに同じ表が含まれるような検索：
+#       納入業者S2から納入されている部品を少なくとも１個は納入している
+#       納入業者についてその納入業者番号を求める。
+(#
+    SELECT UNIQUE S#
+    FROM   SP
+    WHERE  P# IN
+          (SELECT P#
+           FROM   SP
+           WHERE  S# = 'S2')
+#)
+
+print "#### 7.2.12 ####" ;;
+pp (
+     [|sno|
+        val (sno: pno:) <- SP::rows
+
+        if include?
+            pno
+            [|pno| val (sno: pno:) <- SP::rows
+                   if sno == @S2
+            ]
+     ] |>
+        sort |> uniq
+) ;;
+# --> [@S1, @S2, @S3, @S4]
+nl () ;;
+
+
+# 7.2.13 Retrieval with a subquery, with interblock reference and
+#       same table involved in both block.
+# 7.2.13 副次問合せとブロックにまたがる参照を含み、両方のブロックに
+#       同じ表が含まれるような検索。
+(#
+    SELECT UNIQUE P#
+    FROM   SP SPX
+    WHERE  P# IN
+          (SELECT P#
+           FROM   SP
+           WHERE  S# != SPX.S#)
+#)
+
+print "#### 7.2.13 ####" ;;
+pp (
+     [|spx$pno|
+        val spx <- SP::rows
+
+        if include?
+            (spx$pno)
+            [|pno| val (sno: pno:) <- SP::rows
+                   if sno <> spx$sno
+            ]
+     ] |>
+        sort |> uniq
+) ;;
+# --> [@S1, @S2, @S4, @S5]
+nl () ;;
+
+
+# 7.2.14 Retrieval using ALL:
+#       Get supplier names for suppliers who do not supply part P2.
+# 7.2.14 ALLを使用する検索：
+#       部品P2を納入しない納入業者についてその名前を求める。
+(#
+    SELECT SNAME
+    FROM   S
+    WHERE  'P2' != ALL
+          (SELECT P#
+           FROM   SP
+           WHERE  S# = S.S#)
+#)
+
+print "#### 7.2.14 ####" ;;
+pp (
+     [|sname|
+        val (sno:s-sno sname:) <- S::rows
+
+        if not <| include?
+            @P2
+            [|pno| val (sno: pno:) <- SP::rows
+                   if sno == s-sno
+            ]
+     ]
+) ;;
+# --> ["Adams"]
+nl () ;;
+
+
+# 7.2.15 Retrieval with subquery and unqualified comparison operator:
+#       Get supplier numbers for suppliers who are located
+#       in the same city as supplier S1.
+# 7.2.15 副次問合せと修飾なしの比較演算子を含む検索：
+#       納入業者S1と同じ都市にいる納入業者について
+#       その納入業者番号を求める。
+(#
+    SELECT S#
+    FROM   S
+    WHERE  CITY =
+          (SELECT CITY
+           FROM   S
+           WHERE  S# = 'S1')
+#)
+
+print "#### 7.2.15 ####" ;;
+pp (
+     [|sno|
+        val (sno: city:) <- S::rows
+
+        if include?
+            city
+            [|city| val (sno: city:) <- S::rows
+                   if sno == @S1
+            ]
+     ]
+) ;;
+# --> [@S1, @S4]
+nl () ;;
+
+
+# 7.2.16 Retrieval using EXISTS:
+#       Get supplier names for suppliers who supply part P2
+#       (the same as Examples 7.2.7, 7.2.9, and 7.2.11).
+# 7.2.16 EXISTSを使用する検索：
+#       部品P2を納入する納入業者についてその名前を求める
+#       (例7.2.7, 7.2.9, および7.2.11と同じ)。
+(#
+    SELECT SNAME
+    FROM   S
+    WHERE  EXISTS
+          (SELECT *
+           FROM   SP
+           WHERE  S# = S.S#
+           AND    P# = 'P2')
+#)
+
+print "#### 7.2.16 ####" ;;
+pp (
+     [|sname|
+        val (sno: sname:) <- S::rows
+
+        if not <| empty?
+            [|sp| val sp <- SP::rows
+                 if sp$sno == sno &&
+                    sp$pno == @P2
+            ]
+     ]
+) ;;
+# --> ["Smith", "Jones", "Blake", "Clark"]
+nl () ;;
+
+
+# 7.2.17 Retrieval using NOT EXISTS:
+#       Get supplier names for suppliers who do not supply part P2
+#       (the same as Examples 7.2.14).
+# 7.2.17 NOT EXISTSを使用する検索：
+#       部品P2を納入しない納入業者についてその名前を求める
+#       (例7.2.14と同じ)。
+(#
+    SELECT SNAME
+    FROM   S
+    WHERE  NOT EXISTS
+          (SELECT *
+           FROM   SP
+           WHERE  S# = S.S#
+           AND    P# = 'P2')
+#)
+
+print "#### 7.2.17 ####" ;;
+pp (
+     [|sname|
+        val (sno: sname:) <- S::rows
+
+        if empty?
+            [|sp| val sp <- SP::rows
+                 if sp$sno == sno &&
+                    sp$pno == @P2
+            ]
+     ]
+) ;;
+# --> ["Adams"]
+nl () ;;
+
+
+# 7.2.18 Retrieval using NOT EXISTS:
+#       Get supplier names for suppliers who supply all parts.
+# 7.2.18 NOT EXISTSを使用する検索：
+#       すべての部品を納入する納入業者についてその名前を求める。
+(#
+    SELECT SNAME
+    FROM   S
+    WHERE  NOT EXISTS
+          (SELECT *
+           FROM   P
+           WHERE  NOT EXISTS
+                 (SELECT *
+                  FROM   SP
+                  WHERE  S# = S.S#
+                  AND    P# = P.P# ))
+#)
+
+print "#### 7.2.18 ####" ;;
+pp (
+     [|sname|
+        val (sno:s-sno sname:) <- S::rows
+
+        if empty?
+            [|()| val (pno:p-pno) <- P::rows
+
+                if empty?
+                    [|()| val (sno: pno:) <- SP::rows
+                          if sno == s-sno &&
+                             pno == p-pno
+                    ]
+            ]
+     ]
+) ;;
+# --> ["Smith"]
 nl () ;;

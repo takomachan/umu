@@ -272,6 +272,11 @@ structure Umu = struct {
         fun any? = (f : Fun) (xs : Morph) -> xs.any? f
 
 
+        # include? : 'a -> %['a] -> Bool
+        fun include? = x (xs : Morph) -> xs.include? x
+
+
+        # max : %['a] -> 'a
         # max : %['a] -> 'a
         fun max = xs : Morph -> case xs of {
         [init|xs'] -> xs'.foldl init { x y -> if y.< x then x else y }
@@ -641,6 +646,9 @@ structure Umu = struct {
 
         # any? : ('a -> Bool) -> %['a] -> Bool
         val any? = Morph::any?
+
+        # include? : 'a -> %['a] -> Bool
+        val include? = Morph::include?
 
         # max       : %['a] -> 'a
         val max = Morph::max

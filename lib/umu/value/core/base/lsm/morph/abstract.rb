@@ -245,6 +245,22 @@ class Abstract < LSM::Abstract
 
 
     define_instance_method(
+        :meth_is_include,
+        :include?, [],
+        [VC::Top], VCBA::Bool
+    )
+    def meth_is_include(loc, env, event, value)
+        ASSERT.kind_of value, VC::Top
+
+        new_env = env.enter event
+
+        VC.make_bool self.any? { |x|
+            x.meth_equal(loc, new_env, event, value).true?
+        }
+    end
+
+
+    define_instance_method(
         :meth_for_each,
         :'for-each', [],
         [VC::Fun], VC::Unit
