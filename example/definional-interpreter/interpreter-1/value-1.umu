@@ -1,10 +1,10 @@
-(######## Value ########
+(######## Value I ########
 
 <VAL> = <INTEGER> + <BOOLEAN> + <FUNVAL>
 
 ################)
 
-structure VAL = struct {
+structure VAL-I = struct {
     #### Constructor ####
 
     # Int -> <INTEGER>

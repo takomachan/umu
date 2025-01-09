@@ -3,13 +3,13 @@ UMU = '../../exe/umu'
 COMMON_FILES =	[
     'common/error.umu',
     'common/expression.umu',
-    'common/value.umu',
     'common/parser.umu',
     'common/prelude.umu',
     'common/test.umu'
 ]
 
 INTERPRETER_1_FILES = [
+    'interpreter-1/value-1.umu',
     'interpreter-1/environment-1.umu',
     'interpreter-1/evaluator-1.umu',
     'interpreter-1.umu'

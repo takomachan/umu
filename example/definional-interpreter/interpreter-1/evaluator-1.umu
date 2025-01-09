@@ -12,7 +12,7 @@ structure EVAL-I = struct {
     else        -> ERROR::failure ("Unknown EXP: ", r)
     } where {
         # eval-const : <CONST> -> <INTEGER>
-        fun eval-const = c : Datum -> VAL::mk-integer <| val-of c
+        fun eval-const = c : Datum -> VAL-I::mk-integer <| val-of c
 
         # eval-var : (<VAR>, <ENV>) -> <VAL>
         fun eval-var = (v : Datum, e : Fun) -> ENV-I::lookup (e, v)
@@ -23,7 +23,7 @@ structure EVAL-I = struct {
 
             val va-opr : Datum = eval (opr, e)
 
-            assert VAL::funval? va-opr ->
+            assert VAL-I::funval? va-opr ->
                 ERROR::application
                     "In APPL, Expected a <FUNVAL>, but: " va-opr
 
@@ -36,7 +36,7 @@ structure EVAL-I = struct {
         fun eval-lambda = (l : Datum, e : Fun) -> let {
             val (fp : Datum, body : Datum) = val-of l
         in
-            VAL::mk-funval { a : Datum ->
+            VAL-I::mk-funval { a : Datum ->
                  eval (body, ENV-I::extend-value (e, fp, a))
             }
         }
@@ -47,7 +47,7 @@ structure EVAL-I = struct {
 
             val va-prem = eval (prem, e)
 
-            assert VAL::boolean? va-prem ->
+            assert VAL-I::boolean? va-prem ->
                 ERROR::type' "In COND, expected a <BOOLEAN>, but: " va-prem
         in
             if val-of va-prem then
