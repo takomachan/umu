@@ -388,7 +388,7 @@ private
                     "For '%s's #%d argument, expected a %s, but %s : %s",
                         self.sym.to_s,
                         i + 1,
-                        param_signat.mess_sym,
+                        param_signat.symbol,
                         arg_value.to_s,
                         arg_value.type_sym
                 )
