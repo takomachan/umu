@@ -1,0 +1,75 @@
+(######## Environment II ########
+
+<ENV> = <INIT> + <SIMP> + <REC>
+
+<INIT> = []
+<SIMP> = [bvar:<VAR>, bval:<VAL>, old:<ENV>]
+<REC>  = [dvar:<VAR>, dexp:<EXP>, old:<ENV>]
+
+################)
+
+structure ENV-II = struct {
+    val initial : Datum = mk-init ()
+
+
+    # lookup : (<ENV>, <VAR>) -> <VAL>
+    fun rec lookup = (e : Datum, x : Datum) -> case e of {
+    | Init -> let {
+            val op = val-of x
+        in
+            case op of {
+            #### Constant
+            | @TRUE     -> VAL-II::mk-boolean TRUE
+            | @FALSE    -> VAL-II::mk-boolean FALSE
+
+            #### Number
+            | @NEG      -> VAL-II::mk-unop   op
+            | @SUCC     -> VAL-II::mk-unop   op
+            | @PRED     -> VAL-II::mk-unop   op
+            | @ADD      -> VAL-II::mk-binop1 op
+            | @SUB      -> VAL-II::mk-binop1 op
+            | @MUL      -> VAL-II::mk-binop1 op
+            | @DIV      -> VAL-II::mk-binop1 op
+            | @MOD      -> VAL-II::mk-binop1 op
+
+            #### Relational
+            | @EQ       -> VAL-II::mk-binop1 op
+            | @LT       -> VAL-II::mk-binop1 op
+
+            else        -> ERROR::name "Unknown VAR: " x
+            }
+        }
+    | Simp (bvar : Datum, bval : Datum, old : Datum) ->
+        if x == bvar then
+            bval
+        else
+            lookup (old, x)
+    | Rec (dvar : Datum, dexp : Datum, old : Datum) ->
+        if x == dvar then
+            VAL-II::mk-closr(dexp, e)
+        else
+            lookup (old, x)
+    }
+
+    # extend-value : (<ENV>, <VAR>, <VAL>) -> <ENV>
+    fun extend-value = (e : Datum, bvar : Datum, bval : Datum) ->
+         mk-simp (bvar, bval, e)
+
+    # extend-recursive : (<ENV>, <VAR>, <EXP>) -> <ENV>
+    fun extend-recursive = (e : Datum, dvar : Datum, dexp : Datum) ->
+        mk-rec (dvar, dexp, e)
+} where {
+    #### Constructor ####
+
+    # mk-init : () -> <INIT>
+    fun mk-init = () ->
+                 Datum @Init ()
+
+    # mk-simp : (<VAR>, <VAL>, <ENV>) -> <SIMP>
+    fun mk-simp = (bvar : Datum, bval : Datum, old : Datum) ->
+                 Datum @Simp (bvar, bval, old)
+
+    # mk-rec : (<VAR>, <EXP>, <ENV>) -> <REC>
+    fun mk-rec = (dvar : Datum, dexp : Datum, old : Datum) ->
+                 Datum @Rec (dvar, dexp, old)
+}

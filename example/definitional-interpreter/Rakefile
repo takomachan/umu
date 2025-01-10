@@ -4,18 +4,28 @@ COMMON_FILES =	[
     'common/error.umu',
     'common/expression.umu',
     'common/parser.umu',
-    'common/prelude.umu',
-    'common/test.umu'
+    'common/prelude.umu'
 ]
 
 INTERPRETER_1_FILES = [
     'interpreter-1/value-1.umu',
     'interpreter-1/environment-1.umu',
     'interpreter-1/evaluator-1.umu',
+    'interpreter-1/test-1.umu',
     'interpreter-1.umu'
 ]
 
-FILES = COMMON_FILES + INTERPRETER_1_FILES
+INTERPRETER_2_FILES = [
+    'interpreter-2/value-2.umu',
+    'interpreter-2/environment-2.umu',
+    'interpreter-2/evaluator-2.umu',
+    'interpreter-2/test-2.umu',
+    'interpreter-2.umu'
+]
+
+FILES = COMMON_FILES +
+         INTERPRETER_1_FILES +
+         INTERPRETER_2_FILES
 
 
 
@@ -33,6 +43,16 @@ end
 
 task :test => FILES do
     sh format "%s %s", UMU, FILES.join(' ')
+end
+
+
+task :test1 => FILES do
+    sh format "%s %s", UMU, (COMMON_FILES + INTERPRETER_1_FILES).join(' ')
+end
+
+
+task :test2 => FILES do
+    sh format "%s %s", UMU, (COMMON_FILES + INTERPRETER_2_FILES).join(' ')
 end
 
 

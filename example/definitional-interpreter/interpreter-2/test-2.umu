@@ -1,6 +1,6 @@
-######## Tester ########
+######## Tester II ########
 
-structure TESTER = struct {
+structure TESTER-II = struct {
     structure ASSERT = ASSERT
 
     fun make-tester = interpret : Fun -> { () ->
@@ -274,7 +274,7 @@ structure TESTER = struct {
         fun funval = actual -> let {
             assert actual kind-of? Datum        -> "Datum"
             assert tag-of actual == @Funval     -> "@Funval"
-            assert val-of actual kind-of? Fun   -> "Fun"
+            assert val-of actual kind-of? Datum -> "Datum"
         in
             ()
         }

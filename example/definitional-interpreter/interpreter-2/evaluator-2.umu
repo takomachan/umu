@@ -1,0 +1,103 @@
+######## Evaluator-II ########
+
+structure EVAL-II = struct {
+    fun rec
+        # eval : (<EXP>, <ENV>) -> <VAL>
+        eval = (r : Datum, e : Datum) -> case r of {
+        | Const     -> eval-const r
+        | Var       -> eval-var    (r, e)
+        | Appl      -> eval-appl   (r, e)
+        | Lambda    -> eval-lambda (r, e)
+        | Cond      -> eval-cond   (r, e)
+        | Letrec    -> eval-letrec (r, e)
+        else        -> ERROR::failure ("Unknown EXP: ", r)
+        } where {
+            # eval-const : <CONST> -> <INTEGER>
+            fun eval-const = c : Datum -> VAL-II::mk-integer <| val-of c
+
+            # eval-var : (<VAR>, <ENV>) -> <VAL>
+            fun eval-var = (v : Datum, e : Datum) -> ENV-II::lookup (e, v)
+
+            # eval-appl : (<APPL>, <ENV>) -> <VAL>
+            fun eval-appl = (a : Datum, e : Datum) -> let {
+                val (opr : Datum, opnd : Datum) = val-of a
+
+                val va-opr : Datum = eval (opr, e)
+
+                assert VAL-II::funval? va-opr ->
+                    ERROR::application
+                        "In APPL, Expected a <FUNVAL>, but: " va-opr
+
+                val va-opnd : Datum = eval (opnd, e)
+            in
+                apply (val-of va-opr, va-opnd)
+            }
+
+            # eval-lambda : (<LAMBDA>, <ENV>) -> <FUNVAL>
+            fun eval-lambda = (l : Datum, e : Datum) ->
+                                     VAL-II::mk-closr (l, e)
+
+            # eval-cond : (<COND>, <ENV>) -> <VAL>
+            fun eval-cond = (c : Datum, e : Datum) -> let {
+                val (prem : Datum, conc : Datum, altr : Datum) = val-of c
+
+                val va-prem = eval (prem, e)
+
+                assert VAL-II::boolean? va-prem ->
+                    ERROR::type' "In COND, expected a <BOOLEAN>, but: "
+                                 va-prem
+            in
+                if val-of va-prem then
+                    eval (conc, e)
+                else
+                    eval (altr, e)
+            }
+
+            # eval-letrec : (<LETREC>, <ENV>) -> <VAL>
+            fun eval-letrec =  (l : Datum, e : Datum) -> let {
+                val (dvar : Datum, dexp : Datum, body : Datum) = val-of l
+
+                assert EXP::lambda? dexp ->
+                    ERROR::failure "In LETREC, expected a LAMBDA, but: " r
+            in
+                eval (body, ENV-II::extend-recursive(e, dvar, dexp))
+            }
+        }
+    #   apply : (<FUNVAL>, <VAL>) -> <VAL>
+    and apply = (f : Datum, a : Datum) -> case f of {
+        | Closr (lam, en) -> let {
+                val (fp : Datum, body : Datum) = val-of lam
+            in
+                eval (body, ENV-II::extend-value(en, fp, a))
+            }
+        | Unop op -> let {
+                assert VAL-II::integer? a ->
+                     ERROR::type' "Unop: " a
+                val compute = case op of {
+                        | @NEG  -> negate
+                        | @SUCC -> (+ 1)
+                        | @PRED -> (- 1)
+                        }
+            in
+                VAL-II::mk-integer <| compute <| val-of a
+            }
+        | Binop1 op -> VAL-II::mk-binop2 (op, a)
+        | Binop2 (op, arg1) -> let {
+                assert VAL-II::integer? arg1 ->
+                    ERROR::type' "Binop2 LHS: " arg1
+                assert VAL-II::integer? a ->
+                    ERROR::type' "Binop2 RHS: " a
+                val (compute, construct) = case op of {
+                    | @ADD  -> ((+),   VAL-II::mk-integer)
+                    | @SUB  -> ((-),   VAL-II::mk-integer)
+                    | @MUL  -> ((*),   VAL-II::mk-integer)
+                    | @DIV  -> ((/),   VAL-II::mk-integer)
+                    | @MOD  -> ((mod), VAL-II::mk-integer)
+                    | @EQ   -> ((==),  VAL-II::mk-boolean)
+                    | @LT   -> ((<),   VAL-II::mk-boolean)
+                    }
+            in
+                construct <| compute (val-of arg1) (val-of a)
+            }
+        }
+}

@@ -1,0 +1,52 @@
+(######## Value II ########
+
+<VAL> = <INTEGER> + <BOOLEAN> + <FUNVAL>
+
+<FUNVAL> = <CLOSR> + <UNOP> + <BINOP1> + <BINOP2>
+<CLOSR> = [lam: <LAMBDA>, en: <ENV>]
+<UNOP> = [op: Symbol]
+<BINOP1> = [op: Symbol]
+<BINOP2> = [op: Symbol, arg1: <VAL>]
+
+################)
+
+structure VAL-II = struct {
+    #### Constructor ####
+
+    # mk-integer : Int -> <INTEGER>
+    fun mk-integer = x : Int -> Datum @Integer x
+
+    # mk-boolean : Bool -> <BOOLEAN>
+    fun mk-boolean = x : Bool -> Datum @Boolean x
+
+    # mk-closr : (<LAMBDA>, <ENV>) -> <CLOSR>
+    fun mk-closr = (lam : Datum, en : Datum) ->
+        mk-funval <| Datum @Closr (lam, en)
+
+    # mk-unop : Symbol -> <UNOP>
+    fun mk-unop = op : Symbol ->
+         mk-funval <| Datum @Unop op
+
+    # mk-binop1 : Symbol -> <BINOP1>
+    fun mk-binop1 = op : Symbol ->
+         mk-funval <| Datum @Binop1 op
+
+    # mk-binop2 : (Symbol, <VAL>) -> <BINOP2>
+    fun mk-binop2 = (op : Symbol, arg1 : Datum) ->
+         mk-funval <| Datum @Binop2 (op, arg1)
+
+
+    #### Classifier ####
+
+    # integer? : <VAL> -> Bool
+    fun integer? = exp : Datum -> tag-of exp == @Integer
+
+    # boolean? : <VAL> -> Bool
+    fun boolean? = exp : Datum -> tag-of exp == @Boolean
+
+    # funval? : <VAL> -> Bool
+    fun funval?  = exp : Datum -> tag-of exp == @Funval
+} where {
+    # mk-funval : Top -> <FUNVAL>
+    fun mk-funval  = contents : Top -> Datum @Funval contents
+}
