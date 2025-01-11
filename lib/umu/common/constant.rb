@@ -54,7 +54,7 @@ module Umu
                     module Number
                         class Abstract < Atom::Abstract; end
                         class Int < Abstract; end
-                        class Real < Abstract; end
+                        class Float < Abstract; end
                     end
                     class String < Abstract; end
                 end

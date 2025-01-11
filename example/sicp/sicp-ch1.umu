@@ -2,7 +2,7 @@ structure UAS = Umu::Assert
 structure UMA = Umu::Math
 structure UIO = Umu::IO
 
-val NDIGITS = 3     # for Umu::Assert::real
+val NDIGITS = 3     # for Umu::Assert::float
 
 ;;
 
@@ -196,14 +196,14 @@ in
 
 print "\n\nSECTION 1.1.5" ;;
 
-### abs : Real -> Real
+### abs : Float -> Float
 fun abs = x -> cond x of {
 | positive? -> x
 | zero?     -> 0.0
 | negative? -> negate x
 } ;;
 
-### abs' : Real -> Real
+### abs' : Float -> Float
 fun abs' = x -> cond x of {
 negative? -> negate x
 else      -> x
@@ -261,49 +261,49 @@ import Umu::Prelude { fun abs fun (>=) }
 
 print "\n\nSECTION 1.1.7" ;;
 
-### good-enough? : Real -> Real -> Real
+### good-enough? : Float -> Float -> Float
 fun good-enough? = guess x -> abs ((square guess) - x) < 0.001
 
-### average : Real -> Real -> Real
+### average : Float -> Float -> Float
 fun average = x y -> (x + y) / 2.0
 
-### improve : Real -> Real -> Real
+### improve : Float -> Float -> Float
 fun improve = guess x -> average guess (x / guess)
 
-###     sqrt-iter :  Real -> Real -> Real
+###     sqrt-iter :  Float -> Float -> Float
 fun rec sqrt-iter = guess x -> (
     if good-enough? guess x then guess
                             else sqrt-iter (improve guess x) x
 )
 
-### sqrt : Real -> Real
+### sqrt : Float -> Float
 fun sqrt = x -> sqrt-iter 1.0 x ;;
 
 let {
     val _result = sqrt 9.0
 in
-    UAS::real _result 3.0 NDIGITS
+    UAS::float _result 3.0 NDIGITS
 } ;;
 # -> 3.00009155413138
 
 let {
     val _result = sqrt <| 100.0 + 37.0
 in
-    UAS::real _result (UMA::sqrt <| 100.0 + 37.0) NDIGITS
+    UAS::float _result (UMA::sqrt <| 100.0 + 37.0) NDIGITS
 } ;;
 # -> 11.704699917758145
 
 let {
     val _result = sqrt <| sqrt 2.0 + sqrt 3.0
 in
-    UAS::real _result (UMA::sqrt <| UMA::sqrt 2.0 + UMA::sqrt 3.0) NDIGITS
+    UAS::float _result (UMA::sqrt <| UMA::sqrt 2.0 + UMA::sqrt 3.0) NDIGITS
 } ;;
 # -> 1.7739279023207892
 
 let {
     val _result = square <| sqrt 1000.0
 in
-    UAS::real _result (square <| UMA::sqrt 1000.0) NDIGITS
+    UAS::float _result (square <| UMA::sqrt 1000.0) NDIGITS
 } ;;
 # -> 1000.000369924366
 
@@ -320,7 +320,7 @@ fun square = x -> x * x
 ### double : 'a -> 'a    where { 'a <- Number }
 fun double = x -> x + x
 
-### squqre' : Real -> Real
+### squqre' : Float -> Float
 fun square' = x -> UMA::exp (double (UMA::log x))
 
 ;;
@@ -344,7 +344,7 @@ fun sqrt = x -> sqrt-iter 1.0 x ;;
 
 #### Block-structured ####
 
-### sqrt' :  Real -> Real
+### sqrt' :  Float -> Float
 fun sqrt' = x -> (
     sqrt-iter 1.0 x
 ) where {
@@ -360,14 +360,14 @@ fun sqrt' = x -> (
 let {
     val _result = sqrt' 9.0
 in
-    UAS::real _result 3.0 NDIGITS
+    UAS::float _result 3.0 NDIGITS
 } ;;
 # -> 3.00009155413138
 
 
 #### Taking advantage of lexical scoping ####
 
-### sqrt'' :  Real -> Real
+### sqrt'' :  Float -> Float
 fun sqrt'' = x -> (
     sqrt-iter 1.0
 ) where {
@@ -383,7 +383,7 @@ fun sqrt'' = x -> (
 let {
     val _result = sqrt'' 9.0
 in
-    UAS::real _result 3.0 NDIGITS
+    UAS::float _result 3.0 NDIGITS
 } ;;
 # -> 3.00009155413138
 
@@ -740,7 +740,7 @@ in
 } ;;
 # -> 3025
 
-###     pi-sum : Real -> Real -> Real
+###     pi-sum : Float -> Float -> Float
 fun rec pi-sum = a b -> (
     if a > b then  0.0
              else 1.0 / (a * (a + 2.0)) + pi-sum (a + 4.0) b
@@ -784,7 +784,7 @@ in
 # -> 55
 
 
-### pi-sum' : Real -> Real -> Real
+### pi-sum' : Float -> Float -> Float
 fun pi-sum' = a b -> (
     sum pi-term a pi-next b 0.0
 ) where {
@@ -795,12 +795,12 @@ fun pi-sum' = a b -> (
 let {
     val _result = 8.0 * pi-sum' 1.0 1000.0
 in
-    UAS::real _result 3.1395 NDIGITS
+    UAS::float _result 3.1395 NDIGITS
 } ;;
 # -> 3.139592655589783 
 
 
-### integral : (Real -> Real) -> Real -> Real -> Real -> Real
+### integral : (Float -> Float) -> Float -> Float -> Float -> Float
 fun integral = f a b dx -> (
     (sum f (a + dx / 2.0) add-dx b 0.0) * dx
 ) where {
@@ -811,7 +811,7 @@ fun integral = f a b dx -> (
 let {
     val _result = integral cube 0.0 1.0 0.01
 in
-    UAS::real _result 0.2499 NDIGITS
+    UAS::float _result 0.2499 NDIGITS
 } ;;
 # -> 0.24998750000000042
 
@@ -825,7 +825,7 @@ in
 
 print "\n\nSECTION 1.3.2" ;;
 
-### pi-sum : Real -> Real -> Real
+### pi-sum : Float -> Float -> Float
 fun pi-sum = a b -> (
     sum { x -> 1.0 / (x * (x + 2.0)) }
         a
@@ -834,7 +834,7 @@ fun pi-sum = a b -> (
         0.0
 )
 
-### integral : (Real -> Real) -> Real -> Real -> Real -> Real
+### integral : (Float -> Float) -> Float -> Float -> Float -> Float
 fun integral = f a b dx -> (
     sum f
         (a + dx / 2.0)
@@ -937,10 +937,10 @@ print "\n\nSECTION 1.3.3" ;;
 
 #### Half-interval method ####
 
-### close-enough? : Real -> Bool
+### close-enough? : Float -> Bool
 fun close-enough? = x y -> abs (x - y) < 0.001
 
-###     search : (Real -> Bool) -> Real -> Real -> Real
+###     search : (Float -> Bool) -> Float -> Float -> Float
 fun rec search = f neg-point pos-point -> let {
     val midpoint = average neg-point pos-point
 in
@@ -957,7 +957,7 @@ in
     }
 }
 
-### half-interval-method : (Real -> Bool) -> Real -> Real -> Real
+### half-interval-method : (Float -> Bool) -> Float -> Float -> Float
 fun half-interval-method = f a b -> let {
     val a-value = f a
     val b-value = f b
@@ -974,7 +974,7 @@ in
 let {
     val _result = half-interval-method UMA::sin 2.0 4.0
 in
-    UAS::real _result 3.141 NDIGITS
+    UAS::float _result 3.141 NDIGITS
 } ;;
 # -> 3.14111328125
 
@@ -985,7 +985,7 @@ let {
                         1.0
                         2.0
 in
-    UAS::real _result 1.893 NDIGITS
+    UAS::float _result 1.893 NDIGITS
 } ;;
 # -> 1.89306640625
 
@@ -994,7 +994,7 @@ in
 
 val tolerance = 0.00001
 
-### fixed-point : (Real -> Bool) -> Real -> Real
+### fixed-point : (Float -> Bool) -> Float -> Float
 fun fixed-point = f first-guess -> (
     try first-guess
 ) where {
@@ -1011,38 +1011,38 @@ fun fixed-point = f first-guess -> (
 let {
     val _result = fixed-point UMA::cos 1.0
 in
-    UAS::real _result 0.7390 NDIGITS
+    UAS::float _result 0.7390 NDIGITS
 } ;;
 # -> 0.7390822985224023
 
 let {
     val _result = fixed-point { y -> UMA::sin y + UMA::cos y } 1.0
 in
-    UAS::real _result 1.2587 NDIGITS
+    UAS::float _result 1.2587 NDIGITS
 } ;;
 # -> 1.2587315962971173
 
 
-### sqrt : Real -> Real
+### sqrt : Float -> Float
 fun sqrt = x -> fixed-point { y -> x / y } 1.0 ;;
 
 (#
 let {
     val _result = sqrt 9.0
 in
-    UAS::real _result 3.0 NDIGITS
+    UAS::float _result 3.0 NDIGITS
 } ;;
 # (-> 3.00009155413138)
 # -> stack level too deep (SystemStackError)
 #)
 
-### sqrt : Real -> Real
+### sqrt : Float -> Float
 fun sqrt = x -> fixed-point { y -> average y (x / y) } 1.0 ;;
 
 let {
     val _result = sqrt 9.0
 in
-    UAS::real _result 3.0 NDIGITS
+    UAS::float _result 3.0 NDIGITS
 } ;;
 # -> 3.0
 
@@ -1063,12 +1063,12 @@ fun average-damp = f -> {
 let {
     val _result = average-damp square 10.0
 in
-    UAS::real _result 55.0 NDIGITS
+    UAS::float _result 55.0 NDIGITS
 } ;;
 # -> 55.0
 
 
-### sqrt : Real -> Real
+### sqrt : Float -> Float
 fun sqrt = x -> (
     fixed-point (average-damp { y -> x / y }) 1.0
 ) ;;
@@ -1076,12 +1076,12 @@ fun sqrt = x -> (
 let {
     val _result = sqrt 9.0
 in
-    UAS::real _result 3.0 NDIGITS
+    UAS::float _result 3.0 NDIGITS
 } ;;
 # -> 3.0
 
 
-### cube-root : Real -> Real
+### cube-root : Float -> Float
 fun cube-root = x -> (
     fixed-point (average-damp { y -> x / square y }) 1.0
 ) ;;
@@ -1102,7 +1102,7 @@ fun cube = x -> x * x * x ;;
 let {
     val _result = deriv cube 5.0
 in
-    UAS::real _result 75.0 NDIGITS
+    UAS::float _result 75.0 NDIGITS
 } ;;
 # -> 75.00014999664018
 
@@ -1113,18 +1113,18 @@ fun newton-transform = g -> {
     x -> x - g x / deriv g x
 }
 
-### newton-transform : (Real -> Real) -> Real -> Real
+### newton-transform : (Float -> Float) -> Float -> Float
 fun newtons-method = g guess -> (
     fixed-point (newton-transform g) guess
 )
 
-### sqrt : Real -> Real
+### sqrt : Float -> Float
 fun sqrt = x -> newtons-method { y -> square y - x } 1.0 ;;
 
 let {
     val _result = sqrt 9.0
 in
-    UAS::real _result 3.0 NDIGITS
+    UAS::float _result 3.0 NDIGITS
 } ;;
 # -> 3.0
 
@@ -1133,12 +1133,12 @@ in
 #### Fixed point of transformed function ####
 
 ### fixed-point-of-transform :
-###                 (Real -> Real) -> (Real -> Real) -> Real -> Real
+###                 (Float -> Float) -> (Float -> Float) -> Float -> Float
 fun fixed-point-of-transform = g transform guess -> (
     fixed-point (transform g) guess
 )
 
-### sqrt : Real -> Real
+### sqrt : Float -> Float
 fun sqrt = x -> (
     fixed-point-of-transform { y -> x / y } average-damp 1.0
 ) ;;
@@ -1146,12 +1146,12 @@ fun sqrt = x -> (
 let {
     val _result = sqrt 9.0
 in
-    UAS::real _result 3.0 NDIGITS
+    UAS::float _result 3.0 NDIGITS
 } ;;
 # -> 3.0
 
 
-### sqrt' : Real -> Real
+### sqrt' : Float -> Float
 fun sqrt' = x -> (
     fixed-point-of-transform { y -> square y - x } newton-transform 1.0
 ) ;;
@@ -1159,7 +1159,7 @@ fun sqrt' = x -> (
 let {
     val _result = sqrt 9.0
 in
-    UAS::real _result 3.0 NDIGITS
+    UAS::float _result 3.0 NDIGITS
 } ;;
 # -> 3.0
 

@@ -31,7 +31,7 @@ task :run => FILES do
         puts
         puts
     end
-    sh 'rake -C definional-interpreter/ test'
+    sh 'rake -C definitional-interpreter/ test'
 end
 
 
@@ -39,6 +39,6 @@ task :files do
     FILES.each do |file|
         puts file
     end
-    sh "rake -C definional-interpreter/ files | " +
-            "awk '{ printf(\"definional-interpreter/%s\\n\", $0) }'"
+    sh "rake -C definitional-interpreter/ files | " +
+            "awk '{ printf(\"definitional-interpreter/%s\\n\", $0) }'"
 end

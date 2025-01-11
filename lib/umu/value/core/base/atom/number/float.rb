@@ -15,7 +15,7 @@ module Atom
 
 module Number
 
-class Real < Abstract
+class Float < Abstract
     def initialize(val)
         ASSERT.kind_of val, ::Float
 
@@ -68,7 +68,7 @@ class Real < Abstract
         [], self
     )
     def self.meth_make_pi(_loc, _env, _event)
-        VC.make_real Math::PI
+        VC.make_float Math::PI
     end
 
 
@@ -78,7 +78,7 @@ class Real < Abstract
         [], self
     )
     def self.meth_make_e(_loc, _env, _event)
-        VC.make_real Math::E
+        VC.make_float Math::E
     end
 
 
@@ -96,7 +96,7 @@ class Real < Abstract
     )
 
 
-    def meth_to_real(_loc, _env, _event)
+    def meth_to_float(_loc, _env, _event)
         self
     end
 
@@ -186,7 +186,7 @@ class Real < Abstract
         [], self
     )
     def meth_sin(_loc, _env, _event)
-        VC.make_real Math.sin(self.val)
+        VC.make_float Math.sin(self.val)
     end
 
 
@@ -196,7 +196,7 @@ class Real < Abstract
         [], self
     )
     def meth_cos(_loc, _env, _event)
-        VC.make_real Math.cos(self.val)
+        VC.make_float Math.cos(self.val)
     end
 
 
@@ -206,7 +206,7 @@ class Real < Abstract
         [], self
     )
     def meth_tan(_loc, _env, _event)
-        VC.make_real Math.tan(self.val)
+        VC.make_float Math.tan(self.val)
     end
 
 
@@ -216,7 +216,7 @@ class Real < Abstract
         [], self
     )
     def meth_asin(_loc, _env, _event)
-        VC.make_real Math.asin(self.val)
+        VC.make_float Math.asin(self.val)
     end
 
 
@@ -226,7 +226,7 @@ class Real < Abstract
         [], self
     )
     def meth_acos(_loc, _env, _event)
-        VC.make_real Math.acos(self.val)
+        VC.make_float Math.acos(self.val)
     end
 
 
@@ -236,7 +236,7 @@ class Real < Abstract
         [], self
     )
     def meth_atan(_loc, _env, _event)
-        VC.make_real Math.atan(self.val)
+        VC.make_float Math.atan(self.val)
     end
 
 
@@ -246,9 +246,9 @@ class Real < Abstract
         [self], self
     )
     def meth_atan2(_loc, _env, _event, other)
-        ASSERT.kind_of other, Real
+        ASSERT.kind_of other, Float
 
-        VC.make_real Math.atan2(other.val, self.val)
+        VC.make_float Math.atan2(other.val, self.val)
     end
 
 
@@ -258,7 +258,7 @@ class Real < Abstract
         [], self
     )
     def meth_sinh(_loc, _env, _event)
-        VC.make_real Math.sinh(self.val)
+        VC.make_float Math.sinh(self.val)
     end
 
 
@@ -268,7 +268,7 @@ class Real < Abstract
         [], self
     )
     def meth_cosh(_loc, _env, _event)
-        VC.make_real Math.cosh(self.val)
+        VC.make_float Math.cosh(self.val)
     end
 
 
@@ -278,7 +278,7 @@ class Real < Abstract
         [], self
     )
     def meth_tanh(_loc, _env, _event)
-        VC.make_real Math.tanh(self.val)
+        VC.make_float Math.tanh(self.val)
     end
 
 
@@ -288,7 +288,7 @@ class Real < Abstract
         [], self
     )
     def meth_exp(_loc, _env, _event)
-        VC.make_real Math.exp(self.val)
+        VC.make_float Math.exp(self.val)
     end
 
 
@@ -298,7 +298,7 @@ class Real < Abstract
         [], self
     )
     def meth_log(_loc, _env, _event)
-        VC.make_real Math.log(self.val)
+        VC.make_float Math.log(self.val)
     end
 
 
@@ -308,7 +308,7 @@ class Real < Abstract
         [], self
     )
     def meth_log10(_loc, _env, _event)
-        VC.make_real Math.log10(self.val)
+        VC.make_float Math.log10(self.val)
     end
 
 
@@ -318,7 +318,7 @@ class Real < Abstract
         [], self
     )
     def meth_sqrt(_loc, _env, _event)
-        VC.make_real Math.sqrt(self.val)
+        VC.make_float Math.sqrt(self.val)
     end
 
 
@@ -339,7 +339,7 @@ class Real < Abstract
             )
         end
 
-        VC.make_real self.val.truncate(ndigits.val).to_f
+        VC.make_float self.val.truncate(ndigits.val).to_f
     end
 
 
@@ -360,7 +360,7 @@ class Real < Abstract
             )
         end
 
-        VC.make_real self.val.ceil(ndigits.val).to_f
+        VC.make_float self.val.ceil(ndigits.val).to_f
     end
 
 
@@ -381,7 +381,7 @@ class Real < Abstract
             )
         end
 
-        VC.make_real self.val.floor(ndigits.val).to_f
+        VC.make_float self.val.floor(ndigits.val).to_f
     end
 
 
@@ -393,7 +393,7 @@ class Real < Abstract
     def meth_ldexp(_loc, _env, _event, other)
         ASSERT.kind_of other, VCBAN::Int
 
-        VC.make_real Math.ldexp(self.val, other.val)
+        VC.make_float Math.ldexp(self.val, other.val)
     end
 
 
@@ -407,7 +407,7 @@ class Real < Abstract
 
         VC.make_tuple(
             [
-                VC.make_real(fract.to_f),
+                VC.make_float(fract.to_f),
                 VC.make_integer(expon.to_i)
             ]
         )
@@ -420,14 +420,14 @@ class Real < Abstract
         [self], VCBLP::Tuple
     )
     def meth_divmod(_loc, _env, _event, other)
-        ASSERT.kind_of other, VCBAN::Real
+        ASSERT.kind_of other, VCBAN::Float
 
         fract, integ = self.val.divmod other.val
 
         VC.make_tuple(
             [
-                VC.make_real(fract.to_f),
-                VC.make_real(integ.to_f)
+                VC.make_float(fract.to_f),
+                VC.make_float(integ.to_f)
             ]
         )
     end
@@ -439,10 +439,10 @@ class Real < Abstract
         [], self
     )
 end
-Real.freeze
+Float.freeze
 
-NAN         = Atom::Number::Real.new(::Float::NAN).freeze
-INFINITY    = Atom::Number::Real.new(::Float::INFINITY).freeze
+NAN         = Atom::Number::Float.new(::Float::NAN).freeze
+INFINITY    = Atom::Number::Float.new(::Float::INFINITY).freeze
 
 end # Umu::Value::Core::Atom::Base::Number
 
@@ -453,10 +453,10 @@ end # Umu::Value::Core::Atom
 
 module_function
 
-    def make_real(val)
+    def make_float(val)
         ASSERT.kind_of val, ::Float
 
-        Base::Atom::Number::Real.new(val).freeze
+        Base::Atom::Number::Float.new(val).freeze
     end
 
 

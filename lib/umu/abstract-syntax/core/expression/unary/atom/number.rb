@@ -45,7 +45,7 @@ class Int < Abstract
 end
 
 
-class Real < Abstract
+class Float < Abstract
     def initialize(loc, obj)
         ASSERT.kind_of obj, ::Float
 
@@ -54,7 +54,7 @@ class Real < Abstract
 
 
     def __evaluate__(_env, _event)
-        VC.make_real self.obj
+        VC.make_float self.obj
     end
 end
 
@@ -75,11 +75,11 @@ module_function
     end
 
 
-    def make_real(loc, obj)
+    def make_float(loc, obj)
         ASSERT.kind_of loc, LOC::Entry
         ASSERT.kind_of obj, ::Float
 
-        Unary::Atom::Number::Real.new(loc, obj).freeze
+        Unary::Atom::Number::Float.new(loc, obj).freeze
     end
 
 end # Umu::AbstractSyntax::Core::Expression

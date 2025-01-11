@@ -47,7 +47,7 @@ private
 end
 
 
-class Real < Abstract
+class Float < Abstract
     def initialize(loc, obj)
         ASSERT.kind_of obj, ::Float
 
@@ -58,7 +58,7 @@ class Real < Abstract
 private
 
     def __desugar__(_env, _event)
-        ASCE.make_real self.loc, self.obj
+        ASCE.make_float self.loc, self.obj
     end
 end
 
@@ -80,11 +80,11 @@ module_function
     end
 
 
-    def make_real(loc, obj)
+    def make_float(loc, obj)
         ASSERT.kind_of loc, LOC::Entry
         ASSERT.kind_of obj, ::Float
 
-        Unary::Atom::Number::Real.new(loc, obj).freeze
+        Unary::Atom::Number::Float.new(loc, obj).freeze
     end
 
 end # Umu::ConcreteSyntax::Expression::Core

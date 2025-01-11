@@ -96,7 +96,7 @@ class Abstract < Atom::Abstract
             raise X::ArgumentError.new(
                 loc,
                 env,
-                "Domain error on real number %s : %s",
+                "Domain error on float number %s : %s",
                         self.to_s,
                         self.type_sym.to_s
             )
@@ -105,12 +105,12 @@ class Abstract < Atom::Abstract
 
 
     define_instance_method(
-        :meth_to_real,
+        :meth_to_float,
         :'to-r', [],
-        [], VCBAN::Real
+        [], VCBAN::Float
     )
-    def meth_to_real(_loc, _env, _event)
-        VC.make_real self.val.to_f
+    def meth_to_float(_loc, _env, _event)
+        VC.make_float self.val.to_f
     end
 
 
@@ -230,7 +230,7 @@ class Abstract < Atom::Abstract
                     raise X::ArgumentError.new(
                         loc,
                         env,
-                        "Domain error on real number %s : %s",
+                        "Domain error on float number %s : %s",
                                 self.to_s,
                                 self.type_sym.to_s
                     )

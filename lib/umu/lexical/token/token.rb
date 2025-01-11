@@ -158,7 +158,7 @@ end
 
 
 
-class Real < Abstraction::Abstract
+class Float < Abstraction::Abstract
     def initialize(loc, val)
         ASSERT.kind_of val, ::Float
 
@@ -167,12 +167,12 @@ class Real < Abstraction::Abstract
 
 
     def to_s
-        format "REAL(%s)", self.val.to_s
+        format "FLOAT(%s)", self.val.to_s
     end
 
 
     def to_racc_token
-        :REAL
+        :FLOAT
     end
 end
 
@@ -260,11 +260,11 @@ module_function
     end
 
 
-    def make_real(loc, val)
+    def make_float(loc, val)
         ASSERT.kind_of loc, LOC::Entry
         ASSERT.kind_of val, ::Float
 
-        Real.new(loc, val).freeze
+        Float.new(loc, val).freeze
     end
 
 end # Umu::Lexical::Token

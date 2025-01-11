@@ -53,90 +53,90 @@ structure Umu = struct {
     #### Math ####
 
     structure Math = struct {
-        # NAN           : Real
-        val NAN = &Real.nan
+        # NAN           : Float
+        val NAN = &Float.nan
 
-        # INFINITY      : Real
-        val INFINITY = &Real.infinity
+        # INFINITY      : Float
+        val INFINITY = &Float.infinity
 
-        # PI            : Real
-        val PI = &Real.pi
+        # PI            : Float
+        val PI = &Float.pi
 
-        # E             : Real
-        val E = &Real.e
+        # E             : Float
+        val E = &Float.e
 
-        # nan?          : Real -> Bool
-        val nan? = &(Real.nan?)
+        # nan?          : Float -> Bool
+        val nan? = &(Float.nan?)
 
-        # infinite?     : Real -> Bool
-        val infinite? = &(Real.infinite?)
+        # infinite?     : Float -> Bool
+        val infinite? = &(Float.infinite?)
 
-        # equal?        : Real -> Real -> Int -> Bool
-        fun equal? = (x : Real) (y : Real) (n : Int) ->
+        # equal?        : Float -> Float -> Int -> Bool
+        fun equal? = (x : Float) (y : Float) (n : Int) ->
             x.truncate n.== (y.truncate n)
 
-        # finite?       : Real -> Bool
-        val finite? = &(Real.finite?)
+        # finite?       : Float -> Bool
+        val finite? = &(Float.finite?)
 
-        # sin           : Real -> Real
-        val sin = &(Real.sin)
+        # sin           : Float -> Float
+        val sin = &(Float.sin)
 
-        # cos           : Real -> Real
-        val cos = &(Real.cos)
+        # cos           : Float -> Float
+        val cos = &(Float.cos)
 
-        # tan           : Real -> Real
-        val tan = &(Real.tan)
+        # tan           : Float -> Float
+        val tan = &(Float.tan)
 
-        # asin          : Real -> Real
+        # asin          : Float -> Float
         val asin = &(loat.asin)
 
-        # acos          : Real -> Real
-        val acos = &(Real.acos)
+        # acos          : Float -> Float
+        val acos = &(Float.acos)
 
-        # atan          : Real -> Real
-        val atan = &(Real.atan)
+        # atan          : Float -> Float
+        val atan = &(Float.atan)
 
-        # atan2         : Real -> Real -> Real
-        val atan2 = &(Real.atan2)
+        # atan2         : Float -> Float -> Float
+        val atan2 = &(Float.atan2)
 
-        # sinh          : Real -> Real
-        val sinh = &(Real.sinh)
+        # sinh          : Float -> Float
+        val sinh = &(Float.sinh)
 
-        # cosh          : Real -> Real
-        val cosh = &(Real.cosh)
+        # cosh          : Float -> Float
+        val cosh = &(Float.cosh)
 
-        # tanh          : Real -> Real
-        val tanh = &(Real.tanh)
+        # tanh          : Float -> Float
+        val tanh = &(Float.tanh)
 
-        # exp           : Real -> Real
-        val exp = &(Real.exp)
+        # exp           : Float -> Float
+        val exp = &(Float.exp)
 
-        # log           : Real -> Real
-        val log = &(Real.log)
+        # log           : Float -> Float
+        val log = &(Float.log)
 
-        # log10         : Real -> Real
-        val log10 = &(Real.log10)
+        # log10         : Float -> Float
+        val log10 = &(Float.log10)
 
-        # sqrt          : Real -> Real
-        val sqrt = &(Real.sqrt)
+        # sqrt          : Float -> Float
+        val sqrt = &(Float.sqrt)
 
-        # truncate      : Real -> Int -> Real
-        fun truncate = (x : Real) (n : Int) -> x.truncate n
+        # truncate      : Float -> Int -> Float
+        fun truncate = (x : Float) (n : Int) -> x.truncate n
 
-        # ceil          : Real -> Int -> Real
-        fun ceil = (x : Real) (n : Int) -> x.ceil n
+        # ceil          : Float -> Int -> Float
+        fun ceil = (x : Float) (n : Int) -> x.ceil n
 
-        # floor         : Real -> Int -> Real
-        fun floor = (x : Real) (n : Int) -> x.floor n
+        # floor         : Float -> Int -> Float
+        fun floor = (x : Float) (n : Int) -> x.floor n
 
-        # ldexp         : Real -> Int -> Real
-        fun ldexp = (x : Real) (y : Int) -> x.ldexp y
+        # ldexp         : Float -> Int -> Float
+        fun ldexp = (x : Float) (y : Int) -> x.ldexp y
 
-        # frexp         : Real -> (Real, Real)
-        fun frexp = (x : Real) (y : Int) -> x.frexp y
+        # frexp         : Float -> (Float, Float)
+        fun frexp = (x : Float) (y : Int) -> x.frexp y
 
-        # divmod        : Real -> Real -> (Real, Real)
-        fun divmod = (x : Real) (y : Int) -> x.divmod y
+        # divmod        : Float -> Float -> (Float, Float)
+        fun divmod = (x : Float) (y : Int) -> x.divmod y
     }
 
 
@@ -480,7 +480,7 @@ structure Umu = struct {
         # to-i          : Number -> Int
         val to-i = &(Number.to-i)
 
-        # to-r          : Number -> Real
+        # to-r          : Number -> Float
         val to-r = &(Number.to-r)
 
         # (+)           : 'a -> 'a -> 'a        where { 'a <- Number }
@@ -504,19 +504,19 @@ structure Umu = struct {
 
         #### Math ####
 
-        # NAN       : Real
+        # NAN       : Float
         val NAN = Math::NAN
 
-        # INFINITY  : Real
+        # INFINITY  : Float
         val INFINITY = Math::INFINITY
 
-        # nan?      : Real -> Bool
+        # nan?      : Float -> Bool
         val nan? = Math::nan?
 
-        # infinite? : Real -> Bool
+        # infinite? : Float -> Bool
         val infinite? = Math::infinite?
 
-        # finite?   : Real -> Bool
+        # finite?   : Float -> Bool
         val finite? = Math::finite?
 
 
@@ -794,13 +794,13 @@ structure Umu = struct {
         }
 
 
-        # real : 'a -> Real -> Int -> Real
-        fun real =
+        # float : 'a -> Float -> Int -> Float
+        fun float =
                 actual
-                (expect : Real)
+                (expect : Float)
                 (n      : Int)
         -> let {
-            assert actual kind-of? Real         -> "Real"
+            assert actual kind-of? Float         -> "Float"
             assert Math::equal? actual expect n -> msg expect actual
         in
             actual

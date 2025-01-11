@@ -1,5 +1,5 @@
 import Umu::Math {
-    val PI : Real
+    val PI : Float
     fun (sin, cos, atan = atan2, sqrt)
 }
 

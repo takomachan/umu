@@ -140,7 +140,7 @@ FILES = [
     'value/core/base/atom/number.rb',
     'value/core/base/atom/number/abstract.rb',
     'value/core/base/atom/number/int.rb',
-    'value/core/base/atom/number/real.rb',
+    'value/core/base/atom/number/float.rb',
     'value/core/base/atom/string.rb',
     'value/core/base/atom/symbol.rb',
     'value/core/base/lsm.rb',
