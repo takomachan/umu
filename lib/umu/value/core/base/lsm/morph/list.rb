@@ -152,7 +152,7 @@ class Nil < Abstract
     end
 
 
-    def des!
+    def dest!
         raise ::StopIteration
     end
 
@@ -217,7 +217,7 @@ class Cons < Abstract
     end
 
 
-    def des!
+    def dest!
         VC.make_tuple [self.head, self.tail]
     end
 
@@ -227,7 +227,7 @@ class Cons < Abstract
         :contents, [],
         [], VCBLP::Tuple
     )
-    alias meth_contents meth_des!
+    alias meth_contents meth_dest!
 end
 Cons.freeze
 

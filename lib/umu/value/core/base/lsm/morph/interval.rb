@@ -94,7 +94,7 @@ class Interval < Abstract
     end
 
 
-    def des!
+    def dest!
         raise ::StopIteration if __empty__?
 
         VC.make_tuple [

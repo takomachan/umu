@@ -22,7 +22,7 @@ class Abstract < LSM::Abstract
     * .meth_make_empty(loc, env, event) -> Morph::Abstract
     * #meth_cons(loc, env, event, value : VC::Top) -> Morph::Abstract
     * #meth_is_empty(loc, env, event) -> VCBA::Bool
-    * #des! -> [VC::Top, Morph::Abstract]
+    * #dest! -> [VC::Top, Morph::Abstract]
     * #contents -> VC::Top
 =end
 
@@ -50,7 +50,7 @@ class Abstract < LSM::Abstract
 
         xs = self
         loop do
-            t = xs.des!
+            t = xs.dest!
             ASSERT.kind_of t, VCBLP::Tuple
             x, xs1 = t.values
 
@@ -85,19 +85,19 @@ class Abstract < LSM::Abstract
     end
 
 
-    def des!
+    def dest!
         raise X::InternalSubclassResponsibility
     end
 
 
     define_instance_method(
-        :meth_des!,
-        :des!, [],
+        :meth_dest!,
+        :dest!, [],
         [], VCBLP::Tuple
     )
-    def meth_des!(loc, env, _event)
+    def meth_dest!(loc, env, _event)
         begin
-            self.des!
+            self.dest!
         rescue ::StopIteration
             raise X::EmptyError.new(
                         loc,
@@ -109,15 +109,15 @@ class Abstract < LSM::Abstract
 
 
     define_instance_method(
-        :meth_des,
-        :des, [],
+        :meth_dest,
+        :dest, [],
         [], VCBLU::Option::Abstract
     )
-    def meth_des(loc, env, event)
+    def meth_dest(loc, env, event)
         if self.meth_is_empty(loc, env, event).true?
             VC.make_none
         else
-            VC.make_some self.des!
+            VC.make_some self.dest!
         end
     end
 
@@ -138,7 +138,7 @@ class Abstract < LSM::Abstract
         [], VC::Top
     )
     def meth_head(loc, env, event)
-        self.meth_des!(loc, env, event).select_by_number(1, loc, env)
+        self.meth_dest!(loc, env, event).select_by_number(1, loc, env)
     end
 
 
@@ -148,7 +148,7 @@ class Abstract < LSM::Abstract
         [], self
     )
     def meth_tail(loc, env, event)
-        self.meth_des!(loc, env, event).select_by_number(2, loc, env)
+        self.meth_dest!(loc, env, event).select_by_number(2, loc, env)
     end
 
 
@@ -542,7 +542,7 @@ class Abstract < LSM::Abstract
         if self.meth_is_empty(loc, env, event).true?
             self
         else
-            pair = self.des!
+            pair = self.dest!
             x  = pair.select_by_number 1, loc, env
             xs = pair.select_by_number 2, loc, env
 

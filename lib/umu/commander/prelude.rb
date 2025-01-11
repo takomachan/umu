@@ -197,8 +197,8 @@ structure Umu = struct {
         val empty? = &(Morph.empty?)
 
 
-        # des : %['a] -> Option ('a, %['a])
-        val des = &(Morph.des)
+        # dest : %['a] -> Option ('a, %['a])
+        val dest = &(Morph.dest)
 
 
         # head : %['a] -> 'a

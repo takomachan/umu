@@ -136,7 +136,7 @@ private
             ASCD.make_value(
                 init_loc,
                 init_pair_sym,
-                __make_send_des__(init_loc, expr)
+                __make_send_dest__(init_loc, expr)
             ),
 
             ASCD.make_value(
@@ -171,7 +171,7 @@ private
                                 next_pair_sym,
                                 ASCE.make_send(
                                     loc,
-                                    __make_send_des__(loc, tail_list_expr),
+                                    __make_send_dest__(loc, tail_list_expr),
                                     ASCE.make_number_selector(loc, 2)
                                 ),
                                 vpat.opt_type_sym
@@ -182,7 +182,7 @@ private
                             ASCD.make_value(
                                 loc,
                                 next_pair_sym,
-                                __make_send_des__(loc, tail_list_expr)
+                                __make_send_dest__(loc, tail_list_expr)
                             ),
 
                             ASCD.make_value(
@@ -234,7 +234,7 @@ private
     end
 
 
-    def __make_send_des__(loc, expr)
+    def __make_send_dest__(loc, expr)
         ASSERT.kind_of loc,  LOC::Entry
         ASSERT.kind_of expr, ASCE::Abstract
 
@@ -245,7 +245,7 @@ private
                     end
 
         ASCE.make_send(
-            loc, expr, ASCE.make_message(loc, :des!), [], type_sym
+            loc, expr, ASCE.make_message(loc, :dest!), [], type_sym
         )
     end
 
