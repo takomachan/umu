@@ -202,6 +202,50 @@ class Abstract < Object
 
 
     define_instance_method(
+        :meth_max,
+        :max, [],
+        [], VCBAN::Int
+    )
+    def meth_max(loc, env, event)
+        if self.meth_is_empty(loc, env, event).true?
+            raise X::EmptyError.new loc, env, "max: Empty morph"
+        end
+
+        self.meth_tail(loc, env, event).inject(
+            self.meth_head(loc, env, event)
+        ) { |x, y|
+            if y.meth_less_than(loc, env, event, x).true?
+                x
+            else
+                y
+            end
+        }
+    end
+
+
+    define_instance_method(
+        :meth_min,
+        :min, [],
+        [], VCBAN::Int
+    )
+    def meth_min(loc, env, event)
+        if self.meth_is_empty(loc, env, event).true?
+            raise X::EmptyError.new loc, env, "min: Empty morph"
+        end
+
+        self.meth_tail(loc, env, event).inject(
+            self.meth_head(loc, env, event)
+        ) { |x, y|
+            if x.meth_less_than(loc, env, event, y).true?
+                x
+            else
+                y
+            end
+        }
+    end
+
+
+    define_instance_method(
         :meth_is_all,
         :all?, [],
         [VC::Fun], VCBA::Bool

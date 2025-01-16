@@ -264,6 +264,26 @@ structure Umu = struct {
         fun count = xs : Morph -> xs.count
 
 
+        # max : %['a] -> 'a
+        (#
+        fun max = xs : Morph -> case xs of {
+        [init|xs'] -> xs'.foldl init { x y -> if y.< x then x else y }
+        else       -> "max: Empty Error".panic!
+        }
+        #)
+        fun max = xs : Morph -> xs.max
+
+
+        # min : %['a] -> 'a
+        (#
+        fun min = xs : Morph -> case xs of {
+        [init|xs'] -> xs'.foldl init { x y -> if x.< y then x else y }
+        else       -> "min: Empty Error".panic!
+        }
+        #)
+        fun min = xs : Morph -> xs.min
+
+
         # all? : ('a -> Bool) -> %['a] -> Bool
         fun all? = (f : Fun) (xs : Morph) -> xs.all? f
 
@@ -274,21 +294,6 @@ structure Umu = struct {
 
         # include? : 'a -> %['a] -> Bool
         fun include? = x (xs : Morph) -> xs.include? x
-
-
-        # max : %['a] -> 'a
-        # max : %['a] -> 'a
-        fun max = xs : Morph -> case xs of {
-        [init|xs'] -> xs'.foldl init { x y -> if y.< x then x else y }
-        else       -> "max: Empty Error".panic!
-        }
-
-
-        # min : %['a] -> 'a
-        fun min = xs : Morph -> case xs of {
-        [init|xs'] -> xs'.foldl init { x y -> if x.< y then x else y }
-        else       -> "min: Empty Error".panic!
-        }
 
 
         # reverse : %['a] -> %['a]
@@ -637,6 +642,12 @@ structure Umu = struct {
 
         # length    : %['a] -> Int
         val length = Morph::count
+
+        # max : %['a] -> 'a
+        val max = Morph::max
+
+        # min : %['a] -> 'a
+        val min = Morph::min
 
         # all? : ('a -> Bool) -> %['a] -> Bool
         val all? = Morph::all?
