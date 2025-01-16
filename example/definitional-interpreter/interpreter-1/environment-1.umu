@@ -4,22 +4,22 @@ structure ENV-I = struct {
     # initial : <ENV>   where { type <ENV> = <VAR> -> <VAL> }
     val initial : Fun = initenv
 
-    # lookup : (<ENV>, <VAR>) -> <VAL>
-    fun lookup = (e :Fun, v : Datum) -> e v
+    # lookup : (<ENV>, Symbol) -> <VAL>
+    fun lookup = (e :Fun, v : Symbol) -> e v
 
-    # extend-value : (<ENV>, <VAR>, <VAL>) -> <ENV>
-    fun extend-value = (e : Fun, z : Datum, a : Datum) -> e'
+    # extend-value : (<ENV>, Symbol, <VAL>) -> <ENV>
+    fun extend-value = (e : Fun, z : Symbol, a : Datum) -> e'
     where {
-        fun e'      = x : Datum -> if x == z then a    else e x
+        fun e'      = x : Symbol -> if x == z then a    else e x
     }
 
-    # extend-recursive : (<ENV>, <VAR>, Fun) -> <ENV>
-    fun extend-recursive = (e : Fun, z : Datum, f : Fun) -> e'
+    # extend-recursive : (<ENV>, Symbol, Fun) -> <ENV>
+    fun extend-recursive = (e : Fun, z : Symbol, f : Fun) -> e'
     where {
-        fun rec e'  = x : Datum -> if x == z then f e' else e x
+        fun rec e'  = x : Symbol -> if x == z then f e' else e x
     }
 } where {
-    fun initenv = x : Datum -> case val-of x of {
+    fun initenv = x : Symbol -> case x of {
     #### Constant
     | @TRUE     -> VAL-I::mk-boolean  TRUE
     | @FALSE    -> VAL-I::mk-boolean  FALSE

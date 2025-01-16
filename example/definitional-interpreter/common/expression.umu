@@ -22,17 +22,21 @@ structure EXP = struct {
     fun mk-appl   = (opr : Datum, opnd : Datum) ->
                         Datum @Appl (opr, opnd)
 
-    # mk-lambda : (<VAR>, <EXP>) -> <LAMBDA>
-    fun mk-lambda = (fp : Datum, body : Datum) ->
+    # mk-lambda : (Symbol, <EXP>) -> <LAMBDA>
+    fun mk-lambda = (fp : Symbol, body : Datum) ->
                         Datum @Lambda (fp, body)
 
     # mk-cond   : (<EXP>, <EXP>, <EXP>) -> <COND>
     fun mk-cond   = (prem : Datum, conc : Datum, altr : Datum) ->
                         Datum @Cond (prem, conc, altr)
 
-    # mk-letrec : (<VAR>, <LAMBDA>, <EXP>) -> <LETREC>
-    fun mk-letrec = (dvar : Datum, dexp : Datum, body : Datum) ->
+    # mk-letrec : (Symbol, <LAMBDA>, <EXP>) -> <LETREC>
+    fun mk-letrec = (dvar : Symbol, dexp : Datum, body : Datum) -> let {
+                        assert tag-of dexp == @Lambda ->
+                                                 "No Lambda-expression"
+                    in
                         Datum @Letrec (dvar, dexp, body)
+                    }
 
 
     #### Classifier ####

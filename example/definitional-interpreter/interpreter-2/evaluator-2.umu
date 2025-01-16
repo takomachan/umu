@@ -4,20 +4,14 @@ structure EVAL-II = struct {
     fun rec
         # eval : (<EXP>, <ENV>) -> <VAL>
         eval = (r : Datum, e : Datum) -> case r of {
-        | Const     -> eval-const r
-        | Var       -> eval-var    (r, e)
+        | Const c   -> VAL-II::mk-integer c
+        | Var v     -> ENV-II::lookup (e, v)
         | Appl      -> eval-appl   (r, e)
         | Lambda    -> eval-lambda (r, e)
         | Cond      -> eval-cond   (r, e)
         | Letrec    -> eval-letrec (r, e)
         else        -> ERROR::failure ("Unknown EXP: ", r)
         } where {
-            # eval-const : <CONST> -> <INTEGER>
-            fun eval-const = c : Datum -> VAL-II::mk-integer <| val-of c
-
-            # eval-var : (<VAR>, <ENV>) -> <VAL>
-            fun eval-var = (v : Datum, e : Datum) -> ENV-II::lookup (e, v)
-
             # eval-appl : (<APPL>, <ENV>) -> <VAL>
             fun eval-appl = (a : Datum, e : Datum) -> let {
                 val (opr : Datum, opnd : Datum) = val-of a
@@ -55,7 +49,7 @@ structure EVAL-II = struct {
 
             # eval-letrec : (<LETREC>, <ENV>) -> <VAL>
             fun eval-letrec =  (l : Datum, e : Datum) -> let {
-                val (dvar : Datum, dexp : Datum, body : Datum) = val-of l
+                val (dvar : Symbol, dexp : Datum, body : Datum) = val-of l
 
                 assert EXP::lambda? dexp ->
                     ERROR::failure "In LETREC, expected a LAMBDA, but: " r
@@ -66,7 +60,7 @@ structure EVAL-II = struct {
     #   apply : (<FUNVAL>, <VAL>) -> <VAL>
     and apply = (f : Datum, a : Datum) -> case f of {
         | Closr (lam, en) -> let {
-                val (fp : Datum, body : Datum) = val-of lam
+                val (fp : Symbol, body : Datum) = val-of lam
             in
                 eval (body, ENV-II::extend-value(en, fp, a))
             }

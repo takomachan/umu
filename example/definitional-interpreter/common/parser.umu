@@ -91,18 +91,18 @@ else        -> ERROR::syntax "Unknown Expression: " exp
 
             val [init-fp|fps'] = reverse fps
 
-            assert var? init-fp ->
-                ERROR::syntax "In LAMBDA, expected a <Var>, but: " init-fp
+            assert init-fp kind-of? Symbol ->
+                ERROR::syntax "In LAMBDA, expected a Symbol, but: " init-fp
 
-            val init-body-exp = EXP::mk-lambda (parse init-fp, parse body)
+            val init-body-exp = EXP::mk-lambda (init-fp, parse body)
         in
             fps' |> foldl init-body-exp { fp body-exp ->
                 let {
-                    assert var? fp ->
-                        ERROR::syntax "In LAMBDA, expected a <Var>, but: "
+                    assert fp kind-of? Symbol ->
+                        ERROR::syntax "In LAMBDA, expected a Symbol, but: "
                         fp
                 in
-                    EXP::mk-lambda (parse fp, body-exp)
+                    EXP::mk-lambda (fp, body-exp)
                 }
             }
         }
@@ -140,10 +140,11 @@ else        -> ERROR::syntax "Unknown Expression: " exp
 
                     val [dvar, dexp] = bind
 
-                    assert var? dvar ->
-                        ERROR::syntax "In LET, expected VAR, but: " dvar
+                    assert dvar kind-of? Symbol ->
+                        ERROR::syntax "In LET, expected a Symbol, but: "
+                                      dvar
                 in
-                    mk-let (parse dvar, parse dexp, body-exp)
+                    mk-let (dvar, parse dexp, body-exp)
                 }
             }
         } where {
@@ -172,8 +173,8 @@ else        -> ERROR::syntax "Unknown Expression: " exp
 
                     val [dvar|dexp] = bind
 
-                    assert var? dvar ->
-                        ERROR::syntax "In LETREC, expected <VAR>, but: "
+                    assert dvar kind-of? Symbol ->
+                        ERROR::syntax "In LETREC, expected a Symbol, but: "
                         dvar
                     assert form? dexp ->
                         ERROR::syntax "In LETREC, expected <Form>, but: "
@@ -185,7 +186,7 @@ else        -> ERROR::syntax "Unknown Expression: " exp
                         ERROR::syntax
                             "In LETREC, expected LAMBDA, but: " keyword
                 in
-                    EXP::mk-letrec (parse dvar, parse-lambda lam, body-exp)
+                    EXP::mk-letrec (dvar, parse-lambda lam, body-exp)
                 }
             }
         }
