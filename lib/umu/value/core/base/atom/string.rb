@@ -26,7 +26,7 @@ class String < Abstract
     end
 
 
-    def meth_inspect(_loc, _env, _event)
+    def meth_show(_loc, _env, _event)
         VC.make_string self.to_s
     end
 

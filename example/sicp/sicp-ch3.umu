@@ -212,7 +212,7 @@ fun make-table' = records -> let {
 
     fun dispatch = m -> case m of {
     | @lookup-proc -> lookup
-    else           -> panic! <| "Unknown operation -- TABLE: " ^ inspect m
+    else           -> panic! <| "Unknown operation -- TABLE: " ^ show m
     }
 in
     dispatch

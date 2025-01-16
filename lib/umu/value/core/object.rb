@@ -11,11 +11,11 @@ module Core
 
 class Object < Top
     define_instance_method(
-        :meth_inspect,
-        :inspect, [],
+        :meth_show,
+        :show, [],
         [], VCBA::String
     )
-    def meth_inspect(_loc, _env, _event)
+    def meth_show(_loc, _env, _event)
         VC.make_string self.to_s
     end
 
@@ -25,7 +25,7 @@ class Object < Top
         :'to-s', [],
         [], VCBA::String
     )
-    alias meth_to_string meth_inspect
+    alias meth_to_string meth_show
 
 
     def contents

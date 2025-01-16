@@ -263,7 +263,7 @@ structure TESTER-II = struct {
             assert actual kind-of? Datum        -> "Datum"
             assert tag-of actual == @Integer    -> "@Integer"
             assert val-of actual kind-of? Int   -> "Int"
-            assert val-of actual == expect      -> inspect expect
+            assert val-of actual == expect      -> show expect
         in
             ()
         }
@@ -283,7 +283,7 @@ structure TESTER-II = struct {
             assert actual kind-of? Datum        -> "Datum"
             assert tag-of actual == @Boolean    -> "@Boolean"
             assert val-of actual kind-of? Bool  -> "Bool"
-            assert val-of actual == expect      -> inspect expect
+            assert val-of actual == expect      -> show expect
         in
             ()
         }

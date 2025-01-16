@@ -172,7 +172,7 @@ structure Umu = struct {
         fun print = x -> STDOUT.puts (x.to-s.^ "\n")
 
         # p : 'a -> ()
-        fun p = x -> STDOUT.puts (x.inspect.^ "\n")
+        fun p = x -> STDOUT.puts (x.show.^ "\n")
 
         # pp : 'a -> ()
         fun pp = x -> STDOUT.pp x
@@ -409,8 +409,8 @@ structure Umu = struct {
     structure Prelude = struct {
         #### Top ####
 
-        # inspect   : 'a -> String
-        val inspect = &(inspect)
+        # show   : 'a -> String
+        val show = &(show)
 
         # to-s      : 'a -> String
         val to-s = &(to-s)
@@ -831,7 +831,7 @@ structure Umu = struct {
         import Morph   { fun map  fun zip }
 
         fun msg = expect actual ->
-            "Expected: " ^ expect.inspect ^ ", but: " ^ actual.inspect
+            "Expected: " ^ expect.show ^ ", but: " ^ actual.show
     }
 }
 
