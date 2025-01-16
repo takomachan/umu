@@ -47,13 +47,6 @@ class Abstract < Morph::Abstract
     end
 
 
-    define_instance_method(
-        :meth_tail,
-        :tail, [],
-        [], VCBLM::List::Abstract
-    )
-
-
     def to_s
         format "[%s]", self.map(&:to_s).join(', ')
     end
@@ -78,76 +71,6 @@ class Abstract < Morph::Abstract
     def meth_to_list(loc, env, event)
         self
     end
-
-
-    define_instance_method(
-        :meth_map,
-        :map, [],
-        [VC::Fun], self
-    )
-
-
-    define_instance_method(
-        :meth_select,
-        :select, [],
-        [VC::Fun], self
-    )
-
-
-    define_instance_method(
-        :meth_reject,
-        :reject, [],
-        [VC::Fun], self
-    )
-
-
-    define_instance_method(
-        :meth_append,
-        :'++', [],
-        [VCBLM::Abstract], self
-    )
-
-
-    define_instance_method(
-        :meth_concat,
-        :concat, [],
-        [], self
-    )
-
-
-    define_instance_method(
-        :meth_concat_map,
-        :'concat-map', [],
-        [VC::Fun], self
-    )
-
-
-    define_instance_method(
-        :meth_zip,
-        :zip, [],
-        [VCBLM::Abstract], self
-    )
-
-
-    define_instance_method(
-        :meth_uniq,
-        :uniq, [],
-        [], self
-    )
-
-
-    define_instance_method(
-        :meth_sort,
-        :sort, [],
-        [], self
-    )
-
-
-    define_instance_method(
-        :meth_sort,
-        :'sort-with', [],
-        [VC::Fun], self
-    )
 end
 Abstract.freeze
 
