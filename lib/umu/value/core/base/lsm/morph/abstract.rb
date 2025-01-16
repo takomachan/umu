@@ -15,7 +15,7 @@ module LSM
 
 module Morph
 
-class Abstract < Top
+class Abstract < Object
 =begin
     Inheriting subclasses must implement the following methods:
     * .make(xs : ::Array) -> Morph::Abstract

@@ -13,7 +13,7 @@ module Base
 
 module Atom
 
-class Abstract < Top
+class Abstract < Object
     attr_reader :val
 
 

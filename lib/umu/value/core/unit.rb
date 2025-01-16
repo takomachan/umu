@@ -9,7 +9,7 @@ module Value
 
 module Core
 
-class Unit < Top
+class Unit < Object
     def to_s
         '()'
     end

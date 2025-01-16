@@ -9,7 +9,7 @@ module Value
 
 module Core
 
-class Fun < Top
+class Fun < Object
     attr_reader :lam, :va_context
 
 

@@ -132,6 +132,7 @@ FILES = [
     'value.rb',
     'value/core.rb',
     'value/core/top.rb',
+    'value/core/object.rb',
     'value/core/unit.rb',
     'value/core/base.rb',
     'value/core/base/atom.rb',

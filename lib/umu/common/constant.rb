@@ -46,10 +46,11 @@ module Umu
     module Value
         module Core
             class Top < ::Object; end
-            class Unit < Top; end
+            class Object < Top; end
+            class Unit < Object; end
             module Base
                 module Atom
-                    class Abstract < Top; end
+                    class Abstract < Object; end
                     class Bool < Abstract; end
                     module Number
                         class Abstract < Atom::Abstract; end
@@ -60,17 +61,17 @@ module Umu
                 end
                 module LSM
                     module Product
-                        class Abstract < Top; end
+                        class Abstract < Object; end
                         class Tuple < Abstract; end
                     end
                     module Union
-                        class Abstract < Top; end
+                        class Abstract < Object; end
                         module Option
                             class Abstract < Union::Abstract; end
                         end
                     end
                     module Morph
-                        class Abstract < Top; end
+                        class Abstract < Object; end
                         class Interval < Abstract; end
                         module List
                             class Abstract < Morph::Abstract; end
@@ -78,7 +79,7 @@ module Umu
                     end
                 end
             end
-            class Fun < Top; end
+            class Fun < Object; end
         end
     end
     module Environment

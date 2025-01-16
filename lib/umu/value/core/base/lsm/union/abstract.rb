@@ -15,7 +15,7 @@ module LSM
 
 module Union
 
-class Abstract < Top
+class Abstract < Object
     def to_s
         format("&%s %s", self.type_sym, self.contents.to_s)
     end

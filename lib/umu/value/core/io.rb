@@ -9,7 +9,7 @@ module Value
 
 module Core
 
-class IO < Top
+class IO < Object
     define_class_method(
         :meth_make_stdin,
         :stdin, [],
