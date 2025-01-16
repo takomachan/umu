@@ -16,6 +16,22 @@ module Signature
 module Class
 
 class Abstract
+    def symbol
+        raise X::InternalSubclassResponsibility
+    end
+
+
+    def ==(other)
+        other.kind_of?(Abstract) && self.symbol == other.symbol
+    end
+    alias eql? ==
+
+
+    def hash
+        self.symbol.hash
+    end
+
+
     def lookup_instance_method(sym, loc, env)
         raise X::InternalSubclassResponsibility
     end
@@ -55,21 +71,10 @@ class Base < Abstract
     end
 
 
-    def ==(other)
-        other.kind_of?(Abstract) && self.symbol == other.symbol
-    end
-    alias eql? ==
-
-
     def <=>(other)
         ASSERT.kind_of other, Abstract
 
         self.symbol <=> other.symbol
-    end
-
-
-    def hash
-        self.symbol.hash
     end
 
 
@@ -201,6 +206,11 @@ class Meta < Abstract
         ASSERT.kind_of base_class_signat, Base
 
         @base_class_signat = base_class_signat
+    end
+
+
+    def symbol
+        :Class
     end
 
 

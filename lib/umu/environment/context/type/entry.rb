@@ -326,10 +326,7 @@ class Entry
         lhs_signat = self.class_signat_of lhs_value
         ASSERT.kind_of lhs_signat, ECTSC::Abstract
 
-        result = (
-                    lhs_signat.kind_of? ECTSC::Base
-                ) && (
-                    if lhs_signat == rhs_signat
+        result = if lhs_signat == rhs_signat
                         true
                     else
                         rhs_signats = self.descendants_of rhs_signat
@@ -337,7 +334,6 @@ class Entry
 
                         rhs_signats.member? lhs_signat
                     end
-                )
         ASSERT.bool result
     end
 

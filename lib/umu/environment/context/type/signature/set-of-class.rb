@@ -37,7 +37,7 @@ class SetOfClass < Abstraction::Collection
 
 
     def member?(signat)
-        ASSERT.kind_of signat, ECTSC::Base
+        ASSERT.kind_of signat, ECTSC::Abstract
 
         self.hash.has_key? signat
     end

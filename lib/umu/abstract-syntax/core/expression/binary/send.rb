@@ -270,6 +270,16 @@ class Basic < Abstraction::Abstract
                 next_receiver = receiver.invoke(
                     method_signat, self.loc, env, event, *arg_values
                 )
+=begin
+                unless env.ty_kind_of?(
+                    next_receiver, method_signat.ret_class_signat
+                )
+                    pp({
+                        next_receiver: next_receiver,
+                        method_signat: method_signat
+                    })
+                end
+=end
                 ASSERT.assert env.ty_kind_of?(
                     next_receiver, method_signat.ret_class_signat
                 )
