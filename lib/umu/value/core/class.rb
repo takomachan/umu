@@ -9,7 +9,7 @@ module Value
 
 module Core
 
-class Class < Object
+class Class < Top
     attr_reader :class_signat
 
 
