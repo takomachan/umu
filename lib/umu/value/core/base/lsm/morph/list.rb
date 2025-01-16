@@ -95,6 +95,13 @@ class Abstract < Morph::Abstract
 
 
     define_instance_method(
+        :meth_reject,
+        :reject, [],
+        [VC::Fun], self
+    )
+
+
+    define_instance_method(
         :meth_append,
         :'++', [],
         [VCBLM::Abstract], self
@@ -155,18 +162,6 @@ class Nil < Abstract
     def dest!
         raise ::StopIteration
     end
-
-
-    define_instance_method(
-        :meth_contents,
-        :contents, [],
-        [], VC::Unit
-    )
-
-
-    def contents
-        VC.make_unit
-    end
 end
 Nil.freeze
 
@@ -220,6 +215,7 @@ class Cons < Abstract
     def dest!
         VC.make_tuple [self.head, self.tail]
     end
+    alias contents dest!
 
 
     define_instance_method(

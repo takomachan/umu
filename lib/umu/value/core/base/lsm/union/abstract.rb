@@ -27,11 +27,6 @@ class Abstract < LSM::Abstract
     end
 
 
-    def contents
-        VC.make_unit
-    end
-
-
     def meth_to_string(loc, env, event)
         VC.make_string(
             format("&%s %s",
@@ -43,16 +38,6 @@ class Abstract < LSM::Abstract
                     ).val
             )
         )
-    end
-
-
-    define_instance_method(
-        :meth_contents,
-        :contents, [],
-        [], VC::Top
-    )
-    def meth_contents(_loc, _env, _event)
-        self.contents
     end
 end
 Abstract.freeze

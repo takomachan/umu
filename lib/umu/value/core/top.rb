@@ -213,6 +213,21 @@ class Top < ::Object
     alias meth_to_string meth_inspect
 
 
+    def contents
+        VC.make_unit
+    end
+
+
+    define_instance_method(
+        :meth_contents,
+        :contents, [],
+        [], VC::Top
+    )
+    def meth_contents(_loc, _env, _event)
+        self.contents
+    end
+
+
     define_instance_method(
         :meth_equal,
         :'==', [],

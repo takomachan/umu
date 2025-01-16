@@ -23,7 +23,6 @@ class Abstract < LSM::Abstract
     * #meth_cons(loc, env, event, value : VC::Top) -> Morph::Abstract
     * #meth_is_empty(loc, env, event) -> VCBA::Bool
     * #dest! -> [VC::Top, Morph::Abstract]
-    * #contents -> VC::Top
 =end
 
 
@@ -119,16 +118,6 @@ class Abstract < LSM::Abstract
         else
             VC.make_some self.dest!
         end
-    end
-
-
-    def contents
-        raise X::InternalSubclassResponsibility
-    end
-
-
-    def meth_contents(_loc, _env, _event)
-        self.contents
     end
 
 

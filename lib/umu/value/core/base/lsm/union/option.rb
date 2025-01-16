@@ -55,13 +55,6 @@ class None < Abstract
     def meth_is_none(_loc, _env, _event)
         VC.make_true
     end
-
-
-    define_instance_method(
-        :meth_contents,
-        :contents, [],
-        [], VC::Unit
-    )
 end
 None.freeze
 

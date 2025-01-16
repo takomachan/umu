@@ -46,6 +46,7 @@ module Umu
     module Value
         module Core
             class Top < ::Object; end
+            class Unit < Top; end
             module Base
                 class Abstract < Top; end
                 module Atom

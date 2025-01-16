@@ -87,11 +87,6 @@ class Datum < Abstract
     def meth_tag(_loc, _env, _event)
         VC.make_symbol self.tag_sym
     end
-
-
-    def meth_contents(_loc, _env, _event)
-        self.contents
-    end
 end
 Datum.freeze
 

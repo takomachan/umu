@@ -415,6 +415,9 @@ structure Umu = struct {
         # to-s      : 'a -> String
         val to-s = &(to-s)
 
+        # val-of : 'a -> Top
+        fun val-of = x -> x.contents
+
         # (==)      : 'a -> 'b -> Bool
         fun (==) = x y -> x.== y
 
@@ -573,12 +576,6 @@ structure Umu = struct {
 
         # snd   : ('a, 'b) -> 'b
         fun snd = (_, s) -> s
-
-
-        #### Union ####
-
-        # val-of : Union 'a -> Top
-        fun val-of = x : Union -> x.contents
 
 
         #### Datum ####
