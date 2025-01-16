@@ -48,9 +48,8 @@ module Umu
             class Top < ::Object; end
             class Unit < Top; end
             module Base
-                class Abstract < Top; end
                 module Atom
-                    class Abstract < Base::Abstract; end
+                    class Abstract < Top; end
                     class Bool < Abstract; end
                     module Number
                         class Abstract < Atom::Abstract; end
@@ -60,19 +59,18 @@ module Umu
                     class String < Abstract; end
                 end
                 module LSM
-                    class Abstract < Base::Abstract; end
                     module Product
-                        class Abstract < LSM::Abstract; end
+                        class Abstract < Top; end
                         class Tuple < Abstract; end
                     end
                     module Union
-                        class Abstract < LSM::Abstract; end
+                        class Abstract < Top; end
                         module Option
                             class Abstract < Union::Abstract; end
                         end
                     end
                     module Morph
-                        class Abstract < LSM::Abstract; end
+                        class Abstract < Top; end
                         class Interval < Abstract; end
                         module List
                             class Abstract < Morph::Abstract; end

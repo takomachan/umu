@@ -106,7 +106,7 @@ class Abstract < Atom::Abstract
 
     define_instance_method(
         :meth_to_float,
-        :'to-r', [],
+        :'to-f', [],
         [], VCBAN::Float
     )
     def meth_to_float(_loc, _env, _event)

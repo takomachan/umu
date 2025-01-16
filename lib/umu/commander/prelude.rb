@@ -483,8 +483,8 @@ structure Umu = struct {
         # to-i          : Number -> Int
         val to-i = &(Number.to-i)
 
-        # to-r          : Number -> Float
-        val to-r = &(Number.to-r)
+        # to-f          : Number -> Float
+        val to-f = &(Number.to-f)
 
         # (+)           : 'a -> 'a -> 'a        where { 'a <- Number }
         fun (+) = (x : Number) (y : Number) -> x.+ y

@@ -15,7 +15,7 @@ module LSM
 
 module Product
 
-class Abstract < LSM::Abstract
+class Abstract < Top
     include Enumerable
 
     attr_reader :objs

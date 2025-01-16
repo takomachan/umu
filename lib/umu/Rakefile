@@ -144,7 +144,6 @@ FILES = [
     'value/core/base/atom/string.rb',
     'value/core/base/atom/symbol.rb',
     'value/core/base/lsm.rb',
-    'value/core/base/lsm/abstract.rb',
     'value/core/base/lsm/product.rb',
     'value/core/base/lsm/product/abstract.rb',
     'value/core/base/lsm/product/tuple.rb',
