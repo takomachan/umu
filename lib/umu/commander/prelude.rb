@@ -472,14 +472,17 @@ structure Umu = struct {
 
         #### Number ####
 
+        #   zero        : Number -> Number
+        val zero = &(Number.zero)
+
+        #   zero?       : Number -> Bool
+        val zero? = &(Number.zero?)
+
         #   positive?   : Number -> Bool
         val positive? = &(Number.positive?)
 
         #   negative?   : Number -> Bool
         val negative? = &(Number.negative?)
-
-        #   zero?       : Number -> Bool
-        val zero? = &(Number.zero?)
 
         #   odd?        : Int -> Bool
         val odd? = &(Int.odd?)
@@ -498,6 +501,12 @@ structure Umu = struct {
 
         # to-f          : Number -> Float
         val to-f = &(Number.to-f)
+
+        # succ          : Number -> Number
+        val succ = &(Number.succ)
+
+        # pred          : Number -> Number
+        val pred = &(Number.pred)
 
         # (+)           : 'a -> 'a -> 'a        where { 'a <- Number }
         fun (+) = (x : Number) (y : Number) -> x.+ y

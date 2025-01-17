@@ -35,6 +35,26 @@ class Abstract < Atom::Abstract
 
 
     define_instance_method(
+        :meth_zero,
+        :zero, [],
+        [], self
+    )
+    def meth_zero(_loc, _env, _event)
+        raise X::InternalSubclassResponsibility
+    end
+
+
+    define_instance_method(
+        :meth_is_zero,
+        :zero?, [],
+        [], VCBA::Bool
+    )
+    def meth_is_zero(_loc, _env, _event)
+        VC.make_bool self.val.zero?
+    end
+
+
+    define_instance_method(
         :meth_is_positive,
         :positive?, [],
         [], VCBA::Bool
@@ -55,26 +75,6 @@ class Abstract < Atom::Abstract
 
 
     define_instance_method(
-        :meth_is_zero,
-        :zero?, [],
-        [], VCBA::Bool
-    )
-    def meth_is_zero(_loc, _env, _event)
-        VC.make_bool self.val.zero?
-    end
-
-
-    define_instance_method(
-        :meth_zero,
-        :zero, [],
-        [], VCBAN::Abstract
-    )
-    def meth_zero(_loc, _env, _event)
-        raise X::InternalSubclassResponsibility
-    end
-
-
-    define_instance_method(
         :meth_negate,
         :negate, [],
         [], self
@@ -86,7 +86,7 @@ class Abstract < Atom::Abstract
 
     define_instance_method(
         :meth_absolute,
-        :absolute, [],
+        :abs, [],
         [], self
     )
     def meth_absolute(_loc, _env, _event)
@@ -130,6 +130,16 @@ class Abstract < Atom::Abstract
         [], VCBAN::Abstract
     )
     def meth_succ(_loc, _env, _event)
+        raise X::InternalSubclassResponsibility
+    end
+
+
+    define_instance_method(
+        :meth_pred,
+        :pred, [],
+        [], VCBAN::Abstract
+    )
+    def meth_pred(_loc, _env, _event)
         raise X::InternalSubclassResponsibility
     end
 

@@ -24,6 +24,16 @@ class Int < Abstract
 
 
     define_instance_method(
+        :meth_zero,
+        :zero, [],
+        [], self
+    )
+    def meth_zero(_loc, _env, _event)
+        VC.make_integer 0
+    end
+
+
+    define_instance_method(
         :meth_is_odd,
         :odd?, [],
         [], VCBA::Bool
@@ -43,11 +53,6 @@ class Int < Abstract
     end
 
 
-    def meth_zero(_loc, _env, _event)
-        VC.make_integer 0
-    end
-
-
     define_instance_method(
         :meth_negate,
         :negate, [],
@@ -62,8 +67,23 @@ class Int < Abstract
     )
 
 
+    define_instance_method(
+        :meth_succ,
+        :succ, [],
+        [], self
+    )
     def meth_succ(_loc, _env, _event)
         VC.make_integer(self.val.succ)
+    end
+
+
+    define_instance_method(
+        :meth_pred,
+        :pred, [],
+        [], self
+    )
+    def meth_pred(_loc, _env, _event)
+        VC.make_integer(self.val.pred)
     end
 
 
