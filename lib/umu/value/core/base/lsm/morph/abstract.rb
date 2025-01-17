@@ -202,18 +202,124 @@ class Abstract < Object
 
 
     define_instance_method(
+        :meth_sum,
+        :sum, [],
+        [], VCBAN::Abstract
+    )
+    def meth_sum(loc, env, event)
+        if self.meth_is_empty(loc, env, event).true?
+            raise X::EmptyError.new loc, env, "sum: Empty morph"
+        end
+
+        head = self.meth_head loc, env, event
+        unless head.kind_of? VCBAN::Abstract
+            raise X::TypeError.new(
+                loc,
+                env,
+                "sum: expected a Number, but %s : %s",
+                head.to_s,
+                head.type_sym.to_s
+            )
+        end
+        zero = head.meth_zero loc, env, event
+        zero_class_signat = env.ty_class_signat_of zero
+
+        self.inject(zero) { |sum, x|
+            unless env.ty_kind_of?(x, zero_class_signat)
+                raise X::TypeError.new(
+                    loc,
+                    env,
+                    "sum: expected a %s, but %s : %s",
+                    zero_class_signat.symbol.to_s,
+                    x.to_s,
+                    x.type_sym.to_s
+                )
+            end
+
+            sum.meth_add loc, env, event, x
+        }
+    end
+
+
+    define_instance_method(
+        :meth_avg,
+        :avg, [],
+        [], VCBAN::Abstract
+    )
+    def meth_avg(loc, env, event)
+        if self.meth_is_empty(loc, env, event).true?
+            raise X::EmptyError.new loc, env, "avg: Empty morph"
+        end
+
+        head = self.meth_head loc, env, event
+        unless head.kind_of? VCBAN::Abstract
+            raise X::TypeError.new(
+                loc,
+                env,
+                "avg: expected a Number, but %s : %s",
+                head.to_s,
+                head.type_sym.to_s
+            )
+        end
+        zero = head.meth_zero loc, env, event
+        zero_class_signat = env.ty_class_signat_of zero
+
+        va_sum, va_count = self.inject([zero, zero]) { |(sum, count), x|
+            unless env.ty_kind_of?(x, zero_class_signat)
+                raise X::TypeError.new(
+                    loc,
+                    env,
+                    "avg: expected a %s, but %s : %s",
+                    zero_class_signat.symbol.to_s,
+                    x.to_s,
+                    x.type_sym.to_s
+                )
+            end
+
+            [
+                sum.meth_add(loc, env, event, x),
+                count.meth_succ(loc, env, event)
+            ]
+        }
+
+        va_sum.meth_divide(loc, env, event, va_count)
+    end
+
+
+    define_instance_method(
         :meth_max,
         :max, [],
-        [], VCBAN::Int
+        [], VCBAN::Abstract
     )
     def meth_max(loc, env, event)
         if self.meth_is_empty(loc, env, event).true?
             raise X::EmptyError.new loc, env, "max: Empty morph"
         end
 
-        self.meth_tail(loc, env, event).inject(
-            self.meth_head(loc, env, event)
-        ) { |x, y|
+        head = self.meth_head loc, env, event
+        unless head.kind_of? VCBAN::Abstract
+            raise X::TypeError.new(
+                loc,
+                env,
+                "max: expected a Number, but %s : %s",
+                head.to_s,
+                head.type_sym.to_s
+            )
+        end
+        head_class_signat = env.ty_class_signat_of head
+
+        self.meth_tail(loc, env, event).inject(head) { |x, y|
+            unless env.ty_kind_of?(y, head_class_signat)
+                raise X::TypeError.new(
+                    loc,
+                    env,
+                    "max: expected a %s, but %s : %s",
+                    head_class_signat.symbol.to_s,
+                    y.to_s,
+                    y.type_sym.to_s
+                )
+            end
+
             if y.meth_less_than(loc, env, event, x).true?
                 x
             else
@@ -226,16 +332,37 @@ class Abstract < Object
     define_instance_method(
         :meth_min,
         :min, [],
-        [], VCBAN::Int
+        [], VCBAN::Abstract
     )
     def meth_min(loc, env, event)
         if self.meth_is_empty(loc, env, event).true?
             raise X::EmptyError.new loc, env, "min: Empty morph"
         end
 
-        self.meth_tail(loc, env, event).inject(
-            self.meth_head(loc, env, event)
-        ) { |x, y|
+        head = self.meth_head loc, env, event
+        unless head.kind_of? VCBAN::Abstract
+            raise X::TypeError.new(
+                loc,
+                env,
+                "min: expected a Number, but %s : %s",
+                head.to_s,
+                head.type_sym.to_s
+            )
+        end
+        head_class_signat = env.ty_class_signat_of head
+
+        self.meth_tail(loc, env, event).inject(head) { |x, y|
+            unless env.ty_kind_of?(y, head_class_signat)
+                raise X::TypeError.new(
+                    loc,
+                    env,
+                    "min: expected a %s, but %s : %s",
+                    head_class_signat.symbol.to_s,
+                    y.to_s,
+                    y.type_sym.to_s
+                )
+            end
+
             if x.meth_less_than(loc, env, event, y).true?
                 x
             else

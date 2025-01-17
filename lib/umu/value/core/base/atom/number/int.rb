@@ -43,6 +43,11 @@ class Int < Abstract
     end
 
 
+    def meth_zero(_loc, _env, _event)
+        VC.make_integer 0
+    end
+
+
     define_instance_method(
         :meth_negate,
         :negate, [],
@@ -55,6 +60,11 @@ class Int < Abstract
         :abs, [],
         [], self
     )
+
+
+    def meth_succ(_loc, _env, _event)
+        VC.make_integer(self.val.succ)
+    end
 
 
     def meth_to_int(_loc, _env, _event)

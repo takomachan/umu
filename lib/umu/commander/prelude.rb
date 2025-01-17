@@ -264,7 +264,15 @@ structure Umu = struct {
         fun count = xs : Morph -> xs.count
 
 
-        # max : %['a] -> 'a
+        # sum : %['a] -> 'a  where { 'a <- Number }
+        fun sum = xs : Morph -> xs.sum
+
+
+        # avg : %['a] -> 'a  where { 'a <- Number }
+        fun avg = xs : Morph -> xs.avg
+
+
+        # max : %['a] -> 'a  where { 'a <- Number }
         (#
         fun max = xs : Morph -> case xs of {
         [init|xs'] -> xs'.foldl init { x y -> if y.< x then x else y }
@@ -274,7 +282,7 @@ structure Umu = struct {
         fun max = xs : Morph -> xs.max
 
 
-        # min : %['a] -> 'a
+        # min : %['a] -> 'a  where { 'a <- Number }
         (#
         fun min = xs : Morph -> case xs of {
         [init|xs'] -> xs'.foldl init { x y -> if x.< y then x else y }
@@ -643,26 +651,26 @@ structure Umu = struct {
         # length    : %['a] -> Int
         val length = Morph::count
 
-        # max : %['a] -> 'a
+        # sum       : %['a] -> 'a  where { 'a <- Number }
+        val sum = Morph::sum
+
+        # avg       : %['a] -> 'a  where { 'a <- Number }
+        val avg = Morph::avg
+
+        # max       : %['a] -> 'a  where { 'a <- Number }
         val max = Morph::max
 
-        # min : %['a] -> 'a
+        # min       : %['a] -> 'a  where { 'a <- Number }
         val min = Morph::min
 
-        # all? : ('a -> Bool) -> %['a] -> Bool
+        # all?      : ('a -> Bool) -> %['a] -> Bool
         val all? = Morph::all?
 
-        # any? : ('a -> Bool) -> %['a] -> Bool
+        # any?      : ('a -> Bool) -> %['a] -> Bool
         val any? = Morph::any?
 
-        # include? : 'a -> %['a] -> Bool
+        # include?  : 'a -> %['a] -> Bool
         val include? = Morph::include?
-
-        # max       : %['a] -> 'a
-        val max = Morph::max
-
-        # min       : %['a] -> 'a
-        val min = Morph::min
 
         # reverse   : %['a] -> ['a]
         val reverse = Morph::reverse

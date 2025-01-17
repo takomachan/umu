@@ -89,6 +89,11 @@ class Float < Abstract
     )
 
 
+    def meth_zero(_loc, _env, _event)
+        VC.make_float 0.0
+    end
+
+
     define_instance_method(
         :meth_negate,
         :negate, [],
@@ -98,6 +103,11 @@ class Float < Abstract
 
     def meth_to_float(_loc, _env, _event)
         self
+    end
+
+
+    def meth_succ(_loc, _env, _event)
+        VC.make_float(self.val + 1.0)
     end
 
 

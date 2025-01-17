@@ -65,6 +65,16 @@ class Abstract < Atom::Abstract
 
 
     define_instance_method(
+        :meth_zero,
+        :zero, [],
+        [], VCBAN::Abstract
+    )
+    def meth_zero(_loc, _env, _event)
+        raise X::InternalSubclassResponsibility
+    end
+
+
+    define_instance_method(
         :meth_negate,
         :negate, [],
         [], self
@@ -111,6 +121,16 @@ class Abstract < Atom::Abstract
     )
     def meth_to_float(_loc, _env, _event)
         VC.make_float self.val.to_f
+    end
+
+
+    define_instance_method(
+        :meth_succ,
+        :succ, [],
+        [], VCBAN::Abstract
+    )
+    def meth_succ(_loc, _env, _event)
+        raise X::InternalSubclassResponsibility
     end
 
 
