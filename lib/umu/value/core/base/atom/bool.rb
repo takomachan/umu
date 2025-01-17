@@ -63,7 +63,7 @@ class Bool < Abstract
             if self.val
                 ! other.val
             else
-                FALSE
+                false
             end
         )
     end
