@@ -21,9 +21,9 @@ RESERVED_WORDS = [
     '__FILE__',     '__LINE__',
     'and',          'assert',
     'case',         'cond',
-    'do',
+    'delay',        'do',
     'else',         'elsif',
-    'fun',
+    'force',        'fun',
     'if',           'import',           'in',
     'kind-of?',
     'let',
@@ -64,7 +64,7 @@ RESERVED_WORDS = [
     'peek', 'poke', 'ref',
 
     # For lazy evaluation
-    'delay', 'force', 'lazy',
+    'lazy',
 
     # For non-determinism
     'none', 'or'
