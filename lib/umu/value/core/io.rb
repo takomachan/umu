@@ -9,7 +9,9 @@ module Value
 
 module Core
 
-class IO < Object
+module IO
+
+class Abstract < Object
     define_class_method(
         :meth_make_stdin,
         :stdin, [],
@@ -55,8 +57,12 @@ class IO < Object
     def to_s
         self.io.inspect
     end
+end
+Abstract.freeze
 
 
+
+class Input  < Abstract
     define_instance_method(
         :meth_get_string,
         :gets, [],
@@ -71,8 +77,12 @@ class IO < Object
             VC.make_none
         end
     end
+end
+Input.freeze
 
 
+
+class Output < Abstract
     define_instance_method(
         :meth_put_string,
         :puts, [],
@@ -100,27 +110,30 @@ class IO < Object
         VC.make_unit
     end
 end
-IO.freeze
+Output.freeze
 
-STDIN   = IO.new(::STDIN).freeze
-STDOUT  = IO.new(::STDOUT).freeze
-STDERR  = IO.new(::STDERR).freeze
+STDIN   = Input.new(::STDIN).freeze
+STDOUT  = Output.new(::STDOUT).freeze
+STDERR  = Output.new(::STDERR).freeze
+
+end # Umu::Value::Core::IO
+
 
 
 module_function
 
     def make_stdin
-        STDIN
+        IO::STDIN
     end
 
 
     def make_stdout
-        STDOUT
+        IO::STDOUT
     end
 
 
     def make_stderr
-        STDERR
+        IO::STDERR
     end
 
 end # Umu::Value::Core
