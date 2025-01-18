@@ -440,6 +440,19 @@ structure Umu = struct {
 
 
 
+    ######## List ########
+
+    structure List = struct {
+        # unfoldr : 'b -> ('b -> Option ('a, 'b)) -> ['a]
+        fun unfoldr = x (f : Fun) -> &List.unfoldr x f
+
+
+        # unfoldl : 'b -> ('b -> Option ('a, 'b)) -> ['a]
+        fun unfoldl = x (f : Fun) -> &List.unfoldl x f
+    }
+
+
+
     ######## String ########
 
     structure String = struct {
@@ -792,6 +805,15 @@ structure Umu = struct {
 
         # sort-with : ('a -> Int) -> %['a] -> %['a]
         val sort-with = Morph::sort-with
+
+
+        #### List ####
+
+        # unfoldr : 'b -> ('b -> Option ('a, 'b)) -> ['a]
+        val unfoldr = List::unfoldr
+
+        # unfoldl : 'b -> ('b -> Option ('a, 'b)) -> ['a]
+        val unfoldl = List::unfoldl
 
 
         #### High order Function ####

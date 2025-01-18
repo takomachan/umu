@@ -41,6 +41,118 @@ class Abstract < Object
     end
 
 
+=begin
+    HOW TO USE: unfoldr
+
+    * Same to: [1 .. 5].to-list
+
+        > &List.unfoldr 1 { x -> if x <= 5 then Some (x, x + 1) else NONE }
+        val it : Cons = [1, 2, 3, 4, 5]
+
+    * Same to: [1, 2, 3].map to-s
+
+        > &List.unfoldr [1, 2, 3] { xs ->
+        *     case xs of {
+        *       [x|xs'] -> Some (x.to-s, xs')
+        *       else    -> NONE
+        *     }
+        * }
+        val it : Cons = ["1", "2", "3"]
+
+    * Same to: STDIN.each-line.to-list
+
+        > &List.unfoldr STDIN { io ->
+        *     case io.gets of {
+        *       &Some s -> Some (s, io)
+        *       else    -> NONE
+        *     }
+        * }
+        a
+        b
+        c
+        [Ctrl]+[D]
+        val it : Cons = ["a", "b", "c"]
+=end
+    define_class_method(
+        :meth_unfoldr,
+        :unfoldr, [],
+        [VC::Top, VC::Fun], self
+    )
+    def self.meth_unfoldr(loc, env, event, x, func)
+        ASSERT.kind_of x,    VC::Top
+        ASSERT.kind_of func, VC::Fun
+
+        result = self.meth_unfoldl(loc, env, event, x, func)
+                     .meth_reverse(loc, env, event)
+
+        ASSERT.kind_of result, VC::Top
+    end
+
+
+    define_class_method(
+        :meth_unfoldl,
+        :unfoldl, [],
+        [VC::Top, VC::Fun], self
+    )
+    def self.meth_unfoldl(loc, env, event, x, func)
+        ASSERT.kind_of x,    VC::Top
+        ASSERT.kind_of func, VC::Fun
+
+        _, result = loop.inject(
+            [x, self.meth_make_empty(loc, env, event)]
+        ) { |(x1, ys), _|
+            value = func.apply x1, [], loc, env.enter(event)
+            ASSERT.kind_of value, VC::Top
+
+            unless value.kind_of? VCBLU::Option::Abstract
+                raise X::TypeError.new(
+                    loc,
+                    env,
+                    "Expected a Option, but %s : %s",
+                    value.to_s,
+                    value.type_sym.to_s
+                )
+            end
+
+            case value
+            when VCBLU::Option::None
+                break [x1, ys]
+            when VCBLU::Option::Some
+                tuple = value.contents
+                ASSERT.kind_of tuple, VC::Top
+
+                unless tuple.kind_of? VCBLP::Tuple
+                    raise X::TypeError.new(
+                        loc,
+                        env,
+                        "Expected a Tuple, but %s : %s",
+                        tuple.to_s,
+                        tuple.type_sym.to_s
+                    )
+                end
+
+                tup_vals = tuple.values
+                unless tup_vals.size == 2
+                    raise X::TypeError.new(
+                        loc,
+                        env,
+                        "Expected arity of the tuple is 2, but %s",
+                        tuple.to_s
+                    )
+                end
+
+                x2, next_x = tup_vals
+
+                [next_x, ys.meth_cons(loc, env, event, x2)]
+            else
+                ASSERT.abort "No case"
+            end
+        }
+
+        ASSERT.kind_of result, VC::Top
+    end
+
+
     include Enumerable
 
 
@@ -185,6 +297,22 @@ class Abstract < Object
 
         result_value = self.inject(init) { |acc, x|
             func.apply x, [acc], loc, new_env
+        }
+
+        ASSERT.kind_of result_value, VC::Top
+    end
+
+
+    define_instance_method(
+        :meth_reverse,
+        :reverse, [],
+        [], self
+    )
+    def meth_reverse(loc, env, event)
+        result_value = self.inject(
+            self.class.meth_make_empty(loc, env, event)
+        ) { |ys, x|
+            ys.meth_cons(loc, env, event, x)
         }
 
         ASSERT.kind_of result_value, VC::Top
