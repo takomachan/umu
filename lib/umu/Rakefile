@@ -159,6 +159,7 @@ FILES = [
     'value/core/base/lsm/morph/interval.rb',
     'value/core/base/lsm/morph/list.rb',
     'value/core/function.rb',
+    'value/core/file.rb',
     'value/core/io.rb',
     'value/core/struct.rb',
     'environment.rb',

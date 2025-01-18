@@ -80,6 +80,11 @@ module Umu
                 end
             end
             class Fun < Object; end
+            module IO
+                class Abstract < Object; end
+                class Input  < Abstract; end
+                class Output < Abstract; end
+            end
         end
     end
     module Environment

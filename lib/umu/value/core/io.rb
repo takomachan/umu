@@ -12,36 +12,6 @@ module Core
 module IO
 
 class Abstract < Object
-    define_class_method(
-        :meth_make_stdin,
-        :stdin, [],
-        [], self
-    )
-    def self.meth_make_stdin(_loc, _env, _event)
-        VC.make_stdin
-    end
-
-
-    define_class_method(
-        :meth_make_stdout,
-        :stdout, [],
-        [], self
-    )
-    def self.meth_make_stdout(_loc, _env, _event)
-        VC.make_stdout
-    end
-
-
-    define_class_method(
-        :meth_make_stderr,
-        :stderr, [],
-        [], self
-    )
-    def self.meth_make_stderr(_loc, _env, _event)
-        VC.make_stderr
-    end
-
-
     attr_reader :io
 
 
@@ -64,6 +34,18 @@ Abstract.freeze
 
 class Input  < Abstract
     define_instance_method(
+        :meth_seen,
+        :seen, [],
+        [], VC::Unit
+    )
+    def meth_seen(_loc, _env, _event)
+        self.io.close unless self.io.tty?
+
+        VC.make_unit
+    end
+
+
+    define_instance_method(
         :meth_get_string,
         :gets, [],
         [], VCBLU::Option::Abstract
@@ -84,14 +66,38 @@ Input.freeze
 
 class Output < Abstract
     define_instance_method(
+        :meth_told,
+        :told, [],
+        [], VC::Unit
+    )
+    def meth_told(_loc, _env, _event)
+        self.io.close unless self.io.tty?
+
+        VC.make_unit
+    end
+
+
+    define_instance_method(
         :meth_put_string,
         :puts, [],
         [VCBA::String], VC::Unit
     )
-    def meth_put_string(_loc, _env, event, value)
+    def meth_put_string(_loc, _env, _event, value)
         ASSERT.kind_of value, VCBA::String
 
         self.io.print value.val
+
+        VC.make_unit
+    end
+
+
+    define_instance_method(
+        :meth_flush,
+        :flush, [],
+        [], VC::Unit
+    )
+    def meth_flush(_loc, _env, _event)
+        self.io.flush
 
         VC.make_unit
     end
@@ -112,28 +118,23 @@ class Output < Abstract
 end
 Output.freeze
 
-STDIN   = Input.new(::STDIN).freeze
-STDOUT  = Output.new(::STDOUT).freeze
-STDERR  = Output.new(::STDERR).freeze
-
 end # Umu::Value::Core::IO
 
 
 
 module_function
 
-    def make_stdin
-        IO::STDIN
+    def make_input(io)
+        ASSERT.kind_of io, ::IO
+
+        IO::Input.new(io).freeze
     end
 
 
-    def make_stdout
-        IO::STDOUT
-    end
+    def make_output(io)
+        ASSERT.kind_of io, ::IO
 
-
-    def make_stderr
-        IO::STDERR
+        IO::Output.new(io).freeze
     end
 
 end # Umu::Value::Core

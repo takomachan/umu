@@ -144,41 +144,90 @@ structure Umu = struct {
     #### I/O ####
 
     structure IO = struct {
-        val STDIN  = &IO.stdin
-        val STDOUT = &IO.stdout
-        val STDERR = &IO.stderr
+        val STDIN  : Input  = &File.stdin
+        val STDOUT : Output = &File.stdout
+        val STDERR : Output = &File.stderr
+
+
+        # see : String -> Input
+        fun see = file-path : String -> &File.see file-path
+
+        # seen : Input -> ()
+        fun seen = io : Input -> io.seen
+
+        # see-with : String -> Fun -> ()
+        fun see-with = (file-path : String) (f : Fun) ->
+             &File.see-with file-path f
+
+
+        # tell : String -> Output
+        fun tell = file-path : String -> &File.tell file-path
+
+        # told : Output -> ()
+        fun told = io : Output -> io.told
+
+        # tell-with : String -> Fun -> ()
+        fun tell-with = (file-path : String) (f : Fun) ->
+             &File.tell-with file-path f
+
 
         # gets : () -> Option String 
         fun gets = () -> STDIN.gets
 
+        # fgets : Input -> Option String 
+        fun fgets = io : Input -> io.gets
+
         # puts : String -> ()
-        fun puts = x -> STDOUT.puts x
+        fun puts = (s : String) -> STDOUT.puts s
+
+        # fputs : Output -> String -> ()
+        fun fputs = (io : Output) (s : String) -> io.puts s
+
+        # flush : Output -> ()
+        fun flush = (io : Output) -> io.flush
 
         # display : 'a -> ()
-        fun display = x -> STDOUT.puts (x.to-s)
+        fun display = x -> do (
+            ! STDOUT.puts (x.to-s)
+            ! STDOUT.flush
+        )
 
         # tab : Int -> ()
         fun rec tab = n ->
-            if 0.< n then do (
-                ! STDOUT.puts " "
-                ! tab (n.- 1)
-            ) else
+            if 0.< n then
+                do (
+                    ! [1 .. n].for-each { _ -> STDOUT.puts " " }
+                    ! STDOUT.flush
+                )
+            else
                 ()
 
         # nl : () -> ()
-        fun nl = () -> STDOUT.puts "\n"
+        fun nl = () -> do (
+            ! STDOUT.puts "\n"
+            ! STDOUT.flush
+        )
 
         # print : 'a -> ()
-        fun print = x -> STDOUT.puts (x.to-s.^ "\n")
+        fun print = x -> do (
+            ! STDOUT.puts (x.to-s.^ "\n")
+            ! STDOUT.flush
+        )
 
         # p : 'a -> ()
-        fun p = x -> STDOUT.puts (x.show.^ "\n")
+        fun p = x -> do (
+            ! STDOUT.puts (x.show.^ "\n")
+            ! STDOUT.flush
+        )
 
         # pp : 'a -> ()
         fun pp = x -> STDOUT.pp x
 
         # msgout : 'a -> ()
-        fun msgout = x -> STDERR.puts (x.to-s.^ "\n")
+        fun msgout = x -> do (
+            ! STDERR.puts (x.to-s.^ "\n")
+            ! STDERR.flush
+        )
 
         # random : 'a -> 'a where { 'a <- Number }
         fun random = x : Number -> x.random
@@ -563,28 +612,58 @@ structure Umu = struct {
         val STDOUT = IO::STDOUT
         val STDERR = IO::STDERR
 
-        # gets      : () -> Option String 
+
+        # see      : String -> Input
+        val see = IO::see
+
+        # seen     : Input -> ()
+        val seen = IO::seen
+
+        # see-with : String -> Fun -> ()
+        val see-with = IO::see-with
+
+
+        # tell      : String -> Output
+        val tell = IO::tell
+
+        # told      : Output -> ()
+        val told = IO::told
+
+        # tell-with : String -> Fun -> ()
+        val tell-with = IO::tell-with
+
+
+        # gets    : () -> Option String 
         val gets = IO::gets
 
-        # puts      : 'a -> ()
+        # fgets   : Input -> Option String 
+        val fgets = IO::fgets
+
+        # puts    : String -> ()
         val puts = IO::puts
 
-        # display   : 'a -> ()
+        # fputs   : Output -> String -> ()
+        val fputs = IO::fputs
+
+        # flush : Output -> ()
+        val flush = IO::flush
+
+        # display : 'a -> ()
         val display = IO::display
 
-        # tab       : Int -> ()
+        # tab     : Int -> ()
         val tab = IO::tab
 
-        # nl        : () -> ()
+        # nl      : () -> ()
         val nl = IO::nl
 
-        # print     : 'a -> ()
+        # print   : 'a -> ()
         val print = IO::print
 
-        # p         : 'a -> ()
+        # p       : 'a -> ()
         val p = IO::p
 
-        # pp        : 'a -> ()
+        # pp      : 'a -> ()
         val pp = IO::pp
 
 
