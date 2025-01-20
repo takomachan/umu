@@ -456,9 +456,9 @@ class Abstract < Object
         zero = head.meth_zero loc, env, event
         zero_class_signat = env.ty_class_signat_of zero
 
-        va_sum, va_count = self.foldl(
-             loc,     env,     event, [zero, zero]
-        ) { |new_loc, new_env, x,     (sum,  count)|
+        result_opaque = self.foldl(
+             loc,     env,     event, VC.make_opaque([zero, zero])
+        ) { |new_loc, new_env, x,     opaque|
 
             unless env.ty_kind_of?(x, zero_class_signat)
                 raise X::TypeError.new(
@@ -471,13 +471,19 @@ class Abstract < Object
                 )
             end
 
-            [
-                sum.meth_add(loc, env, event, x),
-                count.meth_succ(loc, env, event)
-            ]
+            va_sum, va_count = opaque.obj
+
+            VC.make_opaque(
+                [
+                    va_sum.meth_add(loc, env, event, x),
+                    va_count.meth_succ(loc, env, event)
+                ]
+            )
         }
 
-        va_sum.meth_divide(loc, env, event, va_count)
+        res_sum, res_count = result_opaque.obj
+
+        res_sum.meth_divide(loc, env, event, res_count)
     end
 
 
