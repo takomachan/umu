@@ -58,7 +58,7 @@ end
 
 
 
-class Entry < Object
+class Entry < Top
     TYPE_SYM = :Struct
 
     include Enumerable
