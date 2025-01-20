@@ -355,7 +355,7 @@ structure Umu = struct {
 
         # reverse : %['a] -> %['a]
         # val reverse = foldl [] cons
-        fun reverse = xs : Morph -> xs.foldl [] cons
+        fun reverse = xs : Morph -> xs.reverse
 
 
         # for-each : ('a -> 'b) -> %['a] -> ()

@@ -196,6 +196,9 @@ class Int < Abstract
 end
 Int.freeze
 
+ZERO = Int.new(0).freeze
+ONE  = Int.new(1).freeze
+
 end # Umu::Value::Core::Atom::Base::Number
 
 end # Umu::Value::Core::Atom::Base
@@ -212,8 +215,13 @@ module_function
     end
 
 
+    def make_integer_zero
+        Base::Atom::Number::ZERO
+    end
+
+
     def make_integer_one
-        Base::Atom::Number::Int.new(1).freeze
+        Base::Atom::Number::ONE
     end
 
 end # Umu::Value::Core

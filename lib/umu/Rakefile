@@ -167,6 +167,7 @@ FILES = [
     'value/core/file.rb',
     'value/core/io.rb',
     'value/core/struct.rb',
+    'value/core/opaque.rb',
     'environment.rb',
     'environment/preference.rb',
     'environment/tracer.rb',
