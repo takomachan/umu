@@ -75,6 +75,23 @@ class Interval < Abstract
     end
 
 
+    INDEX_BY_LABELS = {current: 0, stop: 1, step: 2}
+
+    define_instance_method(
+        :meth_contents,
+        :contents, [],
+        [], VCBLP::Named
+    )
+    def meth_contents(_loc, _env, _event)
+        VC.make_named_tuple(
+            INDEX_BY_LABELS, 
+            self.current_value,
+            self.stop_value,
+            self.step_value
+        )
+    end
+
+
     define_instance_method(
         :meth_cons,
         :cons, [],
@@ -97,7 +114,7 @@ class Interval < Abstract
     def dest!
         raise ::StopIteration if __empty__?
 
-        VC.make_tuple [
+        VC.make_tuple(
             self.current_value,
 
             VC.make_interval(
@@ -105,7 +122,7 @@ class Interval < Abstract
                 self.stop_value,
                 self.step_value
             )
-        ]
+        )
     end
 
 

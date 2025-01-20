@@ -136,7 +136,7 @@ class Cons < Abstract
 
 
     def dest!
-        VC.make_tuple [self.head, self.tail]
+        VC.make_tuple self.head, self.tail
     end
     alias contents dest!
 

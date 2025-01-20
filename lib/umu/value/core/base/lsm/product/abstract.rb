@@ -18,25 +18,38 @@ module Product
 class Abstract < Object
     include Enumerable
 
-    attr_reader :objs
+    attr_reader :fst_obj, :snd_obj, :tail_objs
 
 
-    def initialize(objs)
-        ASSERT.kind_of objs, ::Object
+    def initialize(fst_obj, snd_obj, tail_objs)
+        ASSERT.kind_of fst_obj,   ::Object
+        ASSERT.kind_of snd_obj,   ::Object
+        ASSERT.kind_of tail_objs, ::Array
 
         super()
 
-        @objs = objs
+        @fst_obj   = fst_obj
+        @snd_obj   = snd_obj
+        @tail_objs = tail_objs
+    end
+
+
+    def objs
+        [self.fst_obj, self.snd_obj] + self.tail_objs
     end
 
 
     def arity
-        self.objs.size
+        2 + self.tail_objs.size
     end
 
 
     def each
-        self.objs.each do |obj|
+        yield self.fst_obj
+
+        yield self.snd_obj
+
+        self.tail_objs.each do |obj|
             yield obj
         end
     end
@@ -46,15 +59,23 @@ class Abstract < Object
         ASSERT.kind_of sel_num,     ::Integer
         ASSERT.kind_of loc,         LOC::Entry
 
-        unless 1 <= sel_num && sel_num <= self.arity
-            raise X::SelectionError.new(
-                loc,
-                env,
-                "Selector expected 1..%d, but %d",
-                    self.arity, sel_num
-            )
-        end
-        value = self.values[sel_num - 1]
+        value = case sel_num
+            when 1
+                self.fst_obj
+            when 2
+                self.snd_obj
+            else
+                unless 3 <= sel_num && sel_num <= self.arity
+                    raise X::SelectionError.new(
+                        loc,
+                        env,
+                        "Selector expected 1..%d, but %d",
+                            self.arity, sel_num
+                    )
+                end
+
+                self.tail_objs[sel_num - 3]
+            end
 
         ASSERT.kind_of value, VC::Top
     end

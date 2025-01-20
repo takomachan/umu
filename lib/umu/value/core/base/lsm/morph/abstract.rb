@@ -964,7 +964,7 @@ class Abstract < Object
                     xs2,
                     ys2,
                     zs1.meth_cons(loc, env, event,
-                        VC.make_tuple([x, y])
+                        VC.make_tuple(x, y)
                     )
                 ]
             end
@@ -984,7 +984,7 @@ class Abstract < Object
     def meth_unzip(loc, env, event)
         result = self.foldr(
              loc,     env,     event,
-            VC.make_tuple([VC.make_nil, VC.make_nil])
+            VC.make_tuple(VC.make_nil, VC.make_nil)
         ) { |new_loc, new_env, y_z,     ys_zs|
 
             unless y_z.kind_of? VCBLP::Tuple
@@ -1012,10 +1012,8 @@ class Abstract < Object
             ys, zs = ys_zs.values
 
             VC.make_tuple(
-                [
-                    ys.meth_cons(loc, env, event, y),
-                    zs.meth_cons(loc, env, event, z),
-                ]
+                ys.meth_cons(loc, env, event, y),
+                zs.meth_cons(loc, env, event, z)
             )
         }
 
@@ -1132,7 +1130,7 @@ class Abstract < Object
             end
         }
 
-        VC.make_tuple result_opaque.obj
+        VC.make_tuple *(result_opaque.obj)
     end
 
 

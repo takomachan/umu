@@ -436,10 +436,8 @@ class Float < Abstract
         fract, expon = Math.frexp self.val
 
         VC.make_tuple(
-            [
-                VC.make_float(fract.to_f),
-                VC.make_integer(expon.to_i)
-            ]
+            VC.make_float(fract.to_f),
+            VC.make_integer(expon.to_i)
         )
     end
 
@@ -455,10 +453,8 @@ class Float < Abstract
         fract, integ = self.val.divmod other.val
 
         VC.make_tuple(
-            [
-                VC.make_float(fract.to_f),
-                VC.make_float(integ.to_f)
-            ]
+            VC.make_float(fract.to_f),
+            VC.make_float(integ.to_f)
         )
     end
 

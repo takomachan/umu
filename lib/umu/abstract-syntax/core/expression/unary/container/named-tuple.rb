@@ -100,11 +100,11 @@ private
         new_env = env.enter event
 
         VC.make_named_tuple(
-            self.exprs.map { |expr| expr.evaluate(new_env).value },
-
             self.index_by_label.inject({}) { |hash, (label, index)|
                 hash.merge(label.sym => index)
-            }
+            },
+
+            *(self.exprs.map { |expr| expr.evaluate(new_env).value })
         )
     end
 end

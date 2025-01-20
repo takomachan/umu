@@ -20,14 +20,16 @@ class Named < Abstract
     attr_reader :index_by_label
 
 
-    def initialize(values, index_by_label)
-        ASSERT.kind_of values,          ::Array
-        ASSERT.assert values.size >= 2
-        ASSERT.kind_of index_by_label,  ::Hash
+    def initialize(fst_value, snd_value, tail_values, index_by_label)
+        ASSERT.kind_of fst_value,      ::Object
+        ASSERT.kind_of snd_value,      ::Object
+        ASSERT.kind_of tail_values,    ::Array
+        ASSERT.kind_of index_by_label, ::Hash
+        ASSERT.assert index_by_label.size == 2 + tail_values.size
+
+        super(fst_value, snd_value, tail_values)
 
         @index_by_label = index_by_label.freeze
-
-        super(values)
     end
 
 
@@ -102,7 +104,7 @@ class Named < Abstract
             mut_values[index] = value_by_label[label]
         end
 
-        VC.make_named_tuple mut_values, self.index_by_label
+        VC.make_named_tuple self.index_by_label, *mut_values
     end
 
 
@@ -226,12 +228,14 @@ end # Umu::Value::Core::LSM
 
 module_function
 
-    def make_named_tuple(values, index_by_label)
-        ASSERT.kind_of values,          ::Array
-        ASSERT.kind_of index_by_label,  ::Hash
+    def make_named_tuple(index_by_label, fst_value, snd_value, *tail_values)
+        ASSERT.kind_of index_by_label, ::Hash
+        ASSERT.kind_of fst_value,      ::Object
+        ASSERT.kind_of snd_value,      ::Object
+        ASSERT.kind_of tail_values,    ::Array
 
         Base::LSM::Product::Named.new(
-            values.freeze, index_by_label.freeze
+            fst_value, snd_value, tail_values.freeze, index_by_label.freeze
         ).freeze
     end
 

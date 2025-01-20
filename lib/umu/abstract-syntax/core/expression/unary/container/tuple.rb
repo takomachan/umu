@@ -44,7 +44,7 @@ private
         new_env = env.enter event
 
         VC.make_tuple(
-            self.map { |expr| expr.evaluate(new_env).value }
+            *(self.map { |expr| expr.evaluate(new_env).value })
         )
     end
 end

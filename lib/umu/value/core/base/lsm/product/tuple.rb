@@ -19,14 +19,6 @@ class Tuple < Abstract
     alias values objs
 
 
-    def initialize(values)
-        ASSERT.kind_of values, ::Array
-        ASSERT.assert values.size >= 2  # Pair or More
-
-        super
-    end
-
-
     def to_s
         format "(%s)", self.map(&:to_s).join(', ')
     end
@@ -136,10 +128,14 @@ end # Umu::Value::Core::LSM
 
 module_function
 
-    def make_tuple(values)
-        ASSERT.kind_of values, ::Array
+    def make_tuple(fst_value, snd_value, *tail_values)
+        ASSERT.kind_of fst_value,   ::Object
+        ASSERT.kind_of snd_value,   ::Object
+        ASSERT.kind_of tail_values, ::Array
 
-        Base::LSM::Product::Tuple.new(values.freeze).freeze
+        Base::LSM::Product::Tuple.new(
+            fst_value, snd_value, tail_values.freeze
+        ).freeze
     end
 
 end # Umu::Value::Core
