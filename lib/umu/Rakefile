@@ -168,6 +168,7 @@ FILES = [
     'value/core/io.rb',
     'value/core/struct.rb',
     'value/core/opaque.rb',
+    'value/core/validate-type.rb',
     'environment.rb',
     'environment/preference.rb',
     'environment/tracer.rb',

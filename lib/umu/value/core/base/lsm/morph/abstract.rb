@@ -106,45 +106,14 @@ class Abstract < Object
             value = func.apply x1, [], loc, new_env
             ASSERT.kind_of value, VC::Top
 
-            unless value.kind_of? VCBLU::Option::Abstract
-                raise X::TypeError.new(
-                    new_loc,
-                    new_env,
-                    "unfoldl: Expected a Option, but %s : %s",
-                    value.to_s,
-                    value.type_sym.to_s
-                )
-            end
+            VC.validate_option value, 'unfoldl', loc, new_env
 
             case value
             when VCBLU::Option::None
                 break [x1, ys]
             when VCBLU::Option::Some
-                tuple = value.contents
-                ASSERT.kind_of tuple, VC::Top
-
-                unless tuple.kind_of? VCBLP::Tuple
-                    raise X::TypeError.new(
-                        new_loc,
-                        new_env,
-                        "Unfoldl: Expected a Tuple, but %s : %s",
-                        tuple.to_s,
-                        tuple.type_sym.to_s
-                    )
-                end
-
-                tup_vals = tuple.values
-                unless tup_vals.size == 2
-                    raise X::TypeError.new(
-                        new_loc,
-                        new_env,
-                        "Unfoldl: Expected arity of the tuple is 2, " +
-                                                                "but %s",
-                        tuple.to_s
-                    )
-                end
-
-                x2, next_x = tup_vals
+                tuple      = value.contents
+                x2, next_x = VC.validate_pair tuple, "unfoldl", loc, env
 
                 [next_x, ys.meth_cons(loc, new_env, event, x2)]
             else
@@ -314,20 +283,16 @@ class Abstract < Object
         ASSERT.kind_of init,  VC::Top
         ASSERT.kind_of block, ::Proc
 
-        new_env = env.enter event
-
         mut_y  = init.dup
         mut_xs = self.dup
         result = loop {
-            if mut_xs.meth_is_empty(loc, new_env, event).true?
+            if mut_xs.meth_is_empty(loc, env, event).true?
                 break mut_y
             end
 
-            pair = mut_xs.meth_dest!(loc, new_env, event)
-            ASSERT.kind_of pair, VCBLP::Tuple
-
-            x, mut_xs = pair.values
-            mut_y = yield loc, new_env, x, mut_y
+            pair      = mut_xs.meth_dest! loc, env, event
+            x, mut_xs = VC.validate_pair pair, "foldl", loc, env
+            mut_y = yield loc, env, x, mut_y
         }
 
         ASSERT.kind_of mut_y.freeze, VC::Top
@@ -399,15 +364,8 @@ class Abstract < Object
         end
 
         head = self.meth_head loc, env, event
-        unless head.kind_of? VCBAN::Abstract
-            raise X::TypeError.new(
-                loc,
-                env,
-                "sum: Expected a Number, but %s : %s",
-                head.to_s,
-                head.type_sym.to_s
-            )
-        end
+        VC.validate_number head, 'sum', loc, env
+
         zero = head.meth_zero loc, env, event
         zero_class_signat = env.ty_class_signat_of zero
 
@@ -444,15 +402,8 @@ class Abstract < Object
         end
 
         head = self.meth_head loc, env, event
-        unless head.kind_of? VCBAN::Abstract
-            raise X::TypeError.new(
-                loc,
-                env,
-                "avg: Expected a Number, but %s : %s",
-                head.to_s,
-                head.type_sym.to_s
-            )
-        end
+        VC.validate_number head, 'avg', loc, env
+
         zero = head.meth_zero loc, env, event
         zero_class_signat = env.ty_class_signat_of zero
 
@@ -498,15 +449,8 @@ class Abstract < Object
         end
 
         head = self.meth_head loc, env, event
-        unless head.kind_of? VCBAN::Abstract
-            raise X::TypeError.new(
-                loc,
-                env,
-                "max: Expected a Number, but %s : %s",
-                head.to_s,
-                head.type_sym.to_s
-            )
-        end
+        VC.validate_number head, 'max', loc, env
+
         head_class_signat = env.ty_class_signat_of head
 
         self.meth_tail(loc, env, event).foldl(
@@ -544,15 +488,8 @@ class Abstract < Object
         end
 
         head = self.meth_head loc, env, event
-        unless head.kind_of? VCBAN::Abstract
-            raise X::TypeError.new(
-                loc,
-                env,
-                "min: Expected a Number, but %s : %s",
-                head.to_s,
-                head.type_sym.to_s
-            )
-        end
+        VC.validate_number head, 'min', loc, env
+
         head_class_signat = env.ty_class_signat_of head
 
         self.meth_tail(loc, env, event).foldl(
@@ -592,15 +529,7 @@ class Abstract < Object
         ) { |new_loc, new_env, x,     bool|
 
             value = func.apply x, [], new_loc, new_env
-            unless value.kind_of? VCBA::Bool
-                raise X::TypeError.new(
-                    new_loc,
-                    new_env,
-                    "all?:Expected a Bool, but %s : %s",
-                    value.to_s,
-                    value.type_sym.to_s
-                )
-            end
+            VC.validate_bool value, 'all?', loc, env
 
             break VC.make_false if value.false?
 
@@ -624,15 +553,7 @@ class Abstract < Object
         ) { |new_loc, new_env, x,     bool|
 
             value = func.apply x, [], new_loc, new_env
-            unless value.kind_of? VCBA::Bool
-                raise X::TypeError.new(
-                    new_loc,
-                    new_env,
-                    "any?: Expected a Bool, but %s : %s",
-                    value.to_s,
-                    value.type_sym.to_s
-                )
-            end
+            VC.validate_bool value, 'any?', loc, env
 
             break VC.make_true if value.true?
 
@@ -656,15 +577,7 @@ class Abstract < Object
         ) { |new_loc, new_env, x,     bool|
 
             value = x.meth_equal loc, new_env, event, member
-            unless value.kind_of? VCBA::Bool
-                raise X::TypeError.new(
-                    new_loc,
-                    new_env,
-                    "include?: Expected a Bool, but %s : %s",
-                    value.to_s,
-                    value.type_sym.to_s
-                )
-            end
+            VC.validate_bool value, 'include?', loc, env
 
             break VC.make_true if value.true?
 
@@ -729,15 +642,7 @@ class Abstract < Object
         ) { |new_loc, new_env, x,     ys|
 
             value = func.apply x, [], new_loc, new_env
-            unless value.kind_of? VCBA::Bool
-                raise X::TypeError.new(
-                    new_loc,
-                    new_env,
-                    "select: Expected a Bool, but %s : %s",
-                    value.to_s,
-                    value.type_sym.to_s
-                )
-            end
+            VC.validate_bool value, 'select', new_loc, new_env
 
             if value.true?
                 ys.meth_cons new_loc, new_env, event, x
@@ -763,15 +668,7 @@ class Abstract < Object
         ) { |new_loc, new_env, x,     ys|
 
             value = func.apply x, [], new_loc, new_env
-            unless value.kind_of? VCBA::Bool
-                raise X::TypeError.new(
-                    new_loc,
-                    new_env,
-                    "reject: Expected a Bool, but %s : %s",
-                    value.to_s,
-                    value.type_sym.to_s
-                )
-            end
+            VC.validate_bool value, 'reject', new_loc, new_env
 
             if value.false?
                 ys.meth_cons new_loc, new_env, event, x
@@ -803,7 +700,7 @@ class Abstract < Object
                         }
                     end
 
-        ASSERT.kind_of result, VCBLM::List::Abstract
+        ASSERT.kind_of result, VCBLM::Abstract
     end
 
 
@@ -836,16 +733,8 @@ class Abstract < Object
              loc,     env,     event, VC.make_nil
         ) { |new_loc, new_env, x,     yss|
 
-            xs = func.apply x, [], loc, new_env
-            unless xs.kind_of? Abstract
-                raise X::TypeError.new(
-                    new_loc,
-                    new_env,
-                    "concat-map: Expected a Morph, but %s : %s",
-                    xs.to_s,
-                    xs.type_sym.to_s
-                )
-            end
+            xs = func.apply x, [], new_loc, new_env
+            VC.validate_morph xs, 'concat-map', new_loc, new_env
 
             yss.meth_append new_loc, new_env, event, xs
         }
@@ -871,15 +760,7 @@ class Abstract < Object
              loc,     env,     event, VC.make_opaque(["", true])
         ) { |new_loc, new_env, x,     opaque|
 
-            unless x.kind_of? VCBA::String
-                raise X::TypeError.new(
-                    new_loc,
-                    new_env,
-                    "join: Expected a String, but %s : %s",
-                    x.to_s,
-                    x.type_sym.to_s
-                )
-            end
+            VC.validate_string x, 'join', new_loc, new_env
 
             s, is_first = opaque.obj
 
@@ -921,50 +802,10 @@ class Abstract < Object
                 break [xs1, ys1, zs1]
             else
                 xs_pair = xs1.meth_dest! loc, env, event
-                unless xs_pair.kind_of? VCBLP::Tuple
-                    raise X::TypeError.new(
-                        new_loc,
-                        new_env,
-                        "zip (Lhs): Expected a Tuple, but %s : %s",
-                        xs_pair.to_s,
-                        xs_pair.type_sym.to_s
-                    )
-                end
-
-                xs_arity = xs_pair.arity
-                unless xs_arity == 2
-                    raise X::TypeError.new(
-                        new_loc,
-                        new_env,
-                        "zip (Lhs): Expected a pair, " +
-                            "but arity of the tuple is %d",
-                        xs_arity
-                    )
-                end
-                x, xs2 = xs_pair.values
+                x, xs2 = VC.validate_pair xs_pair, "zip", loc, env
 
                 ys_pair = ys1.meth_dest! loc, env, event
-                unless ys_pair.kind_of? VCBLP::Tuple
-                    raise X::TypeError.new(
-                        new_loc,
-                        new_env,
-                        "zip (Rhs): Expected a Tuple, but %s : %s",
-                        ys_pair.to_s,
-                        ys_pair.type_sym.to_s
-                    )
-                end
-
-                ys_arity = ys_pair.arity
-                unless ys_arity == 2
-                    raise X::TypeError.new(
-                        new_loc,
-                        new_env,
-                        "zip (Rhs): Expected a pair, " +
-                            "but arity of the tuple is %d",
-                        ys_arity
-                    )
-                end
-                y, ys2 = ys_pair.values
+                y, ys2 = VC.validate_pair ys_pair, "zip", loc, env
 
                 [
                     xs2,
@@ -993,28 +834,8 @@ class Abstract < Object
             VC.make_tuple(VC.make_nil, VC.make_nil)
         ) { |new_loc, new_env, y_z,     ys_zs|
 
-            unless y_z.kind_of? VCBLP::Tuple
-                raise X::TypeError.new(
-                    new_loc,
-                    new_env,
-                    "unzip: Expected a Tuple, but %s : %s",
-                    y_z.to_s,
-                    y_z.type_sym.to_s
-                )
-            end
-
-            y_z_arity = y_z.arity
-            unless y_z_arity == 2
-                raise X::TypeError.new(
-                    new_loc,
-                    new_env,
-                    "unzip: Expected a pair, " +
-                        "but arity of the tuple is %d",
-                    y_z_arity
-                )
-            end
-            y, z = y_z.values
-
+            y,  z  = VC.validate_pair y_z,   "unzip", new_loc, new_env
+            ys, zs = VC.validate_pair ys_zs, "unzip", new_loc, new_env
             ys, zs = ys_zs.values
 
             VC.make_tuple(
@@ -1036,29 +857,8 @@ class Abstract < Object
         if self.meth_is_empty(loc, env, event).true?
             self
         else
-            pair = self.dest!
-
-            unless pair.kind_of? VCBLP::Tuple
-                raise X::TypeError.new(
-                    new_loc,
-                    new_env,
-                    "uniq: Expected a Tuple, but %s : %s",
-                    pair.to_s,
-                    pair.type_sym.to_s
-                )
-            end
-
-            pair_arity = pair.arity
-            unless pair_arity == 2
-                raise X::TypeError.new(
-                    new_loc,
-                    new_env,
-                    "uniq: Expected a pair, " +
-                        "but arity of the tuple is %d",
-                    pair_arity
-                )
-            end
-            x, xs = pair.values
+            pair  = self.dest!
+            x, xs = VC.validate_pair pair, "uniq", loc, env
 
             if xs.meth_is_empty(loc, env, event).true?
                 self
@@ -1109,17 +909,7 @@ class Abstract < Object
         ) { |new_loc, new_env, x,     opaque|
 
             value = func.apply(x, [], loc, new_env)
-            ASSERT.kind_of value, VC::Top
-
-            unless value.kind_of? VCBA::Bool
-                raise X::TypeError.new(
-                    new_loc,
-                    new_env,
-                    "partition: Expected a Bool, but %s : %s",
-                    value.to_s,
-                    value.type_sym.to_s
-                )
-            end
+            VC.validate_bool value, 'partition', new_loc, new_env
 
             ys, zs = opaque.obj
 
@@ -1157,29 +947,8 @@ class Abstract < Object
             return self
         end
 
-        pair = self.meth_dest!(loc, env, event)
-
-        unless pair.kind_of? VCBLP::Tuple
-            raise X::TypeError.new(
-                new_loc,
-                new_env,
-                "sort: Expected a Tuple, but %s : %s",
-                pair.to_s,
-                pair.type_sym.to_s
-            )
-        end
-
-        pair_arity = pair.arity
-        unless pair_arity == 2
-            raise X::TypeError.new(
-                new_loc,
-                new_env,
-                "sort: Expected a pair, " +
-                    "but arity of the tuple is %d",
-                pair_arity
-            )
-        end
-        pivot, xs = pair.values
+        pair      = self.meth_dest! loc, env, event
+        pivot, xs = VC.validate_pair pair, "sort", loc, env
 
         init_opaque = VC.make_opaque [VC.make_nil, VC.make_nil]
 
@@ -1191,17 +960,7 @@ class Abstract < Object
                     func = opt_func
 
                     value = func.apply x, [pivot], new_loc, new_env
-                    ASSERT.kind_of value, VC::Top
-
-                    unless value.kind_of? VCBAN::Int
-                        raise X::TypeError.new(
-                            new_loc,
-                            new_env,
-                            "sort: Expected a Int, but %s : %s",
-                            value.to_s,
-                            value.type_sym.to_s
-                        )
-                    end
+                    VC.validate_int value, 'sort', new_loc, new_env
 
                     value.val
                 else
