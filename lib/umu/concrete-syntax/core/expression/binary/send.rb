@@ -249,9 +249,9 @@ private
 
         message = case self.tail_exprs.size
                 when 0
-                    exprs = [self.head_expr.desugar(new_env)]
+                    expr = [self.head_expr.desugar(new_env)]
 
-                    ASCE.make_message self.loc, :apply, exprs
+                    ASCE.make_message self.loc, :apply, expr
                 when 1
                     exprs = [
                         self.head_expr.desugar(new_env),
@@ -275,7 +275,7 @@ private
                     ASCE.make_message self.loc, :'apply-nary', exprs
                 end
 
-        ASSERT.kind_of message, ASCE::Binary::Send::Message::Method
+        ASSERT.kind_of message, ASCE::Binary::Send::Message::Basic
     end
 end
 
