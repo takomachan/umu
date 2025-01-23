@@ -460,9 +460,13 @@ structure Umu = struct {
         val panic! = &(String.panic!)
 
 
-        # join : String -> %[String] -> String
+        # join : %[String] -> String
+        fun join = (sep : String) (xs : Morph) -> xs.join
+
+
+        # join-by : String -> %[String] -> String
         (#
-        fun join = j xs -> case xs of {
+        fun join-by = j xs -> case xs of {
         [x|xs'] -> case xs' of {
             []   -> x
             else -> x.^ (xs'.foldl "" { x' s -> s.^ j.^ x' })
@@ -470,11 +474,7 @@ structure Umu = struct {
         else -> ""
         }
         #)
-        fun join = (sep : String) (xs : Morph) -> xs.(join:sep)
-
-
-        # concat : [String] -> String
-        fun concat = xs : Morph -> xs.join
+        fun join-by = (sep : String) (xs : Morph) -> xs.join-by sep
     }
 
 
@@ -615,8 +615,11 @@ structure Umu = struct {
         # (^)       : String -> String -> String
         fun (^) = (x : String) (y : String) -> x.^ y
 
-        # join      : String -> [String] -> String
+        # join      : [String] -> String
         val join = String::join
+
+        # join-by   : String -> [String] -> String
+        val join-by = String::join-by
 
 
         #### I/O ####

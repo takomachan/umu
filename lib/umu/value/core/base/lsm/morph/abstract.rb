@@ -750,7 +750,7 @@ class Abstract < Object
     )
     define_instance_method(
         :meth_join,
-        :'join:', [],
+        :'join-by', [:'join:'],
         [VCBA::String], VCBA::String
     )
     def meth_join(loc, env, event, sep_value = nil)

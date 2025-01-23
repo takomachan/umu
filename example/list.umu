@@ -207,7 +207,7 @@ structure List = struct {
 val sort    = List::sort (<)
 val reverse = List::reverse
 val map     = List::map
-val join    = List::join-string
+val join-by = List::join-by
 
 ;;
 
@@ -225,29 +225,29 @@ val join    = List::join-string
 [1, 4, 3, 2] |> sort |> reverse |> map to-s ;;
 # -> ["4", "3", "2", "1"]
 
-[1, 4, 3, 2] |> sort |> reverse |> map to-s |> join "-" ;;
+[1, 4, 3, 2] |> sort |> reverse |> map to-s |> join-by "-" ;;
 # -> "4-3-2-1"
 
 
 #### 1'. Another Pipeline Style (Like a Haskell's $-operator)
-join "-" <| map to-s <| reverse <| sort <| [1, 4, 3, 2] ;;
+join-by "-" <| map to-s <| reverse <| sort <| [1, 4, 3, 2] ;;
 # -> "4-3-2-1"
 
 
 #### 2. Composition Style
-(sort >> reverse >> map to-s >> join "-") [1, 4, 3, 2] ;;
+(sort >> reverse >> map to-s >> join-by "-") [1, 4, 3, 2] ;;
 # or
-[1, 4, 3, 2] |> sort >> reverse >> map to-s >> join "-" ;;
+[1, 4, 3, 2] |> sort >> reverse >> map to-s >> join-by "-" ;;
 # -> "4-3-2-1"
 
 
 #### 2'. Another Composition Style (Like a Haskell's Point-free style)
-(join "-" << map to-s << reverse << sort) [1, 4, 3, 2] ;;
+(join-by "-" << map to-s << reverse << sort) [1, 4, 3, 2] ;;
 # or
-join "-" << map to-s << reverse << sort <| [1, 4, 3, 2] ;;
+join-by "-" << map to-s << reverse << sort <| [1, 4, 3, 2] ;;
 # -> "4-3-2-1"
 
 
 #### 3. Classical Style (Like a LISP, Python, ... etc)
-join "-" (map to-s (reverse (sort [1, 4, 3, 2]))) ;;
+join-by "-" (map to-s (reverse (sort [1, 4, 3, 2]))) ;;
 # -> "4-3-2-1"
