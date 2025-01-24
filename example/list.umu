@@ -207,7 +207,7 @@ structure List = struct {
 val sort    = List::sort (<)
 val reverse = List::reverse
 val map     = List::map
-val join-by = List::join-by
+val join-by = List::join-string
 
 ;;
 
