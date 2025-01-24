@@ -6,7 +6,7 @@ $ git clone https://github.com/takomachan/umu
 
 
 
-## How to Use
+## How to Play REPL
 
 ### REPL
 ```
