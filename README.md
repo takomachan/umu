@@ -215,6 +215,9 @@ umu:3>
 ### Function definition
 
 #### Simple function
+
+`val` declaration bind value to identifier, where the value is function object
+
 ```
 umu:1> val add = { x y -> x + y }
 fun add = #<{ x y -> (+ x y) }>
@@ -222,6 +225,8 @@ umu:2> add 3 4
 val it : Int = 7
 umu:3>
 ```
+
+`fun` declaration is syntax sugar of binding function object
 
 ```
 umu:1> fun add' = x y -> x + y
@@ -247,7 +252,7 @@ umu:8>
 ```
 
 
-### Function application and Sending message
+### Function application and Message sending
 ```
 umu:1> 3 + 4             # Infix orepator expression
 val it : Int = 7
@@ -368,11 +373,11 @@ umu:2> [1, 3 .. 10]
 val it : Interval = [1 .. 10 (+2)]
 ```
 
-##### Send to instance
+##### Send to instance object
 
 ###### By binary instance message expression
 
-sending binary instance message 'Int#to'
+send binary instance message 'Int#to'
 
 ```
 umu:1> 1.to 10
@@ -384,7 +389,7 @@ val it : Interval = [1 .. 10 (+1)]
 umu:4>
 ```
 
-sending binary instance message 'Int#to-by'
+send binary instance message 'Int#to-by'
 
 ```
 umu:1> 1.to-by 10 2
@@ -400,7 +405,7 @@ umu:5>
 
 ###### By keyword instance message expression
 
-sending keyword instance message 'Int#(to:)' and 'Int#(to:by:)'
+send keyword instance message 'Int#(to:)' and 'Int#(to:by:)'
 
 ```
 umu:1> 1.(to:10)
@@ -410,11 +415,11 @@ val it : Interval = [1 .. 10 (+2)]
 umu:3>
 ```
 
-##### Send to class
+##### Send to class object
 
 ###### By binary class message expression
 
-sending binary class message 'Interval.make'
+send binary class message 'Interval.make'
 
 ```
 umu:1> &Interval.make 1 10
@@ -428,7 +433,7 @@ val it : Interval = [1 .. 10 (+1)]
 umu:5>
 ```
 
-sending binary class message 'Interval.make-by'
+send binary class message 'Interval.make-by'
 
 ```
 umu:1> &Interval.make-by 1 10 2
@@ -446,7 +451,7 @@ umu:6>
 
 ###### By keyword class message expression
 
-sending keyword class message 'Interval.(from:to:)' and 'Interval.(from:to:by:)'
+send keyword class message 'Interval.(from:to:)' and 'Interval.(from:to:by:)'
 
 ```
 umu:1> &Interval.(from:1 to:10)
