@@ -74,7 +74,7 @@ val it : String = "4-3-2-1"
 umu:6>
 ```
 
-##### (2) Pipeline Style -- like a F#, Ocaml, Elixir
+#### (2) Pipeline Style -- like a F#, Ocaml, Elixir
 
 ```
 umu:1> [1, 4, 3, 2] |> sort |> reverse |> map to-s |> join-by "-"
@@ -82,7 +82,7 @@ val it : String = "4-3-2-1"
 umu:2>
 ```
 
-##### (2') Another Pipeline Style -- like a Haskell's $-operator)
+#### (2') Another Pipeline Style -- like a Haskell's $-operator)
 
 ```
 umu:1> join-by "-" <| map to-s <| reverse <| sort [1, 4, 3, 2]
@@ -90,7 +90,7 @@ val it : String = "4-3-2-1"
 umu:2>
 ```
 
-##### (3) Composition Style
+#### (3) Composition Style
 
 ```
 umu:1> (sort >> reverse >> map to-s >> join-by "-") [1, 4, 3, 2]
@@ -123,7 +123,6 @@ umu:2>
 
 
 ### Interval
-
 
 ```
 umu:1> [1..10]
@@ -188,7 +187,7 @@ umu:3>
 
 ### REPL's subcommands
 
-#### Subcommand: dump
+#### :dump
 
 ```
 umu:1> :dump
@@ -210,7 +209,7 @@ umu:3> :nodump
 umu:4>
 ```
 
-#### Subcommand: trace
+#### :trace
 
 ```
 umu:1> :trace
@@ -239,7 +238,7 @@ umu:3> :notrace
 umu:4>
 ```
 
-#### Subcommand: class
+#### :class
 
 ```
 umu:1> :class
@@ -280,7 +279,7 @@ See [TmDoc](http://xtmlab.com/umu/tmdoc/html/).
 
 
 
-#### License
+## License
 
 The gem is available as open source under the terms of
 the [MIT License](https://opensource.org/licenses/MIT).
