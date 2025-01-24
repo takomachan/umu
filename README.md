@@ -444,7 +444,7 @@ val it : Interval = [1 .. 10 (+2)]
 umu:6>
 ```
 
-###### By keyword message expression
+###### By keyword class message expression
 
 sending keyword class message 'Interval.(from:to:)' and 'Interval.(from:to:by:)'
 
