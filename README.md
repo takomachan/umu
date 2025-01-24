@@ -368,23 +368,90 @@ umu:2> [1, 3 .. 10]
 val it : Interval = [1 .. 10 (+2)]
 ```
 
-##### By binary message expression: Interval#to
+##### Send to instance
 
-sending binary message '.to Int' to integer object
+###### By binary instance message expression
+
+sending binary instance message 'Int#to'
 
 ```
 umu:1> 1.to 10
 val it : Interval = [1 .. 10 (+1)]
-umu:2> 1.to-by 10 2
-val it : Interval = [1 .. 10 (+2)]
+umu:2> 1.to
+fun it = #<{ %x_1 -> (%r).(to %x_1) }>
+umu:3> it 10
+val it : Interval = [1 .. 10 (+1)]
+umu:4>
 ```
 
-##### By keyword message expression: Interval#(to:)
+sending binary instance message 'Int#to-by'
+
+```
+umu:1> 1.to-by 10 2
+val it : Interval = [1 .. 10 (+2)]
+umu:2> 1.to-by
+fun it = #<{ %x_1 %x_2 -> (%r).(to-by %x_1 %x_2) }>
+umu:3> it 10
+fun it = #<{ %x_2 -> (%r).(to-by %x_1 %x_2) }>
+umu:4> it 2
+val it : Interval = [1 .. 10 (+2)]
+umu:5>
+```
+
+###### By keyword instance message expression
+
+sending keyword instance message 'Int#(to:)' and 'Int#(to:by:)'
 
 ```
 umu:1> 1.(to:10)
 val it : Interval = [1 .. 10 (+1)]
 umu:2> 1.(to:10 by:2)
+val it : Interval = [1 .. 10 (+2)]
+umu:3>
+```
+
+##### Send to class
+
+###### By binary class message expression
+
+sending binary class message 'Interval.make'
+
+```
+umu:1> &Interval.make 1 10
+val it : Interval = [1 .. 10 (+1)]
+umu:2> &Interval.make
+fun it = #<{ %x_1 %x_2 -> (%r).(make %x_1 %x_2) }>
+umu:3> it 1
+fun it = #<{ %x_2 -> (%r).(make %x_1 %x_2) }>
+umu:4> it 10
+val it : Interval = [1 .. 10 (+1)]
+umu:5>
+```
+
+sending binary class message 'Interval.make-by'
+
+```
+umu:1> &Interval.make-by 1 10 2
+val it : Interval = [1 .. 10 (+2)]
+umu:2> &Interval.make-by
+fun it = #<{ %x_1 %x_2 %x_3 -> (%r).(make-by %x_1 %x_2 %x_3) }>
+umu:3> it 1
+fun it = #<{ %x_2 %x_3 -> (%r).(make-by %x_1 %x_2 %x_3) }>
+umu:4> it 10
+fun it = #<{ %x_3 -> (%r).(make-by %x_1 %x_2 %x_3) }>
+umu:5> it 2
+val it : Interval = [1 .. 10 (+2)]
+umu:6>
+```
+
+###### By keyword message expression
+
+sending keyword class message 'Interval.(from:to:)' and 'Interval.(from:to:by:)'
+
+```
+umu:1> &Interval.(from:1 to:10)
+val it : Interval = [1 .. 10 (+1)]
+umu:2> &Interval.(from:1 to:10 by:2)
 val it : Interval = [1 .. 10 (+2)]
 umu:3>
 ```
