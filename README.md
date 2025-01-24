@@ -282,9 +282,11 @@ val it : Int = 7
 
 ### Message chaining, Pipelined application and Function composition
 
+See [PythonでもRubyみたいに配列をメソッドチェーンでつなげたい](https://edvakf.hatenadiary.org/entry/20090405/1238885788).
+
 #### Message Chaining
 
-OOP Style
+OOP(Object oriented programming) style
 
 ```
 umu:1> [1, 4, 3, 2]
@@ -302,7 +304,7 @@ umu:6>
 
 #### Pipelined Application
 
-like a F#, Ocaml, Elixir
+like F#, Ocaml, Elixir
 
 ```
 umu:1> [1, 4, 3, 2] |> sort |> reverse |> map to-s |> join-by "-"
@@ -344,7 +346,7 @@ umu:3>
 
 #### Classical Nested Application
 
-like a LISP, Python, ... etc
+like LISP, Python, ... etc
 
 ```
 umu:1> join-by "-" (map to-s (reverse (sort [1, 4, 3, 2])))
