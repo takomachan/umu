@@ -22,6 +22,112 @@ $
 
 ## Example
 
+### Atom
+
+#### Integer
+```
+umu:1> 3
+val it : Int = 3
+umu:2> 3 + 4
+val it : Int = 7
+umu:3>
+```
+
+#### Float
+```
+umu:1> 3.0
+val it : Float = 3.0
+umu:2> 3.0 + 4.0
+val it : Float = 7.0
+umu:3>
+```
+
+#### String
+```
+umu:1> "Hello"
+val it : String = "Hello"
+umu:2> "Hello" ^ " world"
+val it : String = "Hello world"
+umu:3>
+```
+
+#### Symbol
+```
+umu:1> @hello
+val it : Symbol = @hello
+umu:2> to-s @hello
+val it : String = "hello"
+umu:3> show @hello
+val it : String = "@hello"
+umu:4>
+```
+
+#### Bool
+```
+umu:1> TRUE
+val it : Bool = TRUE
+umu:2> 3 == 3
+val it : Bool = TRUE
+umu:3> 3 == 4
+val it : Bool = FALSE
+umu:4>
+```
+
+### Lambda expression and Function definition
+
+### Lambda expression
+```
+umu:1> { x y -> x + y }
+fun it = #<{ x y -> (+ x y) }>
+umu:2> { x y -> x + y } 3 4
+val it : Int = 7
+umu:3> { x y -> x + y } 3
+fun it = #<{ y -> (+ x y) }>
+umu:4> it 4
+val it : Int = 7
+umu:5>
+```
+
+### Function definition
+
+#### Simple function
+```
+umu:1> val add = { x y -> x + y }
+fun add = #<{ x y -> (+ x y) }>
+umu:2> add 3 4
+val it : Int = 7
+umu:3> fun add' = x y -> x + y
+fun add' = #<add': { x y -> (+ x y) }>
+umu:4> add' 3 4
+val it : Int = 7
+umu:5>
+```
+
+```
+umu:1> fun add'' = (x, y) -> 3 + 4
+fun add'' = #<add'': { %a1 : Product
+    -> %LET { %VAL x = (%a1)$1 %VAL y = (%a1)$2 %IN (+ 3 4) }
+    }>
+umu:2> add'' (3, 4)
+val it : Int = 7
+umu:3>
+```
+
+#### Recursive function
+```
+umu:1> fun rec factorial = x -> (
+umu:2*     if x <= 1 then
+umu:3*         1   
+umu:4*     else
+umu:5*         x * factorial (x - 1)
+umu:6* )
+fun factorial = #<factorial: { x -> (%IF (<= x 1) %THEN 1 %ELSE (* x (factorial (- x 1)))) }>
+umu:7> factorial 3
+val it : Int = 6
+umu:8>
+```
+
+
 ### Function application and Sending message
 
 ```
@@ -58,7 +164,7 @@ val it : Int = 7
 
 ### Message chaining, Pipelined application and Function composition
 
-#### (1) Message Chaining
+#### Message Chaining
 
 OOP Style
 
@@ -76,7 +182,7 @@ val it : String = "4-3-2-1"
 umu:6>
 ```
 
-#### (2) Pipelined Application
+#### Pipelined Application
 
 like a F#, Ocaml, Elixir
 
@@ -86,9 +192,9 @@ val it : String = "4-3-2-1"
 umu:2>
 ```
 
-#### (2') Another Pipelined Application
+#### Another Pipelined Application
 
-like a Haskell's $-operator)
+like a Haskell's $-operator
 
 ```
 umu:1> join-by "-" <| map to-s <| reverse <| sort [1, 4, 3, 2]
@@ -96,7 +202,7 @@ val it : String = "4-3-2-1"
 umu:2>
 ```
 
-#### (3) Function Composition
+#### Function Composition
 
 ```
 umu:1> (sort >> reverse >> map to-s >> join-by "-") [1, 4, 3, 2]
@@ -106,9 +212,9 @@ val it : String = "4-3-2-1"
 umu:3>
 ```
 
-#### (3') Another Function Composition
+#### Another Function Composition
 
-like a Haskell's Point-free style
+like a Haskell's point-free style
 
 ```
 umu:1> (join-by "-" << map to-s << reverse << sort) [1, 4, 3, 2]
@@ -121,7 +227,7 @@ val it : String = "4-3-2-1"
 umu:3>
 ```
 
-#### (4) Classical Nested Application
+#### Classical Nested Application
 
 like a LISP, Python, ... etc
 
@@ -134,9 +240,9 @@ umu:2>
 
 ### Interval
 
-#### Makeing interval
+#### Makeing interval object
 
-- By interval expression
+##### By interval expression
 
 ```
 umu:1> [1 .. 10]
@@ -145,7 +251,7 @@ umu:2> [1, 3 .. 10]
 val it : Interval = [1 .. 10 (+2)]
 ```
 
-- By binary message expression
+##### By binary message expression: Interval#to
 
 sending binary message '.to Int' to integer object
 
@@ -156,7 +262,7 @@ umu:2> 1.to-by 10 2
 val it : Interval = [1 .. 10 (+2)]
 ```
 
-- By keyword message expression
+##### By keyword message expression: Interval#(to:)
 ```
 umu:1> 1.(to:10)
 val it : Interval = [1 .. 10 (+1)]
