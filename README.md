@@ -211,7 +211,7 @@ umu:3>
 ```
 umu:1> { (x, y) -> 3 + 4 }
 fun it = #<{ %a1 : Product -> %LET { %VAL x = (%a1)$1 %VAL y = (%a1)$2 %IN (+ 3 4) } }>
-umu:2> { (x, y) -> 3 + 4 } (3, 4)
+umu:2> it (3, 4)
 val it : Int = 7
 umu:3>
 ```
