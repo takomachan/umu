@@ -25,14 +25,14 @@ $
 
 ### Play REPL with Script
 ```
-$ cat umu/factorial.umu 
+$ cat umu/example/factorial.umu 
 fun rec factorial = x -> (
     if x <= 1 then
         1
     else
         x * factorial (x - 1)
 )
-$ umu/exe/umu -i umu/factorial.umu 
+$ umu/exe/umu -i umu/example/factorial.umu 
 umu:1> factorial 3
 val it : Int = 6
 umu:2>
@@ -243,7 +243,7 @@ umu:3>
 
 #### Recursive function
 ```
-umu:1> fun rec factorial = x -> (        # Copy&Paste: 'umu/factorial.umu'
+umu:1> fun rec factorial = x -> (    # Copy&Paste: 'umu/example/factorial.umu'
 umu:2*     if x <= 1 then
 umu:3*         1   
 umu:4*     else
