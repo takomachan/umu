@@ -19,7 +19,7 @@ umu:2>                  # Enter [Ctrl]+[D]
 $
 ```
 
-### REPL with Script
+### Play REPL with Script
 ```
 $ cat umu/factorial.umu 
 fun rec factorial = x -> (
