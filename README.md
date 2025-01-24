@@ -56,9 +56,11 @@ val it : Int = 7
 ```
 
 
-### Message chaining, Pipelined application and function composition
+### Message chaining, Pipelined application and Function composition
 
-#### (1) Message chaining -- OOP style
+#### (1) Message Chaining
+
+OOP Style
 
 ```
 umu:1> [1, 4, 3, 2]
@@ -74,7 +76,9 @@ val it : String = "4-3-2-1"
 umu:6>
 ```
 
-#### (2) Pipeline Style -- like a F#, Ocaml, Elixir
+#### (2) Pipelined Application
+
+like a F#, Ocaml, Elixir
 
 ```
 umu:1> [1, 4, 3, 2] |> sort |> reverse |> map to-s |> join-by "-"
@@ -82,7 +86,9 @@ val it : String = "4-3-2-1"
 umu:2>
 ```
 
-#### (2') Another Pipeline Style -- like a Haskell's $-operator)
+#### (2') Another Pipelined Application
+
+like a Haskell's $-operator)
 
 ```
 umu:1> join-by "-" <| map to-s <| reverse <| sort [1, 4, 3, 2]
@@ -90,7 +96,7 @@ val it : String = "4-3-2-1"
 umu:2>
 ```
 
-#### (3) Composition Style
+#### (3) Function Composition
 
 ```
 umu:1> (sort >> reverse >> map to-s >> join-by "-") [1, 4, 3, 2]
@@ -100,7 +106,9 @@ val it : String = "4-3-2-1"
 umu:3>
 ```
 
-#### (3') Another Composition Style -- like a Haskell's Point-free style
+#### (3') Another Function Composition
+
+like a Haskell's Point-free style
 
 ```
 umu:1> (join-by "-" << map to-s << reverse << sort) [1, 4, 3, 2]
@@ -113,7 +121,9 @@ val it : String = "4-3-2-1"
 umu:3>
 ```
 
-#### (4) Classical Style -- like a LISP, Python, ... etc
+#### (4) Classical Nested Application
+
+like a LISP, Python, ... etc
 
 ```
 umu:1> join-by "-" (map to-s (reverse (sort [1, 4, 3, 2])))
@@ -124,12 +134,20 @@ umu:2>
 
 ### Interval
 
+#### Makeing interval
+
+- By interval expression
+
 ```
-umu:1> [1..10]
+umu:1> [1 .. 10]
 val it : Interval = [1 .. 10 (+1)]
-umu:2> [1,3..10]
+umu:2> [1, 3 .. 10]
 val it : Interval = [1 .. 10 (+2)]
 ```
+
+- By binary message expression
+
+sending binary message '.to Int' to integer object
 
 ```
 umu:1> 1.to 10
@@ -138,6 +156,7 @@ umu:2> 1.to-by 10 2
 val it : Interval = [1 .. 10 (+2)]
 ```
 
+- By keyword message expression
 ```
 umu:1> 1.(to:10)
 val it : Interval = [1 .. 10 (+1)]
@@ -146,16 +165,20 @@ val it : Interval = [1 .. 10 (+2)]
 umu:3>
 ```
 
+#### Operation to interval object
+
+Interval object is kind of collection that same to List object 
+
 ```
-umu:1> [1..10].to-list
+umu:1> [1 .. 10].to-list
 val it : Cons = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-umu:2> [1,3..10].to-list
+umu:2> [1, 3 .. 10].to-list
 val it : Cons = [1, 3, 5, 7, 9]
-umu:3> [1..10].select odd?
+umu:3> [1 .. 10].select odd?
 val it : Cons = [1, 3, 5, 7, 9]
-umu:4> [1..10].map to-s
+umu:4> [1 .. 10].map to-s
 val it : Cons = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
-umu:5> [1..10].select odd?.map to-s
+umu:5> [1 .. 10].select odd?.map to-s
 val it : Cons = ["1", "3", "5", "7", "9"]
 umu:6>
 ```
@@ -165,20 +188,20 @@ umu:6>
 ### List Comprehension
 
 ```
-umu:1> [|x| val x <- [1..10]]
+umu:1> [|x| val x <- [1 .. 10]]
 val it : Cons = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-umu:2> [|x| val x <- [1..10] if odd? x]
+umu:2> [|x| val x <- [1 .. 10] if odd? x]
 val it : Cons = [1, 3, 5, 7, 9]
-umu:3> [|to-s x| val x <- [1..10] ]
+umu:3> [|to-s x| val x <- [1 .. 10] ]
 val it : Cons = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
-umu:4> [|to-s x| val x <- [1..10] if odd? x]
+umu:4> [|to-s x| val x <- [1 .. 10] if odd? x]
 val it : Cons = ["1", "3", "5", "7", "9"]
 ```
 
 ```
-umu:1> [|k, v| val k <- [@a, @b] val v <- [1..3]]
+umu:1> [|k, v| val k <- [@a, @b] val v <- [1 .. 3]]
 val it : Cons = [(@a, 1), (@a, 2), (@a, 3), (@b, 1), (@b, 2), (@b, 3)]
-umu:2> [|k: v:| val k <- [@a, @b] val v <- [1..3]]
+umu:2> [|k: v:| val k <- [@a, @b] val v <- [1 .. 3]]
 val it : Cons = [(k:@a v:1), (k:@a v:2), (k:@a v:3), (k:@b v:1), (k:@b v:2), (k:@b v:3)]
 umu:3>
 ```
