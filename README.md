@@ -6,8 +6,9 @@ $ git clone https://github.com/takomachan/umu
 
 
 
-## Usage
+## How to Use
 
+### REPL
 ```
 $ exe/umu -i
 umu:1> print "Hello world\n"
@@ -18,6 +19,117 @@ umu:2>                  # Enter [Ctrl]+[D]
 $
 ```
 
+### REPL with script
+```
+$ cat umu/factorial.umu 
+fun rec factorial = x -> (
+    if x <= 1 then
+        1
+    else
+        x * factorial (x - 1)
+)
+$ umu/exe/umu -i umu/factorial.umu 
+umu:1> factorial 3
+val it : Int = 6
+umu:2>
+```
+
+### REPL's Subcommand
+
+#### :class
+
+##### Summary
+```
+umu:1> :class
+Top/
+    Class
+    Object/
+        Atom/
+            Bool
+            Number/
+                Float
+                Int
+            String
+            Symbol
+    :
+    :
+```
+
+##### Detail
+```
+umu:1> :class Bool
+ABSTRACT CLASS?: No, this is a concrete class
+SUPERCLASS: Atom
+ANCESTORS: Atom, Object, Top
+CLASS MESSAGES:
+    &Bool.false : Bool
+    &Bool.true : Bool
+INSTANCE MESSAGES:
+    Bool#< : Bool -> Bool
+    Bool#== : Object -> Bool
+    Bool#contents : Top
+    Bool#not : Bool
+    Bool#show : String
+    Bool#to-s : String
+umu:3>
+```
+
+#### :dump
+```
+umu:1> :dump
+umu:2> 3 + 4
+________ Source: '<stdin>' ________
+0002: 3 + 4
+
+________ Tokens: '<stdin>' ________
+0002: INT(3) WHITE(" ") '+' WHITE(" ") INT(4) NEWLINE("\n")
+
+________ Concrete Syntax: #2 in "<stdin>" ________
+(3 + 4)
+
+________ Abstract Syntax: #2 in "<stdin>" ________
+(+ 3 4)
+
+val it : Int = 7
+umu:3> :nodump
+umu:4>
+```
+
+#### :trace
+```
+umu:1> :trace
+umu:2> 3 + 4
+________ Source: '<stdin>' ________
+0002: 3 + 4
+
+________ Desugar Trace ________
+[Desu] Redefinable (CSCEB::Infix): (3 + 4)
+| [Desu] Int (CSCEUA::Number): 3 --> Int (ASCEUA::Number): 3
+| [Desu] Int (CSCEUA::Number): 4 --> Int (ASCEUA::Number): 4
+--> Apply (ASCEB): (+ 3 4)
+
+________ Evaluator Trace ________
+[Eval(Expr)] Apply (ASCEB): (+ 3 4)
+| [Eval(Expr)] Short (ASCEU::Identifier): +
+| --> Fun (VC): #<+: {x : Number y : Number -> (x).(+ y)}>
+| [Eval(Expr)] Int (ASCEUA::Number): 3 --> Int (VCBA::Number): 3
+| [Eval(Expr)] Int (ASCEUA::Number): 4 --> Int (VCBA::Number): 4
+| [Apply] Fun (VC): (#<+: {x : Number y : Number -> (x).(+ y)}> 3 4)
+| | [Eval(Expr)] Entry (ASCEB::Send): (x).(+ y)
+| | | [Eval(Expr)] Short (ASCEU::Identifier): x
+| | | --> Int (VCBA::Number): 3
+| | | [Eval(Expr)] Short (ASCEU::Identifier): y
+| | | --> Int (VCBA::Number): 4
+| | | [Invoke] Int (VCBA::Number): (3).meth_add(4 : Int) -> Int
+| | | --> Int (VCBA::Number): 7
+| | --> Int (VCBA::Number): 7
+| --> Int (VCBA::Number): 7
+--> Int (VCBA::Number): 7
+
+val it : Int = 7
+umu:3> :notrace
+umu:4>
+```
 
 
 ## Example
@@ -79,13 +191,29 @@ umu:4>
 ```
 umu:1> { x y -> x + y }
 fun it = #<{ x y -> (+ x y) }>
-umu:2> { x y -> x + y } 3 4
+umu:2>
+```
+
+```
+umu:1> { x y -> x + y } 3 4
 val it : Int = 7
-umu:3> { x y -> x + y } 3
+umu:2>
+```
+
+```
+umu:1> { x y -> x + y } 3
 fun it = #<{ y -> (+ x y) }>
-umu:4> it 4
+umu:2> it 4
 val it : Int = 7
-umu:5>
+umu:3>
+```
+
+```
+umu:1> { (x, y) -> 3 + 4 }
+fun it = #<{ %a1 : Product -> %LET { %VAL x = (%a1)$1 %VAL y = (%a1)$2 %IN (+ 3 4) } }>
+umu:2> { (x, y) -> 3 + 4 } (3, 4)
+val it : Int = 7
+umu:3>
 ```
 
 ### Function definition
@@ -96,26 +224,21 @@ umu:1> val add = { x y -> x + y }
 fun add = #<{ x y -> (+ x y) }>
 umu:2> add 3 4
 val it : Int = 7
-umu:3> fun add' = x y -> x + y
-fun add' = #<add': { x y -> (+ x y) }>
-umu:4> add' 3 4
-val it : Int = 7
-umu:5>
+umu:3>
 ```
 
 ```
-umu:1> fun add'' = (x, y) -> 3 + 4
-fun add'' = #<add'': { %a1 : Product
-    -> %LET { %VAL x = (%a1)$1 %VAL y = (%a1)$2 %IN (+ 3 4) }
-    }>
-umu:2> add'' (3, 4)
+umu:1> fun add' = x y -> x + y
+fun add' = #<add': { x y -> (+ x y) }>
+umu:2> add' 3 4
 val it : Int = 7
 umu:3>
 ```
 
+
 #### Recursive function
 ```
-umu:1> fun rec factorial = x -> (
+umu:1> fun rec factorial = x -> (        # Copy&Paste: 'umu/factorial.umu'
 umu:2*     if x <= 1 then
 umu:3*         1   
 umu:4*     else
@@ -129,7 +252,6 @@ umu:8>
 
 
 ### Function application and Sending message
-
 ```
 umu:1> 3 + 4             # Infix orepator expression
 val it : Int = 7
@@ -263,6 +385,7 @@ val it : Interval = [1 .. 10 (+2)]
 ```
 
 ##### By keyword message expression: Interval#(to:)
+
 ```
 umu:1> 1.(to:10)
 val it : Interval = [1 .. 10 (+1)]
@@ -289,8 +412,6 @@ val it : Cons = ["1", "3", "5", "7", "9"]
 umu:6>
 ```
 
-
-
 ### List Comprehension
 
 ```
@@ -311,95 +432,6 @@ umu:2> [|k: v:| val k <- [@a, @b] val v <- [1 .. 3]]
 val it : Cons = [(k:@a v:1), (k:@a v:2), (k:@a v:3), (k:@b v:1), (k:@b v:2), (k:@b v:3)]
 umu:3>
 ```
-
-
-
-### REPL's subcommands
-
-#### :dump
-
-```
-umu:1> :dump
-umu:2> 3.+ 4
-________ Source: '<stdin>' ________
-0002: 3.+ 4
-
-________ Tokens: '<stdin>' ________
-0002: INT(3) '.' '+' WHITE(" ") INT(4) NEWLINE("\n")
-
-________ Concrete Syntax: #2 in "<stdin>" ________
-(3).(+ 4)
-
-________ Abstract Syntax: #2 in "<stdin>" ________
-(3).(+ 4)
-
-val it : Int = 7
-umu:3> :nodump
-umu:4>
-```
-
-#### :trace
-
-```
-umu:1> :trace
-umu:2> 3.+ 4
-________ Source: '<stdin>' ________
-0002: 3.+ 4
-
-________ Desugar Trace ________
-[Desu] Entry (CSCEB::Send): (3).(+ 4)
-| [Desu] Int (CSCEUA::Number): 3 --> Int (ASCEUA::Number): 3
-| [Desu] BasicMessage (CSCEB::Send::Message): .(+ 4)
-| | [Desu] Int (CSCEUA::Number): 4 --> Int (ASCEUA::Number): 4
-| --> Basic (ASCEB::Send::Message): .(+ 4)
---> Entry (ASCEB::Send): (3).(+ 4)
-
-________ Evaluator Trace ________
-[Eval(Expr)] Entry (ASCEB::Send): (3).(+ 4)
-| [Eval(Expr)] Int (ASCEUA::Number): 3 --> Int (VCBA::Number): 3
-| [Eval(Expr)] Int (ASCEUA::Number): 4 --> Int (VCBA::Number): 4
-| [Invoke] Int (VCBA::Number): (3).meth_add(4 : Int) -> Int
-| --> Int (VCBA::Number): 7
---> Int (VCBA::Number): 7
-
-val it : Int = 7
-umu:3> :notrace
-umu:4>
-```
-
-#### :class
-
-```
-umu:1> :class
-Top/
-    Class
-    Object/
-        Atom/
-            Bool
-            Number/
-                Float
-                Int
-            String
-            Symbol
-    :
-    :
-umu:2> :class Bool
-ABSTRACT CLASS?: No, this is a concrete class
-SUPERCLASS: Atom
-ANCESTORS: Atom, Object, Top
-CLASS MESSAGES:
-    &Bool.false : Bool
-    &Bool.true : Bool
-INSTANCE MESSAGES:
-    Bool#< : Bool -> Bool
-    Bool#== : Object -> Bool
-    Bool#contents : Top
-    Bool#not : Bool
-    Bool#show : String
-    Bool#to-s : String
-umu:3>
-```
-
 
 
 ## Inside of Interpreter
