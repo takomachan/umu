@@ -191,13 +191,9 @@ umu:4>
 ```
 umu:1> { x y -> x + y }
 fun it = #<{ x y -> (+ x y) }>
-umu:2>
-```
-
-```
-umu:1> { x y -> x + y } 3 4
+umu:2> it 3 4
 val it : Int = 7
-umu:2>
+umu:3>
 ```
 
 ```
