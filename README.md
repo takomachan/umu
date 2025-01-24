@@ -8,7 +8,7 @@ $ git clone https://github.com/takomachan/umu
 
 ## How to Play REPL
 
-### REPL
+### First Step
 ```
 $ umu/exe/umu -i
 umu:1> print "Hello world\n"
@@ -19,7 +19,7 @@ umu:2>                  # Enter [Ctrl]+[D]
 $
 ```
 
-### REPL with script
+### REPL with Script
 ```
 $ cat umu/factorial.umu 
 fun rec factorial = x -> (
