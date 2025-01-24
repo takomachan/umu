@@ -258,7 +258,7 @@ umu:1> 3 + 4             # Infix orepator expression
 val it : Int = 7
 umu:2> (+) 3 4           # Infix operator as function object
 val it : Int = 7
-umu:3> ((+) 3) 4         # Partial application for fist parameter
+umu:3> ((+) 3) 4         # Partial application for first parameter
 val it : Int = 7
 umu:4> (+ 4) 3           # Partial application for second parameter
 val it : Int = 7
@@ -273,7 +273,7 @@ umu:7> (3.+) 4           # Send only binary message keyword '+'
 val it : Int = 7
 umu:8> &(+) 3 4          # Binary message as function object
 val it : Int = 7
-umu:9> (&(+) 3) 4        # Partial application for fist parameter
+umu:9> (&(+) 3) 4        # Partial application for first parameter
 val it : Int = 7
 ```
 
