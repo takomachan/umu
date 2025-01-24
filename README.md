@@ -10,7 +10,7 @@ $ git clone https://github.com/takomachan/umu
 
 ### REPL
 ```
-$ exe/umu -i
+$ umu/exe/umu -i
 umu:1> print "Hello world\n"
 Hello world
 
