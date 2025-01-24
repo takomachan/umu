@@ -4,6 +4,9 @@
 
 $ git clone https://github.com/takomachan/umu
 
+[!NOTE]
+The name Umu is preliminary and will be given a new name when the official Gem package is released.
+By the time you can swim, you will be able to see the official Gem package.
 
 
 ## How to Play REPL
