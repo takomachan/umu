@@ -289,7 +289,7 @@ val it : Int = 7
 
 See [PythonでもRubyみたいに配列をメソッドチェーンでつなげたい](https://edvakf.hatenadiary.org/entry/20090405/1238885788).
 
-#### Message Chaining
+#### (1) Message Chaining
 
 OOP(Object oriented programming) style
 
@@ -307,7 +307,7 @@ val it : String = "4-3-2-1"
 umu:6>
 ```
 
-#### Pipelined Application
+#### (2) Pipelined Application
 
 like F#, Ocaml, Elixir
 
@@ -317,7 +317,7 @@ val it : String = "4-3-2-1"
 umu:2>
 ```
 
-#### Another Pipelined Application
+#### (2') Another Pipelined Application
 
 like a Haskell's $-operator
 
@@ -327,7 +327,7 @@ val it : String = "4-3-2-1"
 umu:2>
 ```
 
-#### Function Composition
+#### (3) Function Composition
 
 ```
 umu:1> (sort >> reverse >> map to-s >> join-by "-") [1, 4, 3, 2]
@@ -337,7 +337,7 @@ val it : String = "4-3-2-1"
 umu:3>
 ```
 
-#### Another Function Composition
+#### (3') Another Function Composition
 
 like a Haskell's point-free style
 
@@ -349,7 +349,7 @@ val it : String = "4-3-2-1"
 umu:3>
 ```
 
-#### Classical Nested Application
+#### (4) Classical Nested Application
 
 like LISP, Python, ... etc
 
@@ -364,7 +364,7 @@ umu:2>
 
 #### Makeing interval object
 
-##### By interval expression
+##### (1) By interval-expression
 
 ```
 umu:1> [1 .. 10]
@@ -373,9 +373,9 @@ umu:2> [1, 3 .. 10]
 val it : Interval = [1 .. 10 (+2)]
 ```
 
-##### Send to instance object
+##### (2) By send-expression to instance object
 
-###### By binary instance message expression
+###### (2-1) Binary instance message
 
 send binary instance message 'Int#to'
 
@@ -403,7 +403,7 @@ val it : Interval = [1 .. 10 (+2)]
 umu:5>
 ```
 
-###### By keyword instance message expression
+###### (2-2) Keyword instance message
 
 send keyword instance message 'Int#(to:)' and 'Int#(to:by:)'
 
@@ -415,9 +415,9 @@ val it : Interval = [1 .. 10 (+2)]
 umu:3>
 ```
 
-##### Send to class object
+##### (3) By send-expression to class object
 
-###### By binary class message expression
+###### (3-1) Binary class message
 
 send binary class message 'Interval.make'
 
@@ -449,7 +449,7 @@ val it : Interval = [1 .. 10 (+2)]
 umu:6>
 ```
 
-###### By keyword class message expression
+###### (3-2) Keyword class message
 
 send keyword class message 'Interval.(from:to:)' and 'Interval.(from:to:by:)'
 
