@@ -74,7 +74,7 @@ INSTANCE MESSAGES:
 umu:3>
 ```
 
-#### :dump
+#### :dump and :nodump
 ```
 umu:1> :dump
 umu:2> 3 + 4
@@ -95,7 +95,7 @@ umu:3> :nodump
 umu:4>
 ```
 
-#### :trace
+#### :trace and :notrace
 ```
 umu:1> :trace
 umu:2> 3 + 4
