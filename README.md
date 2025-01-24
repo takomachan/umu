@@ -341,9 +341,6 @@ like a Haskell's point-free style
 ```
 umu:1> (join-by "-" << map to-s << reverse << sort) [1, 4, 3, 2]
 val it : String = "4-3-2-1"
-```
-
-```
 umu:2> join-by "-" << map to-s << reverse << sort <| [1, 4, 3, 2]
 val it : String = "4-3-2-1"
 umu:3>
