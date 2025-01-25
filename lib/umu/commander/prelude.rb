@@ -144,31 +144,31 @@ structure Umu = struct {
     #### I/O ####
 
     structure IO = struct {
-        val STDIN  : Input  = &File.stdin
-        val STDOUT : Output = &File.stdout
-        val STDERR : Output = &File.stderr
+        val STDIN  : Input  = &Device.stdin
+        val STDOUT : Output = &Device.stdout
+        val STDERR : Output = &Device.stderr
 
 
         # see : String -> Input
-        fun see = file-path : String -> &File.see file-path
+        fun see = file-path : String -> &Device.see file-path
 
         # seen : Input -> ()
         fun seen = io : Input -> io.seen
 
         # see-with : String -> Fun -> ()
         fun see-with = (file-path : String) (f : Fun) ->
-             &File.see-with file-path f
+             &Device.see-with file-path f
 
 
         # tell : String -> Output
-        fun tell = file-path : String -> &File.tell file-path
+        fun tell = file-path : String -> &Device.tell file-path
 
         # told : Output -> ()
         fun told = io : Output -> io.told
 
         # tell-with : String -> Fun -> ()
         fun tell-with = (file-path : String) (f : Fun) ->
-             &File.tell-with file-path f
+             &Device.tell-with file-path f
 
 
         # gets : () -> Option String 

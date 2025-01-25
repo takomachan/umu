@@ -9,7 +9,7 @@ module Value
 
 module Core
 
-class File < Object
+class Device < Top
     define_class_method(
         :meth_make_stdin,
         :stdin, [],
@@ -101,7 +101,7 @@ class File < Object
         VC.make_unit
     end
 end
-File.freeze
+Device.freeze
 
 end # Umu::Value::Core
 
