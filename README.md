@@ -517,7 +517,7 @@ umu:3>
 ```
 
 For more advanced usage of the list comprehension,
-please refer to the [examples](https://github.com/takomachan/umu/tree/main/example/database).
+please refer to the [database examples](https://github.com/takomachan/umu/tree/main/example/database).
 
 
 
