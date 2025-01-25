@@ -179,7 +179,7 @@ class Entry < Container::Abstract
             q.pp self.expr
         end
 
-        PRT.group_nary q, self.qualifiers, eb: ']', sep: ' ', join: ' '
+        PRT.group_for_enum q, self.qualifiers, eb: ']', sep: ' ', join: ' '
     end
 
 

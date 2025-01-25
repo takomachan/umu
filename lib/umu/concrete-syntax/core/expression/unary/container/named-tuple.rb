@@ -106,7 +106,7 @@ class Entry < Abstract
 
 
     def pretty_print(q)
-        PRT.group_nary(
+        PRT.group_for_enum(
             q, self.index_by_label, bb: '(', eb: ')', join: ' '
         ) do |label, index|
 

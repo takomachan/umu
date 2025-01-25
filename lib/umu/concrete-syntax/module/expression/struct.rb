@@ -36,7 +36,7 @@ class Struct < Expression::Abstract
 
 
     def pretty_print(q)
-        PRT.group_nary(
+        PRT.group_for_enum(
             q, self.body_decls, bb: '%STRUCT {', eb: '}', sep: '  '
         ) do |decl| q.pp decl end
     end

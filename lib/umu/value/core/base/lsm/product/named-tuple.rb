@@ -58,7 +58,7 @@ class Named < Abstract
 
 
     def pretty_print(q)
-        PRT.group_nary q, self, bb: '(', eb: ')', join: ' ' do
+        PRT.group_for_enum q, self, bb: '(', eb: ')', join: ' ' do
             |label, value|
 
             q.text label.to_s

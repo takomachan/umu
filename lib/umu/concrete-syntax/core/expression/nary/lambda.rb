@@ -120,7 +120,7 @@ class Named < Abstract
 
 
     def pretty_print(q)
-        PRT.group_nary(
+        PRT.group_for_enum(
             q,
             self.pats,
             bb: format("%s = ", self.sym.to_s),
@@ -136,7 +136,9 @@ class Named < Abstract
         unless self.decls.empty?
             q.breakable
 
-            PRT.group_nary q, self.decls, bb: '%WHERE {', eb: '}', sep: ' '
+            PRT.group_for_enum(
+                q, self.decls, bb: '%WHERE {', eb: '}', sep: ' '
+            )
         end
     end
 
@@ -166,7 +168,7 @@ class Anonymous < Abstract
 
 
     def pretty_print(q)
-        PRT.group_nary q, self.pats, bb: '{', sep: ' '
+        PRT.group_for_enum q, self.pats, bb: '{', sep: ' '
 
         q.breakable
 
@@ -177,7 +179,7 @@ class Anonymous < Abstract
         unless self.decls.empty?
             q.breakable
 
-            PRT.group_nary q, self.decls, bb: '%WHERE', sep: ' '
+            PRT.group_for_enum q, self.decls, bb: '%WHERE', sep: ' '
         end
 
         q.breakable

@@ -10,12 +10,12 @@ Option Parameter
 * bb:   Begining symbol of grouping (Begin Braket)
 * eb:   Stopping symbol of grouping (End Braket)
 * sep:  Separator symbol between all elements
-* join: Join symbol between repeated a element
+* join: Join symbol between repeated elements
 
 How to Print
-* N=0: <bb> <sep> <eb>
-* N=1: <bb> <sep> elem <sep> <eb>
-* N>2: <bb> <sep> elem (<join> <sep> elem)* <sep> <eb>
+* N==0: <bb> <sep> <eb>
+* N==1: <bb> <sep> elem <sep> <eb>
+* N>=2: <bb> <sep> elem { <join> <sep> elem } <sep> <eb>
 * where N is number of elements
 =end
 
@@ -76,7 +76,7 @@ module_function
     end
 
 
-    def group_nary(q, elems, opts = {}, &_block)
+    def group_for_enum(q, elems, opts = {}, &_block)
         ASSERT.kind_of q,      ::PrettyPrint
         ASSERT.assert elems.respond_to? :each
         ASSERT.kind_of opts,   ::Hash

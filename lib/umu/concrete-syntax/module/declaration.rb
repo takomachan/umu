@@ -61,7 +61,7 @@ class Structure < Abstract
         unless self.local_decls.empty?
             q.breakable
 
-            PRT.group_nary(
+            PRT.group_for_enum(
                  q, self.local_decls, bb: '%WHERE {', eb: '}', sep: ' '
             )
         end
@@ -284,7 +284,7 @@ class Entry < Declaration::Abstract
         q.text self.id.to_s
 
         if self.opt_fields
-            PRT.group_nary(
+            PRT.group_for_enum(
                 q, self.opt_fields, bb: ' {', eb: '}', sep: ' '
            ) do |field| q.pp field end
         end

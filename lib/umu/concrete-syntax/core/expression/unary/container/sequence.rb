@@ -29,7 +29,8 @@ class Sequential < Abstract
 
 
     def pretty_print(q)
-        PRT.group_nary q, self, bb: '%DO (', eb: ')', join: ' ' do |expr|
+        PRT.group_for_enum q, self, bb: '%DO (', eb: ')', join: ' ' do
+        |expr|
             q.text '!'
             expr.pretty_print q
         end

@@ -57,7 +57,7 @@ class SeqOfDeclaration < Declaration::Abstract
 
 
     def pretty_print(q)
-        PRT.group_nary q, self
+        PRT.group_for_enum q, self
     end
 
 

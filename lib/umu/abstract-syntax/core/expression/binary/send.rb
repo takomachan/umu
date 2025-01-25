@@ -147,7 +147,7 @@ class Modifier < Abstraction::Selector
 
 
     def pretty_print(q)
-        PRT.group_nary(
+        PRT.group_for_enum(
             q, self.expr_by_label, bb: '$(', eb: ')', join: ', '
         ) do |label, expr|
             q.pp label
@@ -223,7 +223,7 @@ class Basic < Abstraction::Abstract
 
 
     def pretty_print(q)
-        PRT.group_nary(
+        PRT.group_for_enum(
             q,
 
             self.exprs,
@@ -455,7 +455,7 @@ class Entry < Binary::Abstract
             end
         end
 
-        PRT.group_nary q, self.rhs_messages
+        PRT.group_for_enum q, self.rhs_messages
     end
 
 

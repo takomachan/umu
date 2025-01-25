@@ -106,7 +106,7 @@ class Modifier < Abstract
 
 
     def pretty_print(q)
-        PRT.group_nary(
+        PRT.group_for_enum(
             q, self.fields, bb: '$(', eb: ')', join: ', '
         ) do |label, opt_expr|
             q.text label.to_s
@@ -180,7 +180,7 @@ class BasicMessage < Abstract
 
 
     def pretty_print(q)
-        PRT.group_nary(
+        PRT.group_for_enum(
             q,
 
             self.exprs,
@@ -232,7 +232,7 @@ class ApplyMessage < Abstract
 
 
     def pretty_print(q)
-        PRT.group_nary(
+        PRT.group_for_enum(
             q,
             [self.head_expr] + self.tail_exprs,
             bb: '.[',
@@ -313,7 +313,7 @@ class KeywordMessage < Abstract
 
 
     def pretty_print(q)
-        PRT.group_nary(
+        PRT.group_for_enum(
             q,
             [self.head_field] + self.tail_fields,
             bb: '.(',
@@ -383,7 +383,7 @@ class Entry < Binary::Abstract
             q.pp self.lhs_expr
         end
 
-        PRT.group_nary q, self.rhs_messages
+        PRT.group_for_enum q, self.rhs_messages
     end
 
 

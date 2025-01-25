@@ -46,7 +46,7 @@ class List < Abstraction::Expressions
 
 
     def pretty_print(q)
-        PRT.group_nary q, self, bb: '[', eb: ']', join: ', '
+        PRT.group_for_enum q, self, bb: '[', eb: ']', join: ', '
     end
 
 

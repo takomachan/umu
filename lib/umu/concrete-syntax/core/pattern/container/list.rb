@@ -64,13 +64,13 @@ class List < Container::Abstract
         if self.opt_last_pat
             last_pat = self.opt_last_pat
 
-            PRT.group_nary q, self, bb: '[', join: ', '
+            PRT.group_for_enum q, self, bb: '[', join: ', '
 
             PRT.group q, bb: '|', eb: ']' do
                 q.pp last_pat
             end
         else
-            PRT.group_nary q, self, bb: '[', eb: ']', join: ', '
+            PRT.group_for_enum q, self, bb: '[', eb: ']', join: ', '
         end
     end
 
