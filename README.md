@@ -57,6 +57,8 @@ Top/
             Symbol
     :
     :
+    :
+umu:2>
 ```
 
 ##### Detail
@@ -75,7 +77,7 @@ INSTANCE MESSAGES:
     Bool#not : Bool
     Bool#show : String
     Bool#to-s : String
-umu:3>
+umu:2>
 ```
 
 #### :dump and :nodump
@@ -236,6 +238,16 @@ umu:3>
 umu:1> fun add' = x y -> x + y
 fun add' = #<add': { x y -> (+ x y) }>
 umu:2> add' 3 4
+val it : Int = 7
+umu:3>
+```
+
+```
+umu:1> fun add'' = (x, y) -> x + y
+fun add'' = #<add'': { %a1 : Product
+    -> %LET { %VAL x = (%a1)$1 %VAL y = (%a1)$2 %IN (+ x y) }
+    }>
+umu:2> add'' (3, 4)
 val it : Int = 7
 umu:3>
 ```
