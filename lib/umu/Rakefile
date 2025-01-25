@@ -168,6 +168,7 @@ FILES = [
     'value/core/function.rb',
     'value/core/suspend.rb',
     'value/core/io.rb',
+    'value/core/dir.rb',
     'value/core/validate-type.rb',
     'environment.rb',
     'environment/preference.rb',

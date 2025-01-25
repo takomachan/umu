@@ -72,6 +72,36 @@ class Device < Top
 
 
     define_class_method(
+        :meth_see_dir,
+        :'see-dir', [],
+        [VCBA::String], VC::Dir
+    )
+    def self.meth_see_dir(_loc, _env, _event, file_path)
+        ASSERT.kind_of file_path, VCBA::String
+
+        dir_enum = ::Dir.foreach file_path.val
+
+        VC.make_dir dir_enum
+    end
+
+    define_class_method(
+        :meth_see_dir_with,
+        :'see-dir-with', [],
+        [VCBA::String, VC::Fun], VC::Unit
+    )
+    def self.meth_see_dir_with(loc, env, event, file_path, func)
+        ASSERT.kind_of file_path, VCBA::String
+        ASSERT.kind_of func,      VC::Fun
+
+        ::Dir.foreach(file_path.val) do |entry_name|
+            func.apply VC.make_string(entry_name), [], loc, env.enter(event)
+        end
+
+        VC.make_unit
+    end
+
+
+    define_class_method(
         :meth_tell,
         :tell, [],
         [VCBA::String], VC::IO::Output

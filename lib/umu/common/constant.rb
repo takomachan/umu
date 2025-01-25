@@ -85,6 +85,7 @@ module Umu
                 class Input  < Abstract; end
                 class Output < Abstract; end
             end
+            class Dir < Object; end
         end
     end
     module Environment
