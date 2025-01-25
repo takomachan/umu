@@ -369,7 +369,8 @@ print "#### 7.2.3 ####" ;;
 pp [|sno|
     val (sno: status: city:) <- S::rows
 
-    if city == "Paris" && status > 20
+    if city == "Paris"
+    && status > 20
 ] ;;
 # --> [@S3]
 nl () ;;
@@ -450,8 +451,8 @@ pp (
         val first  <- S::rows
         val second <- S::rows
 
-        if first$city == second$city &&
-           first$sno < second$sno
+        if first$city == second$city
+        && first$sno < second$sno
      ]
 ) ;;
 # --> [(@S1, @S4), (@S2, @S3)]
@@ -475,8 +476,8 @@ pp (
         val (sno: s-sno  sname:) <- S::rows
         val (sno: sp-sno pno:)   <- SP::rows
 
-        if s-sno == sp-sno &&
-           pno == @P2
+        if s-sno == sp-sno
+        && pno == @P2
      ]
 ) ;;
 # --> ["Smith", "Jones", "Blake", "Clark"]
@@ -487,11 +488,11 @@ pp (
      [|sname|
         val (sno: sname:) <- S::rows
 
-        if any?
-            (== sno)
-            [|sno| val (sno: pno:) <- SP::rows
-                   if pno == @P2
-            ]
+        if any? (== sno) [|sno|
+            val (sno: pno:) <- SP::rows
+
+            if pno == @P2
+        ]
      ]
 ) ;;
 # --> ["Smith", "Jones", "Blake", "Clark"]
@@ -516,9 +517,9 @@ pp (
      [|sno|
         val (sno: status:) <- S::rows
 
-        if any?
-            { x -> status < x }
-            [|status| val (status:) <- S::rows]
+        if any? (> status) [|status|
+            val (status:) <- S::rows
+        ]
      ]
 ) ;;
 # --> [@S1, @S2, @S4]
@@ -545,11 +546,11 @@ pp (
      [|sname|
         val (sno: sname:) <- S::rows
 
-        if include?
-            sno
-            [|sno| val (sno: pno:) <- SP::rows
-                   if pno == @P2
-            ]
+        if include? sno [|sno|
+            val (sno: pno:) <- SP::rows
+
+            if pno == @P2
+        ]
      ]
 ) ;;
 # --> ["Smith", "Jones", "Blake", "Clark"]
@@ -578,16 +579,15 @@ pp (
      [|sname|
         val (sno: sname:) <- S::rows
 
-        if include?
-            sno
-            [|sno| val (sno: pno:) <- SP::rows
+        if include? sno [|sno|
+            val (sno: pno:) <- SP::rows
 
-                   if include?
-                       pno
-                       [|pno| val (pno: color:) <- P::rows
-                           if color == "Red"
-                       ]
+            if include? pno [|pno|
+                val (pno: color:) <- P::rows
+
+                if color == "Red"
             ]
+        ]
      ]
 ) ;;
 # --> ["Smith", "Jones", "Clark"]
@@ -614,11 +614,11 @@ pp (
      [|sname|
         val (sno:s-sno sname:) <- S::rows
 
-        if include?
-            @P2
-            [|pno| val (sno: pno:) <- SP::rows
-                   if sno == s-sno
-            ]
+        if include? @P2 [|pno|
+            val (sno: pno:) <- SP::rows
+
+            if sno == s-sno
+        ]
      ]
 ) ;;
 # --> ["Smith", "Jones", "Blake", "Clark"]
@@ -645,11 +645,11 @@ pp (
      [|sno|
         val (sno: pno:) <- SP::rows
 
-        if include?
-            pno
-            [|pno| val (sno: pno:) <- SP::rows
-                   if sno == @S2
-            ]
+        if include? pno [|pno|
+            val (sno: pno:) <- SP::rows
+
+            if sno == @S2
+        ]
      ] |>
         sort |> uniq
 ) ;;
@@ -675,11 +675,11 @@ pp (
      [|spx$pno|
         val spx <- SP::rows
 
-        if include?
-            (spx$pno)
-            [|pno| val (sno: pno:) <- SP::rows
-                   if sno <> spx$sno
-            ]
+        if include? (spx$pno) [|pno|
+            val (sno: pno:) <- SP::rows
+
+            if sno <> spx$sno
+        ]
      ] |>
         sort |> uniq
 ) ;;
@@ -705,11 +705,11 @@ pp (
      [|sname|
         val (sno:s-sno sname:) <- S::rows
 
-        if not <| include?
-            @P2
-            [|pno| val (sno: pno:) <- SP::rows
-                   if sno == s-sno
-            ]
+        if not <| include? @P2 [|pno|
+            val (sno: pno:) <- SP::rows
+
+            if sno == s-sno
+        ]
      ]
 ) ;;
 # --> ["Adams"]
@@ -734,13 +734,13 @@ nl () ;;
 print "#### 7.2.15 ####" ;;
 pp (
      [|sno|
-        val (sno: city:) <- S::rows
+         val (sno: city:) <- S::rows
 
-        if include?
-            city
-            [|city| val (sno: city:) <- S::rows
-                   if sno == @S1
-            ]
+         if include? city [|city|
+             val (sno: city:) <- S::rows
+
+             if sno == @S1
+         ]
      ]
 ) ;;
 # --> [@S1, @S4]
@@ -766,13 +766,14 @@ nl () ;;
 print "#### 7.2.16 ####" ;;
 pp (
      [|sname|
-        val (sno: sname:) <- S::rows
+         val (sno: sname:) <- S::rows
 
-        if not <| empty?
-            [|sp| val sp <- SP::rows
-                 if sp$sno == sno &&
-                    sp$pno == @P2
-            ]
+         if not <| empty? [|sp|
+             val sp <- SP::rows
+
+             if sp$sno == sno
+             && sp$pno == @P2
+         ]
      ]
 ) ;;
 # --> ["Smith", "Jones", "Blake", "Clark"]
@@ -798,13 +799,14 @@ nl () ;;
 print "#### 7.2.17 ####" ;;
 pp (
      [|sname|
-        val (sno: sname:) <- S::rows
+         val (sno: sname:) <- S::rows
 
-        if empty?
-            [|sp| val sp <- SP::rows
-                 if sp$sno == sno &&
-                    sp$pno == @P2
-            ]
+         if empty? [|sp|
+             val sp <- SP::rows
+
+             if sp$sno == sno
+             && sp$pno == @P2
+         ]
      ]
 ) ;;
 # --> ["Adams"]
@@ -831,17 +833,18 @@ nl () ;;
 print "#### 7.2.18 ####" ;;
 pp (
      [|sname|
-        val (sno:s-sno sname:) <- S::rows
+         val (sno:s-sno sname:) <- S::rows
 
-        if empty?
-            [|()| val (pno:p-pno) <- P::rows
+         if empty? [|()|
+             val (pno:p-pno) <- P::rows
 
-                if empty?
-                    [|()| val (sno: pno:) <- SP::rows
-                          if sno == s-sno &&
-                             pno == p-pno
-                    ]
-            ]
+             if empty? [|()|
+                 val (sno: pno:) <- SP::rows
+
+                 if sno == s-sno
+                 && pno == p-pno
+             ]
+         ]
      ]
 ) ;;
 # --> ["Smith"]
