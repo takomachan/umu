@@ -516,8 +516,8 @@ val it : Cons = [(k:@a v:1), (k:@a v:2), (k:@a v:3), (k:@b v:1), (k:@b v:2), (k:
 umu:3>
 ```
 
-For more advanced usage,
-please refer to the [examples](https://github.com/takomachan/umu/tree/main/example).
+For more advanced usage of the list comprehension,
+please refer to the [examples](https://github.com/takomachan/umu/tree/main/example/database).
 
 
 
