@@ -357,7 +357,7 @@ val it : Int = 7
 
 ### メッセージチェイン、パイプライン適用そして関数合成
 
-edvakf様のブログ記事
+edvakfさんのブログ記事
 「[PythonでもRubyみたいに配列をメソッドチェーンでつなげたい](https://edvakf.hatenadiary.org/entry/20090405/1238885788)」
 を参照。
 
