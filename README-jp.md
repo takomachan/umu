@@ -640,7 +640,7 @@ umu:3>
 を参照してください。
 
 
-## インタプリタの内部実装
+## インタプリタ実装の内部
 
 [TmDoc](http://xtmlab.com/umu/tmdoc/html/)を参照
 
