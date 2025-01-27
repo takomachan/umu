@@ -12,6 +12,9 @@ $ git clone https://github.com/takomachan/umu
 
 ## REPLの使いかた
 
+> [!NOTE]
+> この章は別の文書「ユーザーガイド」に移行される予定です。
+
 ### 最初の一歩
 ```
 $ umu/exe/umu -i
@@ -99,9 +102,11 @@ umu:2>
 /結果(環境と値)/
 ```
 
-この処理の過程で生成される中間オブジェクトである
-トークンの並び(tokens)、具象構文木(soncrete syntax tree)そして
-抽象構文木(abstract syntax tree)を表示します。
+この処理の過程で生成される中間オブジェクトである：
+- トークンの並び(tokens)
+- 具象構文木(soncrete syntax tree)
+- 抽象構文木(abstract syntax tree)
+を表示します。
 
 ```
 umu:1> :dump
@@ -125,7 +130,7 @@ umu:4>
 
 #### :trace and :notrace
 
-インタプリタ内部の脱糖化(desugaring)処理と評価(evaluation)処理について、
+インタプリタ内部の脱糖化(desugaring)処理と評価(evaluation)処理について、
 その過程を階層的な軌跡(trace)で表示します。
 
 ```
@@ -164,7 +169,10 @@ umu:4>
 ```
 
 
-## 実行伶
+## 実行例
+
+> [!NOTE]
+> この章は別の文書「プログラミングガイド」に移行される予定です。
 
 ### 式と値
 
@@ -261,8 +269,6 @@ val it : Int = 7
 umu:3>
 ```
 
-`fun` declaration is syntax sugar of binding function object
-
 宣言 `fun` は関数オブジェクトの束縛に関する構文糖(syntax sugar)です。
 
 ```
@@ -336,14 +342,13 @@ val it : Int = 7
 ```
 
 
-### Message chaining, Pipelined application and Function composition
 ### メッセージチェイン、パイプライン適用そして関数合成
 
-[PythonでもRubyみたいに配列をメソッドチェーンでつなげたい](https://edvakf.hatenadiary.org/entry/20090405/1238885788)を参照。
+edvakf様のブログ記事[PythonでもRubyみたいに配列をメソッドチェーンでつなげたい](https://edvakf.hatenadiary.org/entry/20090405/1238885788)を参照。
 
 #### (1) メッセージチェイン
 
-オブジェクト指向プログラミング(Object oriented programming, OOP)スタイル
+オブジェクト指向プログラミング(object oriented programming, OOP)スタイル
 
 ```
 umu:1> [1, 4, 3, 2]
@@ -361,7 +366,7 @@ umu:6>
 
 #### (2) パイプライン適用
 
-F#, Ocaml, Elixirのように
+F#, Ocaml, Scala, Elixir ... のように
 
 ```
 umu:1> [1, 4, 3, 2] |> sort |> reverse |> map to-s |> join-by "-"
@@ -391,7 +396,7 @@ umu:3>
 
 #### (3') もう一つの関数合成
 
-like a Haskell's point-free style
+Haskellのポイントフリースタイル(point free style)のように
 
 ```
 umu:1> (join-by "-" << map to-s << reverse << sort) [1, 4, 3, 2]
@@ -412,11 +417,11 @@ umu:2>
 ```
 
 
-### 数列
+### インターバル
 
-#### 数列オブジェクトの生成
+#### インターバルオブジェクトの生成
 
-##### (1) 数列式で
+##### (1) インターバル式で
 
 ```
 umu:1> [1 .. 10]
@@ -513,10 +518,9 @@ val it : Interval = [1 .. 10 (+2)]
 umu:3>
 ```
 
-#### 数列オブジェクトの操作
+#### インターバルオブジェクトの操作
 
-数列(Interval)オブジェクトはリスト(List)オブジェクトと同じく
-コレクションの一種です。
+インターバルはリストと同じくコレクションの一種です。
 
 ```
 umu:1> [1 .. 10].to-list
@@ -553,8 +557,9 @@ val it : Cons = [(k:@a v:1), (k:@a v:2), (k:@a v:3), (k:@b v:1), (k:@b v:2), (k:
 umu:3>
 ```
 
-リスト内包表記のより高度な使いかたは
-[データベースの例](https://github.com/takomachan/umu/tree/main/example/database)を参照してください。
+リスト内包表記のより高度な使いかたは：
+- [データベースの例](https://github.com/takomachan/umu/tree/main/example/database)
+を参照してください。
 
 
 ## インタプリタの内部実装
