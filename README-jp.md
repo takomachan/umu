@@ -106,6 +106,7 @@ umu:2>
 - トークンの並び(tokens)
 - 具象構文木(soncrete syntax tree)
 - 抽象構文木(abstract syntax tree)
+
 を表示します。
 
 ```
@@ -344,7 +345,7 @@ val it : Int = 7
 
 ### メッセージチェイン、パイプライン適用そして関数合成
 
-edvakf様のブログ記事[PythonでもRubyみたいに配列をメソッドチェーンでつなげたい](https://edvakf.hatenadiary.org/entry/20090405/1238885788)を参照。
+edvakf様のブログ記事「[PythonでもRubyみたいに配列をメソッドチェーンでつなげたい](https://edvakf.hatenadiary.org/entry/20090405/1238885788)」を参照。
 
 #### (1) メッセージチェイン
 
@@ -557,7 +558,7 @@ val it : Cons = [(k:@a v:1), (k:@a v:2), (k:@a v:3), (k:@b v:1), (k:@b v:2), (k:
 umu:3>
 ```
 
-リスト内包表記のより高度な使いかたは：
+リスト内包表記の高度な使いかたは：
 - [データベースの例](https://github.com/takomachan/umu/tree/main/example/database)
 を参照してください。
 
