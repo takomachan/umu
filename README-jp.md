@@ -1,5 +1,15 @@
 # Umu - 関数型スクリプト言語
 
+## 特徴
+
+- オブジェクト指向と関数型という二つのスタイルが利用できます
+- 先行評価(eager evaluation)で不純(impure)ですが、原則は不変(immutable)です
+- 動的型付け(dynamic typing)です
+- あらゆる関数と多くのメッセージは最初からカリー化されています
+- 速度よりも表現力を
+
+
+
 ## インストール
 
 $ git clone https://github.com/takomachan/umu
