@@ -13,7 +13,7 @@ $ git clone https://github.com/takomachan/umu
 ## REPLの使いかた
 
 > [!NOTE]
-> この章は別の文書「ユーザーガイド」に移行される予定です。
+> この章は別の文書「ユーザガイド」に移行される予定です。
 
 ### 最初の一歩
 ```
@@ -89,7 +89,7 @@ INSTANCE MESSAGES:
 umu:2>
 ```
 
-#### :dump and :nodump
+#### :dump と :nodump
 
 インタプリタは入力されたスクリプトを以下の流れで処理します。
 
@@ -129,7 +129,7 @@ umu:3> :nodump
 umu:4>
 ```
 
-#### :trace and :notrace
+#### :trace と :notrace
 
 インタプリタ内部の脱糖化(desugaring)処理と評価(evaluation)処理について、
 その過程を階層的な軌跡(trace)で表示します。
@@ -341,6 +341,8 @@ val it : Int = 7
 umu:11> (+).[3, 4]       # 別の適用メッセージ記法(構文糖)
 val it : Int = 7
 ```
+```
+
 
 
 ### メッセージチェイン、パイプライン適用そして関数合成
@@ -418,6 +420,65 @@ umu:2>
 ```
 
 
+### メッセージ
+
+メッセージは以下のように分類されます。
+
+- メッセージ
+    - インスタンスメッセージ
+        - 単純インスタンスメッセージ
+            - 単項インスタンスメッセージ
+                - [例] Int#to-s : String
+                - [例] Bool#not : Bool
+                - [例] List#join : String
+            - 二項インスタンスメッセージ
+                - [例] Int#+ : Int -> Int
+                - [例] Int#to : Int -> Interval
+                - [例] String#^ : String -> String
+                - [例] List#join-by : String -> String
+                - [例] Fun#apply : Top -> Top
+            - 多項インスタンスメッセージ
+                - [例] Int#to-by : Int -> Int -> Interval
+                - [例] List#foldr : Top -> Fun -> Top
+                - [例] Fun#apply-binary : Top -> Top -> Top
+                - [例] Fun#apply-nary : Top -> Top -> Morph -> Top
+        - キーワードインスタンスメッセージ
+            - [例] Int#(to:Int) -> Interval
+            - [例] Int#(to:Int by:Int) -> Interval
+            - [例] List#(join:String) -> String
+    - クラスメッセージ
+        - 単純クラスメッセージ
+            - [例] &Bool.true : Bool
+            - [例] &Float.nan : Float
+            - [例] &Some.make : Top -> Some
+            - [例] &Datum.make : Symbol -> Top -> Datum
+            - [例] &Interval.make : Int -> Int -> Interval
+            - [例] &Interval.make-by : Int -> Int -> Int -> Interval
+        - キーワードクラスメッセージ
+            - [例] &Datum.(tag:Symbol contents:Top) -> Datum
+            - [例] &Interval.(from:Int to:Int) -> Interval
+            - [例] &Interval.(from:Int to:Int by:Int) -> Interval
+
+
+#### インスタンスメッセージとクラスメッセージ
+
+インスタンスメッセージは普通のメッセージです。
+
+クラスメッセージはクラス式 `&Foo` で生成されるクラスオブジェクトへのメッセージです。
+これは多くの場合、あるクラスからインスタンスを生成する、いわゆるインスタンス化(instantiation)のために用います。
+
+> [!NOTE]
+> 今のところ、JavaやRubyで見かけるインスタンス生成の予約語 `new` は、定義されていますが使われていません。
+> 将来、クラスのユーザー定義機能が提供される時、`new Foo x` という文法で使われるようになる予定です。
+
+
+#### 単純メッセージとキーワードメッセージ
+
+単純メッセージはカリー化されたメッセージであり、オブジェクト指向と関数型を混在したプログラミングスタイルに適しています。
+
+キーワードメッセージはカリー化されないメッセージであり、複雑な引数があるメッセージでは単純メッセージよりも可読性に優れています。
+
+
 ### インターバル
 
 #### インターバルオブジェクトの生成
@@ -435,7 +496,7 @@ val it : Interval = [1 .. 10 (+2)]
 
 ###### (2-1) 二項インスタンスメッセージ
 
-二項インスタンスメッセージ `Int#to` を送信
+二項インスタンスメッセージ `Int#to : Int -> Interval` を送信
 
 ```
 umu:1> 1.to 10
@@ -447,7 +508,7 @@ val it : Interval = [1 .. 10 (+1)]
 umu:4>
 ```
 
-二項インスタンスメッセージ `Int#to-by` を送信
+多項インスタンスメッセージ `Int#to-by : Int -> Int -> Interval` を送信
 
 ```
 umu:1> 1.to-by 10 2
@@ -463,7 +524,7 @@ umu:5>
 
 ###### (2-2) キーワードインスタンスメッセージ
 
-キーワードインスタンスメッセージ `Int#(to:)` と `Int#(to:by:)` を送信
+キーワードインスタンスメッセージ `Int#(to:Int) -> Interval` と `Int#(to:Int by:Int) -> Interval` を送信
 
 ```
 umu:1> 1.(to:10)
@@ -475,9 +536,9 @@ umu:3>
 
 ##### (3) クラスオブジェクトへの送信式で
 
-###### (3-1) 二項クラスメッセージ
+###### (3-1) 単純クラスメッセージ
 
-二項クラスメッセージ `Interval.make` を送信
+単純クラスメッセージ `&Interval.make : Int -> Int -> Interval` を送信
 
 ```
 umu:1> &Interval.make 1 10
@@ -491,7 +552,7 @@ val it : Interval = [1 .. 10 (+1)]
 umu:5>
 ```
 
-二項クラスメッセージ `Interval.make-by` を送信
+単純クラスメッセージ `&Interval.make-by : Int -> Int -> Int -> Interval` を送信
 
 ```
 umu:1> &Interval.make-by 1 10 2
@@ -509,7 +570,8 @@ umu:6>
 
 ###### (3-2) キーワードクラスメッセージ
 
-キーワードクラスメッセージ `Interval.(from:to:)` と `Interval.(from:to:by:)` を送信
+キーワードクラスメッセージ `&Interval.(from:Int to:Int) -> Interval` と
+`&Interval.(from:Int to:Int by:Int) -> Interval` を送信
 
 ```
 umu:1> &Interval.(from:1 to:10)
