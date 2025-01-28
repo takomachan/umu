@@ -15,186 +15,7 @@ module Binary
 
 module Send
 
-module Message
-
-module Abstraction
-
-class Abstract < Umu::Abstraction::Model
-    def evaluate_for(value, env, event)
-        raise X::InternalSubclassResponsibility
-    end
-end
-
-
-
-class Selector < Abstract
-    attr_reader :sel
-
-
-    def initialize(loc, sel)
-        ASSERT.kind_of sel, ::Object        # Polymopic
-
-        super(loc)
-
-        @sel = sel
-    end
-end
-
-end # Umu::AbstractSyntax::Core::Expression::Binary::Send::Message::Abstraction
-
-
-
-class ByNumber < Abstraction::Selector
-    alias sel_num sel
-
-
-    def initialize(loc, sel_num)
-        ASSERT.kind_of sel_num, ::Integer
-
-        super
-    end
-
-
-    def to_s
-        '$' + self.sel_num.to_s
-    end
-
-
-    def pretty_print(q)
-        q.text format("$%d", self.sel_num)
-    end
-
-
-    def evaluate_for(value, env, _event)
-        ASSERT.kind_of value,   VC::Top
-        ASSERT.kind_of env,     E::Entry
-
-        unless value.kind_of? VCP::Abstract
-            raise X::TypeError.new(
-                self.loc,
-                env,
-                "Selection operator '$' require a Product, but %s : %s",
-                    value.to_s,
-                    value.type_sym.to_s
-            )
-        end
-
-        result = value.select_by_number self.sel_num, self.loc, env
-        ASSERT.kind_of result, VC::Top
-    end
-end
-
-
-
-class ByLabel < Abstraction::Selector
-    alias sel_sym sel
-
-    def initialize(loc, sel_sym)
-        ASSERT.kind_of sel_sym, ::Symbol
-
-        super
-    end
-
-
-    def to_s
-        '$' + self.sel_sym.to_s
-    end
-
-
-    def pretty_print(q)
-        q.text format("$%s", self.sel_sym.to_s)
-    end
-
-
-    def evaluate_for(value, env, _event)
-        ASSERT.kind_of value,   VC::Top
-        ASSERT.kind_of env,         E::Entry
-
-        unless value.kind_of? VCP::Named
-            raise X::TypeError.new(
-                self.loc,
-                env,
-                "Selection operator '$' require a Named, but %s : %s",
-                    value.to_s,
-                    value.type_sym.to_s
-            )
-        end
-
-        result = value.select_by_label self.sel_sym, self.loc, env
-        ASSERT.kind_of result, VC::Top
-    end
-end
-
-
-
-class Modifier < Abstraction::Selector
-    alias expr_by_label sel
-
-    def initialize(loc, expr_by_label)
-        ASSERT.kind_of expr_by_label, ::Hash
-
-        super
-    end
-
-
-    def to_s
-        format("$(%s)",
-            self.expr_by_label.map { |label, expr|
-                format "%s %s", label.to_s, expr.to_s
-            }.join(', ')
-        )
-    end
-
-
-    def pretty_print(q)
-        PRT.group_for_enum(
-            q, self.expr_by_label, bb: '$(', eb: ')', join: ', '
-        ) do |label, expr|
-            q.pp label
-
-            q.breakable
-
-            q.pp expr
-        end
-    end
-
-
-    def evaluate_for(value, env, event)
-        ASSERT.kind_of value, VC::Top
-
-        unless value.kind_of? VCP::Named
-            raise X::TypeError.new(
-                self.loc,
-                env,
-                "Modifier operator '$(..)' require a Named, but %s : %s",
-                    value.to_s,
-                    value.type_sym.to_s
-            )
-        end
-
-        new_env = env.enter event
-        value_by_label = self.expr_by_label.inject({}) {
-            |hash, (label, expr)|
-            ASSERT.kind_of hash,    ::Hash
-            ASSERT.kind_of label,   ASCEU::Container::Named::Label
-            ASSERT.kind_of expr,    ASCE::Abstract
-
-            result = expr.evaluate new_env
-            ASSERT.kind_of result, ASR::Value
-
-            hash.merge(label.sym => result.value) { |lab, _, _|
-                ASSERT.abort "No case - label: $s", lab.to_s
-            }
-        }
-
-        result = value.modify value_by_label, self.loc, env
-        ASSERT.kind_of result, VC::Top
-    end
-end
-
-
-
-class Basic < Abstraction::Abstract
+class Message < Umu::Abstraction::Model
     attr_reader :sym, :exprs
 
 
@@ -399,8 +220,6 @@ private
     end
 end
 
-end # Umu::AbstractSyntax::Core::Expression::Binary::Send::Message
-
 
 
 class Entry < Binary::Abstract
@@ -415,8 +234,7 @@ class Entry < Binary::Abstract
         opt_receiver_type_sym
     )
         ASSERT.kind_of      lhs_expr,               ASCE::Abstract
-        ASSERT.kind_of      rhs_head_message,
-                                Binary::Send::Message::Abstraction::Abstract
+        ASSERT.kind_of      rhs_head_message,       Binary::Send::Message
         ASSERT.kind_of      rhs_tail_messages,      ::Array
         ASSERT.opt_kind_of  opt_receiver_type_sym,  ::Symbol
 
@@ -489,7 +307,7 @@ class Entry < Binary::Abstract
         final_receiver = self.rhs_messages.inject(init_receiver) {
             |receiver, message|
             ASSERT.kind_of receiver,    VC::Top
-            ASSERT.kind_of message,     Message::Abstraction::Abstract
+            ASSERT.kind_of message,     Message
 
             message.evaluate_for receiver, new_env, event
         }
@@ -503,37 +321,13 @@ end # Umu::AbstractSyntax::Core::Expression::Binary
 
 
 module_function
-    def make_number_selector(loc, sel_num)
-        ASSERT.kind_of loc,     LOC::Entry
-        ASSERT.kind_of sel_num, ::Integer
-
-        Binary::Send::Message::ByNumber.new(loc, sel_num).freeze
-    end
-
-
-    def make_label_selector(loc, sel_sym)
-        ASSERT.kind_of loc,     LOC::Entry
-        ASSERT.kind_of sel_sym, ::Symbol
-
-        Binary::Send::Message::ByLabel.new(loc, sel_sym).freeze
-    end
-
-
-    def make_modifier(loc, expr_by_label)
-        ASSERT.kind_of loc,             LOC::Entry
-        ASSERT.kind_of expr_by_label,   ::Hash
-
-        Binary::Send::Message::Modifier.new(loc, expr_by_label).freeze
-    end
-
-
 
     def make_message(loc, sym, exprs = [])
         ASSERT.kind_of loc,     LOC::Entry
         ASSERT.kind_of sym,     ::Symbol
         ASSERT.kind_of exprs,   ::Array
 
-        Binary::Send::Message::Basic.new(loc, sym, exprs.freeze).freeze
+        Binary::Send::Message.new(loc, sym, exprs.freeze).freeze
     end
 
 
@@ -544,8 +338,7 @@ module_function
     )
         ASSERT.kind_of      loc,                    LOC::Entry
         ASSERT.kind_of      lhs_expr,               ASCE::Abstract
-        ASSERT.kind_of      rhs_head_message,
-                                Binary::Send::Message::Abstraction::Abstract
+        ASSERT.kind_of      rhs_head_message,       Binary::Send::Message
         ASSERT.kind_of      rhs_tail_messages,      ::Array
         ASSERT.opt_kind_of  opt_receiver_type_sym,  ::Symbol
 

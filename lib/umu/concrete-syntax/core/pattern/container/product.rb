@@ -69,7 +69,7 @@ private
             ASSERT.kind_of epat,   ElementOfContainer::Abstract
             ASSERT.kind_of index,  ::Integer
 
-            expr = ASCE.make_send(
+            expr = ASCE.make_product(
                         epat.loc,
                         ASCE.make_identifier(epat.loc, var_sym),
                         __make_selector__(epat.loc, index, epat)

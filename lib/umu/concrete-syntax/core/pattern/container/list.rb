@@ -169,7 +169,7 @@ private
                             ASCD.make_value(
                                 loc,
                                 next_pair_sym,
-                                ASCE.make_send(
+                                ASCE.make_product(
                                     loc,
                                     __make_send_dest__(loc, tail_list_expr),
                                     ASCE.make_number_selector(loc, 2)
@@ -255,7 +255,7 @@ private
         ASSERT.kind_of var_sym, ::Symbol
         ASSERT.kind_of sel_num, ::Integer
 
-        ASCE.make_send(
+        ASCE.make_product(
             loc,
             ASCE.make_identifier(loc, var_sym),
             ASCE.make_number_selector(loc, sel_num)
