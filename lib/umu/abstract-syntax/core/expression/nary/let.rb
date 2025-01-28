@@ -60,6 +60,8 @@ class Let < Expression::Abstract
     end
 
 
+private
+
     def __evaluate__(init_env, event)
         ASSERT.kind_of init_env,    E::Entry
         ASSERT.kind_of event,       E::Tracer::Event

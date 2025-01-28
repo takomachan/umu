@@ -39,6 +39,8 @@ class Int < Abstract
     end
 
 
+private
+
     def __evaluate__(_env, _event)
         VC.make_integer self.obj
     end
@@ -52,6 +54,8 @@ class Float < Abstract
         super
     end
 
+
+private
 
     def __evaluate__(_env, _event)
         VC.make_float self.obj

@@ -35,6 +35,8 @@ class Force < Abstract
     end
 
 
+private
+
     def __evaluate__(env, event)
         result = self.expr.evaluate env.enter(event)
         ASSERT.kind_of result, ASR::Value

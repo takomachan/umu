@@ -131,6 +131,8 @@ class Entry < Expression::Abstract
     end
 
 
+private
+
     def __evaluate__(env, event)
         ASSERT.kind_of env,     E::Entry
         ASSERT.kind_of event,   E::Tracer::Event

@@ -28,6 +28,8 @@ class String < Abstract
     end
 
 
+private
+
     def __evaluate__(_env, _event)
         VC.make_string self.obj
     end

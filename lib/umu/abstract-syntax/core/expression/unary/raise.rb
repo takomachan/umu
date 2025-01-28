@@ -46,6 +46,8 @@ class Raise < Abstract
     end
 
 
+private
+
     def __evaluate__(env, event)
         new_env = env.enter event
 

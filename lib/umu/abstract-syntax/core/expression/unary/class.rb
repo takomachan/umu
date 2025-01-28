@@ -29,6 +29,8 @@ class Class < Abstract
     end
 
 
+private
+
     def __evaluate__(env, _event)
         class_signat = env.ty_lookup self.class_sym, self.loc
         ASSERT.kind_of class_signat, ECTSC::Base

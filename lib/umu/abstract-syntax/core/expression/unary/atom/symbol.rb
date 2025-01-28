@@ -28,6 +28,8 @@ class Symbol < Abstract
     end
 
 
+private
+
     def __evaluate__(_env, _event)
         VC.make_symbol self.obj
     end
