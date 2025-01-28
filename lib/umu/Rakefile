@@ -1,7 +1,7 @@
 FILES = [
     'version.rb',
     'commander.rb',
-    'commander/commander.rb',
+    'commander/entry.rb',
     'commander/option.rb',
     'commander/subcommand.rb',
     'commander/prelude.rb',
