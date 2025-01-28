@@ -9,8 +9,6 @@ module Value
 
 module Core
 
-module Base
-
 module Atom
 
 class Abstract < Object
@@ -38,7 +36,7 @@ class Abstract < Object
     define_instance_method(
         :meth_less_than,
         :'<', [],
-        [self], VCBA::Bool
+        [self], VCA::Bool
     )
     def meth_less_than(_loc, _env, _event, other)
         ASSERT.kind_of other, Atom::Abstract
@@ -48,9 +46,7 @@ class Abstract < Object
 end
 Abstract.freeze
 
-end # Umu::Value::Core::Base::Atom
-
-end # Umu::Value::Core::Base
+end # Umu::Value::Core::Atom
 
 end # Umu::Value::Core
 

@@ -43,10 +43,10 @@ class Device < Top
     define_class_method(
         :meth_see,
         :see, [],
-        [VCBA::String], VC::IO::Input
+        [VCA::String], VC::IO::Input
     )
     def self.meth_see(_loc, _env, _event, file_path)
-        ASSERT.kind_of file_path, VCBA::String
+        ASSERT.kind_of file_path, VCA::String
 
         file = ::File.open file_path.val, "r"
 
@@ -57,10 +57,10 @@ class Device < Top
     define_class_method(
         :meth_see_with,
         :'see-with', [],
-        [VCBA::String, VC::Fun], VC::Unit
+        [VCA::String, VC::Fun], VC::Unit
     )
     def self.meth_see_with(loc, env, event, file_path, func)
-        ASSERT.kind_of file_path, VCBA::String
+        ASSERT.kind_of file_path, VCA::String
         ASSERT.kind_of func,      VC::Fun
 
         ::File.open(file_path.val, "r") do |file|
@@ -74,10 +74,10 @@ class Device < Top
     define_class_method(
         :meth_see_dir,
         :'see-dir', [],
-        [VCBA::String], VC::Dir
+        [VCA::String], VC::Dir
     )
     def self.meth_see_dir(_loc, _env, _event, file_path)
-        ASSERT.kind_of file_path, VCBA::String
+        ASSERT.kind_of file_path, VCA::String
 
         dir_enum = ::Dir.foreach file_path.val
 
@@ -87,10 +87,10 @@ class Device < Top
     define_class_method(
         :meth_see_dir_with,
         :'see-dir-with', [],
-        [VCBA::String, VC::Fun], VC::Unit
+        [VCA::String, VC::Fun], VC::Unit
     )
     def self.meth_see_dir_with(loc, env, event, file_path, func)
-        ASSERT.kind_of file_path, VCBA::String
+        ASSERT.kind_of file_path, VCA::String
         ASSERT.kind_of func,      VC::Fun
 
         ::Dir.foreach(file_path.val) do |entry_name|
@@ -104,10 +104,10 @@ class Device < Top
     define_class_method(
         :meth_tell,
         :tell, [],
-        [VCBA::String], VC::IO::Output
+        [VCA::String], VC::IO::Output
     )
     def self.meth_tell(_loc, _env, _event, file_path)
-        ASSERT.kind_of file_path, VCBA::String
+        ASSERT.kind_of file_path, VCA::String
 
         file = ::File.open file_path.val, "a"
 
@@ -118,10 +118,10 @@ class Device < Top
     define_class_method(
         :meth_tell_with,
         :'tell-with', [],
-        [VCBA::String, VC::Fun], VC::Unit
+        [VCA::String, VC::Fun], VC::Unit
     )
     def self.meth_tell_with(loc, env, event, file_path, func)
-        ASSERT.kind_of file_path, VCBA::String
+        ASSERT.kind_of file_path, VCA::String
         ASSERT.kind_of func,      VC::Fun
 
         ::File.open(file_path.val, "a") do |file|

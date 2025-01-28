@@ -9,8 +9,6 @@ module Value
 
 module Core
 
-module Base
-
 module LSM
 
 module Product
@@ -81,11 +79,9 @@ class Abstract < Object
     end
 end
 
-end # Umu::Value::Core::Base::LSM::Product
+end # Umu::Value::Core::LSM::Product
 
-end # Umu::Value::Core::Base::LSM
-
-end # Umu::Value::Core::Base
+end # Umu::Value::Core::LSM
 
 end # Umu::Value::Core
 

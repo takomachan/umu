@@ -9,8 +9,6 @@ module Value
 
 module Core
 
-module Base
-
 module LSM
 
 module Morph
@@ -40,12 +38,12 @@ class Interval < Abstract
     define_class_method(
         :meth_make,
         :make, [:'from:to:'],
-        [VCBAN::Int, VCBAN::Int], self
+        [VCAN::Int, VCAN::Int], self
     )
     define_class_method(
         :meth_make,
         :'make-by', [:'from:to:by:'],
-        [VCBAN::Int, VCBAN::Int, VCBAN::Int], self
+        [VCAN::Int, VCAN::Int, VCAN::Int], self
     )
     def self.meth_make(
         _loc, _env, _event,
@@ -53,9 +51,9 @@ class Interval < Abstract
         stop_value,
         step_value = VC.make_integer_one
     )
-        ASSERT.kind_of start_value, VCBAN::Int
-        ASSERT.kind_of stop_value,  VCBAN::Int
-        ASSERT.kind_of step_value,  VCBAN::Int
+        ASSERT.kind_of start_value, VCAN::Int
+        ASSERT.kind_of stop_value,  VCAN::Int
+        ASSERT.kind_of step_value,  VCAN::Int
 
         VC.make_interval start_value, stop_value, step_value
     end
@@ -65,9 +63,9 @@ class Interval < Abstract
 
 
     def initialize(current_value, stop_value, step_value)
-        ASSERT.kind_of current_value, VCBAN::Int
-        ASSERT.kind_of stop_value,    VCBAN::Int
-        ASSERT.kind_of step_value,    VCBAN::Int
+        ASSERT.kind_of current_value, VCAN::Int
+        ASSERT.kind_of stop_value,    VCAN::Int
+        ASSERT.kind_of step_value,    VCAN::Int
 
         @current_value = current_value
         @stop_value    = stop_value
@@ -80,7 +78,7 @@ class Interval < Abstract
     define_instance_method(
         :meth_contents,
         :contents, [],
-        [], VCBLP::Named
+        [], VCLP::Named
     )
     def meth_contents(_loc, _env, _event)
         VC.make_named_tuple(
@@ -95,7 +93,7 @@ class Interval < Abstract
     define_instance_method(
         :meth_cons,
         :cons, [],
-        [VC::Top], VCBLM::List::Abstract  # --> NotConstractible
+        [VC::Top], VCLM::List::Abstract  # --> NotConstractible
     )
     def meth_cons(loc, env, _event, _value)
         raise X::NotImplemented.new(
@@ -151,11 +149,9 @@ end
 Interval.freeze
 
 
-end # Umu::Value::Core::Base::LSM::Morph
+end # Umu::Value::Core::LSM::Morph
 
-end # Umu::Value::Core::Base::LSM
-
-end # Umu::Value::Core::Base
+end # Umu::Value::Core::LSM
 
 
 module_function
@@ -165,11 +161,11 @@ module_function
         stop_value,
         step_value = VC.make_integer_one
     )
-        ASSERT.kind_of start_value, VCBAN::Int
-        ASSERT.kind_of stop_value,  VCBAN::Int
-        ASSERT.kind_of step_value,  VCBAN::Int
+        ASSERT.kind_of start_value, VCAN::Int
+        ASSERT.kind_of stop_value,  VCAN::Int
+        ASSERT.kind_of step_value,  VCAN::Int
 
-        Base::LSM::Morph::Interval.new(
+        LSM::Morph::Interval.new(
             start_value, stop_value, step_value
         ).freeze
     end

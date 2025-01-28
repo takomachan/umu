@@ -145,7 +145,7 @@ class Entry < Expression::Abstract
             ASSERT.kind_of head_result, ASR::Value
 
             head_value = head_result.value
-            unless head_value.kind_of? VCBA::Bool
+            unless head_value.kind_of? VCA::Bool
                 raise X::TypeError.new(
                     rule.loc,
                     env,

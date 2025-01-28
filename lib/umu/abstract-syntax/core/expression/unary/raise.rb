@@ -53,7 +53,7 @@ class Raise < Abstract
         ASSERT.kind_of msg_result, ASR::Value
 
         msg_value = msg_result.value
-        unless msg_value.kind_of? VCBA::String
+        unless msg_value.kind_of? VCA::String
             raise X::TypeError.new(
                 self.msg_expr.loc,
                 new_env,

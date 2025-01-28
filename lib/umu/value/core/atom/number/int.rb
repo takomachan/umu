@@ -9,8 +9,6 @@ module Value
 
 module Core
 
-module Base
-
 module Atom
 
 module Number
@@ -36,7 +34,7 @@ class Int < Abstract
     define_instance_method(
         :meth_is_odd,
         :odd?, [],
-        [], VCBA::Bool
+        [], VCA::Bool
     )
     def meth_is_odd(_loc, _env, _event)
         VC.make_bool self.val.odd?
@@ -46,7 +44,7 @@ class Int < Abstract
     define_instance_method(
         :meth_is_even,
         :even?, [],
-        [], VCBA::Bool
+        [], VCA::Bool
     )
     def meth_is_even(_loc, _env, _event)
         VC.make_bool self.val.even?
@@ -95,7 +93,7 @@ class Int < Abstract
     define_instance_method(
         :meth_less_than,
         :'<', [],
-        [self], VCBA::Bool
+        [self], VCA::Bool
     )
 
 
@@ -144,10 +142,10 @@ class Int < Abstract
     define_instance_method(
         :meth_to,
         :to, [:'to:'],
-        [self], VCBLM::Interval
+        [self], VCLM::Interval
     )
     def meth_to(_loc, _env, _event, stop_value)
-        ASSERT.kind_of stop_value, VCBAN::Int
+        ASSERT.kind_of stop_value, VCAN::Int
 
         VC.make_interval self, stop_value
     end
@@ -156,11 +154,11 @@ class Int < Abstract
     define_instance_method(
         :meth_to_by,
         :'to-by', [:'to:by:'],
-        [self, self], VCBLM::Interval
+        [self, self], VCLM::Interval
     )
     def meth_to_by(loc, env, _event, stop_value, step_value)
-        ASSERT.kind_of stop_value, VCBAN::Int
-        ASSERT.kind_of step_value, VCBAN::Int
+        ASSERT.kind_of stop_value, VCAN::Int
+        ASSERT.kind_of step_value, VCAN::Int
 
         if self.val <= stop_value.val
             unless step_value.val.positive?
@@ -199,9 +197,7 @@ Int.freeze
 ZERO = Int.new(0).freeze
 ONE  = Int.new(1).freeze
 
-end # Umu::Value::Core::Atom::Base::Number
-
-end # Umu::Value::Core::Atom::Base
+end # Umu::Value::Core::Atom::Number
 
 end # Umu::Value::Core::Atom
 
@@ -211,17 +207,17 @@ module_function
     def make_integer(val)
         ASSERT.kind_of val, ::Integer
 
-        Base::Atom::Number::Int.new(val).freeze
+        Atom::Number::Int.new(val).freeze
     end
 
 
     def make_integer_zero
-        Base::Atom::Number::ZERO
+        Atom::Number::ZERO
     end
 
 
     def make_integer_one
-        Base::Atom::Number::ONE
+        Atom::Number::ONE
     end
 
 end # Umu::Value::Core

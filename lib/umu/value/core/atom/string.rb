@@ -9,8 +9,6 @@ module Value
 
 module Core
 
-module Base
-
 module Atom
 
 class String < Abstract
@@ -39,7 +37,7 @@ class String < Abstract
     define_instance_method(
         :meth_less_than,
         :'<', [],
-        [self], VCBA::Bool
+        [self], VCA::Bool
     )
 
 
@@ -67,9 +65,7 @@ end
 String.freeze
 
 
-end # Umu::Value::Core::Base::Atom
-
-end # Umu::Value::Core::Base
+end # Umu::Value::Core::Atom
 
 
 module_function
@@ -77,7 +73,7 @@ module_function
     def make_string(val)
         ASSERT.kind_of val, ::String
 
-        Base::Atom::String.new(val.freeze).freeze
+        Atom::String.new(val.freeze).freeze
     end
 
 end # Umu::Value::Core

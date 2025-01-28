@@ -48,34 +48,32 @@ module Umu
             class Top < ::Object; end
             class Object < Top; end
             class Unit < Object; end
-            module Base
-                module Atom
-                    class Abstract < Object; end
-                    class Bool < Abstract; end
-                    module Number
-                        class Abstract < Atom::Abstract; end
-                        class Int < Abstract; end
-                        class Float < Abstract; end
-                    end
-                    class String < Abstract; end
+            module Atom
+                class Abstract < Object; end
+                class Bool < Abstract; end
+                module Number
+                    class Abstract < Atom::Abstract; end
+                    class Int < Abstract; end
+                    class Float < Abstract; end
                 end
-                module LSM
-                    module Product
-                        class Abstract < Object; end
-                        class Tuple < Abstract; end
+                class String < Abstract; end
+            end
+            module LSM
+                module Product
+                    class Abstract < Object; end
+                    class Tuple < Abstract; end
+                end
+                module Union
+                    class Abstract < Object; end
+                    module Option
+                        class Abstract < Union::Abstract; end
                     end
-                    module Union
-                        class Abstract < Object; end
-                        module Option
-                            class Abstract < Union::Abstract; end
-                        end
-                    end
-                    module Morph
-                        class Abstract < Object; end
-                        class Interval < Abstract; end
-                        module List
-                            class Abstract < Morph::Abstract; end
-                        end
+                end
+                module Morph
+                    class Abstract < Object; end
+                    class Interval < Abstract; end
+                    module List
+                        class Abstract < Morph::Abstract; end
                     end
                 end
             end
@@ -131,13 +129,12 @@ module Umu
     ASCEN   = AbstractSyntax::Core::Expression::Nary
     V       = Value
     VC      = Value::Core
-    VCB     = Value::Core::Base
-    VCBA    = Value::Core::Base::Atom
-    VCBAN   = Value::Core::Base::Atom::Number
-    VCBL    = Value::Core::Base::LSM
-    VCBLP   = Value::Core::Base::LSM::Product
-    VCBLU   = Value::Core::Base::LSM::Union
-    VCBLM   = Value::Core::Base::LSM::Morph
+    VCA     = Value::Core::Atom
+    VCAN    = Value::Core::Atom::Number
+    VCL     = Value::Core::LSM
+    VCLP    = Value::Core::LSM::Product
+    VCLU    = Value::Core::LSM::Union
+    VCLM    = Value::Core::LSM::Morph
     E       = Environment
     EC      = Environment::Context
     ECT     = Environment::Context::Type

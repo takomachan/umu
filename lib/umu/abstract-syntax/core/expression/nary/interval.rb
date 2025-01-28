@@ -54,7 +54,7 @@ class Interval < Expression::Abstract
         ASSERT.kind_of fst_result, ASR::Value
         fst_value = fst_result.value
         ASSERT.kind_of fst_value, VC::Top
-        unless fst_value.kind_of? VCBAN::Int
+        unless fst_value.kind_of? VCAN::Int
             raise X::TypeError.new(
                 self.loc,
                 env,
@@ -71,7 +71,7 @@ class Interval < Expression::Abstract
                 ASSERT.kind_of snd_result, ASR::Value
                 snd_value = snd_result.value
                 ASSERT.kind_of snd_value, VC::Top
-                unless snd_value.kind_of? VCBAN::Int
+                unless snd_value.kind_of? VCAN::Int
                     raise X::TypeError.new(
                         self.loc,
                         env,
@@ -91,7 +91,7 @@ class Interval < Expression::Abstract
         ASSERT.kind_of lst_result, ASR::Value
         lst_value = lst_result.value
         ASSERT.kind_of lst_value, VC::Top
-        unless lst_value.kind_of? VCBAN::Int
+        unless lst_value.kind_of? VCAN::Int
             raise X::TypeError.new(
                 self.loc,
                 env,

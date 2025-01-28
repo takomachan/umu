@@ -9,8 +9,6 @@ module Value
 
 module Core
 
-module Base
-
 module LSM
 
 module Product
@@ -134,10 +132,10 @@ class Named < Abstract
     define_instance_method(
         :meth_less_than,
         :'<', [],
-        [self], VCBA::Bool
+        [self], VCA::Bool
     )
     def meth_less_than(loc, env, event, other)
-        ASSERT.kind_of other, VCBLP::Named
+        ASSERT.kind_of other, VCLP::Named
 
         unless other.kind_of?(self.class) && self.arity == other.arity
             raise X::TypeError.new(
@@ -159,7 +157,7 @@ class Named < Abstract
                 (res, index),
                 ((self_label, self_value), (other_label, other_value))
             |
-            ASSERT.kind_of res,         VCBA::Bool
+            ASSERT.kind_of res,         VCA::Bool
             ASSERT.kind_of index,       ::Integer
             ASSERT.kind_of self_label,  ::Symbol
             ASSERT.kind_of self_value,  VC::Top
@@ -214,14 +212,12 @@ class Named < Abstract
             end
         }
 
-        ASSERT.kind_of result, VCBA::Bool
+        ASSERT.kind_of result, VCA::Bool
     end
 end
 Named.freeze
 
-end # Umu::Value::Core::LSM::Base::Product
-
-end # Umu::Value::Core::LSM::Base
+end # Umu::Value::Core::LSM::Product
 
 end # Umu::Value::Core::LSM
 
@@ -234,7 +230,7 @@ module_function
         ASSERT.kind_of snd_value,      ::Object
         ASSERT.kind_of tail_values,    ::Array
 
-        Base::LSM::Product::Named.new(
+        LSM::Product::Named.new(
             fst_value, snd_value, tail_values.freeze, index_by_label.freeze
         ).freeze
     end

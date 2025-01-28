@@ -9,8 +9,6 @@ module Value
 
 module Core
 
-module Base
-
 module LSM
 
 module Morph
@@ -21,7 +19,7 @@ class Abstract < Object
     * .make(xs : ::Array) -> Morph::Abstract
     * .meth_make_empty(loc, env, event) -> Morph::Abstract
     * #meth_cons(loc, env, event, value : VC::Top) -> Morph::Abstract
-    * #meth_is_empty(loc, env, event) -> VCBA::Bool
+    * #meth_is_empty(loc, env, event) -> VCA::Bool
     * #dest! -> [VC::Top, Morph::Abstract]
 =end
 
@@ -109,9 +107,9 @@ class Abstract < Object
             VC.validate_option value, 'unfoldl', loc, new_env
 
             case value
-            when VCBLU::Option::None
+            when VCLU::Option::None
                 break [x1, ys]
-            when VCBLU::Option::Some
+            when VCLU::Option::Some
                 tuple      = value.contents
                 x2, next_x = VC.validate_pair tuple, "unfoldl", loc, env
 
@@ -134,7 +132,7 @@ class Abstract < Object
         xs = self
         loop do
             t = xs.dest!
-            ASSERT.kind_of t, VCBLP::Tuple
+            ASSERT.kind_of t, VCLP::Tuple
             x, xs1 = t.values
 
             yield x
@@ -161,7 +159,7 @@ class Abstract < Object
     define_instance_method(
         :meth_is_empty,
         :empty?, [],
-        [], VCBA::Bool
+        [], VCA::Bool
     )
     def meth_is_empty(_loc, _env, _event)
         raise X::InternalSubclassResponsibility
@@ -176,7 +174,7 @@ class Abstract < Object
     define_instance_method(
         :meth_dest!,
         :dest!, [],
-        [], VCBLP::Tuple
+        [], VCLP::Tuple
     )
     def meth_dest!(loc, env, _event)
         begin
@@ -194,7 +192,7 @@ class Abstract < Object
     define_instance_method(
         :meth_dest,
         :dest, [],
-        [], VCBLU::Option::Abstract
+        [], VCLU::Option::Abstract
     )
     def meth_dest(loc, env, event)
         if self.meth_is_empty(loc, env, event).true?
@@ -228,7 +226,7 @@ class Abstract < Object
     define_instance_method(
         :meth_to_list,
         :'to-list', [],
-        [], VCBLM::List::Abstract
+        [], VCLM::List::Abstract
     )
     def meth_to_list(loc, env, event)
         result = self.foldr(
@@ -339,7 +337,7 @@ class Abstract < Object
     define_instance_method(
         :meth_count,
         :count, [],
-        [], VCBAN::Int
+        [], VCAN::Int
     )
     def meth_count(loc, env, event)
         result = self.foldl(
@@ -349,14 +347,14 @@ class Abstract < Object
              n.meth_succ new_loc, new_env, event
         }
 
-        ASSERT.kind_of result, VCBAN::Int
+        ASSERT.kind_of result, VCAN::Int
     end
 
 
     define_instance_method(
         :meth_sum,
         :sum, [],
-        [], VCBAN::Abstract
+        [], VCAN::Abstract
     )
     def meth_sum(loc, env, event)
         if self.meth_is_empty(loc, env, event).true?
@@ -387,14 +385,14 @@ class Abstract < Object
             sum.meth_add new_loc, new_env, event, x
         }
 
-        ASSERT.kind_of result, VCBAN::Abstract
+        ASSERT.kind_of result, VCAN::Abstract
     end
 
 
     define_instance_method(
         :meth_avg,
         :avg, [],
-        [], VCBAN::Abstract
+        [], VCAN::Abstract
     )
     def meth_avg(loc, env, event)
         if self.meth_is_empty(loc, env, event).true?
@@ -441,7 +439,7 @@ class Abstract < Object
     define_instance_method(
         :meth_max,
         :max, [],
-        [], VCBAN::Abstract
+        [], VCAN::Abstract
     )
     def meth_max(loc, env, event)
         if self.meth_is_empty(loc, env, event).true?
@@ -480,7 +478,7 @@ class Abstract < Object
     define_instance_method(
         :meth_min,
         :min, [],
-        [], VCBAN::Abstract
+        [], VCAN::Abstract
     )
     def meth_min(loc, env, event)
         if self.meth_is_empty(loc, env, event).true?
@@ -519,7 +517,7 @@ class Abstract < Object
     define_instance_method(
         :meth_is_all,
         :all?, [],
-        [VC::Fun], VCBA::Bool
+        [VC::Fun], VCA::Bool
     )
     def meth_is_all(loc, env, event, func)
         ASSERT.kind_of func, VC::Fun
@@ -536,14 +534,14 @@ class Abstract < Object
             bool
         }
 
-        ASSERT.kind_of result, VCBA::Bool
+        ASSERT.kind_of result, VCA::Bool
     end
 
 
     define_instance_method(
         :meth_is_any,
         :any?, [],
-        [VC::Fun], VCBA::Bool
+        [VC::Fun], VCA::Bool
     )
     def meth_is_any(loc, env, event, func)
         ASSERT.kind_of func, VC::Fun
@@ -560,14 +558,14 @@ class Abstract < Object
             bool
         }
 
-        ASSERT.kind_of result, VCBA::Bool
+        ASSERT.kind_of result, VCA::Bool
     end
 
 
     define_instance_method(
         :meth_is_include,
         :include?, [],
-        [VC::Top], VCBA::Bool
+        [VC::Top], VCA::Bool
     )
     def meth_is_include(loc, env, event, member)
         ASSERT.kind_of member, VC::Top
@@ -584,7 +582,7 @@ class Abstract < Object
             bool
         }
 
-        ASSERT.kind_of result, VCBA::Bool
+        ASSERT.kind_of result, VCA::Bool
     end
 
 
@@ -625,7 +623,7 @@ class Abstract < Object
             )
         }
 
-        ASSERT.kind_of result, VCBLM::List::Abstract
+        ASSERT.kind_of result, VCLM::List::Abstract
     end
 
 
@@ -651,7 +649,7 @@ class Abstract < Object
             end
         }
 
-        ASSERT.kind_of result, VCBLM::List::Abstract
+        ASSERT.kind_of result, VCLM::List::Abstract
     end
 
 
@@ -677,7 +675,7 @@ class Abstract < Object
             end
         }
 
-        ASSERT.kind_of result, VCBLM::List::Abstract
+        ASSERT.kind_of result, VCLM::List::Abstract
     end
 
 
@@ -700,7 +698,7 @@ class Abstract < Object
                         }
                     end
 
-        ASSERT.kind_of result, VCBLM::Abstract
+        ASSERT.kind_of result, VCLM::Abstract
     end
 
 
@@ -717,7 +715,7 @@ class Abstract < Object
             xss.meth_append new_loc, new_env, event, xs
         }
 
-        ASSERT.kind_of result, VCBLM::List::Abstract
+        ASSERT.kind_of result, VCLM::List::Abstract
     end
 
 
@@ -739,22 +737,22 @@ class Abstract < Object
             yss.meth_append new_loc, new_env, event, xs
         }
 
-        ASSERT.kind_of result, VCBLM::List::Abstract
+        ASSERT.kind_of result, VCLM::List::Abstract
     end
 
 
     define_instance_method(
         :meth_join,
         :join, [],
-        [], VCBA::String
+        [], VCA::String
     )
     define_instance_method(
         :meth_join,
         :'join-by', [:'join:'],
-        [VCBA::String], VCBA::String
+        [VCA::String], VCA::String
     )
     def meth_join(loc, env, event, sep_value = nil)
-        ASSERT.opt_kind_of sep_value, VCBA::String
+        ASSERT.opt_kind_of sep_value, VCA::String
 
         result = self.foldl(
              loc,     env,     event, VC.make_opaque(["", true])
@@ -819,14 +817,14 @@ class Abstract < Object
 
         result = zs.meth_reverse loc, env, event
 
-        ASSERT.kind_of result, VCBLM::List::Abstract
+        ASSERT.kind_of result, VCLM::List::Abstract
     end
 
 
     define_instance_method(
         :meth_unzip,
         :unzip, [],
-        [], VCBLP::Tuple
+        [], VCLP::Tuple
     )
     def meth_unzip(loc, env, event)
         result = self.foldr(
@@ -844,7 +842,7 @@ class Abstract < Object
             )
         }
 
-        ASSERT.kind_of result, VCBLP::Tuple
+        ASSERT.kind_of result, VCLP::Tuple
     end
 
 
@@ -897,7 +895,7 @@ class Abstract < Object
     define_instance_method(
         :meth_partition,
         :partition, [],
-        [VC::Fun], VCBLP::Tuple
+        [VC::Fun], VCLP::Tuple
     )
     def meth_partition(loc, env, event, func)
         ASSERT.kind_of func, VC::Fun
@@ -996,14 +994,12 @@ class Abstract < Object
                                 bigs1.meth_cons(loc, env, event, pivot)
                             )
 
-        ASSERT.kind_of result, VCBLM::List::Abstract
+        ASSERT.kind_of result, VCLM::List::Abstract
     end
 end
 Abstract.freeze
 
-end # Umu::Value::Core::LSM::Base::Morph
-
-end # Umu::Value::Core::LSM::Base
+end # Umu::Value::Core::LSM::Morph
 
 end # Umu::Value::Core::LSM
 

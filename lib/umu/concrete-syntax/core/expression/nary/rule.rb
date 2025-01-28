@@ -150,7 +150,7 @@ class Atom < Abstract
 
 
     def initialize(loc, atom_value)
-        ASSERT.kind_of atom_value, VCBA::Abstract
+        ASSERT.kind_of atom_value, VCA::Abstract
 
         super
     end
@@ -331,7 +331,7 @@ module_function
 
     def make_case_rule_atom(loc, atom_value)
         ASSERT.kind_of loc,         LOC::Entry
-        ASSERT.kind_of atom_value,  VCBA::Abstract
+        ASSERT.kind_of atom_value,  VCA::Abstract
 
         Nary::Rule::Case::Head::Atom.new(
             loc, atom_value

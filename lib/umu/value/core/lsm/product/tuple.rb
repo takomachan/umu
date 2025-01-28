@@ -9,8 +9,6 @@ module Value
 
 module Core
 
-module Base
-
 module LSM
 
 module Product
@@ -61,10 +59,10 @@ class Tuple < Abstract
     define_instance_method(
         :meth_less_than,
         :'<', [],
-        [self], VCBA::Bool
+        [self], VCA::Bool
     )
     def meth_less_than(loc, env, event, other)
-        ASSERT.kind_of other, VCBLP::Tuple
+        ASSERT.kind_of other, VCLP::Tuple
 
         unless other.kind_of?(self.class) && self.arity == other.arity
             raise X::TypeError.new(
@@ -79,7 +77,7 @@ class Tuple < Abstract
             .zip(other.values)
             .inject([VC.make_false, 0]) {
             |(res, index), (self_value, other_value)|
-            ASSERT.kind_of res,         VCBA::Bool
+            ASSERT.kind_of res,         VCA::Bool
             ASSERT.kind_of index,       ::Integer
             ASSERT.kind_of self_value,  VC::Top
             ASSERT.kind_of other_value, VC::Top
@@ -114,14 +112,12 @@ class Tuple < Abstract
             end
         }
 
-        ASSERT.kind_of result, VCBA::Bool
+        ASSERT.kind_of result, VCA::Bool
     end
 end
 Tuple.freeze
 
-end # Umu::Value::Core::LSM::Base::Product
-
-end # Umu::Value::Core::LSM::Base
+end # Umu::Value::Core::LSM::Product
 
 end # Umu::Value::Core::LSM
 
@@ -133,7 +129,7 @@ module_function
         ASSERT.kind_of snd_value,   ::Object
         ASSERT.kind_of tail_values, ::Array
 
-        Base::LSM::Product::Tuple.new(
+        LSM::Product::Tuple.new(
             fst_value, snd_value, tail_values.freeze
         ).freeze
     end

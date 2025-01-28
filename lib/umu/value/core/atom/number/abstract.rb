@@ -9,8 +9,6 @@ module Value
 
 module Core
 
-module Base
-
 module Atom
 
 module Number
@@ -47,7 +45,7 @@ class Abstract < Atom::Abstract
     define_instance_method(
         :meth_is_zero,
         :zero?, [],
-        [], VCBA::Bool
+        [], VCA::Bool
     )
     def meth_is_zero(_loc, _env, _event)
         VC.make_bool self.val.zero?
@@ -57,7 +55,7 @@ class Abstract < Atom::Abstract
     define_instance_method(
         :meth_is_positive,
         :positive?, [],
-        [], VCBA::Bool
+        [], VCA::Bool
     )
     def meth_is_positive(_loc, _env, _event)
         VC.make_bool(self.val > 0)
@@ -67,7 +65,7 @@ class Abstract < Atom::Abstract
     define_instance_method(
         :meth_is_negative,
         :negative?, [],
-        [], VCBA::Bool
+        [], VCA::Bool
     )
     def meth_is_negative(_loc, _env, _event)
         VC.make_bool(self.val < 0)
@@ -97,7 +95,7 @@ class Abstract < Atom::Abstract
     define_instance_method(
         :meth_to_int,
         :'to-i', [],
-        [], VCBAN::Int
+        [], VCAN::Int
     )
     def meth_to_int(loc, env, _event)
         begin
@@ -117,7 +115,7 @@ class Abstract < Atom::Abstract
     define_instance_method(
         :meth_to_float,
         :'to-f', [],
-        [], VCBAN::Float
+        [], VCAN::Float
     )
     def meth_to_float(_loc, _env, _event)
         VC.make_float self.val.to_f
@@ -127,7 +125,7 @@ class Abstract < Atom::Abstract
     define_instance_method(
         :meth_succ,
         :succ, [],
-        [], VCBAN::Abstract
+        [], VCAN::Abstract
     )
     def meth_succ(_loc, _env, _event)
         raise X::InternalSubclassResponsibility
@@ -137,7 +135,7 @@ class Abstract < Atom::Abstract
     define_instance_method(
         :meth_pred,
         :pred, [],
-        [], VCBAN::Abstract
+        [], VCAN::Abstract
     )
     def meth_pred(_loc, _env, _event)
         raise X::InternalSubclassResponsibility
@@ -282,9 +280,7 @@ class Abstract < Atom::Abstract
 end
 Abstract.freeze
 
-end # Umu::Value::Core::Atom::Base::Number
-
-end # Umu::Value::Core::Atom::Base
+end # Umu::Value::Core::Atom::Number
 
 end # Umu::Value::Core::Atom
 
@@ -292,7 +288,7 @@ end # Umu::Value::Core::Atom
 module_function
 
     def make_number(klass, val)
-        ASSERT.subclass_of  klass,  VCBAN::Abstract
+        ASSERT.subclass_of  klass,  VCAN::Abstract
         ASSERT.kind_of      val,    ::Numeric
 
         klass.new(val).freeze

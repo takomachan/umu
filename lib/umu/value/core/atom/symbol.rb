@@ -9,8 +9,6 @@ module Value
 
 module Core
 
-module Base
-
 module Atom
 
 class Symbol < Abstract
@@ -34,14 +32,12 @@ class Symbol < Abstract
     define_instance_method(
         :meth_less_than,
         :'<', [],
-        [self], VCBA::Bool
+        [self], VCA::Bool
     )
 end
 Symbol.freeze
 
-end # Umu::Value::Core::Base::Atom
-
-end # Umu::Value::Core::Base
+end # Umu::Value::Core::Atom
 
 
 module_function
@@ -49,7 +45,7 @@ module_function
     def make_symbol(val)
         ASSERT.kind_of val, ::Symbol
 
-        Base::Atom::Symbol.new(val).freeze
+        Atom::Symbol.new(val).freeze
     end
 
 end # Umu::Value::Core

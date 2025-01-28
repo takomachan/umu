@@ -48,7 +48,7 @@ class Input  < Abstract
     define_instance_method(
         :meth_get_string,
         :gets, [],
-        [], VCBLU::Option::Abstract
+        [], VCLU::Option::Abstract
     )
     def meth_get_string(_loc, _env, _event)
         s = self.io.gets
@@ -80,10 +80,10 @@ class Output < Abstract
     define_instance_method(
         :meth_put_string,
         :puts, [],
-        [VCBA::String], VC::Unit
+        [VCA::String], VC::Unit
     )
     def meth_put_string(_loc, _env, _event, value)
-        ASSERT.kind_of value, VCBA::String
+        ASSERT.kind_of value, VCA::String
 
         self.io.print value.val
 

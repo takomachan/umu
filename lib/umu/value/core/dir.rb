@@ -40,7 +40,7 @@ class Dir < Object
     define_instance_method(
         :meth_get_string,
         :gets, [],
-        [], VCBLU::Option::Abstract
+        [], VCLU::Option::Abstract
     )
     def meth_get_string(_loc, _env, _event)
         begin

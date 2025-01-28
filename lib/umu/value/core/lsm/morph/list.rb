@@ -9,8 +9,6 @@ module Value
 
 module Core
 
-module Base
-
 module LSM
 
 module Morph
@@ -96,7 +94,7 @@ class Cons < Abstract
     define_class_method(
         :meth_make,
         :make, [:'head:tail:'],
-        [VC::Top, VCBLM::List::Abstract], self
+        [VC::Top, VCLM::List::Abstract], self
     )
     def self.meth_make(_loc, _env, _event, head, tail)
         ASSERT.kind_of head,    VC::Top
@@ -144,17 +142,15 @@ class Cons < Abstract
     define_instance_method(
         :meth_contents,
         :contents, [],
-        [], VCBLP::Tuple
+        [], VCLP::Tuple
     )
     alias meth_contents meth_dest!
 end
 Cons.freeze
 
-end # Umu::Value::Core::LSM::Base::Morph::List
+end # Umu::Value::Core::LSM::Morph::List
 
-end # Umu::Value::Core::LSM::Base::Morph
-
-end # Umu::Value::Core::LSM::Base
+end # Umu::Value::Core::LSM::Morph
 
 end # Umu::Value::Core::LSM
 
@@ -162,21 +158,21 @@ end # Umu::Value::Core::LSM
 module_function
 
     def make_nil
-        Base::LSM::Morph::List::NIL
+        LSM::Morph::List::NIL
     end
 
 
     def make_cons(head, tail)
         ASSERT.kind_of head,    VC::Top
-        ASSERT.kind_of tail,    Base::LSM::Morph::List::Abstract
+        ASSERT.kind_of tail,    LSM::Morph::List::Abstract
 
-        Base::LSM::Morph::List::Cons.new(head, tail).freeze
+        LSM::Morph::List::Cons.new(head, tail).freeze
     end
 
 
     def make_list(xs, tail = VC.make_nil)
         ASSERT.kind_of xs,      ::Array
-        ASSERT.kind_of tail,    Base::LSM::Morph::List::Abstract
+        ASSERT.kind_of tail,    LSM::Morph::List::Abstract
 
         xs.reverse_each.inject(tail) { |ys, x|
             VC.make_cons x, ys

@@ -9,8 +9,6 @@ module Value
 
 module Core
 
-module Base
-
 module LSM
 
 module Union
@@ -42,11 +40,9 @@ class Abstract < Object
 end
 Abstract.freeze
 
-end # Umu::Value::Core::Base::LSM::Union
+end # Umu::Value::Core::LSM::Union
 
-end # Umu::Value::Core::Base::LSM
-
-end # Umu::Value::Core::Base
+end # Umu::Value::Core::LSM
 
 end # Umu::Value::Core
 

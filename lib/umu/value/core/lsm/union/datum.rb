@@ -9,8 +9,6 @@ module Value
 
 module Core
 
-module Base
-
 module LSM
 
 module Union
@@ -33,10 +31,10 @@ class Datum < Abstract
     define_class_method(
         :meth_make,
         :make, [:'tag:contents:'],
-        [VCBA::Symbol, VC::Top], self
+        [VCA::Symbol, VC::Top], self
     )
     def self.meth_make(_loc, _env, _event, tag, contents)
-        ASSERT.kind_of tag,         VCBA::Symbol
+        ASSERT.kind_of tag,         VCA::Symbol
         ASSERT.kind_of contents,    VC::Top
 
         VC.make_datum tag.val, contents
@@ -82,7 +80,7 @@ class Datum < Abstract
     define_instance_method(
         :meth_tag,
         :tag, [],
-        [], VCBA::Symbol
+        [], VCA::Symbol
     )
     def meth_tag(_loc, _env, _event)
         VC.make_symbol self.tag_sym
@@ -90,11 +88,9 @@ class Datum < Abstract
 end
 Datum.freeze
 
-end # Umu::Core::Base::LSM::Union
+end # Umu::Core::LSM::Union
 
-end # Umu::Core::Base::LSM
-
-end # Umu::Core::Base
+end # Umu::Core::LSM
 
 
 module_function
@@ -103,7 +99,7 @@ module_function
         ASSERT.kind_of tag_sym,     ::Symbol
         ASSERT.kind_of contents,    VC::Top
 
-        Base::LSM::Union::Datum.new(tag_sym, contents).freeze
+        LSM::Union::Datum.new(tag_sym, contents).freeze
     end
 
 end # Umu::Core

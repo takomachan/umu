@@ -9,8 +9,6 @@ module Value
 
 module Core
 
-module Base
-
 module LSM
 
 module Union
@@ -21,7 +19,7 @@ class Abstract < Union::Abstract
     define_instance_method(
         :meth_is_none,
         :none?, [],
-        [], VCBA::Bool
+        [], VCA::Bool
     )
     def meth_is_none(_loc, _env, event)
         VC.make_false
@@ -31,7 +29,7 @@ class Abstract < Union::Abstract
     define_instance_method(
         :meth_is_some,
         :some?, [],
-        [], VCBA::Bool
+        [], VCA::Bool
     )
     def meth_is_some(_loc, _env, event)
         VC.make_false
@@ -93,26 +91,24 @@ class Some < Abstract
 end
 Some.freeze
 
-end # Umu::Core::Base::LSM::Union::Option
+end # Umu::Core::LSM::Union::Option
 
-end # Umu::Core::Base::LSM::Union
+end # Umu::Core::LSM::Union
 
-end # Umu::Core::Base::LSM
-
-end # Umu::Core::Base
+end # Umu::Core::LSM
 
 
 module_function
 
     def make_none
-        Base::LSM::Union::Option::NONE
+        LSM::Union::Option::NONE
     end
 
 
     def make_some(contents)
         ASSERT.kind_of contents, VC::Top
 
-        Base::LSM::Union::Option::Some.new(contents).freeze
+        LSM::Union::Option::Some.new(contents).freeze
     end
 
 end # Umu::Core

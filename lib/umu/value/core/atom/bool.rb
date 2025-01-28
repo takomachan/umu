@@ -9,15 +9,13 @@ module Value
 
 module Core
 
-module Base
-
 module Atom
 
 class Bool < Abstract
     define_class_method(
         :meth_make_true,
         :true, [],
-        [], VCBA::Bool
+        [], VCA::Bool
     )
     def self.meth_make_true(_loc, _env, _event)
         VC.make_true
@@ -27,7 +25,7 @@ class Bool < Abstract
     define_class_method(
         :meth_make_false,
         :false, [],
-        [], VCBA::Bool
+        [], VCA::Bool
     )
     def self.meth_make_false(_loc, _env, _event)
         VC.make_false
@@ -83,21 +81,19 @@ Bool.freeze
 TRUE    = Bool.new(true).freeze
 FALSE   = Bool.new(false).freeze
 
-end # Umu::Value::Core::Base::Atom
-
-end # Umu::Value::Core::Base
+end # Umu::Value::Core::Atom
 
 
 
 module_function
 
     def make_true
-        Base::Atom::TRUE
+        Atom::TRUE
     end
 
 
     def make_false
-        Base::Atom::FALSE
+        Atom::FALSE
     end
 
 

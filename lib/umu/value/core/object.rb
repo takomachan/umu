@@ -13,7 +13,7 @@ class Object < Top
     define_instance_method(
         :meth_show,
         :show, [],
-        [], VCBA::String
+        [], VCA::String
     )
     def meth_show(_loc, _env, _event)
         VC.make_string self.to_s
@@ -23,7 +23,7 @@ class Object < Top
     define_instance_method(
         :meth_to_string,
         :'to-s', [],
-        [], VCBA::String
+        [], VCA::String
     )
     alias meth_to_string meth_show
 
@@ -46,7 +46,7 @@ class Object < Top
     define_instance_method(
         :meth_equal,
         :'==', [],
-        [self], VCBA::Bool
+        [self], VCA::Bool
     )
     def meth_equal(loc, env, _event, _other)
         raise X::EqualityError.new(
@@ -62,7 +62,7 @@ class Object < Top
     define_instance_method(
         :meth_less_than,
         :'<', [],
-        [self], VCBA::Bool
+        [self], VCA::Bool
     )
     def meth_less_than(loc, env, _event, _other)
         raise X::OrderError.new(

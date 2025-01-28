@@ -9,8 +9,6 @@ module Value
 
 module Core
 
-module Base
-
 module Atom
 
 module Number
@@ -134,7 +132,7 @@ class Float < Abstract
     define_instance_method(
         :meth_less_than,
         :'<', [],
-        [self], VCBA::Bool
+        [self], VCA::Bool
     )
 
 
@@ -183,7 +181,7 @@ class Float < Abstract
     define_instance_method(
         :meth_is_nan,
         :nan?, [],
-        [], VCBA::Bool
+        [], VCA::Bool
     )
     def meth_is_nan(_loc, _env, _event)
         VC.make_bool self.val.nan?
@@ -193,7 +191,7 @@ class Float < Abstract
     define_instance_method(
         :meth_is_infinite,
         :infinite?, [],
-        [], VCBA::Bool
+        [], VCA::Bool
     )
     def meth_is_infinite(_loc, _env, _event)
         VC.make_bool self.val.infinite?.kind_of?(::Integer)
@@ -203,7 +201,7 @@ class Float < Abstract
     define_instance_method(
         :meth_is_finite,
         :finite?, [],
-        [], VCBA::Bool
+        [], VCA::Bool
     )
     def meth_is_finite(_loc, _env, _event)
         VC.make_bool self.val.finite?
@@ -355,10 +353,10 @@ class Float < Abstract
     define_instance_method(
         :meth_truncate,
         :truncate, [],
-        [VCBAN::Int], self
+        [VCAN::Int], self
     )
     def meth_truncate(loc, env, _event, ndigits)
-        ASSERT.kind_of ndigits, VCBAN::Int
+        ASSERT.kind_of ndigits, VCAN::Int
 
         unless ndigits.val >= 0
             raise X::ArgumentError.new(
@@ -376,10 +374,10 @@ class Float < Abstract
     define_instance_method(
         :meth_ceil,
         :ceil, [],
-        [VCBAN::Int], self
+        [VCAN::Int], self
     )
     def meth_ceil(loc, env, _event, ndigits)
-        ASSERT.kind_of ndigits, VCBAN::Int
+        ASSERT.kind_of ndigits, VCAN::Int
 
         unless ndigits.val >= 0
             raise X::ArgumentError.new(
@@ -397,10 +395,10 @@ class Float < Abstract
     define_instance_method(
         :meth_floor,
         :floor, [],
-        [VCBAN::Int], self
+        [VCAN::Int], self
     )
     def meth_floor(loc, env, _event, ndigits)
-        ASSERT.kind_of ndigits, VCBAN::Int
+        ASSERT.kind_of ndigits, VCAN::Int
 
         unless ndigits.val >= 0
             raise X::ArgumentError.new(
@@ -418,10 +416,10 @@ class Float < Abstract
     define_instance_method(
         :meth_ldexp,
         :ldexp, [],
-        [VCBAN::Int], self
+        [VCAN::Int], self
     )
     def meth_ldexp(_loc, _env, _event, other)
-        ASSERT.kind_of other, VCBAN::Int
+        ASSERT.kind_of other, VCAN::Int
 
         VC.make_float Math.ldexp(self.val, other.val)
     end
@@ -430,7 +428,7 @@ class Float < Abstract
     define_instance_method(
         :meth_frexp,
         :frexp, [],
-        [], VCBLP::Tuple
+        [], VCLP::Tuple
     )
     def meth_frexp(_loc, _env, _event)
         fract, expon = Math.frexp self.val
@@ -445,10 +443,10 @@ class Float < Abstract
     define_instance_method(
         :meth_divmod,
         :divmod, [],
-        [self], VCBLP::Tuple
+        [self], VCLP::Tuple
     )
     def meth_divmod(_loc, _env, _event, other)
-        ASSERT.kind_of other, VCBAN::Float
+        ASSERT.kind_of other, VCAN::Float
 
         fract, integ = self.val.divmod other.val
 
@@ -470,9 +468,7 @@ Float.freeze
 NAN         = Atom::Number::Float.new(::Float::NAN).freeze
 INFINITY    = Atom::Number::Float.new(::Float::INFINITY).freeze
 
-end # Umu::Value::Core::Atom::Base::Number
-
-end # Umu::Value::Core::Atom::Base
+end # Umu::Value::Core::Atom::Number
 
 end # Umu::Value::Core::Atom
 
@@ -482,17 +478,17 @@ module_function
     def make_float(val)
         ASSERT.kind_of val, ::Float
 
-        Base::Atom::Number::Float.new(val).freeze
+        Atom::Number::Float.new(val).freeze
     end
 
 
     def make_nan
-        Base::Atom::Number::NAN
+        Atom::Number::NAN
     end
 
 
     def make_infinity
-        Base::Atom::Number::INFINITY
+        Atom::Number::INFINITY
     end
 
 end # Umu::Value::Core

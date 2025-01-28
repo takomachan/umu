@@ -69,7 +69,7 @@ class ByNumber < Abstraction::Selector
         ASSERT.kind_of value,   VC::Top
         ASSERT.kind_of env,     E::Entry
 
-        unless value.kind_of? VCBLP::Abstract
+        unless value.kind_of? VCLP::Abstract
             raise X::TypeError.new(
                 self.loc,
                 env,
@@ -110,7 +110,7 @@ class ByLabel < Abstraction::Selector
         ASSERT.kind_of value,   VC::Top
         ASSERT.kind_of env,         E::Entry
 
-        unless value.kind_of? VCBLP::Named
+        unless value.kind_of? VCLP::Named
             raise X::TypeError.new(
                 self.loc,
                 env,
@@ -162,7 +162,7 @@ class Modifier < Abstraction::Selector
     def evaluate_for(value, env, event)
         ASSERT.kind_of value, VC::Top
 
-        unless value.kind_of? VCBLP::Named
+        unless value.kind_of? VCLP::Named
             raise X::TypeError.new(
                 self.loc,
                 env,
