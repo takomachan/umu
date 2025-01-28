@@ -2556,14 +2556,14 @@ module_eval(<<'.,.,', 'grammar.ry', 677)
 
 module_eval(<<'.,.,', 'grammar.ry', 680)
   def _reduce_142(val, _values, result)
-        expr, msgs = val
+        expr, oprs = val
 
-    result = if msgs.empty?
+    result = if oprs.empty?
                     expr
                 else
-                    hd_msg, *tl_msgs = msgs
+                    hd_opr, *tl_oprs = oprs
 
-                    CSCE.make_send expr.loc, expr, hd_msg, tl_msgs
+                    CSCE.make_product expr.loc, expr, hd_opr, tl_oprs
                 end
 
     result

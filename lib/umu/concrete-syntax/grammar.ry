@@ -678,14 +678,14 @@ prod_exprs:
 | prod_expr prod_exprs  { result = [val[0]] + val[1] }
 
 prod_expr: atom_expr prod_oprs {
-    expr, msgs = val
+    expr, oprs = val
 
-    result = if msgs.empty?
+    result = if oprs.empty?
                     expr
                 else
-                    hd_msg, *tl_msgs = msgs
+                    hd_opr, *tl_oprs = oprs
 
-                    CSCE.make_send expr.loc, expr, hd_msg, tl_msgs
+                    CSCE.make_product expr.loc, expr, hd_opr, tl_oprs
                 end
 }
 

@@ -69,6 +69,7 @@ FILES = [
     'concrete-syntax/core/expression/binary/infix/pipe.rb',
     'concrete-syntax/core/expression/binary/infix/composite.rb',
     'concrete-syntax/core/expression/binary/apply.rb',
+    'concrete-syntax/core/expression/binary/product.rb',
     'concrete-syntax/core/expression/binary/send.rb',
     'concrete-syntax/core/expression/nary.rb',
     'concrete-syntax/core/expression/nary/rule.rb',
