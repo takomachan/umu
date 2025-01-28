@@ -118,19 +118,19 @@ ________ Evaluator Trace ________
 [Eval(Expr)] Apply (ASCEB): (+ 3 4)
 | [Eval(Expr)] Short (ASCEU::Identifier): +
 | --> Fun (VC): #<+: {x : Number y : Number -> (x).(+ y)}>
-| [Eval(Expr)] Int (ASCEUA::Number): 3 --> Int (VCBA::Number): 3
-| [Eval(Expr)] Int (ASCEUA::Number): 4 --> Int (VCBA::Number): 4
+| [Eval(Expr)] Int (ASCEUA::Number): 3 --> Int (VCAN): 3
+| [Eval(Expr)] Int (ASCEUA::Number): 4 --> Int (VCAN): 4
 | [Apply] Fun (VC): (#<+: {x : Number y : Number -> (x).(+ y)}> 3 4)
 | | [Eval(Expr)] Entry (ASCEB::Send): (x).(+ y)
 | | | [Eval(Expr)] Short (ASCEU::Identifier): x
-| | | --> Int (VCBA::Number): 3
+| | | --> Int (VCAN): 3
 | | | [Eval(Expr)] Short (ASCEU::Identifier): y
-| | | --> Int (VCBA::Number): 4
-| | | [Invoke] Int (VCBA::Number): (3).meth_add(4 : Int) -> Int
-| | | --> Int (VCBA::Number): 7
-| | --> Int (VCBA::Number): 7
-| --> Int (VCBA::Number): 7
---> Int (VCBA::Number): 7
+| | | --> Int (VCAN): 4
+| | | [Invoke] Int (VCAN): (3).meth_add(4 : Int) -> Int
+| | | --> Int (VCAN): 7
+| | --> Int (VCAN): 7
+| --> Int (VCAN): 7
+--> Int (VCAN): 7
 
 val it : Int = 7
 umu:3> :notrace
