@@ -867,8 +867,6 @@ class Abstract < Object
 
                     before, ys = opaque.obj
 
-                    pp({x1: x1, before: before, ys: ys})
-
                     VC.make_opaque(
                         [
                             x1,
