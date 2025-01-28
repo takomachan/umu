@@ -624,20 +624,7 @@ _messages:
 | message _messages { result = [val[0]] + val[1] }
 
 message:
-  '$' INT {
-    kw, int = val
-
-    result = CSCE.make_number_selector kw.loc, int.val
-}
-| SEL {
-    result = CSCE.make_label_selector  val[0].loc, val[0].sym
-}
-| '$(' named_fld named_flds ')' {
-    bb, fld, flds, _ = val
-
-    result = CSCE.make_modifier bb.loc, [fld] + flds
-}
-| '.' '(' ID atom_exprs ')' {
+  '.' '(' ID atom_exprs ')' {
     kw, _, msg, exprs, _ = val
 
     result = CSCE.make_message kw.loc, msg.sym, exprs
@@ -671,7 +658,7 @@ message:
 
 # Apply expression
 
-apply_expr: atom_expr atom_exprs {
+apply_expr: prod_expr prod_exprs {
     expr, exprs = val
 
     result = if exprs.empty?
@@ -681,6 +668,48 @@ apply_expr: atom_expr atom_exprs {
 
                     CSCE.make_apply expr.loc, expr, hd_expr, tl_exprs
                 end
+}
+
+
+# Product expression
+
+prod_exprs:
+  /* empty */           { result = [] }
+| prod_expr prod_exprs  { result = [val[0]] + val[1] }
+
+prod_expr: atom_expr prod_oprs {
+    expr, msgs = val
+
+    result = if msgs.empty?
+                    expr
+                else
+                    hd_msg, *tl_msgs = msgs
+
+                    CSCE.make_send expr.loc, expr, hd_msg, tl_msgs
+                end
+}
+
+prod_oprs:
+  /* empty */           { result = [] }
+| _prod_oprs            { result = val[0] }
+
+_prod_oprs:
+  prod_opr            { result = [val[0]] }
+| prod_opr _prod_oprs { result = [val[0]] + val[1] }
+
+prod_opr:
+  '$' INT {
+    kw, int = val
+
+    result = CSCE.make_number_selector kw.loc, int.val
+}
+| SEL {
+    result = CSCE.make_label_selector  val[0].loc, val[0].sym
+}
+| '$(' named_fld named_flds ')' {
+    bb, fld, flds, _ = val
+
+    result = CSCE.make_modifier bb.loc, [fld] + flds
 }
 
 

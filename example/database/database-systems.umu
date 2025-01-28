@@ -675,7 +675,7 @@ pp (
      [|spx$pno|
         val spx <- SP::rows
 
-        if include? (spx$pno) [|pno|
+        if include? spx$pno [|pno|
             val (sno: pno:) <- SP::rows
 
             if sno <> spx$sno
