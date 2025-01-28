@@ -48,7 +48,7 @@ class Input  < Abstract
     define_instance_method(
         :meth_get_string,
         :gets, [],
-        [], VCLU::Option::Abstract
+        [], VCU::Option::Abstract
     )
     def meth_get_string(_loc, _env, _event)
         s = self.io.gets

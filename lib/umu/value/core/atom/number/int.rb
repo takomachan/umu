@@ -142,7 +142,7 @@ class Int < Abstract
     define_instance_method(
         :meth_to,
         :to, [:'to:'],
-        [self], VCLM::Interval
+        [self], VCM::Interval
     )
     def meth_to(_loc, _env, _event, stop_value)
         ASSERT.kind_of stop_value, VCAN::Int
@@ -154,7 +154,7 @@ class Int < Abstract
     define_instance_method(
         :meth_to_by,
         :'to-by', [:'to:by:'],
-        [self, self], VCLM::Interval
+        [self, self], VCM::Interval
     )
     def meth_to_by(loc, env, _event, stop_value, step_value)
         ASSERT.kind_of stop_value, VCAN::Int

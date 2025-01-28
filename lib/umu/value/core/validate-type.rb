@@ -59,7 +59,7 @@ module_function
         ASSERT.kind_of pair,      VC::Top
         ASSERT.kind_of meth_name, ::String
 
-        VC.validate_type pair, VCLP::Tuple, meth_name, loc, env
+        VC.validate_type pair, VCP::Tuple, meth_name, loc, env
 
         vals = pair.values
         unless vals.size == 2
@@ -82,7 +82,7 @@ module_function
         ASSERT.kind_of value,     VC::Top
         ASSERT.kind_of meth_name, ::String
 
-        VC.validate_type value, VCLU::Option::Abstract, meth_name, loc, env
+        VC.validate_type value, VCU::Option::Abstract, meth_name, loc, env
 
         nil
     end
@@ -94,7 +94,7 @@ module_function
         ASSERT.kind_of value,     VC::Top
         ASSERT.kind_of meth_name, ::String
 
-        VC.validate_type value, VCLM::Abstract, meth_name, loc, env
+        VC.validate_type value, VCM::Abstract, meth_name, loc, env
 
         nil
     end

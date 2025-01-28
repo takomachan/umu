@@ -9,8 +9,6 @@ module Value
 
 module Core
 
-module LSM
-
 module Union
 
 class Datum < Abstract
@@ -88,9 +86,7 @@ class Datum < Abstract
 end
 Datum.freeze
 
-end # Umu::Core::LSM::Union
-
-end # Umu::Core::LSM
+end # Umu::Value::Core::Union
 
 
 module_function
@@ -99,10 +95,10 @@ module_function
         ASSERT.kind_of tag_sym,     ::Symbol
         ASSERT.kind_of contents,    VC::Top
 
-        LSM::Union::Datum.new(tag_sym, contents).freeze
+        Union::Datum.new(tag_sym, contents).freeze
     end
 
-end # Umu::Core
+end # Umu::Value::Core
 
 end # Umu::Value
 

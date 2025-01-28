@@ -168,10 +168,9 @@ module_function
         [['Value',          'Core'],                            'VC'],
         [['Value',          'Core', 'Atom'],                    'VCA'],
         [['Value',          'Core', 'Atom', 'Number'],          'VCAN'],
-        [['Value',          'Core', 'LSM'],                     'VCL'],
-        [['Value',          'Core', 'LSM',  'Product'],         'VCLP'],
-        [['Value',          'Core', 'LSM',  'Union'],           'VCLU'],
-        [['Value',          'Core', 'LSM',  'Morph'],           'VCLM'],
+        [['Value',          'Core', 'Product'],                 'VCP'],
+        [['Value',          'Core', 'Union'],                   'VCU'],
+        [['Value',          'Core', 'Morph'],                   'VCM'],
 
         # Environment
         [['Environment'],                                       'E']

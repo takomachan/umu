@@ -428,7 +428,7 @@ class Float < Abstract
     define_instance_method(
         :meth_frexp,
         :frexp, [],
-        [], VCLP::Tuple
+        [], VCP::Tuple
     )
     def meth_frexp(_loc, _env, _event)
         fract, expon = Math.frexp self.val
@@ -443,7 +443,7 @@ class Float < Abstract
     define_instance_method(
         :meth_divmod,
         :divmod, [],
-        [self], VCLP::Tuple
+        [self], VCP::Tuple
     )
     def meth_divmod(_loc, _env, _event, other)
         ASSERT.kind_of other, VCAN::Float

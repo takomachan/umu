@@ -9,8 +9,6 @@ module Value
 
 module Core
 
-module LSM
-
 module Product
 
 class Tuple < Abstract
@@ -62,7 +60,7 @@ class Tuple < Abstract
         [self], VCA::Bool
     )
     def meth_less_than(loc, env, event, other)
-        ASSERT.kind_of other, VCLP::Tuple
+        ASSERT.kind_of other, VCP::Tuple
 
         unless other.kind_of?(self.class) && self.arity == other.arity
             raise X::TypeError.new(
@@ -117,9 +115,7 @@ class Tuple < Abstract
 end
 Tuple.freeze
 
-end # Umu::Value::Core::LSM::Product
-
-end # Umu::Value::Core::LSM
+end # Umu::Value::Core::Product
 
 
 module_function
@@ -129,7 +125,7 @@ module_function
         ASSERT.kind_of snd_value,   ::Object
         ASSERT.kind_of tail_values, ::Array
 
-        LSM::Product::Tuple.new(
+        Product::Tuple.new(
             fst_value, snd_value, tail_values.freeze
         ).freeze
     end

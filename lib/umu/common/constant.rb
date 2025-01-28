@@ -58,26 +58,24 @@ module Umu
                 end
                 class String < Abstract; end
             end
-            module LSM
-                module Product
-                    class Abstract < Object; end
-                    class Tuple < Abstract; end
-                end
-                module Union
-                    class Abstract < Object; end
-                    module Option
-                        class Abstract < Union::Abstract; end
-                    end
-                end
-                module Morph
-                    class Abstract < Object; end
-                    class Interval < Abstract; end
-                    module List
-                        class Abstract < Morph::Abstract; end
-                    end
+            module Product
+                class Abstract < Object; end
+                class Tuple < Abstract; end
+            end
+            module Union
+                class Abstract < Object; end
+                module Option
+                    class Abstract < Union::Abstract; end
                 end
             end
-            class Fun < Object; end
+            module Morph
+                class Abstract < Object; end
+                class Interval < Abstract; end
+                module List
+                    class Abstract < Morph::Abstract; end
+                end
+            end
+        class Fun < Object; end
             module IO
                 class Abstract < Object; end
                 class Input  < Abstract; end
@@ -131,10 +129,9 @@ module Umu
     VC      = Value::Core
     VCA     = Value::Core::Atom
     VCAN    = Value::Core::Atom::Number
-    VCL     = Value::Core::LSM
-    VCLP    = Value::Core::LSM::Product
-    VCLU    = Value::Core::LSM::Union
-    VCLM    = Value::Core::LSM::Morph
+    VCP     = Value::Core::Product
+    VCU     = Value::Core::Union
+    VCM     = Value::Core::Morph
     E       = Environment
     EC      = Environment::Context
     ECT     = Environment::Context::Type

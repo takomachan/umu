@@ -9,8 +9,6 @@ module Value
 
 module Core
 
-module LSM
-
 module Morph
 
 class Interval < Abstract
@@ -78,7 +76,7 @@ class Interval < Abstract
     define_instance_method(
         :meth_contents,
         :contents, [],
-        [], VCLP::Named
+        [], VCP::Named
     )
     def meth_contents(_loc, _env, _event)
         VC.make_named_tuple(
@@ -93,7 +91,7 @@ class Interval < Abstract
     define_instance_method(
         :meth_cons,
         :cons, [],
-        [VC::Top], VCLM::List::Abstract  # --> NotConstractible
+        [VC::Top], VCM::List::Abstract  # --> NotConstractible
     )
     def meth_cons(loc, env, _event, _value)
         raise X::NotImplemented.new(
@@ -149,9 +147,7 @@ end
 Interval.freeze
 
 
-end # Umu::Value::Core::LSM::Morph
-
-end # Umu::Value::Core::LSM
+end # Umu::Value::Core::Morph
 
 
 module_function
@@ -165,7 +161,7 @@ module_function
         ASSERT.kind_of stop_value,  VCAN::Int
         ASSERT.kind_of step_value,  VCAN::Int
 
-        LSM::Morph::Interval.new(
+        Morph::Interval.new(
             start_value, stop_value, step_value
         ).freeze
     end

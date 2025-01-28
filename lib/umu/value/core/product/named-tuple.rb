@@ -9,8 +9,6 @@ module Value
 
 module Core
 
-module LSM
-
 module Product
 
 class Named < Abstract
@@ -135,7 +133,7 @@ class Named < Abstract
         [self], VCA::Bool
     )
     def meth_less_than(loc, env, event, other)
-        ASSERT.kind_of other, VCLP::Named
+        ASSERT.kind_of other, VCP::Named
 
         unless other.kind_of?(self.class) && self.arity == other.arity
             raise X::TypeError.new(
@@ -217,9 +215,7 @@ class Named < Abstract
 end
 Named.freeze
 
-end # Umu::Value::Core::LSM::Product
-
-end # Umu::Value::Core::LSM
+end # Umu::Value::Core::Product
 
 
 module_function
@@ -230,7 +226,7 @@ module_function
         ASSERT.kind_of snd_value,      ::Object
         ASSERT.kind_of tail_values,    ::Array
 
-        LSM::Product::Named.new(
+        Product::Named.new(
             fst_value, snd_value, tail_values.freeze, index_by_label.freeze
         ).freeze
     end

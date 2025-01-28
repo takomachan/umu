@@ -9,8 +9,6 @@ module Value
 
 module Core
 
-module LSM
-
 module Morph
 
 class Abstract < Object
@@ -107,9 +105,9 @@ class Abstract < Object
             VC.validate_option value, 'unfoldl', loc, new_env
 
             case value
-            when VCLU::Option::None
+            when VCU::Option::None
                 break [x1, ys]
-            when VCLU::Option::Some
+            when VCU::Option::Some
                 tuple      = value.contents
                 x2, next_x = VC.validate_pair tuple, "unfoldl", loc, env
 
@@ -132,7 +130,7 @@ class Abstract < Object
         xs = self
         loop do
             t = xs.dest!
-            ASSERT.kind_of t, VCLP::Tuple
+            ASSERT.kind_of t, VCP::Tuple
             x, xs1 = t.values
 
             yield x
@@ -174,7 +172,7 @@ class Abstract < Object
     define_instance_method(
         :meth_dest!,
         :dest!, [],
-        [], VCLP::Tuple
+        [], VCP::Tuple
     )
     def meth_dest!(loc, env, _event)
         begin
@@ -192,7 +190,7 @@ class Abstract < Object
     define_instance_method(
         :meth_dest,
         :dest, [],
-        [], VCLU::Option::Abstract
+        [], VCU::Option::Abstract
     )
     def meth_dest(loc, env, event)
         if self.meth_is_empty(loc, env, event).true?
@@ -226,7 +224,7 @@ class Abstract < Object
     define_instance_method(
         :meth_to_list,
         :'to-list', [],
-        [], VCLM::List::Abstract
+        [], VCM::List::Abstract
     )
     def meth_to_list(loc, env, event)
         result = self.foldr(
@@ -623,7 +621,7 @@ class Abstract < Object
             )
         }
 
-        ASSERT.kind_of result, VCLM::List::Abstract
+        ASSERT.kind_of result, VCM::List::Abstract
     end
 
 
@@ -649,7 +647,7 @@ class Abstract < Object
             end
         }
 
-        ASSERT.kind_of result, VCLM::List::Abstract
+        ASSERT.kind_of result, VCM::List::Abstract
     end
 
 
@@ -675,7 +673,7 @@ class Abstract < Object
             end
         }
 
-        ASSERT.kind_of result, VCLM::List::Abstract
+        ASSERT.kind_of result, VCM::List::Abstract
     end
 
 
@@ -698,7 +696,7 @@ class Abstract < Object
                         }
                     end
 
-        ASSERT.kind_of result, VCLM::Abstract
+        ASSERT.kind_of result, VCM::Abstract
     end
 
 
@@ -715,7 +713,7 @@ class Abstract < Object
             xss.meth_append new_loc, new_env, event, xs
         }
 
-        ASSERT.kind_of result, VCLM::List::Abstract
+        ASSERT.kind_of result, VCM::List::Abstract
     end
 
 
@@ -737,7 +735,7 @@ class Abstract < Object
             yss.meth_append new_loc, new_env, event, xs
         }
 
-        ASSERT.kind_of result, VCLM::List::Abstract
+        ASSERT.kind_of result, VCM::List::Abstract
     end
 
 
@@ -817,14 +815,14 @@ class Abstract < Object
 
         result = zs.meth_reverse loc, env, event
 
-        ASSERT.kind_of result, VCLM::List::Abstract
+        ASSERT.kind_of result, VCM::List::Abstract
     end
 
 
     define_instance_method(
         :meth_unzip,
         :unzip, [],
-        [], VCLP::Tuple
+        [], VCP::Tuple
     )
     def meth_unzip(loc, env, event)
         result = self.foldr(
@@ -842,7 +840,7 @@ class Abstract < Object
             )
         }
 
-        ASSERT.kind_of result, VCLP::Tuple
+        ASSERT.kind_of result, VCP::Tuple
     end
 
 
@@ -895,7 +893,7 @@ class Abstract < Object
     define_instance_method(
         :meth_partition,
         :partition, [],
-        [VC::Fun], VCLP::Tuple
+        [VC::Fun], VCP::Tuple
     )
     def meth_partition(loc, env, event, func)
         ASSERT.kind_of func, VC::Fun
@@ -994,14 +992,12 @@ class Abstract < Object
                                 bigs1.meth_cons(loc, env, event, pivot)
                             )
 
-        ASSERT.kind_of result, VCLM::List::Abstract
+        ASSERT.kind_of result, VCM::List::Abstract
     end
 end
 Abstract.freeze
 
-end # Umu::Value::Core::LSM::Morph
-
-end # Umu::Value::Core::LSM
+end # Umu::Value::Core::Morph
 
 end # Umu::Value::Core
 

@@ -105,12 +105,12 @@ class Fun < Object
     define_instance_method(
         :meth_apply_nary,
         :'apply-nary', [],
-        [VC::Top, VC::Top, VCLM::Abstract], VC::Top
+        [VC::Top, VC::Top, VCM::Abstract], VC::Top
     )
     def meth_apply_nary(loc, env, event, fst_value, snd_value, tail_values)
         ASSERT.kind_of fst_value,   VC::Top
         ASSERT.kind_of snd_value,   VC::Top
-        ASSERT.kind_of tail_values, VCLM::Abstract
+        ASSERT.kind_of tail_values, VCM::Abstract
 
         self.apply(
             fst_value,
