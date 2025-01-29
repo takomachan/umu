@@ -56,15 +56,113 @@ class Message < Umu::Abstraction::Model
             join: ' '
         )
     end
+end
 
 
-    def evaluate_for(receiver, env, event)
+
+class Entry < Binary::Abstract
+    alias       rhs_head_message rhs
+    attr_reader :rhs_tail_messages
+    attr_reader :opt_receiver_type_sym
+
+
+    def initialize(
+        loc, lhs_expr,
+        rhs_head_message, rhs_tail_messages,
+        opt_receiver_type_sym
+    )
+        ASSERT.kind_of      lhs_expr,               ASCE::Abstract
+        ASSERT.kind_of      rhs_head_message,       Message
+        ASSERT.kind_of      rhs_tail_messages,      ::Array
+        ASSERT.opt_kind_of  opt_receiver_type_sym,  ::Symbol
+
+        super(loc, lhs_expr, rhs_head_message)
+
+        @rhs_tail_messages      = rhs_tail_messages
+        @opt_receiver_type_sym  = opt_receiver_type_sym
+    end
+
+
+    def rhs_messages
+        [self.rhs_head_message] + self.rhs_tail_messages
+    end
+
+
+    def to_s
+        format("(%s%s)%s",
+            self.lhs_expr.to_s,
+
+            if self.opt_receiver_type_sym
+                format " : %s", self.opt_receiver_type_sym.to_s
+            else
+                ''
+            end,
+
+            self.rhs_messages.map(&:to_s).join
+        )
+    end
+
+
+    def pretty_print(q)
+        q.group(PP_INDENT_WIDTH, '(', ')') do
+            q.pp lhs_expr
+            if self.opt_receiver_type_sym
+                q.text format(" : %s", self.opt_receiver_type_sym.to_s)
+            end
+        end
+
+        PRT.group_for_enum q, self.rhs_messages
+    end
+
+
+private
+
+    def __evaluate__(env, event)
+        ASSERT.kind_of env,     E::Entry
+        ASSERT.kind_of event,   E::Tracer::Event
+
+        new_env = env.enter event
+
+        lhs_result = self.lhs_expr.evaluate new_env
+        ASSERT.kind_of lhs_result, ASR::Value
+        init_receiver = lhs_result.value
+
+        if self.opt_receiver_type_sym
+            receiver_type_sym = opt_receiver_type_sym
+
+            receiver_signat = new_env.ty_lookup receiver_type_sym, self.loc
+            ASSERT.kind_of receiver_signat, ECTSC::Base
+            unless env.ty_kind_of?(init_receiver, receiver_signat)
+                raise X::TypeError.new(
+                    self.loc,
+                    env,
+                    "Expected a %s, but %s : %s",
+                    receiver_type_sym,
+                    init_receiver,
+                    init_receiver.type_sym
+                )
+            end
+        end
+
+        final_receiver = self.rhs_messages.inject(init_receiver) {
+            |receiver, message|
+            ASSERT.kind_of receiver,    VC::Top
+            ASSERT.kind_of message,     Message
+
+            __send_message__ receiver, message, new_env, event
+        }
+        ASSERT.kind_of final_receiver, VC::Top
+    end
+
+
+    def __send_message__(receiver, message, env, event)
         ASSERT.kind_of receiver,    VC::Top
+        ASSERT.kind_of message,     Message
         ASSERT.kind_of env,         E::Entry
         ASSERT.kind_of event,       E::Tracer::Event
 
-        message_sym  = self.sym
-        arg_values   = self.exprs.map { |expr|
+        message_sym  = message.sym
+        arg_values   = message.exprs.map { |expr|
             result = expr.evaluate env
             ASSERT.kind_of result, ASR::Value
 
@@ -75,7 +173,7 @@ class Message < Umu::Abstraction::Model
         receiver_signat = env.ty_class_signat_of receiver
         ASSERT.kind_of receiver_signat, ECTSC::Abstract
         method_signat   = receiver_signat.lookup_instance_method(
-                                        message_sym, self.loc, env
+                                        message_sym, message.loc, env
                                     )
         ASSERT.kind_of method_signat, ECTSM::Entry
 
@@ -89,7 +187,7 @@ class Message < Umu::Abstraction::Model
                 )
 
                 next_receiver = receiver.invoke(
-                    method_signat, self.loc, env, event, *arg_values
+                    method_signat, message.loc, env, event, *arg_values
                 )
                 ASSERT.assert(
                     env.ty_kind_of?(
@@ -189,8 +287,6 @@ class Message < Umu::Abstraction::Model
     end
 
 
-private
-
     def __validate_type_of_args__(num, arg_values, param_signats, loc, env)
         ASSERT.kind_of num,             ::Integer
         ASSERT.kind_of arg_values,      ::Array
@@ -217,103 +313,6 @@ private
                 )
             end
         end
-    end
-end
-
-
-
-class Entry < Binary::Abstract
-    alias       rhs_head_message rhs
-    attr_reader :rhs_tail_messages
-    attr_reader :opt_receiver_type_sym
-
-
-    def initialize(
-        loc, lhs_expr,
-        rhs_head_message, rhs_tail_messages,
-        opt_receiver_type_sym
-    )
-        ASSERT.kind_of      lhs_expr,               ASCE::Abstract
-        ASSERT.kind_of      rhs_head_message,       Binary::Send::Message
-        ASSERT.kind_of      rhs_tail_messages,      ::Array
-        ASSERT.opt_kind_of  opt_receiver_type_sym,  ::Symbol
-
-        super(loc, lhs_expr, rhs_head_message)
-
-        @rhs_tail_messages      = rhs_tail_messages
-        @opt_receiver_type_sym  = opt_receiver_type_sym
-    end
-
-
-    def rhs_messages
-        [self.rhs_head_message] + self.rhs_tail_messages
-    end
-
-
-    def to_s
-        format("(%s%s)%s",
-            self.lhs_expr.to_s,
-
-            if self.opt_receiver_type_sym
-                format " : %s", self.opt_receiver_type_sym.to_s
-            else
-                ''
-            end,
-
-            self.rhs_messages.map(&:to_s).join
-        )
-    end
-
-
-    def pretty_print(q)
-        q.group(PP_INDENT_WIDTH, '(', ')') do
-            q.pp lhs_expr
-            if self.opt_receiver_type_sym
-                q.text format(" : %s", self.opt_receiver_type_sym.to_s)
-            end
-        end
-
-        PRT.group_for_enum q, self.rhs_messages
-    end
-
-
-private
-
-    def __evaluate__(env, event)
-        ASSERT.kind_of env,     E::Entry
-        ASSERT.kind_of event,   E::Tracer::Event
-
-        new_env = env.enter event
-
-        lhs_result = self.lhs_expr.evaluate new_env
-        ASSERT.kind_of lhs_result, ASR::Value
-        init_receiver = lhs_result.value
-
-        if self.opt_receiver_type_sym
-            receiver_type_sym = opt_receiver_type_sym
-
-            receiver_signat = new_env.ty_lookup receiver_type_sym, self.loc
-            ASSERT.kind_of receiver_signat, ECTSC::Base
-            unless env.ty_kind_of?(init_receiver, receiver_signat)
-                raise X::TypeError.new(
-                    self.loc,
-                    env,
-                    "Expected a %s, but %s : %s",
-                    receiver_type_sym,
-                    init_receiver,
-                    init_receiver.type_sym
-                )
-            end
-        end
-
-        final_receiver = self.rhs_messages.inject(init_receiver) {
-            |receiver, message|
-            ASSERT.kind_of receiver,    VC::Top
-            ASSERT.kind_of message,     Message
-
-            message.evaluate_for receiver, new_env, event
-        }
-        ASSERT.kind_of final_receiver, VC::Top
     end
 end
 
