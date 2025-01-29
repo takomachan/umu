@@ -359,9 +359,7 @@ val it : Int = 7
 
 ### メッセージチェイン、パイプライン適用そして関数合成
 
-edvakfさんのブログ記事
-「[PythonでもRubyみたいに配列をメソッドチェーンでつなげたい](https://edvakf.hatenadiary.org/entry/20090405/1238885788)」
-を参照。
+edvakfさんのブログ記事: [PythonでもRubyみたいに配列をメソッドチェーンでつなげたい](https://edvakf.hatenadiary.org/entry/20090405/1238885788) を参照。
 
 #### (1) メッセージチェイン
 
@@ -438,40 +436,39 @@ umu:2>
 
 メッセージは以下のように分類されます。
 
-- メッセージ
-    - インスタンスメッセージ
-        - 単純インスタンスメッセージ
-            - 単項インスタンスメッセージ
-                - [例] Int#to-s : String
-                - [例] Bool#not : Bool
-                - [例] List#join : String
-            - 二項インスタンスメッセージ
-                - [例] Int#+ : Int -> Int
-                - [例] Int#to : Int -> Interval
-                - [例] String#^ : String -> String
-                - [例] List#join-by : String -> String
-                - [例] Fun#apply : Top -> Top
-            - 多項インスタンスメッセージ
-                - [例] Int#to-by : Int -> Int -> Interval
-                - [例] List#foldr : Top -> Fun -> Top
-                - [例] Fun#apply-binary : Top -> Top -> Top
-                - [例] Fun#apply-nary : Top -> Top -> Morph -> Top
-        - キーワードインスタンスメッセージ
-            - [例] Int#(to:Int) -> Interval
-            - [例] Int#(to:Int by:Int) -> Interval
-            - [例] List#(join:String) -> String
-    - クラスメッセージ
-        - 単純クラスメッセージ
-            - [例] &Bool.true : Bool
-            - [例] &Float.nan : Float
-            - [例] &Some.make : Top -> Some
-            - [例] &Datum.make : Symbol -> Top -> Datum
-            - [例] &Interval.make : Int -> Int -> Interval
-            - [例] &Interval.make-by : Int -> Int -> Int -> Interval
-        - キーワードクラスメッセージ
-            - [例] &Datum.(tag:Symbol contents:Top) -> Datum
-            - [例] &Interval.(from:Int to:Int) -> Interval
-            - [例] &Interval.(from:Int to:Int by:Int) -> Interval
+- インスタンスメッセージ
+    - 単純インスタンスメッセージ
+        - 単項インスタンスメッセージ
+            - [例] Int#to-s : String
+            - [例] Bool#not : Bool
+            - [例] List#join : String
+        - 二項インスタンスメッセージ
+            - [例] Int#+ : Int -> Int
+            - [例] Int#to : Int -> Interval
+            - [例] String#^ : String -> String
+            - [例] List#join-by : String -> String
+            - [例] Fun#apply : Top -> Top
+        - 多項インスタンスメッセージ
+            - [例] Int#to-by : Int -> Int -> Interval
+            - [例] List#foldr : Top -> Fun -> Top
+            - [例] Fun#apply-binary : Top -> Top -> Top
+            - [例] Fun#apply-nary : Top -> Top -> Morph -> Top
+    - キーワードインスタンスメッセージ
+        - [例] Int#(to:Int) -> Interval
+        - [例] Int#(to:Int by:Int) -> Interval
+        - [例] List#(join:String) -> String
+- クラスメッセージ
+    - 単純クラスメッセージ
+        - [例] &Bool.true : Bool
+        - [例] &Float.nan : Float
+        - [例] &Some.make : Top -> Some
+        - [例] &Datum.make : Symbol -> Top -> Datum
+        - [例] &Interval.make : Int -> Int -> Interval
+        - [例] &Interval.make-by : Int -> Int -> Int -> Interval
+    - キーワードクラスメッセージ
+        - [例] &Datum.(tag:Symbol contents:Top) -> Datum
+        - [例] &Interval.(from:Int to:Int) -> Interval
+        - [例] &Interval.(from:Int to:Int by:Int) -> Interval
 
 
 #### インスタンスメッセージとクラスメッセージ
