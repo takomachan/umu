@@ -1,5 +1,16 @@
 # Umu - Functional Scripting Language
 
+## Features
+
+- Two programming styles are available: object-oriented and functional
+- Eager evaluation, impure, principles are immutable
+- Dynamic typing
+- Every function and many messages are curried from the start
+- The interpreter is implemented 100% in Ruby using only standard libraries
+- Expressiveness over speed
+
+
+
 ## Installation
 
 $ git clone https://github.com/takomachan/umu
@@ -11,6 +22,9 @@ $ git clone https://github.com/takomachan/umu
 
 
 ## How to Play REPL
+
+> [!NOTE]
+> This chapter will be moved to a separate document, the User Guide.
 
 ### First Step
 ```
@@ -43,6 +57,9 @@ umu:2>
 #### :class
 
 ##### Summary
+
+Displays inheritance relationships between classes hierarchically.
+
 ```
 umu:1> :class
 Top/
@@ -62,6 +79,10 @@ umu:2>
 ```
 
 ##### Detail
+
+Displays information about the specified class and
+a list of messages to which the class can respond.
+
 ```
 umu:1> :class Bool
 ABSTRACT CLASS?: No, this is a concrete class
@@ -81,6 +102,25 @@ umu:2>
 ```
 
 #### :dump and :nodump
+
+
+The interpreter processes the input script as follows.
+
+```
+/Source(Script)/ ->
+    <Lexical analysis> -> [Tokens] ->
+    <Parse>    -> [Concrete Syntax Tree] ->
+    <Desugar>  -> [Abstract Syntax Tree] ->
+    <Evaluate> ->
+/Result(environment and value)/
+```
+
+Displays the intermediate objects generated in this process as follows.
+
+- Tokens
+- Concrete syntax tree
+- Abstract syntax tree
+
 ```
 umu:1> :dump
 umu:2> 3 + 4
@@ -102,6 +142,11 @@ umu:4>
 ```
 
 #### :trace and :notrace
+
+The process of desugaring and evaluation inside the interpreter is
+displayed in a hierarchical trace.
+
+
 ```
 umu:1> :trace
 umu:2> 3 + 4
@@ -139,6 +184,9 @@ umu:4>
 
 
 ## Example
+
+> [!NOTE]
+> This chapter will be migrated to a separate document, the Programming Guide.
 
 ### Atom
 
@@ -222,7 +270,8 @@ umu:3>
 
 #### Simple function
 
-`val` declaration bind value to identifier, where the value is function object
+The declaration `val` binds a value to an identifier.
+Here, the value is a function object.
 
 ```
 umu:1> val add = { x y -> x + y }
@@ -232,7 +281,7 @@ val it : Int = 7
 umu:3>
 ```
 
-`fun` declaration is syntax sugar of binding function object
+The declaration `fun` is syntactic sugar for binding function objects.
 
 ```
 umu:1> fun add' = x y -> x + y
@@ -254,6 +303,9 @@ umu:3>
 
 
 #### Recursive function
+
+A recursive function is defined with the declaration `fun rec`.
+
 ```
 umu:1> fun rec factorial = x -> (    # Copy&Paste: 'umu/example/factorial.umu'
 umu:2*     if x <= 1 then
@@ -303,7 +355,8 @@ val it : Int = 7
 
 ### Message chaining, Pipelined application and Function composition
 
-See [PythonでもRubyみたいに配列をメソッドチェーンでつなげたい](https://edvakf.hatenadiary.org/entry/20090405/1238885788).
+See edvakf's blog article:
+[PythonでもRubyみたいに配列をメソッドチェーンでつなげたい](https://edvakf.hatenadiary.org/entry/20090405/1238885788)」.
 
 #### (1) Message Chaining
 
@@ -325,7 +378,7 @@ umu:6>
 
 #### (2) Pipelined Application
 
-like F#, Ocaml, Elixir
+Like F#, Ocaml, Scala, Elixir ... etc
 
 ```
 umu:1> [1, 4, 3, 2] |> sort |> reverse |> map to-s |> join-by "-"
@@ -335,7 +388,7 @@ umu:2>
 
 #### (2') Another Pipelined Application
 
-like a Haskell's $-operator
+Like a Haskell's $-operator
 
 ```
 umu:1> join-by "-" <| map to-s <| reverse <| sort [1, 4, 3, 2]
@@ -355,7 +408,7 @@ umu:3>
 
 #### (3') Another Function Composition
 
-like a Haskell's point-free style
+Like a Haskell's point-free style
 
 ```
 umu:1> (join-by "-" << map to-s << reverse << sort) [1, 4, 3, 2]
@@ -365,9 +418,9 @@ val it : String = "4-3-2-1"
 umu:3>
 ```
 
-#### (4) Classical Nested Application
+#### (4) Traditional nested function application
 
-like LISP, Python, ... etc
+like Lisp, Python, Pascal, Fortran, ... etc
 
 ```
 umu:1> join-by "-" (map to-s (reverse (sort [1, 4, 3, 2])))
@@ -376,7 +429,86 @@ umu:2>
 ```
 
 
+
+### Message
+
+Messages are classified as follows:
+
+- Instance message
+    - Simple instance message
+        - Unary Instance message
+            - [Example] Int#to-s : String
+            - [Example] Bool#not : Bool
+            - [Example] List#join : String
+        - Binary instance message
+            - [Example] Int#+ : Int -> Int
+            - [Example] Int#to : Int -> Interval
+            - [Example] String#^ : String -> String
+            - [Example] List#join-by : String -> String
+            - [Example] Fun#apply : Top -> Top
+        - N-ary instance message
+            - [Example] Int#to-by : Int -> Int -> Interval
+            - [Example] List#foldr : Top -> Fun -> Top
+            - [Example] Fun#apply-binary : Top -> Top -> Top
+            - [Example] Fun#apply-nary : Top -> Top -> Morph -> Top
+    - Keyword instance message
+        - [Example] Int#(to:Int) -> Interval
+        - [Example] Int#(to:Int by:Int) -> Interval
+        - [Example] List#(join:String) -> String
+- Class message
+    - Simple class message
+        - [Example] &Bool.true : Bool
+        - [Example] &Float.nan : Float
+        - [Example] &Some.make : Top -> Some
+        - [Example] &Datum.make : Symbol -> Top -> Datum
+        - [Example] &Interval.make : Int -> Int -> Interval
+        - [Example] &Interval.make-by : Int -> Int -> Int -> Interval
+    - Keyword class message
+        - [Example] &Datum.(tag:Symbol contents:Top) -> Datum
+        - [Example] &Interval.(from:Int to:Int) -> Interval
+        - [Example] &Interval.(from:Int to:Int by:Int) -> Interval
+
+
+#### Instance message and Class message
+
+Instance messages are ordinary messages.
+
+A class message is a message to the class object created by the class expression `&Foo`.
+This is often used to create an instance of a class.
+
+> [!NOTE]
+> Currently, the reserved word `new` for instantiation found in Java and Ruby is defined but not used.
+> In the future, when user-defined functionality for classes is provided, the syntax will be `new Foo x`.
+
+
+#### Simple message and Keyword message
+
+Simple messages are messages that are curried and
+are suitable for mixed object-oriented and functional programming styles.
+
+
+Keyword messages are non-curried messages and
+are more readable than simple messages when they involve complex arguments.
+
+
+
+
+
 ### Interval
+
+An interval is an object that represents a sequence of integers.
+Similar to list, but with the following differences:
+
+- The elements of a list can be any objects, but the elements of an interval can only be integers.
+- Intervals are memory efficient for long columns because they consist of only three attributes:
+    - `current`: current value
+    - `stop`: stop value
+    - `step`: step value
+- Intervals can be used not only to represent data, but also to control repetition. for example,
+    - The procedural loop processing `for (i = 1 ; i <= 10 ; i++) { ... }` in C language
+    - uses intervals to `[1 .. 10].for-each { i -> ... }` is written.
+
+
 
 #### Makeing interval object
 
@@ -387,13 +519,15 @@ umu:1> [1 .. 10]
 val it : Interval = [1 .. 10 (+1)]
 umu:2> [1, 3 .. 10]
 val it : Interval = [1 .. 10 (+2)]
+umu:3> it.contents
+val it : Named = (current:1 stop:10 step:2)
 ```
 
 ##### (2) By send-expression to instance object
 
 ###### (2-1) Binary instance message
 
-send binary instance message 'Int#to'
+Send binary instance message 'Int#to : Int -> Interval'
 
 ```
 umu:1> 1.to 10
@@ -405,7 +539,7 @@ val it : Interval = [1 .. 10 (+1)]
 umu:4>
 ```
 
-send binary instance message 'Int#to-by'
+Send binary instance message 'Int#to-by : Int -> Int -> Interval'
 
 ```
 umu:1> 1.to-by 10 2
@@ -421,7 +555,8 @@ umu:5>
 
 ###### (2-2) Keyword instance message
 
-send keyword instance message 'Int#(to:)' and 'Int#(to:by:)'
+Send keyword instance message 'Int#(to:Int) -> Interval' and
+'Int#(to:Int by:Int) -> Interval'
 
 ```
 umu:1> 1.(to:10)
@@ -435,7 +570,7 @@ umu:3>
 
 ###### (3-1) Binary class message
 
-send binary class message 'Interval.make'
+Send binary class message '&Interval.make : Int -> Int -> Interval'
 
 ```
 umu:1> &Interval.make 1 10
@@ -449,7 +584,7 @@ val it : Interval = [1 .. 10 (+1)]
 umu:5>
 ```
 
-send binary class message 'Interval.make-by'
+Send binary class message '&Interval.make-by : Int -> Int -> Int -> Interval'
 
 ```
 umu:1> &Interval.make-by 1 10 2
@@ -467,7 +602,8 @@ umu:6>
 
 ###### (3-2) Keyword class message
 
-send keyword class message 'Interval.(from:to:)' and 'Interval.(from:to:by:)'
+Send keyword class message '&Interval.(from:Int to:Int) -> Interval' and
+'&Interval.(from:Int to:Int by:Int) -> Interval'
 
 ```
 umu:1> &Interval.(from:1 to:10)
@@ -479,7 +615,8 @@ umu:3>
 
 #### Operation to interval object
 
-Interval object is kind of collection that same to List object 
+Like lists, intervals are a type of collection called morphs,
+so they can respond to the same messages as lists.
 
 ```
 umu:1> [1 .. 10].to-list
@@ -492,7 +629,12 @@ umu:4> [1 .. 10].map to-s
 val it : Cons = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
 umu:5> [1 .. 10].select odd?.map to-s
 val it : Cons = ["1", "3", "5", "7", "9"]
-umu:6>
+umu:6> [1 .. 3].for-each print
+1
+2
+3
+val it : Unit = ()
+umu:7>
 ```
 
 ### List Comprehension
@@ -516,7 +658,7 @@ val it : Cons = [(k:@a v:1), (k:@a v:2), (k:@a v:3), (k:@b v:1), (k:@b v:2), (k:
 umu:3>
 ```
 
-For more advanced usage of the list comprehension,
+For  advanced usage of the list comprehension,
 please refer to the [database examples](https://github.com/takomachan/umu/tree/main/example/database).
 
 
