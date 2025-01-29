@@ -89,19 +89,6 @@ NIL = Nil.new.freeze
 
 
 class Cons < Abstract
-    define_class_method(
-        :meth_make,
-        :make, [:'head:tail:'],
-        [VC::Top, VCM::List::Abstract], self
-    )
-    def self.meth_make(_loc, _env, _event, head, tail)
-        ASSERT.kind_of head,    VC::Top
-        ASSERT.kind_of tail,    List::Abstract
-
-        VC.make_cons head, tail
-    end
-
-
     attr_reader :head, :tail
 
 

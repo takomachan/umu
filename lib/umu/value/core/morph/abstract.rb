@@ -37,6 +37,19 @@ class Abstract < Object
     end
 
 
+    define_class_method(
+        :meth_make_cons,
+        :cons, [:'head:tail:'],
+        [VC::Top, self], self
+    )
+    def self.meth_make_cons(loc, env, event, x, xs)
+        ASSERT.kind_of x,  VC::Top
+        ASSERT.kind_of xs, VCM::Abstract
+
+        xs.meth_cons loc, env, event, x
+    end
+
+
 =begin
     HOW TO USE: unfoldr
 
@@ -97,8 +110,8 @@ class Abstract < Object
         new_env = env.enter event
 
         _, result = loop.inject(
-            [x, self.meth_make_empty(loc, new_env, event)]
-        ) { |(x1, ys), _|
+             [x,  self.meth_make_empty(loc, new_env, event)]
+        ) { |(x1, ys                                       ), _|
             value = func.apply x1, [], loc, new_env
             ASSERT.kind_of value, VC::Top
 
@@ -121,8 +134,12 @@ class Abstract < Object
     end
 
 
-    include Enumerable
+    def abstract_class
+        VCM::Abstract
+    end
 
+
+    include Enumerable
 
     def each
         return self.to_enum unless block_given?
@@ -151,6 +168,16 @@ class Abstract < Object
         ASSERT.kind_of value, VC::Top
 
         raise X::InternalSubclassResponsibility
+    end
+
+
+    define_instance_method(
+        :meth_make_empty,
+        :empty, [],
+        [], self
+    )
+    def meth_make_empty(loc, env, event)
+        self.class.meth_make_empty loc, env, event
     end
 
 
@@ -228,7 +255,7 @@ class Abstract < Object
     )
     def meth_to_list(loc, env, event)
         result = self.foldr(
-             loc,     env,     event, VC.make_nil
+             loc,     env,     event, self.meth_make_empty(loc, env, event)
         ) { |new_loc, new_env, x ,    xs|
 
              xs.meth_cons new_loc, new_env, event, x
@@ -243,7 +270,7 @@ class Abstract < Object
         ASSERT.kind_of block, ::Proc
 
         result = self.foldl(
-             loc,     env,     event, VC.make_nil
+             loc,     env,     event, self.meth_make_empty(loc, env, event)
         ) { |new_loc, new_env, x,     xs|
 
              xs.meth_cons new_loc, new_env, event, x
@@ -322,7 +349,7 @@ class Abstract < Object
     )
     def meth_reverse(loc, env, event)
         result = self.foldl(
-             loc,     env,     event, VC.make_nil
+             loc,     env,     event, self.meth_make_empty(loc, env, event)
         ) { |new_loc, new_env, x,     xs|
 
              xs.meth_cons new_loc, new_env, event, x
@@ -612,7 +639,7 @@ class Abstract < Object
         ASSERT.kind_of func, VC::Fun
 
         result = self.foldr(
-             loc,     env,     event, VC.make_nil
+             loc,     env,     event, self.meth_make_empty(loc, env, event)
         ) { |new_loc, new_env, x,     ys|
 
             ys.meth_cons(
@@ -621,7 +648,7 @@ class Abstract < Object
             )
         }
 
-        ASSERT.kind_of result, VCM::List::Abstract
+        ASSERT.kind_of result, self.abstract_class
     end
 
 
@@ -634,7 +661,7 @@ class Abstract < Object
         ASSERT.kind_of func, VC::Fun
 
         result = self.foldr(
-             loc,     env,     event, VC.make_nil
+             loc,     env,     event, self.meth_make_empty(loc, env, event)
         ) { |new_loc, new_env, x,     ys|
 
             value = func.apply x, [], new_loc, new_env
@@ -647,7 +674,7 @@ class Abstract < Object
             end
         }
 
-        ASSERT.kind_of result, VCM::List::Abstract
+        ASSERT.kind_of result, self.abstract_class
     end
 
 
@@ -660,7 +687,7 @@ class Abstract < Object
         ASSERT.kind_of func, VC::Fun
 
         result = self.foldr(
-             loc,     env,     event, VC.make_nil
+             loc,     env,     event, self.meth_make_empty(loc, env, event)
         ) { |new_loc, new_env, x,     ys|
 
             value = func.apply x, [], new_loc, new_env
@@ -673,7 +700,7 @@ class Abstract < Object
             end
         }
 
-        ASSERT.kind_of result, VCM::List::Abstract
+        ASSERT.kind_of result, self.abstract_class
     end
 
 
@@ -707,13 +734,13 @@ class Abstract < Object
     )
     def meth_concat(loc, env, event)
         result = self.foldl(
-             loc,     env,     event, VC.make_nil
+             loc,     env,     event, self.meth_make_empty(loc, env, event)
         ) { |new_loc, new_env, xs,    xss|
 
             xss.meth_append new_loc, new_env, event, xs
         }
 
-        ASSERT.kind_of result, VCM::List::Abstract
+        ASSERT.kind_of result, self.abstract_class
     end
 
 
@@ -726,7 +753,7 @@ class Abstract < Object
         ASSERT.kind_of func, VC::Fun
 
         result = self.foldl(
-             loc,     env,     event, VC.make_nil
+             loc,     env,     event, self.meth_make_empty(loc, env, event)
         ) { |new_loc, new_env, x,     yss|
 
             xs = func.apply x, [], new_loc, new_env
@@ -735,7 +762,7 @@ class Abstract < Object
             yss.meth_append new_loc, new_env, event, xs
         }
 
-        ASSERT.kind_of result, VCM::List::Abstract
+        ASSERT.kind_of result, self.abstract_class
     end
 
 
@@ -788,7 +815,7 @@ class Abstract < Object
         ASSERT.kind_of ys, Abstract
 
         _, _, zs = loop.inject(
-             [self, ys,  VC.make_nil]
+             [self, ys,  self.meth_make_empty(loc, env, event)]
         ) { |(xs1,  ys1, zs1        ), _|
 
             if (
@@ -815,7 +842,7 @@ class Abstract < Object
 
         result = zs.meth_reverse loc, env, event
 
-        ASSERT.kind_of result, VCM::List::Abstract
+        ASSERT.kind_of result, self.abstract_class
     end
 
 
@@ -827,7 +854,10 @@ class Abstract < Object
     def meth_unzip(loc, env, event)
         result = self.foldr(
              loc,     env,     event,
-            VC.make_tuple(VC.make_nil, VC.make_nil)
+             VC.make_tuple(
+                self.meth_make_empty(loc, env, event),
+                self.meth_make_empty(loc, env, event)
+             )
         ) { |new_loc, new_env, y_z,     ys_zs|
 
             y,  z  = VC.validate_pair y_z,   "unzip", new_loc, new_env
@@ -896,7 +926,10 @@ class Abstract < Object
     def meth_partition(loc, env, event, func)
         ASSERT.kind_of func, VC::Fun
 
-        init_opaque = VC.make_opaque [VC.make_nil, VC.make_nil]
+        init_opaque = VC.make_opaque [
+                                self.meth_make_empty(loc, env, event),
+                                self.meth_make_empty(loc, env, event)
+                            ]
 
         result_opaque = self.foldr(
              loc,     env,     event, init_opaque
@@ -944,7 +977,10 @@ class Abstract < Object
         pair      = self.meth_dest! loc, env, event
         pivot, xs = VC.validate_pair pair, "sort", loc, env
 
-        init_opaque = VC.make_opaque [VC.make_nil, VC.make_nil]
+        init_opaque = VC.make_opaque [
+                                self.meth_make_empty(loc, env, event),
+                                self.meth_make_empty(loc, env, event)
+                            ]
 
         result_opaque = xs.foldr(
              loc,     env,     event, init_opaque
@@ -990,7 +1026,7 @@ class Abstract < Object
                                 bigs1.meth_cons(loc, env, event, pivot)
                             )
 
-        ASSERT.kind_of result, VCM::List::Abstract
+        ASSERT.kind_of result, self.abstract_class
     end
 end
 Abstract.freeze

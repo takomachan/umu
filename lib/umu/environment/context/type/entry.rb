@@ -52,7 +52,14 @@ def update_method_info_of_mess_sym(info_of_symbol, infos, klass)
             }
         }
     ) { |mess_sym, sub_info, sup_info|
-        ASSERT.assert(sub_info.meth_sym == sup_info.meth_sym)
+        ASSERT.assert(
+                    sub_info.meth_sym == sup_info.meth_sym,
+                    {
+                        klass:klass,
+                        mess:mess_sym,
+                        meth:sub_info.meth_sym
+                    }.inspect
+                )
 
         ASSERT.assert(
             sub_info.param_classes.size == sup_info.param_classes.size
