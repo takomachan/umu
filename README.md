@@ -186,7 +186,7 @@ umu:4>
 ## Example
 
 > [!NOTE]
-> This chapter will be migrated to a separate document, the Programming Guide.
+> This chapter will be moved to a separate document, the Programming Guide.
 
 ### Atom
 
@@ -348,15 +348,14 @@ val it : Int = 7
 ```
 umu:10> (+).apply-binary 3 4    # Send apply message to function object
 val it : Int = 7
-umu:11> (+).[3, 4]       # Another apply message notation (syntax sugar)
+umu:11> (+).[3, 4]       # Another apply message notation (syntactic sugar)
 val it : Int = 7
 ```
 
 
 ### Message chaining, Pipelined application and Function composition
 
-See edvakf's blog article:
-[PythonでもRubyみたいに配列をメソッドチェーンでつなげたい](https://edvakf.hatenadiary.org/entry/20090405/1238885788)」.
+See edvakf's blog article: [PythonでもRubyみたいに配列をメソッドチェーンでつなげたい](https://edvakf.hatenadiary.org/entry/20090405/1238885788)」.
 
 #### (1) Message Chaining
 
