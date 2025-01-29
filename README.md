@@ -355,7 +355,7 @@ val it : Int = 7
 
 ### Message chaining, Pipelined application and Function composition
 
-See edvakf's blog article: [PythonでもRubyみたいに配列をメソッドチェーンでつなげたい](https://edvakf.hatenadiary.org/entry/20090405/1238885788)」.
+See edvakf's blog article: [PythonでもRubyみたいに配列をメソッドチェーンでつなげたい](https://edvakf.hatenadiary.org/entry/20090405/1238885788).
 
 #### (1) Message Chaining
 
