@@ -359,7 +359,7 @@ See edvakf's blog article: [PythonでもRubyみたいに配列をメソッドチ
 
 #### (1) Message Chaining
 
-OOP(Object oriented programming) style
+OOP(object oriented programming) style
 
 ```
 umu:1> [1, 4, 3, 2]
@@ -419,7 +419,7 @@ umu:3>
 
 #### (4) Traditional nested function application
 
-like Lisp, Python, Pascal, Fortran, ... etc
+Like Lisp, Python, Pascal, Fortran, ... etc
 
 ```
 umu:1> join-by "-" (map to-s (reverse (sort [1, 4, 3, 2])))
