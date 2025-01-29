@@ -499,11 +499,11 @@ An interval is an object that represents a sequence of integers.
 Similar to list, but with the following differences:
 
 - The elements of a list can be any objects, but the elements of an interval can only be integers.
-- Intervals are memory efficient for long columns because they consist of only three attributes:
+- Intervals are memory efficient for long sequence because they consist of only three attributes:
     - `current`: current value
     - `stop`: stop value
     - `step`: step value
-- Intervals can be used not only to represent data, but also to control repetition. for example,
+- Intervals can be used not only to represent data, but also to control repetition. For example,
     - The procedural loop processing `for (i = 1 ; i <= 10 ; i++) { ... }` in C language
     - uses intervals to `[1 .. 10].for-each { i -> ... }` is written.
 
