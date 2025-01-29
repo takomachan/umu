@@ -282,7 +282,7 @@ val it : Int = 7
 umu:3>
 ```
 
-宣言 `fun` は関数オブジェクトの束縛に関する構文糖(syntax sugar)です。
+宣言 `fun` は関数オブジェクトの束縛に関する構文糖(syntactic sugar)です。
 
 ```
 umu:1> fun add' = x y -> x + y
