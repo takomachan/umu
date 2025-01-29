@@ -443,6 +443,7 @@ Messages are classified as follows:
             - [Example] Int#+ : Int -> Int
             - [Example] Int#to : Int -> Interval
             - [Example] String#^ : String -> String
+            - [Example] List#cons : Top -> List
             - [Example] List#join-by : String -> String
             - [Example] Fun#apply : Top -> Top
         - N-ary instance message
@@ -460,10 +461,12 @@ Messages are classified as follows:
         - [Example] &Float.nan : Float
         - [Example] &Some.make : Top -> Some
         - [Example] &Datum.make : Symbol -> Top -> Datum
+        - [Example] &List.cons : Top -> Morph -> Morph
         - [Example] &Interval.make : Int -> Int -> Interval
         - [Example] &Interval.make-by : Int -> Int -> Int -> Interval
     - Keyword class message
         - [Example] &Datum.(tag:Symbol contents:Top) -> Datum
+        - [Example] &List.(head:Top tail:Morph) -> Morph
         - [Example] &Interval.(from:Int to:Int) -> Interval
         - [Example] &Interval.(from:Int to:Int by:Int) -> Interval
 
