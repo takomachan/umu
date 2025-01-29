@@ -3,7 +3,7 @@
 ## Features
 
 - Two programming styles are available: object-oriented and functional
-- Eager evaluation, impure, principles are immutable
+- Eager and impure, but principles are immutable
 - Dynamic typing
 - Every function and many messages are curried from the start
 - The interpreter is implemented 100% in Ruby using only standard libraries
@@ -16,7 +16,7 @@
 $ git clone https://github.com/takomachan/umu
 
 > [!NOTE]
-> The name Umu is preliminary and will be given a new name when the official Gem package is released.
+> The name Umu is preliminary and will be given a new name when the Gem package is released.
 >
 > By the time you can swim, you will be able to see the Gem package.
 
@@ -355,7 +355,7 @@ val it : Int = 7
 
 ### Message chaining, Pipelined application and Function composition
 
-See edvakf's blog article: [PythonでもRubyみたいに配列をメソッドチェーンでつなげたい](https://edvakf.hatenadiary.org/entry/20090405/1238885788)」.
+See edvakf's blog article: [PythonでもRubyみたいに配列をメソッドチェーンでつなげたい](https://edvakf.hatenadiary.org/entry/20090405/1238885788).
 
 #### (1) Message Chaining
 
