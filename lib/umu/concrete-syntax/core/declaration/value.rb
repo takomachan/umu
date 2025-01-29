@@ -54,7 +54,7 @@ class Value < Declaration::Abstract
         q.breakable
 
         unless self.decls.empty?
-            PRT.group q, bb: '%WHERE {', eb: '}' do
+            PRT.group q, bb:'%WHERE {', eb:'}' do
                 q.pp self.decls
             end
         end

@@ -76,7 +76,7 @@ class Abstract < Expression::Abstract
         self.rules.each do |rule|
             q.breakable
 
-            PRT.group q, bb: '| ' do
+            PRT.group q, bb:'| ' do
                 q.pp rule
             end
         end
@@ -86,7 +86,7 @@ class Abstract < Expression::Abstract
 
             q.breakable ' '
 
-            PRT.group q, bb: '%ELSE -> ' do
+            PRT.group q, bb:'%ELSE -> ' do
                 q.pp else_expr
 
                 unless self.else_decls.empty?

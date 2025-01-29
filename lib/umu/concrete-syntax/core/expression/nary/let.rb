@@ -34,13 +34,11 @@ class Let < Expression::Abstract
 
 
     def pretty_print(q)
-        PRT.group q, bb: '%LET {', sep: ' ' do
-            q.pp self.decls
-        end
+        PRT.group_for_enum q, self.decls, bb:'%LET {', sep:' '
 
         q.breakable
 
-        PRT.group q, bb: '%IN', eb: '}', sep: ' ' do
+        PRT.group q, bb:'%IN', eb:'}', sep:' ' do
             q.pp self.expr
         end
     end

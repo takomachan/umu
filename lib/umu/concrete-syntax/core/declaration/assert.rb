@@ -37,7 +37,7 @@ class Assert < Declaration::Abstract
     def pretty_print(q)
         q.text '%ASSERT '
         q.pp self.test_expr
-        PRT.group q, bb: ' -> ' do
+        PRT.group q, bb:' -> ' do
             q.pp self.else_expr
         end
     end

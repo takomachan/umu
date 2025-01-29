@@ -35,7 +35,7 @@ class Susp < Object
 
 
     def pretty_print(q)
-        q.group(PP_INDENT_WIDTH, '#Susp<', '>') do
+        PRT.group q, bb:'#Susp<', eb:'>' do
             q.pp self.expr
         end
     end

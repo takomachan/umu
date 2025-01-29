@@ -106,12 +106,11 @@ class Modifier < Abstract
 
 
     def pretty_print(q)
-        PRT.group_for_enum(
-            q, self.fields, bb: '$(', eb: ')', join: ', '
-        ) do |label, opt_expr|
+        PRT.group_for_enum q, self.fields, bb:'$(', eb:')', join:' ' do
+            |label, opt_expr|
+
             q.text label.to_s
             if opt_expr
-                q.text ' '
                 q.pp opt_expr
             end
         end
@@ -179,7 +178,7 @@ class Entry < Binary::Abstract
 
 
     def pretty_print(q)
-        PRT.group q, bb: '(', eb: ')' do
+        PRT.group q, bb:'(', eb:')' do
             q.pp self.lhs_expr
         end
 

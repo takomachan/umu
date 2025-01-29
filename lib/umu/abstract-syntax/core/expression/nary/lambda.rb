@@ -80,17 +80,11 @@ class Entry < Expression::Abstract
 
 
     def pretty_print(q)
-        q.group(PP_INDENT_WIDTH, '{', '') do
-            self.params.each do |param|
-                q.breakable
-
-                q.pp param
-            end
-        end
+        PRT.group_for_enum q, self.params, bb:'{ ', join:' '
 
         q.breakable
 
-        q.group(PP_INDENT_WIDTH, '-> ', '') do
+        PRT.group q, bb:'-> ' do
             q.pp expr
         end
 

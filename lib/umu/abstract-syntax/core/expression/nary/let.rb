@@ -38,25 +38,13 @@ class Let < Expression::Abstract
 
 
     def pretty_print(q)
-        q.group(PP_INDENT_WIDTH, '%LET {', '') do
-            self.decls.each do |decl|
-                q.breakable
-
-                q.pp decl
-            end
-        end
+        PRT.group_for_enum q, self.decls, bb:'%LET {', sep:' '
 
         q.breakable
 
-        q.group(PP_INDENT_WIDTH, '%IN', '') do
-            q.breakable
-
+        PRT.group q, bb:'%IN', eb:'}', sep:' ' do
             q.pp self.expr
         end
-
-        q.breakable
-
-        q.text '}'
     end
 
 

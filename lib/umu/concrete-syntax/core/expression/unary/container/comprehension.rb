@@ -175,11 +175,11 @@ class Entry < Container::Abstract
 
 
     def pretty_print(q)
-        PRT.group q, bb: '[|', eb: '|' do
+        PRT.group q, bb:'[|', eb:'|' do
             q.pp self.expr
         end
 
-        PRT.group_for_enum q, self.qualifiers, eb: ']', sep: ' ', join: ' '
+        PRT.group_for_enum q, self.qualifiers, eb:']', sep:' ', join:' '
     end
 
 

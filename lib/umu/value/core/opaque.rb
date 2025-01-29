@@ -28,7 +28,7 @@ class Opaque < Top
 
 
     def pretty_print(q)
-        q.group(PP_INDENT_WIDTH, '#Opaque<', '>') do
+        PRT.group q, bb:'#Opaque<', eb:'>' do
             q.pp self.obj
         end
     end

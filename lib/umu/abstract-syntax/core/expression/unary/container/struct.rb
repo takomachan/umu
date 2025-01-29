@@ -42,7 +42,7 @@ class Struct < Abstraction::Abstract
 
 
     def pretty_print(q)
-        PRT.group_for_enum q, self, bb: '%STRUCT {', eb: '}', join: ', ' do
+        PRT.group_for_enum q, self, bb:'%STRUCT {', eb:'}', join:', ' do
             |sym, _expr|
 
             q.text sym.to_s

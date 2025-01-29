@@ -50,22 +50,22 @@ class If < Expression::Abstract
 
 
     def pretty_print(q)
-        PRT.group q, bb: '(', eb: ')' do
-            PRT.group q, bb: '%IF ' do
+        PRT.group q, bb:'(', eb:')' do
+            PRT.group q, bb:'%IF ' do
                 q.pp self.if_rule
             end
 
             self.elsif_rules.each do |rule|
                 q.breakable
 
-                PRT.group q, bb: '%ELSIF ' do
+                PRT.group q, bb:'%ELSIF ' do
                     q.pp rule
                 end
             end
 
             q.breakable
 
-            PRT.group q, bb: '%ELSE ' do
+            PRT.group q, bb:'%ELSE ' do
                 q.pp self.else_expr
             end
         end

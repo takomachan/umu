@@ -104,7 +104,7 @@ class Entry < Binary::Abstract
 
 
     def pretty_print(q)
-        q.group(PP_INDENT_WIDTH, '(', ')') do
+        PRT.group q, bb:'(', eb:')' do
             q.pp lhs_expr
             if self.opt_receiver_type_sym
                 q.text format(" : %s", self.opt_receiver_type_sym.to_s)

@@ -40,11 +40,13 @@ class Fun < Object
 
 
     def pretty_print(q)
-        q.group(PP_INDENT_WIDTH, '#<', '>') do
-            if lam.opt_name
-                q.text format("%s: ", lam.opt_name)
-            end
+        bb = if lam.opt_name
+                    format "#<%s: ", lam.opt_name
+                else
+                    '#<'
+                end
 
+        PRT.group q, bb:bb, eb:'>' do
             q.pp self.lam
         end
     end

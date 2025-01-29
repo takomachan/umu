@@ -47,12 +47,12 @@ class List < Container::Abstract
 
     def pretty_print(q)
         if self.opt_last_expr
-            PRT.group_for_enum q, self, bb: '[', join: ', '
-            PRT.group q, bb: '|', eb: ']' do
+            PRT.group_for_enum q, self, bb:'[', join:', '
+            PRT.group q, bb:'|', eb:']' do
                 q.pp self.opt_last_expr
             end
         else
-            PRT.group_for_enum q, self, bb: '[', eb: ']', join: ', '
+            PRT.group_for_enum q, self, bb:'[', eb:']', join:', '
         end
     end
 

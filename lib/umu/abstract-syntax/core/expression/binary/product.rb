@@ -148,12 +148,10 @@ class Modifier < Abstraction::Selector
 
     def pretty_print(q)
         PRT.group_for_enum(
-            q, self.expr_by_label, bb: '$(', eb: ')', join: ', '
+             q, self.expr_by_label, bb:'$(', eb:')', join:' '
         ) do |label, expr|
-            q.pp label
 
-            q.breakable
-
+            q.text label.to_s
             q.pp expr
         end
     end
@@ -241,7 +239,7 @@ class Entry < Binary::Abstract
 
 
     def pretty_print(q)
-        q.group(PP_INDENT_WIDTH, '(', ')') do
+        PRT.group q, bb:'(', eb:')' do
             q.pp lhs_expr
             if self.opt_operand_type_sym
                 q.text format(" : %s", self.opt_operand_type_sym.to_s)

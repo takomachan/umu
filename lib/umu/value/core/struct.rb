@@ -89,7 +89,7 @@ class Entry < Top
 
 
     def pretty_print(q)
-        PRT.group_for_enum q, self, bb: 'struct {', eb: '}', sep: ' '
+        PRT.group_for_enum q, self, bb:'struct {', eb:'}', sep:' '
     end
 
 

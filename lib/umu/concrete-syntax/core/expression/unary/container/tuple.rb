@@ -30,7 +30,7 @@ class Tuple < Abstract
 
 
     def pretty_print(q)
-        PRT.group_for_enum q, self, bb: '(', eb: ')', join: ', '
+        PRT.group_for_enum q, self, bb:'(', eb:')', join:', '
     end
 
 

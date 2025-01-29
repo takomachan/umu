@@ -92,27 +92,27 @@ class Entry < Expression::Abstract
 
     def pretty_print(q)
         q.text '('
-        q.group(PP_INDENT_WIDTH, '', '') do
+        PRT.group q do
             q.breakable ''
 
             case self.rules.size
             when 0
                 q.text '%IF'
             when 1
-                q.group(PP_INDENT_WIDTH, '%IF ', '') do
+                PRT.group q, bb:'%IF ' do
                     q.pp self.rules[0]
                 end
             else
                 hd_rule, *tl_rules = self.rules
 
-                q.group(PP_INDENT_WIDTH, '%IF ', '') do
+                PRT.group q, bb:'%IF ' do
                     q.pp hd_rule
                 end
 
                 tl_rules.each do |rule|
                     q.breakable
 
-                    q.group(PP_INDENT_WIDTH, '%ELSIF ', '') do
+                    PRT.group q, bb:'%ELSIF ' do
                         q.pp rule
                     end
                 end
@@ -120,13 +120,10 @@ class Entry < Expression::Abstract
 
             q.breakable
 
-            q.group(PP_INDENT_WIDTH, '%ELSE ', '') do
+            PRT.group q, bb:'%ELSE ' do
                 q.pp self.else_expr
             end
         end
-
-        q.breakable ''
-
         q.text ')'
     end
 

@@ -127,7 +127,7 @@ class Recursive < Abstract
 
     def pretty_print(q)
         q.text format("%%VAL %%REC %s = ", self.sym.to_s)
-        q.group(PP_INDENT_WIDTH, '', '') do
+        PRT.group q do
             q.pp self.lam_expr
         end
     end

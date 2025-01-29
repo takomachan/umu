@@ -54,7 +54,7 @@ class Structure < Abstract
 
 
     def pretty_print(q)
-        PRT.group q, bb: format("%%STRUCTURE %s = ", self.pat.to_s) do
+        PRT.group q, bb:format("%%STRUCTURE %s = ", self.pat.to_s) do
             q.pp self.expr
         end
 
@@ -62,7 +62,7 @@ class Structure < Abstract
             q.breakable
 
             PRT.group_for_enum(
-                 q, self.local_decls, bb: '%WHERE {', eb: '}', sep: ' '
+                 q, self.local_decls, bb:'%WHERE {', eb:'}', sep:' '
             )
         end
     end
@@ -285,7 +285,7 @@ class Entry < Declaration::Abstract
 
         if self.opt_fields
             PRT.group_for_enum(
-                q, self.opt_fields, bb: ' {', eb: '}', sep: ' '
+                q, self.opt_fields, bb:' {', eb:'}', sep:' '
            ) do |field| q.pp field end
         end
     end

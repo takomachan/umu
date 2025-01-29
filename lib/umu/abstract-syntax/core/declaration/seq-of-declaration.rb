@@ -45,7 +45,7 @@ class SeqOfDeclaration < Abstract
 
 
     def pretty_print(q)
-        PRT.group_for_enum q, self, bb: '{', eb: '}', sep: ' '
+        PRT.group_for_enum q, self, bb:'{', eb:'}', sep:' '
     end
 
 

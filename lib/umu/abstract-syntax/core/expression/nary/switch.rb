@@ -65,6 +65,7 @@ class Switch < Expression::Abstract
         else
             q.breakable ''
 
+            q.text '| '
             fst_head, fst_body = self.leafs.first
             __pretty_print_leaf__ q, fst_head, fst_body
 
@@ -73,7 +74,7 @@ class Switch < Expression::Abstract
                 q.breakable ''
 
                 q.text '| '
-                q.group(PP_INDENT_WIDTH, '', '') do
+                PRT.group q do
                     __pretty_print_leaf__ q, head, body
                 end
             end
@@ -82,7 +83,7 @@ class Switch < Expression::Abstract
         q.breakable ''
 
         q.text '%ELSE -> '
-        q.group(PP_INDENT_WIDTH, '', '') do
+        PRT.group q do
             q.breakable ''
 
             q.pp self.else_expr
@@ -99,7 +100,7 @@ private
     def __pretty_print_leaf__(q, head, body)
         q.pp head
         q.text ' -> '
-        q.group(PP_INDENT_WIDTH, '', '') do
+        PRT.group q do
             q.pp body
         end
     end

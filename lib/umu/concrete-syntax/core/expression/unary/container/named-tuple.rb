@@ -107,7 +107,7 @@ class Entry < Abstract
 
     def pretty_print(q)
         PRT.group_for_enum(
-            q, self.index_by_label, bb: '(', eb: ')', join: ' '
+            q, self.index_by_label, bb:'(', eb:')', join:' '
         ) do |label, index|
 
             opt_expr = self.exprs[index]
