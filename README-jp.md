@@ -446,6 +446,7 @@ umu:2>
             - [例] Int#+ : Int -> Int
             - [例] Int#to : Int -> Interval
             - [例] String#^ : String -> String
+            - [例] List#cons : Top -> List
             - [例] List#join-by : String -> String
             - [例] Fun#apply : Top -> Top
         - 多項インスタンスメッセージ
@@ -463,10 +464,12 @@ umu:2>
         - [例] &Float.nan : Float
         - [例] &Some.make : Top -> Some
         - [例] &Datum.make : Symbol -> Top -> Datum
+        - [例] &List.cons : Top -> Morph -> Morph
         - [例] &Interval.make : Int -> Int -> Interval
         - [例] &Interval.make-by : Int -> Int -> Int -> Interval
     - キーワードクラスメッセージ
         - [例] &Datum.(tag:Symbol contents:Top) -> Datum
+        - [例] &List.(head:Top tail:Morph) -> Morph
         - [例] &Interval.(from:Int to:Int) -> Interval
         - [例] &Interval.(from:Int to:Int by:Int) -> Interval
 
