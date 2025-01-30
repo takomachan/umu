@@ -23,6 +23,7 @@ module_function
 
     def lex(init_tokens, init_lexer, scanner, pref)
         ASSERT.kind_of init_tokens,     ::Array
+        ASSERT.kind_of init_lexer,      LL::Abstract
         ASSERT.kind_of scanner,         ::StringScanner
         ASSERT.kind_of pref,            E::Preference
 
@@ -32,19 +33,29 @@ module_function
 
             break [tokens, lexer] if scanner.eos?
 
-            event, matched, opt_token, next_lexer = lexer.lex scanner
+            event, matched, output_tokens, next_lexer = lexer.lex scanner
+            ASSERT.kind_of event,           ::Symbol
+            ASSERT.kind_of matched,         ::String
+            ASSERT.kind_of output_tokens,   ::Array
+            ASSERT.kind_of next_lexer,      LL::Abstract
 
             if block_given?
-                yield event, matched, opt_token, next_lexer, before_line_num
+                yield event, matched, output_tokens,
+                      next_lexer, before_line_num
             end
 
-            if opt_token
-                token = opt_token
 
-                [tokens + [token], next_lexer, token.loc.line_num]
-            else
-                [tokens,           next_lexer, before_line_num]
-            end
+            [
+                tokens + output_tokens,
+
+                next_lexer,
+
+                if output_tokens.empty?
+                    before_line_num
+                else
+                    output_tokens[0].loc.line_num
+                end
+            ]
         }.freeze
 
         ASSERT.tuple_of pair, [::Array, LL::Abstract]

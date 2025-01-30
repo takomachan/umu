@@ -54,7 +54,7 @@ class Abstract < Lexer::Abstract
 
                 scanner.matched,
 
-                __make_token__(loc, self.buf),
+                [__make_token__(loc, self.buf)],
 
                 __make_separator__
             ]
@@ -82,7 +82,7 @@ class Abstract < Lexer::Abstract
 
                 scanner.matched,
 
-                nil,
+                [],
 
                 __make_state__(self.buf + opt_esc)
             ]
@@ -94,7 +94,7 @@ class Abstract < Lexer::Abstract
 
                 scanner.matched,
                 
-                nil,
+                [],
 
                 __make_state__(self.buf + scanner.matched)
             ]

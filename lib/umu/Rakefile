@@ -12,7 +12,7 @@ FILES = [
     'lexical/lexer/comment.rb',
     'lexical/lexer/token.rb',
     'lexical/lexer/string.rb',
-    'lexical/lexer/lexer.rb',
+    'lexical/lexer/entry.rb',
     'lexical/token.rb',
     'lexical/token/abstraction.rb',
     'lexical/token/separator.rb',

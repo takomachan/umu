@@ -175,11 +175,13 @@ SYMBOL_PATTERNS = [
 
                 scanner.matched,
 
-                if scanner[1]
-                    LT.make_float self.loc, scanner.matched.to_f
-                else
-                    LT.make_integer self.loc, scanner.matched.to_i
-                end,
+                [
+                    if scanner[1]
+                        LT.make_float self.loc, scanner.matched.to_f
+                    else
+                        LT.make_integer self.loc, scanner.matched.to_i
+                    end
+                ],
 
                 __make_separator__
             ]
@@ -191,7 +193,7 @@ SYMBOL_PATTERNS = [
 
                 scanner.matched,
 
-                nil,
+                [],
 
                 if scanner[1]
                     __make_symbolized_string__('')
@@ -210,7 +212,7 @@ SYMBOL_PATTERNS = [
 
                 scanner.matched,
 
-                LT.make_module_directory(self.loc, body_matched),
+                [LT.make_module_directory(self.loc, body_matched)],
 
                 __make_separator__
             ]
@@ -227,36 +229,38 @@ SYMBOL_PATTERNS = [
 
                 scanner.matched,
 
-                if head_matched
-                    if tail_matched
-                        raise X::LexicalError.new(
-                            self.loc,
-                            "Invalid character: ':' in Symbol: '%s'",
-                                scanner.matched
-                        )
-                    end
+                [
+                    if head_matched
+                        if tail_matched
+                            raise X::LexicalError.new(
+                                self.loc,
+                                "Invalid character: ':' in Symbol: '%s'",
+                                    scanner.matched
+                            )
+                        end
 
-                    case head_matched
-                    when '@'
-                        LT.make_symbol   self.loc, body_matched
-                    when '$'
-                        LT.make_selector self.loc, body_matched
-                    when '.'
-                        LT.make_message  self.loc, body_matched
-                    else
-                        ASSERT.abort head_matched
-                    end
-                else
-                    if tail_matched
-                        LT.make_label self.loc, body_matched
-                    else
-                        if RESERVED_WORDS[body_matched]
-                            LT.make_reserved_word self.loc, body_matched
+                        case head_matched
+                        when '@'
+                            LT.make_symbol   self.loc, body_matched
+                        when '$'
+                            LT.make_selector self.loc, body_matched
+                        when '.'
+                            LT.make_message  self.loc, body_matched
                         else
-                            LT.make_identifier self.loc, body_matched
+                            ASSERT.abort head_matched
+                        end
+                    else
+                        if tail_matched
+                            LT.make_label self.loc, body_matched
+                        else
+                            if RESERVED_WORDS[body_matched]
+                                LT.make_reserved_word self.loc, body_matched
+                            else
+                                LT.make_identifier self.loc, body_matched
+                            end
                         end
                     end
-                end,
+                ],
 
                 __make_separator__
             ]
@@ -272,7 +276,7 @@ SYMBOL_PATTERNS = [
 
                     scanner.matched,
 
-                    LT.make_reserved_symbol(self.loc, matched),
+                    [LT.make_reserved_symbol(self.loc, matched)],
 
                     __make_separator__
                 ]
@@ -282,7 +286,7 @@ SYMBOL_PATTERNS = [
 
                     scanner.matched,
 
-                    LT.make_identifier(self.loc, matched),
+                    [LT.make_identifier(self.loc, matched)],
 
                     __make_separator__
                 ]
@@ -292,7 +296,7 @@ SYMBOL_PATTERNS = [
 
                     scanner.matched,
 
-                    LT.make_reserved_symbol(self.loc, matched),
+                    [LT.make_reserved_symbol(self.loc, matched)],
 
                     __make_separator__(
                         self.loc, [matched] + self.braket_stack
@@ -318,7 +322,7 @@ SYMBOL_PATTERNS = [
 
                         scanner.matched,
                         
-                        LT.make_reserved_symbol(self.loc, matched),
+                        [LT.make_reserved_symbol(self.loc, matched)],
 
                         __make_separator__(self.loc, stack)
                     ]

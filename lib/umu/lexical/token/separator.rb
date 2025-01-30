@@ -24,9 +24,9 @@ class Newline < Abstraction::Abstract
 
     def to_s
         if self.opt_val
-            format "NEWLINE(%s)", self.val.inspect
+            format "NL(%s)", self.val.inspect
         else
-            "NEWLINE"
+            "NL"
         end
     end
 
@@ -51,9 +51,13 @@ end
 
 
 
-class White < Abstraction::String
+class Space < Abstraction::String
     def to_s
-        format "WHITE(%s)", self.val.inspect
+        if self.val == " "
+            'SP'
+        else
+            format "SP(%s)", self.val.inspect
+        end
     end
 
 
@@ -84,11 +88,11 @@ module_function
     end
 
 
-    def make_white(loc, val)
+    def make_space(loc, val)
         ASSERT.kind_of loc, LOC::Entry
         ASSERT.kind_of val, ::String
 
-        Separator::White.new(loc, val.freeze).freeze
+        Separator::Space.new(loc, val.freeze).freeze
     end
 
 end # Umu::Lexical::Token

@@ -21,7 +21,7 @@ class Separator < Abstract
 
                 scanner.matched,
 
-                nil,
+                [],
 
                 __make_comment__(
                     self.loc,   # Save current location
@@ -31,25 +31,25 @@ class Separator < Abstract
             ]
 
         # New-line with optional Line-comment
-        when scanner.scan(/(#.*)?\n/)
+        when scanner.scan(/(#.*)?\R/)
             [
                 :NewLine,
 
                 scanner.matched,
 
-                LT.make_newline(loc, scanner.matched),
+                [LT.make_newline(loc, scanner.matched)],
 
                 __make_separator__(self.loc.next_line_num)
             ]
 
-        # Other white-chars -- space, tab, or carriage-return
-        when scanner.scan(/[ \t\r]+/)
+        # Other space-chars -- space or new-line (Tab is NOT included)
+        when scanner.scan(/[ \R]+/)
             [
                 :White,
 
                 scanner.matched,
 
-                LT.make_white(loc, scanner.matched),
+                [LT.make_space(loc, scanner.matched)],
 
                 self
             ]
@@ -61,7 +61,7 @@ class Separator < Abstract
 
                 '',
                 
-                nil,
+                [],
 
                 __make_token__
             ]

@@ -9,7 +9,7 @@ require_relative 'lexer/separator'
 require_relative 'lexer/comment'
 require_relative 'lexer/token'
 require_relative 'lexer/string'
-require_relative 'lexer/lexer'
+require_relative 'lexer/entry'
 
 
 

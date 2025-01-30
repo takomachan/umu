@@ -191,18 +191,17 @@ end
         scanner = ::StringScanner.new line
         next_tokens, next_lexer = LL.lex(
             tokens, init_lexer, scanner, pref
-        ) do |event, matched, opt_token, lexer, before_line_num|
+        ) do |event, matched, output_tokens, lexer, before_line_num|
 
             if pref.lex_trace_mode?
                 STDERR.printf("\nPATTERN: %s \"%s\"\n",
                                 event.to_s,
                                 Escape.unescape(matched)
                 )
-                if opt_token
-                    token = opt_token
-                    STDERR.printf("    TOKEN: %s -- %s\n",
-                                token.to_s,
-                                token.loc.to_s
+                unless output_tokens.empty?
+                    STDERR.printf("    TOKENS: %s -- %s\n",
+                                output_tokens.map(&:to_s).join(' '),
+                                output_tokens[0].loc.to_s
                     )
                 end
                 STDERR.printf "    NEXT-LEXER: %s\n", lexer.to_s
@@ -292,19 +291,20 @@ end
         scanner     = ::StringScanner.new source
         tokens, _lexer = LL.lex(
             init_tokens, init_lexer, scanner, pref
-        ) do |_event, _matched, opt_token, _lexer, before_line_num|
+        ) do |_event, _matched, output_tokens, _lexer, before_line_num|
 
-            if pref.dump_mode? && opt_token
-                token       = opt_token
-                tk_line_num = token.loc.line_num
+            if pref.dump_mode?
+                output_tokens.each do |token|
+                    tk_line_num = tolen.loc.line_num
 
-                if tk_line_num != before_line_num
-                    STDERR.printf "\n%04d: ", tk_line_num + 1
-                end
+                    if tk_line_num != before_line_num
+                        STDERR.printf "\n%04d: ", tk_line_num + 1
+                    end
 
-                unless token && token.separator?
-                    STDERR.printf "%s ", token.to_s
-                    STDERR.flush
+                    unless token && token.separator?
+                        STDERR.printf "%s ", token.to_s
+                        STDERR.flush
+                    end
                 end
             end
         end

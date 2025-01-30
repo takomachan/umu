@@ -66,7 +66,7 @@ class Comment < Abstract
 
                 scanner.matched,
 
-                nil,
+                [],
 
                 __make_comment__(
                     self.saved_loc,
@@ -82,10 +82,12 @@ class Comment < Abstract
 
                 scanner.matched,
 
-                LT.make_comment(
-                    self.saved_loc, # Load Begin-Comment's location 
-                    self.buf
-                ),
+                [
+                    LT.make_comment(
+                        self.saved_loc, # Load Begin-Comment's location 
+                        self.buf
+                    )
+                ],
 
                 if self.comment_depth <= 1
                     __make_separator__
@@ -105,7 +107,7 @@ class Comment < Abstract
 
                 scanner.matched,
 
-                nil,
+                [],
 
                 __make_comment__(
                     self.saved_loc,
@@ -122,7 +124,7 @@ class Comment < Abstract
 
                 scanner.matched,
                 
-                nil,
+                [],
 
                 __make_comment__(
                     self.saved_loc,
