@@ -128,7 +128,7 @@ ________ Source: '<stdin>' ________
 0002: 3 + 4
 
 ________ Tokens: '<stdin>' ________
-0002: INT(3) WHITE(" ") '+' WHITE(" ") INT(4) NEWLINE("\n")
+0002: INT(3) SP '+' SP INT(4) NL("\n")
 
 ________ Concrete Syntax: #2 in "<stdin>" ________
 (3 + 4)
