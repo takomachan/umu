@@ -40,7 +40,7 @@ Estelleに関する文献を以下に示す。
 
     %DATA Token =
       TkNewline     (String, Int)
-    | TkWhite       (String, Int)
+    | TkSpace       (String, Int)
     | TkComment     (String, Int)
     | TkBeginBraket (String, Int)
     | TkEndBraket   (String, Int)
@@ -54,7 +54,7 @@ Estelleに関する文献を以下に示す。
       BeginComment  String
     | EndComment    String
     | Newline       String
-    | White         String
+    | Space         String
     | BeginString   String
     | EndString     String
     | BeginBraket   String
@@ -100,8 +100,8 @@ Estelleに関する文献を以下に示す。
         %WHEN Newline matched
             %OUTPUT TkNewline (matched, line-num)
             %TO %SAME {line-num: line-num + 1}
-        %WHEN White matched
-            %OUTPUT TkWhite (matched, line-num)
+        %WHEN Space matched
+            %OUTPUT TkSpace (matched, line-num)
         %WHEN %ANY
             %TO Token
     | %FROM Comment {

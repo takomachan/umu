@@ -31,21 +31,32 @@ class Separator < Abstract
             ]
 
         # New-line with optional Line-comment
-        when scanner.scan(/(#.*)?\R/)
+        when scanner.scan(/(#.*)?(\R)/)
+            comment_matched = scanner[1]
+            newline_matched = scanner[2]
+
             [
                 :NewLine,
 
                 scanner.matched,
 
-                [LT.make_newline(loc, scanner.matched)],
+                (
+                    if (! comment_matched) || comment_matched.empty?
+                        []
+                    else
+                        [LT.make_comment(loc, comment_matched)]
+                    end
+                ) + [
+                    LT.make_newline(loc, newline_matched)
+                ],
 
                 __make_separator__(self.loc.next_line_num)
             ]
 
-        # Other space-chars -- space or new-line (Tab is NOT included)
-        when scanner.scan(/[ \R]+/)
+        # Other space-chars
+        when scanner.scan(/ +/)
             [
-                :White,
+                :Space,
 
                 scanner.matched,
 
@@ -53,6 +64,13 @@ class Separator < Abstract
 
                 self
             ]
+
+        # Tab char
+        when scanner.scan(/\t/)
+            raise X::LexicalError.new(
+                loc,
+                "Hard tab '\\t' is prohibited",
+            )
 
         # Unmatched
         else
