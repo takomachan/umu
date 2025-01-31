@@ -28,8 +28,6 @@ class Susp < Object
 
 
     def to_s
-        expr = self.expr
-
         format "#Susp<%s>", self.expr.to_s
     end
 

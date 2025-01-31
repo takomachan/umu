@@ -14,6 +14,7 @@ prechigh
     left    '+' '-' '^'
     left    '==' '<>' '<' '>' '<=' '>=' '<=>'
     left    '++'
+    left    ':='
     left    KIND_OF
     left    '&&' '||'
 preclow
@@ -599,6 +600,7 @@ _redef_infix_expr:
 | redef_infix_expr '>='    redef_infix_expr { result = val }
 | redef_infix_expr '<=>'   redef_infix_expr { result = val }
 | redef_infix_expr '++'    redef_infix_expr { result = val }
+| redef_infix_expr ':='    redef_infix_expr { result = val }
 
 
 # Send expression
@@ -1076,7 +1078,7 @@ norm_infix_opr:
 | MOD    { result = LT.make_reserved_symbol(val[0].loc, 'mod') }
 | POW    { result = LT.make_reserved_symbol(val[0].loc, 'pow') }
 | '==' | '<>' | '<'  | '>'  | '<=' | '>=' | '<=>'
-| '^'  | '++'
+| '^'  | '++' | ':='
 
 
 # Special infix operator

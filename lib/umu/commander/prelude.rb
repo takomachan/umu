@@ -235,6 +235,21 @@ structure Umu = struct {
 
 
 
+    #### Reference ####
+
+    structure Ref = struct {
+        # ref : Top -> Ref
+        val ref = &Ref.make
+
+        # peek! : Ref -> Top
+        fun peek! = r : Ref -> r.peek!
+
+        # poke! : Ref -> Top -> Unit
+        fun poke! = (r : Ref) x -> r.poke! x
+    }
+
+
+
     ######## Morph ########
 
     structure Morph = struct {
@@ -681,6 +696,18 @@ structure Umu = struct {
 
         # pp      : 'a -> ()
         val pp = IO::pp
+
+
+        #### Reference ####
+
+        # ref : Top -> Ref
+        val ref  = Ref::ref
+
+        # !! : Ref -> Top
+        val !! = Ref::peek!
+
+        # (:=) : Ref -> Top -> Unit
+        val (:=) = Ref::poke!
 
 
         #### Tuple ####

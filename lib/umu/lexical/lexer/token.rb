@@ -60,9 +60,6 @@ RESERVED_WORDS = [
     # For continuation
     'callcc', 'throw',
 
-    # For refernce type
-    'peek', 'poke', 'ref',
-
     # For lazy evaluation
     'lazy',
 
@@ -86,6 +83,7 @@ RESERVED_SYMBOLS = [
     '+',    '-',    '*',    '/',    '^',
     '==',   '<>',   '<',    '>',    '<=',   '>=',   '<=>',
     '++',   '<<',   '>>',   '<|',   '|>',
+    ':=',
 
     # Not used, but reserved for future
     '...'   # Interval (exclude last value)
@@ -97,7 +95,7 @@ RESERVED_SYMBOLS = [
 
 
 IDENTIFIER_SYMBOLS = [
-    # empty
+    '!!'    # Peek operator for reference type
 ].inject({}) { |hash, x|
     hash.merge(x => true) { |key, _, _|
         ASSERT.abort format("Duplicated identifier-symbol: '%s'", key)

@@ -166,6 +166,7 @@ FILES = [
     'value/core/morph/interval.rb',
     'value/core/morph/list.rb',
     'value/core/function.rb',
+    'value/core/reference.rb',
     'value/core/suspend.rb',
     'value/core/io.rb',
     'value/core/dir.rb',
