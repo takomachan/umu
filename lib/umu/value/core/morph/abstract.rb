@@ -13,12 +13,12 @@ module Morph
 
 class Abstract < Object
 =begin
-    Inheriting subclasses must implement the following methods:
+    The subclasses of this class must be implemented the following methods:
     * .make(xs : ::Array) -> Morph::Abstract
     * .meth_make_empty(loc, env, event) -> Morph::Abstract
     * #meth_cons(loc, env, event, value : VC::Top) -> Morph::Abstract
     * #meth_is_empty(loc, env, event) -> VCA::Bool
-    * #dest! -> [VC::Top, Morph::Abstract]
+    * #dest! -> [VC::Top, Morph::Abstract] or ::StopIteration
 =end
 
 
@@ -313,7 +313,7 @@ class Abstract < Object
                 break mut_y
             end
 
-            pair      = mut_xs.meth_dest! loc, env, event
+            pair      = mut_xs.dest!
             x, mut_xs = VC.validate_pair pair, "foldl", loc, env
             mut_y = yield loc, env, x, mut_y
         }
@@ -824,10 +824,10 @@ class Abstract < Object
             )
                 break [xs1, ys1, zs1]
             else
-                xs_pair = xs1.meth_dest! loc, env, event
+                xs_pair = xs1.dest!
                 x, xs2 = VC.validate_pair xs_pair, "zip", loc, env
 
-                ys_pair = ys1.meth_dest! loc, env, event
+                ys_pair = ys1.dest!
                 y, ys2 = VC.validate_pair ys_pair, "zip", loc, env
 
                 [
@@ -974,7 +974,7 @@ class Abstract < Object
             return self
         end
 
-        pair      = self.meth_dest! loc, env, event
+        pair      = self.dest!
         pivot, xs = VC.validate_pair pair, "sort", loc, env
 
         init_opaque = VC.make_opaque [
