@@ -11,6 +11,32 @@
 
 
 
+
+## 背景
+
+以下の言語から強い影響を受けており、いたるところで影響の形跡を見かけることができます。
+
+- Standard ML
+- Ruby
+- Smalltalk
+
+また以下の言語から弱い影響を受けており、選択的にアイデアを採用しています。
+
+- Swift
+    - 名前付きタプル
+- Miranda(Haskell)
+    - リスト内包表記、関数型ライブラリ設計
+- Prolog
+    - アトム、タプル、リストの概念
+    - ファイル関連オブジェクト操作の命名
+- C
+    - 波かっこ { .. } を使う具象構文
+- Basic
+    - 参照型オブジェクト操作の命名
+
+
+
+
 ## インストール
 
 $ git clone https://github.com/takomachan/umu
@@ -19,6 +45,8 @@ $ git clone https://github.com/takomachan/umu
 > Umuという名称は暫定的なものであり、Gemパッケージが公開される時には新しい名前が与えられる予定です。
 >
 > 泳げる頃にはGemパッケージ版が見られるでしょう。
+
+
 
 
 ## REPLの使いかた
@@ -179,6 +207,8 @@ val it : Int = 7
 umu:3> :notrace
 umu:4>
 ```
+
+
 
 
 ## 実行例
@@ -721,9 +751,13 @@ umu:4>
 ```
 
 
+
+
 ## インタプリタ実装の内部
 
 [TmDoc](http://xtmlab.com/umu/tmdoc/html/)を参照
+
+
 
 
 
