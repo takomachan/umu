@@ -29,9 +29,16 @@
 - Prolog
     - アトム、タプル、リストの概念
     - ファイル関連オブジェクト操作の命名
+- Logo
+    - S式ではなくリストを扱う関数型言語、という発想
+    - タートルグラフィックス -- 予定
 - C
-    - 波かっこ { .. } を使う具象構文
-- Basic
+    - 波かっこ { ... } を多用する具象構文
+- Lisp
+    - ハイフン `-` が使える変数の字句定義
+    - データム(タグ付きデータ)の概念
+    - 継続(continuation)の概念 -- 予定
+- 1980年代の非構造化Basic
     - リファレンスオブジェクト操作の命名
 
 
@@ -57,9 +64,8 @@ $ git clone https://github.com/takomachan/umu
 ### 最初の一歩
 ```
 $ umu/exe/umu -i
-umu:1> print "Hello world\n"
+umu:1> print "Hello world"
 Hello world
-
 val it : Unit = ()
 umu:2>                  # [Ctrl]+[D]を入力
 $
