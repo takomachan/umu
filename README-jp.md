@@ -321,6 +321,67 @@ umu:8>
 ```
 
 
+### メッセージ
+
+メッセージは以下のように分類されます。
+
+- インスタンスメッセージ
+    - 単純インスタンスメッセージ
+        - 単項インスタンスメッセージ
+            - [例] Int#to-s : String
+            - [例] Bool#not : Bool
+            - [例] List#join : String
+        - 二項インスタンスメッセージ
+            - [例] Int#+ : Int -> Int
+            - [例] Int#to : Int -> Interval
+            - [例] String#^ : String -> String
+            - [例] List#cons : Top -> List
+            - [例] List#join-by : String -> String
+            - [例] Fun#apply : Top -> Top
+        - 多項インスタンスメッセージ
+            - [例] Int#to-by : Int -> Int -> Interval
+            - [例] List#foldr : Top -> Fun -> Top
+            - [例] Fun#apply-binary : Top -> Top -> Top
+            - [例] Fun#apply-nary : Top -> Top -> Morph -> Top
+    - キーワードインスタンスメッセージ
+        - [例] Int#(to:Int) -> Interval
+        - [例] Int#(to:Int by:Int) -> Interval
+        - [例] List#(join:String) -> String
+- クラスメッセージ
+    - 単純クラスメッセージ
+        - [例] &Bool.true : Bool
+        - [例] &Float.nan : Float
+        - [例] &Some.make : Top -> Some
+        - [例] &Datum.make : Symbol -> Top -> Datum
+        - [例] &List.cons : Top -> Morph -> Morph
+        - [例] &Interval.make : Int -> Int -> Interval
+        - [例] &Interval.make-by : Int -> Int -> Int -> Interval
+    - キーワードクラスメッセージ
+        - [例] &Datum.(tag:Symbol contents:Top) -> Datum
+        - [例] &List.(head:Top tail:Morph) -> Morph
+        - [例] &Interval.(from:Int to:Int) -> Interval
+        - [例] &Interval.(from:Int to:Int by:Int) -> Interval
+
+
+#### インスタンスメッセージとクラスメッセージ
+
+インスタンスメッセージは普通のメッセージです。
+
+クラスメッセージはクラス式 `&Foo` で生成されるクラスオブジェクトへのメッセージです。
+これは多くの場合、あるクラスからインスタンスを生成するために用います。
+
+> [!NOTE]
+> 現在、JavaやRubyで見かけるインスタンス生成の予約語 `new` は、定義されていますが使われていません。
+> 将来、クラスのユーザー定義機能が提供される時、`new Foo x` という文法で使われるようになる予定です。
+
+
+#### 単純メッセージとキーワードメッセージ
+
+単純メッセージはカリー化されるメッセージであり、オブジェクト指向と関数型を混在したプログラミングスタイルに適しています。
+
+キーワードメッセージはカリー化されないメッセージであり、複雑な引数を伴うメッセージでは単純メッセージよりも可読性が優れています。
+
+
 
 ### 関数適用とメッセージ送信
 
@@ -431,66 +492,6 @@ val it : String = "4-3-2-1"
 umu:2>
 ```
 
-
-### メッセージ
-
-メッセージは以下のように分類されます。
-
-- インスタンスメッセージ
-    - 単純インスタンスメッセージ
-        - 単項インスタンスメッセージ
-            - [例] Int#to-s : String
-            - [例] Bool#not : Bool
-            - [例] List#join : String
-        - 二項インスタンスメッセージ
-            - [例] Int#+ : Int -> Int
-            - [例] Int#to : Int -> Interval
-            - [例] String#^ : String -> String
-            - [例] List#cons : Top -> List
-            - [例] List#join-by : String -> String
-            - [例] Fun#apply : Top -> Top
-        - 多項インスタンスメッセージ
-            - [例] Int#to-by : Int -> Int -> Interval
-            - [例] List#foldr : Top -> Fun -> Top
-            - [例] Fun#apply-binary : Top -> Top -> Top
-            - [例] Fun#apply-nary : Top -> Top -> Morph -> Top
-    - キーワードインスタンスメッセージ
-        - [例] Int#(to:Int) -> Interval
-        - [例] Int#(to:Int by:Int) -> Interval
-        - [例] List#(join:String) -> String
-- クラスメッセージ
-    - 単純クラスメッセージ
-        - [例] &Bool.true : Bool
-        - [例] &Float.nan : Float
-        - [例] &Some.make : Top -> Some
-        - [例] &Datum.make : Symbol -> Top -> Datum
-        - [例] &List.cons : Top -> Morph -> Morph
-        - [例] &Interval.make : Int -> Int -> Interval
-        - [例] &Interval.make-by : Int -> Int -> Int -> Interval
-    - キーワードクラスメッセージ
-        - [例] &Datum.(tag:Symbol contents:Top) -> Datum
-        - [例] &List.(head:Top tail:Morph) -> Morph
-        - [例] &Interval.(from:Int to:Int) -> Interval
-        - [例] &Interval.(from:Int to:Int by:Int) -> Interval
-
-
-#### インスタンスメッセージとクラスメッセージ
-
-インスタンスメッセージは普通のメッセージです。
-
-クラスメッセージはクラス式 `&Foo` で生成されるクラスオブジェクトへのメッセージです。
-これは多くの場合、あるクラスからインスタンスを生成するために用います。
-
-> [!NOTE]
-> 現在、JavaやRubyで見かけるインスタンス生成の予約語 `new` は、定義されていますが使われていません。
-> 将来、クラスのユーザー定義機能が提供される時、`new Foo x` という文法で使われるようになる予定です。
-
-
-#### 単純メッセージとキーワードメッセージ
-
-単純メッセージはカリー化されるメッセージであり、オブジェクト指向と関数型を混在したプログラミングスタイルに適しています。
-
-キーワードメッセージはカリー化されないメッセージであり、複雑な引数を伴うメッセージでは単純メッセージよりも可読性が優れています。
 
 
 ### インターバル
@@ -634,6 +635,8 @@ umu:6> [1 .. 3].for-each print
 val it : Unit = ()
 umu:7>
 ```
+
+
 
 ### リスト内包表記
 
