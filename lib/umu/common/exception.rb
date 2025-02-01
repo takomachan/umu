@@ -114,6 +114,7 @@ class NoMessageError        < Abstraction::RuntimeError; end
 class UnmatchError          < Abstraction::RuntimeError; end
 class ZeroDivisionError     < Abstraction::RuntimeError; end
 class EmptyError            < Abstraction::RuntimeError; end
+class IndexError            < Abstraction::RuntimeError; end
 class Panic                 < Abstraction::RuntimeError; end
 class AssertionFailure      < Abstraction::RuntimeError; end
 

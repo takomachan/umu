@@ -360,6 +360,79 @@ class Abstract < Object
 
 
     define_instance_method(
+        :meth_at,
+        :at, [],
+        [VCAN::Int], VCU::Option::Abstract
+    )
+    def meth_at(loc, env, event, target_index)
+        ASSERT.opt_kind_of target_index, VCAN::Int
+
+        target_index_val = target_index.val
+        unless target_index_val >= 0
+            raise X::ArgumentError.new(
+                loc,
+                env,
+                "at: Expected zero or positive integer, but: %d",
+                target_index_val
+            )
+        end
+
+        result = self.foldl(
+             loc,     env,       event, VC.make_opaque([0, VC.make_none])
+        ) { |new_loc, new_event, x,     opaque|
+
+            index_val, opt = opaque.obj
+            if index_val == target_index_val
+                break VC.make_opaque [index_val, VC.make_some(x)]
+            end
+
+            VC.make_opaque [index_val + 1, opt]
+        }
+
+        ASSERT.kind_of result.obj[1], VCU::Option::Abstract
+    end
+
+
+    define_instance_method(
+        :meth_at!,
+        :'at!', [:apply],
+        [VCAN::Int], VC::Top
+    )
+    def meth_at!(loc, env, event, target_index)
+        ASSERT.opt_kind_of target_index, VCAN::Int
+
+        target_index_val = target_index.val
+        unless target_index_val >= 0
+            raise X::ArgumentError.new(
+                loc,
+                env,
+                "at!: Expected zero or positive integer, but: %d",
+                target_index_val
+            )
+        end
+
+        self.foldl(
+              loc,     env,       event, VC.make_opaque(0)
+        ) do |new_loc, new_event, x,     opaque|
+
+            index_val = opaque.obj
+            if index_val == target_index_val
+                return x
+            end
+
+            VC.make_opaque(index_val + 1)
+        end
+
+        raise X::IndexError.new(
+            loc,
+            env,
+            "at!: Out of range index: %d",
+            target_index_val
+        )
+    end
+
+
+    define_instance_method(
         :meth_count,
         :count, [],
         [], VCAN::Int

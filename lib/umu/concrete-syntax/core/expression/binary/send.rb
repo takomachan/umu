@@ -145,7 +145,7 @@ private
                     ASCE.make_message self.loc, :'apply-nary', exprs
                 end
 
-        ASSERT.kind_of message, ASCE::Binary::Send::Message::Basic
+        ASSERT.kind_of message, ASCE::Binary::Send::Message
     end
 end
 

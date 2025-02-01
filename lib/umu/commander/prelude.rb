@@ -373,6 +373,10 @@ structure Umu = struct {
         fun reverse = xs : Morph -> xs.reverse
 
 
+        # nth : Int -> %['a] -> 'a or IndexError
+        fun nth = (i : Int) (xs : Morph) -> xs.at! i
+
+
         # for-each : ('a -> 'b) -> %['a] -> ()
         fun for-each = (f : Fun) (xs : Morph) -> xs.for-each f
 
@@ -805,6 +809,9 @@ structure Umu = struct {
 
         # reverse   : %['a] -> ['a]
         val reverse = Morph::reverse
+
+        # nth : Int -> %['a] -> 'a or IndexError
+        val nth = Morph::nth
 
         # map       : ('a -> 'b) -> %['a] -> %['b]
         val map = Morph::map
