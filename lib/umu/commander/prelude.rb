@@ -265,11 +265,11 @@ structure Umu = struct {
         val dest = &(Morph.dest)
 
 
-        # head : %['a] -> 'a
+        # head : %['a] -> 'a or EmptyError
         fun head = xs : Morph -> xs.head
 
 
-        # tail : %['a] -> %['a]
+        # tail : %['a] -> %['a] or EmptyError
         fun tail = xs : Morph -> xs.tail
 
 
@@ -336,7 +336,7 @@ structure Umu = struct {
         fun avg = xs : Morph -> xs.avg
 
 
-        # max : %['a] -> 'a  where { 'a <- Number }
+        # max : %['a] -> 'a  where { 'a <- Number } or EmptyError
         (#
         fun max = xs : Morph -> case xs of {
         [init|xs'] -> xs'.foldl init { x y -> if y.< x then x else y }
@@ -346,7 +346,7 @@ structure Umu = struct {
         fun max = xs : Morph -> xs.max
 
 
-        # min : %['a] -> 'a  where { 'a <- Number }
+        # min : %['a] -> 'a  where { 'a <- Number } or EmptyError
         (#
         fun min = xs : Morph -> case xs of {
         [init|xs'] -> xs'.foldl init { x y -> if x.< y then x else y }
@@ -373,8 +373,8 @@ structure Umu = struct {
         fun reverse = xs : Morph -> xs.reverse
 
 
-        # nth : Int -> %['a] -> 'a or IndexError
-        fun nth = (i : Int) (xs : Morph) -> xs.at! i
+        # nth : Int -> %['a] -> 'a or ArgumentError or IndexError
+        fun nth = (i : Int) (xs : Morph) -> xs.[i]
 
 
         # for-each : ('a -> 'b) -> %['a] -> ()
