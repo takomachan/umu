@@ -1453,7 +1453,7 @@ fun magnitude-rectanglar = z -> sqrt (
 )
 
 fun angle-rectanglar = z -> (
-    atan (imag-part-rectanglar z) (real-part-rectanglar z)
+    atan (imag-part-rectanglar z, real-part-rectanglar z)
 )
 
 fun make-from-real-imag-rectanglar = x y -> (
@@ -1476,7 +1476,7 @@ fun real-part-polar = z -> magnitude-polar z * cos (angle-polar z)
 fun imag-part-polar = z -> magnitude-polar z * sin (angle-polar z)
 
 fun make-from-real-imag-polar = x y -> (
-    attach-tag @Polar (sqrt (square x + square y), atan y x)
+    attach-tag @Polar (sqrt (square x + square y), atan (y, x))
 )
 
 fun make-from-mag-ang-polar = r a -> (

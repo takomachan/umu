@@ -79,46 +79,46 @@ structure Umu = struct {
         val finite? = &(Float.finite?)
 
         # sin           : Float -> Float
-        val sin = &(Float.sin)
+        fun sin = x : Float -> &Float.sin x
 
         # cos           : Float -> Float
-        val cos = &(Float.cos)
+        fun cos = x : Float -> &Float.cos x
 
         # tan           : Float -> Float
-        val tan = &(Float.tan)
+        fun tan = x : Float -> &Float.tan x
 
         # asin          : Float -> Float
-        val asin = &(loat.asin)
+        fun asin = x : Float -> &Float.asin x
 
         # acos          : Float -> Float
-        val acos = &(Float.acos)
+        fun acos = x : Float -> &Float.acos x
 
         # atan          : Float -> Float
-        val atan = &(Float.atan)
+        fun atan = x : Float -> &Float.atan x
 
         # atan2         : Float -> Float -> Float
-        val atan2 = &(Float.atan2)
+        fun atan2 = (y : Float, x : Float) -> &Float.(atan2-y:y x:)
 
         # sinh          : Float -> Float
-        val sinh = &(Float.sinh)
+        fun sinh = x : Float -> &Float.sinh x
 
         # cosh          : Float -> Float
-        val cosh = &(Float.cosh)
+        fun cosh = x : Float -> &Float.cosh x
 
         # tanh          : Float -> Float
-        val tanh = &(Float.tanh)
+        fun tanh = x : Float -> &Float.tanh x
 
         # exp           : Float -> Float
-        val exp = &(Float.exp)
+        fun exp = x : Float -> &Float.exp x
 
         # log           : Float -> Float
-        val log = &(Float.log)
+        fun log = x : Float -> &Float.log x
 
         # log10         : Float -> Float
-        val log10 = &(Float.log10)
+        fun log10 = x : Float -> &Float.log10 x
 
         # sqrt          : Float -> Float
-        val sqrt = &(Float.sqrt)
+        fun sqrt = x : Float -> &Float.sqrt x
 
         # truncate      : Float -> Int -> Float
         fun truncate = (x : Float) (n : Int) -> x.truncate n

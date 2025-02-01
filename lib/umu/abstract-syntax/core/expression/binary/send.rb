@@ -183,6 +183,7 @@ private
         result_value =
             if param_num == arg_num
                 __validate_type_of_args__(
+                    message_sym,
                     param_num, arg_values, param_signats, loc, env
                 )
 
@@ -197,6 +198,7 @@ private
                 ASSERT.kind_of next_receiver, VC::Top
             elsif param_num < arg_num
                 __validate_type_of_args__(
+                    message_sym,
                     param_num, arg_values, param_signats, loc, env
                 )
 
@@ -287,7 +289,10 @@ private
     end
 
 
-    def __validate_type_of_args__(num, arg_values, param_signats, loc, env)
+    def __validate_type_of_args__(
+        mess_sym, num, arg_values, param_signats, loc, env
+    )
+        ASSERT.kind_of mess_sym,        ::Symbol
         ASSERT.kind_of num,             ::Integer
         ASSERT.kind_of arg_values,      ::Array
         ASSERT.kind_of param_signats,   ::Array
@@ -305,7 +310,7 @@ private
                     loc,
                     env,
                     "For '%s's #%d argument, expected a %s, but %s : %s",
-                        self.sym.to_s,
+                        mess_sym.to_s,
                         i + 1,
                         param_signat.symbol,
                         arg_value.to_s,

@@ -25,6 +25,13 @@ class Entry < Abstract
     end
 
 
+    def get_bindings
+        self.bindings.inject({}) { |hash, (sym, target)|
+            hash.merge(sym => target.get_value(self))
+        }.freeze
+    end
+
+
 private
 
     def __extend__(sym, target)

@@ -26,9 +26,7 @@ class Abstract < Abstraction::Collection
 
 
     def get_bindings
-        self.bindings.inject({}) { |hash, (sym, target)|
-            hash.merge(sym => target.get_value(self))
-        }
+        {}.freeze
     end
 
 
