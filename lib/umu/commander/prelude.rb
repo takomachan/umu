@@ -493,23 +493,34 @@ structure Umu = struct {
 
         #### Classifier
 
-        # Nil? : SExpr -> Bool
-        fun Nil? = x : SExpr -> x.nil?
+        # Nil?  : SExpr -> Bool
+        fun Nil?  = this : SExpr -> this.nil?
 
         # Atom? : SExpr -> Bool
-        fun Atom? = x : SExpr -> x.atom?
+        fun Atom? = this : SExpr -> this.atom?
 
         # Cons? : SExpr -> Bool
-        fun Cons? = x : SExpr -> x.cons?
+        fun Cons? = this : SExpr -> this.cons?
 
 
         #### Selector
 
         # car : SExprCons -> SExpr
-        fun car = c : SExprCons -> c.car
+        fun car = this : SExprCons -> this.car
 
         # cdr : SExprCons -> SExpr
-        fun cdr = c : SExprCons -> c.cdr
+        fun cdr = this : SExprCons -> this.cdr
+
+
+        #### Mutator
+
+        # set-car! : SExprCons -> SExpr -> Unit
+        fun set-car! = (this : SExprCons) (car : SExpr) ->
+             this.set-car! car
+
+        # set-cdr! : SExprCons -> SExpr -> Unit
+        fun set-cdr! = (this : SExprCons) (cdr : SExpr) ->
+             this.set-cdr! cdr
     }
 
 

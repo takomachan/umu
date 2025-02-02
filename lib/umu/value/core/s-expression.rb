@@ -237,7 +237,7 @@ class Cons < Abstract
         [], VC::SExpr::Abstract
     )
     def meth_cdr(_loc, _env, _event)
-        self.car
+        self.cdr
     end
 
 
@@ -253,6 +253,34 @@ class Cons < Abstract
     )
     def meth_contents(_loc, _env, _event)
         self.contents
+    end
+
+
+    define_instance_method(
+        :meth_set_car!,
+        :'set-car!', [],
+        [SExpr::Abstract], VC::Unit
+    )
+    def meth_set_car!(_loc, _env, _event, car)
+        ASSERT.kind_of car, SExpr::Abstract
+
+        @mutable_car = car
+
+        VC.make_unit
+    end
+
+
+    define_instance_method(
+        :meth_set_cdr!,
+        :'set-cdr!', [],
+        [SExpr::Abstract], VC::Unit
+    )
+    def meth_set_cdr!(_loc, _env, _event, cdr)
+        ASSERT.kind_of cdr, SExpr::Abstract
+
+        @mutable_cdr = cdr
+
+        VC.make_unit
     end
 
 
