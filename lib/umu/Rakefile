@@ -165,7 +165,11 @@ FILES = [
     'value/core/morph/abstract.rb',
     'value/core/morph/interval.rb',
     'value/core/morph/list.rb',
+<<<<<<< HEAD
     'value/core/s-expression.rb',
+=======
+    'value/core/s-expr.rb',
+>>>>>>> 42f85d49838bc3292192e170811c3a3c41d22b70
     'value/core/function.rb',
     'value/core/reference.rb',
     'value/core/suspend.rb',

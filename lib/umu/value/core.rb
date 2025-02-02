@@ -9,7 +9,11 @@ require_relative 'core/atom'
 require_relative 'core/product'
 require_relative 'core/union'
 require_relative 'core/morph'
+<<<<<<< HEAD
 require_relative 'core/s-expression'
+=======
+require_relative 'core/s-expr'
+>>>>>>> 42f85d49838bc3292192e170811c3a3c41d22b70
 require_relative 'core/function'
 require_relative 'core/reference'
 require_relative 'core/suspend'
