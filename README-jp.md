@@ -702,7 +702,7 @@ umu:3>
 ```
 
 リスト内包表記の高度な使いかたは
-[データベースの例](https://github.com/takomachan/umu/tree/main/example/database)
+[データベースの例](example/database)
 を参照してください。
 
 
@@ -762,6 +762,10 @@ val it : Int = 7
 umu:4>
 ```
 
+破壊的代入に興味を持たれたなら、`Lisp` を使ったコンピュータサイエンスの教科書である
+[SICP](https://sicp.iijlab.net/) の [節 3.1 代入と局所状態](https://sicp.iijlab.net/fulltext/x310.html)
+を参照してください。
+またリファレンスを使うよう書き改めたコードが [SICPの例](example/sicp//sicp-ch3.umu)　にあります。
 
 
 
