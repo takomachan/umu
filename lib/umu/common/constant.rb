@@ -75,7 +75,10 @@ module Umu
                     class Abstract < Morph::Abstract; end
                 end
             end
-        class Fun < Object; end
+            module SExpr
+                class Abstract < Object; end
+            end
+            class Fun < Object; end
             module IO
                 class Abstract < Object; end
                 class Input  < Abstract; end

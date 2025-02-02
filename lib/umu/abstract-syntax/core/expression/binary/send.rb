@@ -193,6 +193,13 @@ private
                 ASSERT.assert(
                     env.ty_kind_of?(
                         next_receiver, method_signat.ret_class_signat
+                    ), (
+                        {
+                            nx_recv:
+                                 next_receiver.class,
+                            ret_class_signat:
+                                 method_signat.ret_class_signat.symbol
+                        }.inspect
                     )
                 )
                 ASSERT.kind_of next_receiver, VC::Top

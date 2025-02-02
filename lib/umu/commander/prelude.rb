@@ -277,6 +277,10 @@ structure Umu = struct {
         fun to-list = xs : Morph -> xs.to-list
 
 
+        # to-s-expr : %['a] -> %s('a)
+        fun to-s-expr = xs : Morph -> xs.to-s-expr
+
+
         # equal-with? : ('a -> 'b -> Bool) -> %['a] -> %['b] -> Bool
         fun rec equal-with? = eq? xs ys ->
             if xs kind-of? Morph then
@@ -468,6 +472,44 @@ structure Umu = struct {
 
         # unfoldl : 'b -> ('b -> Option ('a, 'b)) -> ['a]
         fun unfoldl = x (f : Fun) -> &List.unfoldl x f
+    }
+
+
+
+    ######## S-Expression ########
+
+    structure SExpr = struct {
+        #### Constructor
+
+        # NIL : SExprNil
+        val NIL = &SExpr.nil
+
+        # atom : Atom -> SExprAtom
+        fun atom = x -> &SExpr.atom x
+
+        # cons : SExpr -> SExpr -> SExpr
+        fun cons = (car : SExpr) (cdr : SExpr) -> &SExpr.cons car cdr
+
+
+        #### Classifier
+
+        # Nil? : SExpr -> Bool
+        fun Nil? = x : SExpr -> x.nil?
+
+        # Atom? : SExpr -> Bool
+        fun Atom? = x : SExpr -> x.atom?
+
+        # Cons? : SExpr -> Bool
+        fun Cons? = x : SExpr -> x.cons?
+
+
+        #### Selector
+
+        # car : SExprCons -> SExpr
+        fun car = c : SExprCons -> c.car
+
+        # cdr : SExprCons -> SExpr
+        fun cdr = c : SExprCons -> c.cdr
     }
 
 
@@ -773,6 +815,9 @@ structure Umu = struct {
 
         # to-list : %['a] -> ['a]
         val to-list = Morph::to-list
+
+        # to-s-expr : %['a] -> %s('a)
+        val to-s-expr = Morph::to-s-expr
 
         # equal?    : 'a -> 'b -> Bool
         val equal? = Morph::equal?
