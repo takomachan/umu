@@ -255,13 +255,13 @@ class Abstract < Object
     )
     def meth_to_list(loc, env, event)
         result = self.foldr(
-             loc,     env,     event, self.meth_make_empty(loc, env, event)
+             loc,     env,     event, VC.make_nil
         ) { |new_loc, new_env, x ,    xs|
 
-             xs.meth_cons new_loc, new_env, event, x
+             VC.meth_cons x, xs
         }
 
-        ASSERT.kind_of result, VC::Top
+        ASSERT.kind_of result, VCM::List::Abstract
     end
 
 
