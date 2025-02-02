@@ -20,6 +20,107 @@
 ;; print "\n\nSECTION 3.1.1"
 ;;
 
+val ref-balance = ref 100
+
+fun withdraw = amount -> (
+    if !!ref-balance >= amount then do (
+        ! ref-balance := !!ref-balance - amount
+        ! !!ref-balance
+    ) else
+        "Insufficient funds"
+)
+
+;; !!ref-balance
+# -> 100
+;; withdraw 25
+# -> 75
+;; withdraw 25
+# -> 50
+;; withdraw 60
+# -> "Insufficient funds"
+;; withdraw 15
+# -> 35
+;;
+
+
+val new-withdraw = let {
+    val ref-balance = ref 100
+in
+    {
+        amount
+    ->
+        if !!ref-balance >= amount then do (
+            ! ref-balance := !!ref-balance - amount
+            ! !!ref-balance
+        ) else
+            "Insufficient funds"
+    }
+}
+
+
+fun make-withdraw = balance -> let {
+    val ref-balance = ref balance
+in {
+        amount
+    ->
+        if !!ref-balance >= amount then do (
+            ! ref-balance := !!ref-balance - amount
+            ! !!ref-balance
+        ) else
+            "Insufficient funds"
+    }
+}
+
+val W1 = make-withdraw 100
+val W2 = make-withdraw 100
+ 
+;; W1 50
+# -> 50
+;; W2 70
+# -> 30
+;; W2 40
+# -> "Insufficient funds"
+;; W1 40
+# -> 10
+;;
+
+
+fun make-account = balance -> let {
+    val ref-balance = ref balance
+
+    fun withdraw = amount ->
+        if !!ref-balance >= amount then do (
+            ! ref-balance := !!ref-balance - amount
+            ! !!ref-balance
+        ) else
+            "Insufficient funds"
+
+    fun deposit = amount -> do (
+        ! ref-balance := !!ref-balance + amount
+        ! !!ref-balance
+    )
+
+    fun dispatch = m -> case m of {
+      | @withdraw -> withdraw
+      | @deposit  -> deposit
+      else        -> panic! ("Unknown request -- MAKE-ACCOUNT: " ^ show m)
+    }
+in
+    dispatch
+}
+
+
+val acc = make-account 100
+
+;; acc @withdraw <| 50
+# -> 50
+;; acc @withdraw <| 60
+# -> "Insufficient funds"
+;; acc @deposit <| 40
+# -> 90
+;; acc @withdraw <| 60
+# -> 30
+
 
 
 #### 3.1.2 The Benefits of Introducing Assignment
