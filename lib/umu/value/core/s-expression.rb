@@ -214,6 +214,13 @@ class Cons < Abstract
     end
 
 
+    def pretty_print(q)
+        PRT.group q, bb:'(', eb:')' do
+            __pretty_print__ q, self
+        end
+    end
+
+
     INDEX_BY_LABELS = {car: 0, cdr: 1}
 
     def contents
@@ -306,6 +313,35 @@ private
                 ASSERT.abort cdr.inspect
             end
         )
+    end
+
+
+    def __pretty_print__(q, cons)
+        ASSERT.kind_of cons, SExpr::Cons
+
+        q.pp cons.car
+
+        cdr = cons.cdr
+        ASSERT.kind_of cdr, SExpr::Abstract
+
+        case cdr
+        when SExpr::Nil
+            # Nothing to do
+        when SExpr::Atom
+            q.breakable
+
+            q.text '.'
+
+            q.breakable
+
+            q.pp cdr
+        when SExpr::Cons
+            q.breakable
+
+            __pretty_print__ q, cdr
+        else
+            ASSERT.abort cdr.inspect
+        end
     end
 end
 Cons.freeze
