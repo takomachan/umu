@@ -68,6 +68,11 @@ class Abstract < Object
     end
 
 
+    def to_s
+        self.to_string({})
+    end
+
+
     def pretty_print(q)
         q.text self.to_s
     end
@@ -126,7 +131,7 @@ class Nil < Abstract
     TYPE_SYM = :SExprNil
 
 
-    def to_s
+    def to_string(visiteds = {})
         '()'
     end
 
@@ -156,7 +161,7 @@ class Atom < Abstract
     end
 
 
-    def to_s
+    def to_string(visiteds = {})
         self.val.to_s
     end
 
@@ -209,8 +214,17 @@ class Cons < Abstract
     end
 
 
-    def to_s
-        format "(%s)", __to_string__(self)
+    def to_string(visiteds = {})
+        format("(%s)",
+                if visiteds.has_key? self.object_id
+                    '....'
+                else
+                     __to_string__(
+                        self,
+                        visiteds.merge(self.object_id => true)
+                    )
+                end
+        )
     end
 
 
@@ -218,6 +232,11 @@ class Cons < Abstract
         PRT.group q, bb:'(', eb:')' do
             __pretty_print__ q, self
         end
+    end
+
+
+    def pretty_print_cycle(q)
+        '(....)'
     end
 
 
@@ -293,26 +312,42 @@ class Cons < Abstract
 
 private
 
-    def __to_string__(cons)
-        ASSERT.kind_of cons, SExpr::Cons
+    def __to_string__(cons, visiteds = {})
+        ASSERT.kind_of cons,     SExpr::Cons
+        ASSERT.kind_of visiteds, ::Hash
+
+        car = cons.car
+        car_str = if visiteds.has_key? car.object_id
+                        '....'
+                    else
+                        cons.car.to_string(
+                            visiteds.merge(self.object_id => true)
+                        )
+                    end
+
 
         cdr = cons.cdr
-        ASSERT.kind_of cdr, SExpr::Abstract
-
-        format("%s%s",
-            cons.car.to_s,
-
-            case cdr
+        cdr_str = case cdr
             when SExpr::Nil
                 ''
             when SExpr::Atom
                 format " . %s", cdr.val.to_s
             when SExpr::Cons
-                format " %s", __to_string__(cdr)
+                cddr_str = if visiteds.has_key? cdr.object_id
+                                '....'
+                            else
+                                __to_string__(
+                                    cdr,
+                                    visiteds.merge(self.object_id => true)
+                                )
+                            end
+
+                ' ' + cddr_str
             else
                 ASSERT.abort cdr.inspect
             end
-        )
+
+        format "%s%s", car_str, cdr_str
     end
 
 
