@@ -462,11 +462,16 @@ val it : Int = 7
 
 ### メッセージチェイン、パイプライン適用そして関数合成
 
-edvakfさんのブログ記事: [PythonでもRubyみたいに配列をメソッドチェーンでつなげたい](https://edvakf.hatenadiary.org/entry/20090405/1238885788) を参照。
+ここで解説するプログラム表現の考察は、edvakfさんのブログ記事:
+[PythonでもRubyみたいに配列をメソッドチェーンでつなげたい](https://edvakf.hatenadiary.org/entry/20090405/1238885788) 
+を出発点としています。
+
 
 #### (1) メッセージチェイン
 
-オブジェクト指向プログラミング(object oriented programming, OOP)スタイル
+オブジェクト指向プログラミングの標準的なスタイルであり、
+複数のメッセージを送信式で繋ぐ(chain)ことによって、
+左から右へと流れるようなコードが書けます。
 
 ```
 umu:1> [1, 4, 3, 2]
@@ -484,7 +489,11 @@ umu:6>
 
 #### (2) パイプライン適用
 
-F#, Ocaml, Scala, Elixir ... のように
+F#, Ocaml, Scala, Elixir のように ...
+
+関数型プログラミングのスタイルの一つであり、
+一つの式と複数の関数をパイプライン演算子 `|>` で連結(concatenate)することによって、
+左から右へと流れるようなコードが書けます。
 
 ```
 umu:1> [1, 4, 3, 2] |> sort |> reverse |> map to-s |> join-by "-"
@@ -494,7 +503,11 @@ umu:2>
 
 #### (2') もう一つのパイプライン適用
 
-Haskellの $-演算子のように
+(2) と似ていますが、こちらは値がパイプラインを右から左へと流れます。
+
+このスタイルは、あまりに過剰なカッコに疲れ果てている全世界のプログラマーにとって、救いの手となるでしょう。
+
+特に `Haskell` だとパイプライン演算子は標準演算子 `$` として定義され、好んで広く使われています。
 
 ```
 umu:1> join-by "-" <| map to-s <| reverse <| sort [1, 4, 3, 2]
@@ -504,29 +517,41 @@ umu:2>
 
 #### (3) 関数合成
 
+ここまで述べたメッセージチェインやパイプライン適用といったプログラミング技法よりも更に視点を上に向け、
+設計技法として「コードの部品化と再利用」を推進するのが関数合成です。
+
+以下の例では、４個の部品 `sort`、 `reverse`、 `map to-s` そして`join-by "-"` について、
+関数合成演算子 `>>` で左から右へと合成し、完成した関数オブジェクトを `f` として定義しています。
+
 ```
-umu:1> (sort >> reverse >> map to-s >> join-by "-") [1, 4, 3, 2]
+umu:1> val f = sort >> reverse >> map to-s >> join-by "-"
+fun f = #<{ %x -> (%x |> sort |> reverse |> (map to-s) |> (join-by "-")) }>
+umu:2> f [1, 4, 3, 2]
 val it : String = "4-3-2-1"
-umu:2> [1, 4, 3, 2] |> sort >> reverse >> map to-s >> join-by "-"
-val it : String = "4-3-2-1"
-umu:3>
+umu:3
 ```
 
 #### (3') もう一つの関数合成
 
-Haskellのポイントフリースタイル(point free style)のように
+(3) と似ていますが、こちらは関数合成演算子 `<<` で部品を右から左へ合成します。
+
+`Haskell` だと関数合成演算子は標準演算子 `.` として定義され、
+このスタイルがポイントフリースタイル(point free style)と命名されるほど広く知られ、
+好んで使われています。
 
 ```
-umu:1> (join-by "-" << map to-s << reverse << sort) [1, 4, 3, 2]
-val it : String = "4-3-2-1"
-umu:2> join-by "-" << map to-s << reverse << sort <| [1, 4, 3, 2]
+umu:1> val f = join-by "-" << map to-s << reverse << sort
+fun f = #<{ %x -> (%x |> sort |> reverse |> (map to-s) |> (join-by "-")) }>
+umu:2> f [1, 4, 3, 2]
 val it : String = "4-3-2-1"
 umu:3>
 ```
 
 #### (4) 伝統的な入れ子になった関数適用
 
-Lisp, Python, Pascal, Fortran, ... のように
+Lisp, Python, Pascal, Fortran のように ...
+
+科学技術計算のような数値関数ライブラリであれば、あえて伝統的なスタイルを採用することも検討すべきでしょう。
 
 ```
 umu:1> join-by "-" (map to-s (reverse (sort [1, 4, 3, 2])))
