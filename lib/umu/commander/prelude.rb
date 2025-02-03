@@ -507,11 +507,14 @@ structure Umu = struct {
         # NIL : SExprNil
         val NIL = &SExpr.nil
 
-        # atom : Atom -> SExprAtom
-        fun atom = x -> &SExpr.atom x
+        # Atom : Atom -> SExprAtom
+        fun Atom = x -> &SExpr.atom x
 
-        # cons : SExpr -> SExpr -> SExpr
-        fun cons = (car : SExpr) (cdr : SExpr) -> &SExpr.cons car cdr
+        # Cons : SExpr -> SExpr -> SExpr
+        fun Cons = (car : SExpr) (cdr : SExpr) -> &SExpr.cons car cdr
+
+        # make : %[SExpr] -> SExpr
+        fun make = xs : Morph -> &SExpr.make xs
 
 
         #### Classifier

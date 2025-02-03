@@ -56,6 +56,26 @@ class Abstract < Object
     end
 
 
+    define_class_method(
+        :meth_make,
+        :make, [],
+        [VCM::Abstract], self
+    )
+    def self.meth_make(loc, env, event, xs)
+        ASSERT.kind_of xs, VCM::Abstract
+
+        result = xs.foldr(
+             loc,     env,     event, VC.make_s_expr_nil
+        ) { |new_loc, new_env, x,     s_expr|
+            VC.validate_s_expr x, 'make', new_loc, new_env
+
+            VC.make_s_expr_cons x, s_expr
+        }
+
+        ASSERT.kind_of result, VC::SExpr::Abstract
+    end
+
+
     define_instance_method(
         :meth_cons,
         :cons, [],
@@ -243,7 +263,7 @@ class Cons < Abstract
     INDEX_BY_LABELS = {car: 0, cdr: 1}
 
     def contents
-        VC.make_named_tuple INDEX_BY_LABELS, self.car, self.car
+        VC.make_named_tuple INDEX_BY_LABELS, self.car, self.cdr
     end
 
 
