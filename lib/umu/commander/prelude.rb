@@ -516,6 +516,9 @@ structure Umu = struct {
         # make : %[SExpr] -> SExpr
         fun make = xs : Morph -> &SExpr.make xs
 
+        # make : %[SExpr] -> SExpr
+        fun make = xs : Morph -> &SExpr.make xs
+
 
         #### Classifier
 
