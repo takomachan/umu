@@ -1,3 +1,6 @@
+structure SE = Umu::SExpr
+
+
 #### 3 Modularity, Objects, and State
 #### 3 標準部品化力、オブジェクトおよび状態 -- p127
 
@@ -244,24 +247,72 @@ val D = make-decrementer 25
 ;;
 
 ###     assoc : Symbol -> [(Symbol, 'a)] -> Option (Symbol, 'a)
-fun rec assoc = key records -> case records of {
-| []     -> NONE
-| [x|xs] -> if key == fst x then Some x
-                            else assoc key xs
+fun rec assoc = (key : Symbol) (records : SExpr) -> cond records of {
+| SE::Nil? -> NONE
+| SE::Atom? -> panic! <| "Unexpected atom: " ^ records.show
+| SE::Cons? -> let {
+        val (car: cdr:) = val-of records
+    in
+        if SE::Cons? car then let {
+            val (car:car' cdr:cdr') = val-of car
+        in
+            if key == val-of car' then
+                Some car
+            else
+                assoc key cdr
+        } else
+            assoc key cdr
+    }
 }
+
 
 ### lookup1 = Symbol -> <TABLE> [(Symbol, 'a)] -> Option 'a
 fun lookup1 = key table -> let {
-    val opt-record = assoc key (val-of table)
+    val opt-record  = assoc key <| SE::cdr table
 in
-    if Some? opt-record then Some (snd (val-of opt-record))
-                        else NONE
+    case opt-record of {
+    | &Some cons -> Some <| SE::cdr cons
+    | &None      -> NONE
+    }
 }
 
-fun make-table = records -> Datum @Table records
+
+fun insert! = key value table -> do (
+    ! let {
+        val (_, ref-records) = table
+        val opt-record  = assoc key <| !!ref-records
+    in
+        case opt-record of {
+        | &Some record -> ref-records := record value 
+        | &None        -> set-cdr! table 
+        }
+    }
+
+    ! @ok
+)
+
+fun make-table = records : List -> (SE::cons
+    (SE::cons
+        (SE::atom @"*table*")
+        SE::NIL
+    )
+
+    (records |> foldr SE::NIL { (k, v) se ->
+            SE::cons
+                (SE::cons (SE::atom k) v)
+                se
+        }
+    )
+)
 
 
-;; val t1 = make-table [(@a, 1), (@b, 2), (@c, 3)]
+
+
+;; val t1 = make-table [
+    (@a, (SE::atom 1)),
+    (@b, (SE::atom 2)),
+    (@c, (SE::atom 3))
+]
 (#
     a:  1
     b:  2
@@ -269,13 +320,13 @@ fun make-table = records -> Datum @Table records
 #)
 
 ;; t1
-# -> Table [(@a, 1), (@b, 2), (@c, 3)]
+# -> ((@*table*) (@a . 1) (@b . 2) (@c . 3))
 
 ;; lookup1 @b t1
-# -> Some 2
+# -> &Some 2
 
 ;; lookup1 @d t1
-# -> NONE
+# -> &None ()
 ;;
 
 
@@ -287,20 +338,36 @@ fun make-table = records -> Datum @Table records
                 Option 'a
 ###)
 fun lookup2 = key1 key2 table -> let {
-    val opt-subtable = assoc key1 (val-of table)
+    val opt-subtable = assoc key1 (SE::cdr table)
 in
     if Some? opt-subtable then let {
-        val opt-record = assoc key2 (snd (val-of opt-subtable))
+        val opt-record = assoc key2 (SE::cdr (val-of opt-subtable))
     in
-        if Some? opt-record then Some (snd (val-of opt-record))
+        if Some? opt-record then Some (SE::cdr (val-of opt-record))
                             else NONE
     } else NONE
 }
 
 
 ;; val t2 = make-table [
-                (@math,    [(@"+", 43), (@"-", 45), (@"*", 42)]),
-                (@letters, [(@a, 97),   (@b, 98)])
+                (@math,
+                    (SE::make
+                        [
+                            (SE::cons (SE::atom @"+") (SE::atom 43)),
+                            (SE::cons (SE::atom @"-") (SE::atom 45)),
+                            (SE::cons (SE::atom @"*") (SE::atom 42))
+                        ]
+                    )
+                ),
+
+                (@letters,
+                    (SE::make
+                        [
+                            (SE::cons (SE::atom @a) (SE::atom 97)),
+                            (SE::cons (SE::atom @b) (SE::atom 98))
+                        ]
+                    )
+                )
             ]
 (#
     math:
@@ -313,34 +380,39 @@ in
 #)
 
 ;; t2
-# -> Table [(@math, [(@+, 43), (@-, 45), (@*, 42)]), (@letters, [(@a, 97), (@b, 98)])]
+# -> (
+#    (@*table*)
+#    (@math (@+ . 43) (@- . 45) (@* . 42))
+#    (@letters (@a . 97) (@b . 98))
+# )
+
 
 ;; lookup2 @math @"-" t2
-# -> Some 45
+# -> &Some 45
 
 ;; lookup2 @letters @a t2
-# -> Some 97
+# -> &Some 97
 
 ;; lookup2 @nath @"-" t2
-# -> NONE
+# -> &None ()
 
 ;; lookup2 @math @"/" t2
-# -> NONE
+# -> &None ()
 ;;
 
 
 #### local tables ####
 
 fun make-table' = records -> let {
-    val local-table = Datum @Table records
+    val local-table = make-table records
 
     fun lookup = key1 key2 -> let {
-        val opt-subtable = assoc key1 (val-of local-table)
+        val opt-subtable = assoc key1 (SE::cdr local-table)
     in
         if Some? opt-subtable then let {
-            val opt-record = assoc key2 (snd (val-of opt-subtable))
+            val opt-record = assoc key2 (SE::cdr (val-of opt-subtable))
         in
-            if Some? opt-record then Some (snd (val-of opt-record))
+            if Some? opt-record then Some (SE::cdr (val-of opt-record))
                                 else NONE
         } else NONE
     }
@@ -354,9 +426,25 @@ in
 }
 
 val operation-table = make-table' [
-                        (@math,    [(@"+", 43), (@"-", 45), (@"*", 42)]),
-                        (@letters, [(@a, 97),   (@b, 98)])
-                    ]
+                    (@math,
+                        (SE::make
+                            [
+                                (SE::cons (SE::atom @"+") (SE::atom 43)),
+                                (SE::cons (SE::atom @"-") (SE::atom 45)),
+                                (SE::cons (SE::atom @"*") (SE::atom 42))
+                            ]
+                        )
+                    ),
+
+                    (@letters,
+                        (SE::make
+                            [
+                                (SE::cons (SE::atom @a) (SE::atom 97)),
+                                (SE::cons (SE::atom @b) (SE::atom 98))
+                            ]
+                        )
+                    )
+                ]
 
 val get = operation-table @lookup-proc
 

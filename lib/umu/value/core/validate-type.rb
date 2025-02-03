@@ -100,6 +100,18 @@ module_function
     end
 
 
+    # S-Expression type
+
+    def validate_s_expr(value, meth_name, loc, env)
+        ASSERT.kind_of value,     VC::Top
+        ASSERT.kind_of meth_name, ::String
+
+        VC.validate_type value, VC::SExpr::Abstract, meth_name, loc, env
+
+        nil
+    end
+
+
     # Top type
 
     def validate_type(actual_value, expected_type, meth_name, loc, env)
