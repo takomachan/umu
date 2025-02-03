@@ -285,6 +285,7 @@ fun insert! = key value table -> do (
     ! @ok
 )
 
+
 fun make-table = records : List -> (SE::Cons
     (SE::Cons
         (SE::Atom @"*table*")
@@ -298,7 +299,6 @@ fun make-table = records : List -> (SE::Cons
         }
     )
 )
-
 
 
 
