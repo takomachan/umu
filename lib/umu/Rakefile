@@ -161,6 +161,7 @@ FILES = [
     'value/core/union/abstract.rb',
     'value/core/union/datum.rb',
     'value/core/union/option.rb',
+    'value/core/union/result.rb',
     'value/core/morph.rb',
     'value/core/morph/abstract.rb',
     'value/core/morph/interval.rb',

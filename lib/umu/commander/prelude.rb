@@ -50,6 +50,29 @@ structure Umu = struct {
 
 
 
+    ######## Result ########
+
+    structure Result = struct {
+        #### Constructor ####
+
+        # Ok : 'a -> Ok 'a
+        val Ok = &Ok.make
+
+        # Err : 'a -> Err 'a
+        val Err = &Err.make
+
+
+        #### Classifier ####
+
+        # Ok? : Result 'a -> Bool
+        val Ok? = &(Result.ok?)
+
+        # Err? : Result 'a -> Bool
+        val Err? = &(Result.err?)
+    }
+
+
+
     #### Math ####
 
     structure Math = struct {
@@ -791,10 +814,10 @@ structure Umu = struct {
 
         #### Option ####
 
-        # Some  : 'a -> Option 'a
+        # Some  : 'a -> Some 'a
         val Some = Option::Some
 
-        # NONE  : Option 'a
+        # NONE  : None 'a
         val NONE = Option::NONE
 
         # Some? : Option 'a -> Bool
@@ -802,6 +825,21 @@ structure Umu = struct {
 
         # None? : Option 'a -> Bool
         val None? = Option::None?
+
+
+        #### Result ####
+
+        # Ok   : 'a -> Ok 'a
+        val Ok = Result::Ok
+
+        # Err  : 'a -> Err 'a
+        val Err = Result::Err
+
+        # Ok?  : Result 'a -> Bool
+        val Ok? = Result::Ok?
+
+        # Err? : Result 'a -> Bool
+        val Err? = Result::Err?
 
 
         #### Morph ####
