@@ -107,6 +107,7 @@ BRAKET_PAIRS = [
     ['(',   ')'],   # Tuple, etc
     ['[',   ']'],   # List
     ['{',   '}'],   # Lambda, etc
+    ['%s(', ')'],   # S-Expression
     ['&(',  ')'],   # Instance method
     ['$(',  ')'],   # Named tuple modifier
 

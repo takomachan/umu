@@ -286,10 +286,7 @@ in
 
 
 fun make-table = records : List -> (SE::Cons
-    (SE::Cons
-        (SE::Atom @"*table*")
-        SE::NIL
-    )
+    %s("*table*" . ())
 
     (records |> foldr SE::NIL { (k : Symbol, v : SExpr) (se : SExpr) ->
             SE::Cons
@@ -302,9 +299,9 @@ fun make-table = records : List -> (SE::Cons
 
 
 ;; val t1 = make-table [
-    (@a, (SE::Atom 1)),
-    (@b, (SE::Atom 2)),
-    (@c, (SE::Atom 3))
+    (@a, %s(1)),
+    (@b, %s(2)),
+    (@c, %s(3))
 ]
 (#
     a:  1
@@ -318,11 +315,11 @@ fun make-table = records : List -> (SE::Cons
 # -> &Some 2
 ;; lookup1 @d t1
 # -> &None ()
-;; insert1! @d (SE::Atom 4) t1
+;; insert1! @d %s(4) t1
 # -> ()
 ;; t1
 # -> ((@*table*) (@d . 4) (@a . 1) (@b . 2) (@c . 3))
-;; insert1! @b (SE::Atom 20) t1
+;; insert1! @b %s(20) t1
 # -> ()
 ;; t1
 # -> ((@*table*) (@d . 4) (@a . 1) (@b . 20) (@c . 3))
@@ -387,17 +384,17 @@ in
 ;; val t2 = make-table [
                 (@math,
                     (SE::make [
-                            (SE::Cons (SE::Atom @"+") (SE::Atom 43)),
-                            (SE::Cons (SE::Atom @"-") (SE::Atom 45)),
-                            (SE::Cons (SE::Atom @"*") (SE::Atom 42))
+                            %s("+" . 43),
+                            %s("-" . 45),
+                            %s("*" . 42)
                         ]
                     )
                 ),
 
                 (@letters,
                     (SE::make [
-                            (SE::Cons (SE::Atom @a) (SE::Atom 97)),
-                            (SE::Cons (SE::Atom @b) (SE::Atom 98))
+                            %s(a . 97),
+                            %s(b . 98)
                         ]
                     )
                 )
@@ -426,7 +423,7 @@ in
 # -> &None ()
 ;; lookup2 @math @"/" t2
 # -> &None ()
-;; insert2! @math @"/" (SE::Atom 40) t2
+;; insert2! @math @"/" %s(40) t2
 # -> ()
 ;; t2
 # -> (
@@ -434,7 +431,7 @@ in
 #     (@math (@/ . 40) (@+ . 43) (@- . 45) (@* . 42))
 #     (@letters (@a . 97) (@b . 98))
 # )
-;; insert2! @math @"-" (SE::Atom 999) t2
+;; insert2! @math @"-" %s(999) t2
 # -> ()
 ;; t2
 # -> (
@@ -442,7 +439,7 @@ in
 #     (@math (@/ . 40) (@+ . 43) (@- . 999) (@* . 42))
 #     (@letters (@a . 97) (@b . 98))
 # )
-;; insert2! @letters @"c" (SE::Atom 99) t2
+;; insert2! @letters @"c" %s(99) t2
 # -> ()
 ;; t2
 # -> (
@@ -450,7 +447,7 @@ in
 #     (@math (@/ . 40) (@+ . 43) (@- . 999) (@* . 42))
 #     (@letters (@c . 99) (@a . 97) (@b . 98))
 # )
-;; insert2! @letters @"a" (SE::Atom 10000) t2
+;; insert2! @letters @"a" %s(10000) t2
 # -> ()
 ;; t2
 # -> (
@@ -542,15 +539,15 @@ val show-op-tbl = operation-table @show-proc
 # -> ()
 ;; get @math @"-"
 # -> &None ()
-;; put @math @"+" <| SE::Atom 43
+;; put @math @"+" %s(43)
 # -> ()
-;; put @math @"-" <| SE::Atom 45
+;; put @math @"-" %s(45)
 # -> ()
-;; put @math @"*" <| SE::Atom 42
+;; put @math @"*" %s(42)
 # -> ()
-;; put @letters @a <| SE::Atom 97
+;; put @letters @a %s(97)
 # -> ()
-;; put @letters @b <| SE::Atom 98
+;; put @letters @b %s(98)
 # -> ()
 ;; get @math @"-"
 # -> &Some 45

@@ -793,6 +793,19 @@ atom_expr:
 
     result = CSCE.make_named_tuple bb.loc, [fld1, fld2] + flds
 }
+| '%s(' ')' {
+    result = CSCE.make_s_expr_nil val[0].loc
+}
+| '%s(' s_expr ')' {
+    _, expr, _ = val
+
+    result = expr
+}
+| '%s(' s_expr '.' s_expr ')' {
+    bb, expr1, _, expr2, _ = val
+
+    result = CSCE.make_s_expr_cons bb.loc, expr1, expr2
+}
 | '&(' ID ')' {
     bb, msg, _ = val
 
@@ -934,6 +947,28 @@ qualifier:
     kw, expr = val
 
     result = CSCE.make_guard kw.loc, expr
+}
+
+
+# S-Expression
+
+s_expr:
+  INT       { result = CSCE.make_s_expr_int    val[0].loc, val[0].val }
+| FLOAT     { result = CSCE.make_s_expr_float  val[0].loc, val[0].val }
+| STRING    { result = CSCE.make_s_expr_string val[0].loc, val[0].val }
+| ID        { result = CSCE.make_s_expr_symbol val[0].loc, val[0].sym }
+| '(' ')' {
+    result = CSCE.make_s_expr_nil val[0].loc
+}
+| '(' s_expr ')' {
+    bb, expr, _ = val
+
+    result = CSCE.make_s_expr_atom bb.loc, expr
+}
+| '(' s_expr '.' s_expr ')' {
+    bb, expr1, _, expr2, _ = val
+
+    result = CSCE.make_s_expr_cons bb.loc, expr1, expr2
 }
 
 
