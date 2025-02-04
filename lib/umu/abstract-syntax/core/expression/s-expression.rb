@@ -54,32 +54,57 @@ end
 
 
 
-class Cons < Abstract
-    attr_reader :car_expr, :cdr_expr
+class List < Abstract
+    attr_reader :fst_expr, :snd_exprs, :opt_expr
 
-    def initialize(loc, car_expr, cdr_expr)
-        ASSERT.kind_of car_expr, ASCE::SExpression::Abstract
-        ASSERT.kind_of cdr_expr, ASCE::SExpression::Abstract
+    def initialize(loc, fst_expr, snd_exprs, opt_expr)
+        ASSERT.kind_of     fst_expr,  SExpression::Abstract
+        ASSERT.kind_of     snd_exprs, ::Array
+        ASSERT.opt_kind_of opt_expr,  SExpression::Abstract
+        snd_exprs.each do |expr|
+            ASSERT.kind_of expr, SExpression::Abstract
+        end
 
         super(loc)
 
-        @car_expr = car_expr
-        @cdr_expr = cdr_expr
+        @fst_expr  = fst_expr
+        @snd_exprs = snd_exprs
+        @opt_expr  = opt_expr
+    end
+
+
+    def exprs
+        [self.fst_expr] + self.snd_exprs
     end
 
 
     def to_s
-        format "(%s . %s)", self.car_expr.to_s, self.cdr_expr.to_s
+        format("(%s%s)",
+            self.exprs.map(&:to_s).join(' '),
+
+            if self.opt_expr
+                format " . %s", self.opt_expr.to_s
+            else
+                ''
+            end
+        )
     end
 
 
     def __evaluate__(env, event)
         new_env = env.enter event
 
-        VC.make_s_expr_cons(
-             self.car_expr.evaluate(new_env).value,
-             self.cdr_expr.evaluate(new_env).value
-        )
+        head_vals = self.exprs.map { |expr| expr.evaluate(new_env).value }
+
+        tail_val = if self.opt_expr
+                        self.opt_expr.evaluate(new_env).value
+                    else
+                        VC.make_s_expr_nil
+                    end
+
+        head_vals.reverse.inject(tail_val) { |xs, x|
+            VC.make_s_expr_cons x, xs
+        }
     end
 end
 
@@ -103,12 +128,15 @@ module_function
     end
 
 
-    def make_s_expr_cons(loc, car_expr, cdr_expr)
-        ASSERT.kind_of loc,      LOC::Entry
-        ASSERT.kind_of car_expr, ASCE::SExpression::Abstract
-        ASSERT.kind_of cdr_expr, ASCE::SExpression::Abstract
+    def make_s_expr_list(loc, fst_expr, snd_exprs, opt_expr = nil)
+        ASSERT.kind_of     loc,       LOC::Entry
+        ASSERT.kind_of     fst_expr,  SExpression::Abstract
+        ASSERT.kind_of     snd_exprs, ::Array
+        ASSERT.opt_kind_of opt_expr,  SExpression::Abstract
 
-        SExpression::Cons.new(loc, car_expr, cdr_expr).freeze
+        SExpression::List.new(
+            loc, fst_expr, snd_exprs.freeze, opt_expr
+        ).freeze
     end
 
 end # Umu::AbstractSyntax::Core::Expression

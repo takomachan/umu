@@ -796,15 +796,10 @@ atom_expr:
 | '%s(' ')' {
     result = CSCE.make_s_expr_nil val[0].loc
 }
-| '%s(' s_expr ')' {
-    _, expr, _ = val
+| '%s(' s_expr s_exprs opt_dot_s_expr ')' {
+    bb, expr, exprs, opt_expr, _ = val
 
-    result = expr
-}
-| '%s(' s_expr '.' s_expr ')' {
-    bb, expr1, _, expr2, _ = val
-
-    result = CSCE.make_s_expr_cons bb.loc, expr1, expr2
+    result = CSCE.make_s_expr_list bb.loc, expr, exprs, opt_expr
 }
 | '&(' ID ')' {
     bb, msg, _ = val
@@ -960,16 +955,21 @@ s_expr:
 | '(' ')' {
     result = CSCE.make_s_expr_nil val[0].loc
 }
-| '(' s_expr ')' {
-    bb, expr, _ = val
+| '(' s_expr s_exprs opt_dot_s_expr ')' {
+    bb, expr, exprs, opt_expr, _ = val
 
-    result = CSCE.make_s_expr_atom bb.loc, expr
+    result = CSCE.make_s_expr_list bb.loc, expr, exprs, opt_expr
 }
-| '(' s_expr '.' s_expr ')' {
-    bb, expr1, _, expr2, _ = val
 
-    result = CSCE.make_s_expr_cons bb.loc, expr1, expr2
-}
+
+s_exprs:
+  /* empty */       { result = [] }
+| s_expr s_exprs    { result = [val[0]] + val[1] }
+
+
+opt_dot_s_expr:
+  /* empty */       { result = nil }
+| '.' s_expr        { result = val[1] }
 
 
 

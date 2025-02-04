@@ -115,13 +115,13 @@ in
 
 val acc = make-account 100
 
-;; acc @withdraw <| 50
+;; acc @withdraw 50
 # -> &Ok 50
-;; acc @withdraw <| 60
+;; acc @withdraw 60
 # -> &Err "Insufficient funds"
-;; acc @deposit <| 40
+;; acc @deposit 40
 # -> 90
-;; acc @withdraw <| 60
+;; acc @withdraw 60
 # -> 30
 
 
@@ -288,7 +288,8 @@ in
 fun make-table = records : List -> (SE::Cons
     %s("*table*" . ())
 
-    (records |> foldr SE::NIL { (k : Symbol, v : SExpr) (se : SExpr) ->
+    (records |>
+        foldr SE::NIL { (k : Symbol, v : SExpr) (se : SExpr) ->
             SE::Cons
                 (SE::Cons (SE::Atom k) v)
                 se
@@ -383,20 +384,11 @@ in
 
 ;; val t2 = make-table [
                 (@math,
-                    (SE::make [
-                            %s("+" . 43),
-                            %s("-" . 45),
-                            %s("*" . 42)
-                        ]
-                    )
+                    %s(("+" . 43) ("-" . 45) ("*" . 42))
                 ),
 
                 (@letters,
-                    (SE::make [
-                            %s(a . 97),
-                            %s(b . 98)
-                        ]
-                    )
+                    %s((a . 97) (b . 98))
                 )
             ]
 (#

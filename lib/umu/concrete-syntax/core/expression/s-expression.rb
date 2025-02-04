@@ -61,34 +61,53 @@ end
 
 
 
-class Cons < Abstract
-    attr_reader :car_expr, :cdr_expr
+class List < Abstract
+    attr_reader :fst_expr, :snd_exprs, :opt_expr
 
-    def initialize(loc, car_expr, cdr_expr); super(loc); @car_expr = car_expr; @cdr_expr = cdr_expr; end
-=begin
-        ASSERT.kind_of car_expr, SExpression::Abstract
-        ASSERT.kind_of cdr_expr, SExpression::Abstract
+    def initialize(loc, fst_expr, snd_exprs, opt_expr)
+        ASSERT.kind_of     fst_expr,  SExpression::Abstract
+        ASSERT.kind_of     snd_exprs, ::Array
+        ASSERT.opt_kind_of opt_expr,  SExpression::Abstract
+        snd_exprs.each do |expr|
+            ASSERT.kind_of expr, SExpression::Abstract
+        end
 
         super(loc)
 
-        @car_expr = car_expr
-        @cdr_expr = cdr_expr
-    emd
-=end
+        @fst_expr  = fst_expr
+        @snd_exprs = snd_exprs
+        @opt_expr  = opt_expr
+    end
 
 
     def to_s
-        format "(%s . %s)", self.car_expr.to_s, self.cdr_expr.to_s
+        format("(%s%s)",
+            ([self.fst_expr] + self.snd_exprs).map(&:to_s).join(' '),
+
+            if self.opt_expr
+                format " . %s", self.opt_expr.to_s
+            else
+                ''
+            end
+        )
     end
 
 
 private
 
     def __desugar__(env, event)
-        ASCE.make_s_expr_cons(
-             self.loc,
-             self.car_expr.desugar(env),
-             self.cdr_expr.desugar(env)
+        ASCE.make_s_expr_list(
+            self.loc,
+
+            self.fst_expr.desugar(env),
+
+            self.snd_exprs.map { |expr| expr.desugar(env) },
+
+            if self.opt_expr
+                self.opt_expr.desugar(env)
+            else
+                nil
+            end
         )
     end
 end
@@ -145,12 +164,15 @@ module_function
     end
 
 
-    def make_s_expr_cons(loc, car_expr, cdr_expr)
-        ASSERT.kind_of loc,      LOC::Entry
-        ASSERT.kind_of car_expr, SExpression::Abstract
-        ASSERT.kind_of cdr_expr, SExpression::Abstract
+    def make_s_expr_list(loc, fst_expr, snd_exprs, opt_expr = nil)
+        ASSERT.kind_of     loc,       LOC::Entry
+        ASSERT.kind_of     fst_expr,  SExpression::Abstract
+        ASSERT.kind_of     snd_exprs, ::Array
+        ASSERT.opt_kind_of opt_expr,  SExpression::Abstract
 
-        SExpression::Cons.new(loc, car_expr, cdr_expr).freeze
+        SExpression::List.new(
+            loc, fst_expr, snd_exprs.freeze, opt_expr
+        ).freeze
     end
 
 end # Umu::ConcreteSyntax::Core::Expression
