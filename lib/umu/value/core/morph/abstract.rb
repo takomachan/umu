@@ -258,7 +258,7 @@ class Abstract < Object
              loc,     env,     event, VC.make_nil
         ) { |new_loc, new_env, x ,    xs|
 
-             VC.meth_cons x, xs
+             VC.make_cons x, xs
         }
 
         ASSERT.kind_of result, VCM::List::Abstract
