@@ -318,7 +318,7 @@ class Abstract < Object
             mut_y = yield loc, env, x, mut_y
         }
 
-        ASSERT.kind_of mut_y.freeze, VC::Top
+        ASSERT.kind_of mut_y, VC::Top
     end
 
 

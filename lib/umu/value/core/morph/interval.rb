@@ -89,9 +89,11 @@ class Interval < Abstract
         :cons, [],
         [VC::Top], VCM::List::Abstract
     )
-    def meth_cons(loc, env, event, _value)
+    def meth_cons(loc, env, event, value)
+        ASSERT.kind_of value, VC::Top
+
         self.meth_to_list(loc, env, event)
-            .meth_cons(loc, env, event, x)
+            .meth_cons(loc, env, event, value)
     end
 
 

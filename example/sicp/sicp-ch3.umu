@@ -374,7 +374,7 @@ in
     | &None -> SE::set-cdr! table (
                    SE::Cons
                        (SE::make [
-                               key-1,
+                               (SE::Atom key-1),
                                (SE::Cons (SE::Atom key-2) value)
                            ]
                        )
@@ -466,62 +466,103 @@ in
 fun make-table' = records -> let {
     val local-table = make-table records
 
-    fun lookup = key1 key2 -> let {
-        val opt-subtable = assoc key1 (SE::cdr local-table)
+
+    fun lookup = (key-1 : Symbol) (key-2 : Symbol) -> let {
+        val opt-subtable = assoc key-1 <| SE::cdr local-table
     in
-        if Some? opt-subtable then let {
-            val opt-record = assoc key2 (SE::cdr (val-of opt-subtable))
-        in
-            if Some? opt-record then Some (SE::cdr (val-of opt-record))
-                                else NONE
-        } else NONE
+        case opt-subtable of {
+        | &Some subtable -> let {
+                val opt-record = assoc key-2 <| SE::cdr subtable
+            in
+                case opt-record of {
+                | &Some record -> Some <| SE::cdr record
+                | &None        -> NONE
+                }
+            }
+        | &None -> NONE
+        }
     }
 
+
+    fun insert! = (key-1 : Symbol) (key-2 : Symbol)
+                   (value : SExpr) -> let {
+        val opt-subtable = assoc key-1 <| SE::cdr local-table
+    in
+        case opt-subtable of {
+        | &Some subtable -> let {
+                val opt-record = assoc key-2 <| SE::cdr subtable
+            in
+                case opt-record of {
+                | &Some record -> SE::set-cdr! record value
+                | &None        -> SE::set-cdr! subtable (
+                                      SE::Cons
+                                          (SE::Cons (SE::Atom key-2) value)
+                                          (SE::cdr subtable)
+                                  )
+                }
+            }
+        | &None -> SE::set-cdr! local-table (
+                       SE::Cons
+                           (SE::make [
+                                   (SE::Atom key-1),
+                                   (SE::Cons (SE::Atom key-2) value)
+                               ]
+                           )
+                           (SE::cdr local-table)
+                   )
+        }
+    }
+
+
+    fun show = () -> pp local-table
+
+
     fun dispatch = m -> case m of {
-    | @lookup-proc -> lookup
+    | @lookup-proc  -> lookup
+    | @insert-proc! -> insert!
+    | @show-proc    -> show
     else           -> panic! <| "Unknown operation -- TABLE: " ^ show m
     }
 in
     dispatch
 }
 
-val operation-table = make-table' [
-                    (@math,
-                        (SE::make [
-                                (SE::Cons (SE::Atom @"+") (SE::Atom 43)),
-                                (SE::Cons (SE::Atom @"-") (SE::Atom 45)),
-                                (SE::Cons (SE::Atom @"*") (SE::Atom 42))
-                            ]
-                        )
-                    ),
 
-                    (@letters,
-                        (SE::make [
-                                (SE::Cons (SE::Atom @a) (SE::Atom 97)),
-                                (SE::Cons (SE::Atom @b) (SE::Atom 98))
-                            ]
-                        )
-                    )
-                ]
+val operation-table = make-table' []
 
 val get = operation-table @lookup-proc
 
+val put = operation-table @insert-proc!
 
-;; operation-table
-# -> #<dispatch: ....>
+val show-op-tbl = operation-table @show-proc
 
-;; get
-# -> #<lookup: ....>
 
+;; show-op-tbl ()
+# ((@*table*))
+# -> ()
+;; get @math @"-"
+# -> &None ()
+;; put @math @"+" <| SE::Atom 43
+# -> ()
+;; put @math @"-" <| SE::Atom 45
+# -> ()
+;; put @math @"*" <| SE::Atom 42
+# -> ()
+;; put @letters @a <| SE::Atom 97
+# -> ()
+;; put @letters @b <| SE::Atom 98
+# -> ()
 ;; get @math @"-"
 # -> &Some 45
-
 ;; get @letters @a
 # -> &Some 97
-
-;; get @nath @"-"
-# -> &None ()
-
 ;; get @math @"/"
 # -> &None ()
+;; show-op-tbl ()
+# (
+#     (@*table*)
+#     (@letters (@b . 98) (@a . 97))
+#     (@math (@* . 42) (@- . 45) (@+ . 43))
+# )
+# -> ()
 ;;
