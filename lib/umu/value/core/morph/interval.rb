@@ -22,14 +22,10 @@ class Interval < Abstract
     define_class_method(
         :meth_make_empty,
         :empty, [],
-        [], self  # --> NotConstractible
+        [], VCM::List::Abstract
     )
     def self.meth_make_empty(loc, env, _event)
-        raise X::NotImplemented.new(
-            loc,
-            env,
-            "Interval object isn't constructible"
-        )
+        VC.make_nil
     end
 
 
@@ -91,14 +87,11 @@ class Interval < Abstract
     define_instance_method(
         :meth_cons,
         :cons, [],
-        [VC::Top], VCM::List::Abstract  # --> NotConstractible
+        [VC::Top], VCM::List::Abstract
     )
-    def meth_cons(loc, env, _event, _value)
-        raise X::NotImplemented.new(
-            loc,
-            env,
-            "Interval object isn't constructible"
-        )
+    def meth_cons(loc, env, event, _value)
+        self.meth_to_list(loc, env, event)
+            .meth_cons(loc, env, event, x)
     end
 
 
