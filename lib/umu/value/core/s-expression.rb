@@ -152,7 +152,7 @@ class Nil < Abstract
 
 
     def to_string(visiteds = {})
-        '()'
+        '%S()'
     end
 
 
@@ -235,7 +235,7 @@ class Cons < Abstract
 
 
     def to_string(visiteds = {})
-        format("(%s)",
+        format("%%S(%s)",
                 if visiteds.has_key? self.object_id
                     '....'
                 else
@@ -249,7 +249,7 @@ class Cons < Abstract
 
 
     def pretty_print(q)
-        PRT.group q, bb:'(', eb:')' do
+        PRT.group q, bb:'%S(', eb:')' do
             __pretty_print__ q, self
         end
     end

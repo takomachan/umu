@@ -71,6 +71,11 @@ class Embeded < Abstract
     end
 
 
+    def pretty_print(q)
+        q.pp self.expr
+    end
+
+
     def __evaluate__(env, event)
         val = self.expr.evaluate(env.enter(event)).value
 
@@ -107,7 +112,7 @@ class List < Abstract
 
 
     def to_s
-        format("(%s%s)",
+        format("%%S(%s%s)",
             self.exprs.map(&:to_s).join(' '),
 
             if self.opt_expr
@@ -116,6 +121,20 @@ class List < Abstract
                 ''
             end
         )
+    end
+
+
+    def pretty_print(q)
+        PRT.group_for_enum q, self.exprs, bb:'%S(', join:' '
+
+        q.breakable
+
+        if self.opt_expr
+            PRT.group q, bb:'.', sep:' ' do
+                q.pp self.opt_expr
+            end
+        end
+        q.text ')'
     end
 
 

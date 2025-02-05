@@ -76,6 +76,11 @@ class Embeded < Abstract
     end
 
 
+    def pretty_print(q)
+        q.pp self.expr
+    end
+
+
 private
 
     def __desugar__(env, event)
@@ -104,9 +109,14 @@ class List < Abstract
     end
 
 
+    def exprs
+        [self.fst_expr] + self.snd_exprs
+    end
+
+
     def to_s
-        format("(%s%s)",
-            ([self.fst_expr] + self.snd_exprs).map(&:to_s).join(' '),
+        format("%%S(%s%s)",
+            self.exprs.map(&:to_s).join(' '),
 
             if self.opt_expr
                 format " . %s", self.opt_expr.to_s
@@ -114,6 +124,20 @@ class List < Abstract
                 ''
             end
         )
+    end
+
+
+    def pretty_print(q)
+        PRT.group_for_enum q, self.exprs, bb:'%S(', join:' '
+
+        q.breakable
+
+        if self.opt_expr
+            PRT.group q, bb:'.', sep:' ' do
+                q.pp self.opt_expr
+            end
+        end
+        q.text ')'
     end
 
 
