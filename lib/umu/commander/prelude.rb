@@ -551,133 +551,6 @@ structure Umu = struct {
 
 
 
-    ######## SICP ########
-    (#
-     # Structure and Implementation of Computer Programs -- 2nd ed.
-     #
-     # - Original (English)
-     #       https://web.mit.edu/6.001/6.037/
-     # - Japanease translated
-     #       https://sicp.iijlab.net/
-     #)
-
-    structure SICP = struct {
-        val operation-table = make-table' []
-
-        val get = operation-table @lookup-proc
-
-        val put = operation-table @insert-proc!
-
-        val show-op-tbl = operation-table @show-proc
-    } where {
-        structure SE = SExpr
-
-        val Some = &Some.make
-        val NONE = &None.make
-
-
-        ###     assoc : Symbol -> SExpr -> Option SExpr
-        fun rec assoc = (key : Symbol) (records : SExpr) ->
-            cond records of {
-            | SE::Nil?   -> NONE
-            | SE::Value? -> NONE
-            | SE::Cons?  -> let {
-                    val (car: cdr:) = records.contents
-                in
-                    if SE::Cons? car && key.== (SE::car car.contents)
-                        then Some car
-                        else assoc key cdr
-                }
-            }
-
-
-        fun make-table = records : List -> %S(
-            ("*table*" . ())
-        .
-            %{records |>
-                Morph::foldr SE::NIL {
-                    (k : Symbol, v : SExpr) (se : SExpr)
-                ->
-                    %S(
-                        (%{SE::Value k} . %{v})
-                    .
-                        %{se}
-                    )
-                }
-            }
-        )
-
-
-        fun make-table' = records -> let {
-            val local-table = make-table records
-
-
-            fun lookup = (key-1 : Symbol) (key-2 : Symbol) -> let {
-                val opt-subtable = assoc key-1 <| SE::cdr local-table
-            in
-                case opt-subtable of {
-                | &Some subtable -> let {
-                        val opt-record = assoc key-2 <| SE::cdr subtable
-                    in
-                        case opt-record of {
-                        | &Some record -> Some <| SE::cdr record
-                        | &None        -> NONE
-                        }
-                    }
-                | &None -> NONE
-                }
-            }
-
-
-            fun insert! = (key-1 : Symbol) (key-2 : Symbol) value -> let {
-                val opt-subtable = assoc key-1 <| SE::cdr local-table
-            in
-                case opt-subtable of {
-                | &Some subtable -> let {
-                        val opt-record = assoc key-2 <| SE::cdr subtable
-                    in
-                        case opt-record of {
-                        | &Some record -> SE::set-cdr! record value
-                        | &None        -> SE::set-cdr! subtable %S(
-                                              (
-                                                %{SE::Value key-2}
-                                              .
-                                                %{value}
-                                              )
-                                          .
-                                              %{SE::cdr subtable}
-                                          )
-                        }
-                    }
-                | &None -> SE::set-cdr! local-table %S(
-                               (
-                                   %{SE::Value key-1}
-                                   (%{SE::Value key-2} . %{value})
-                               )
-                           .
-                               %{SE::cdr local-table}
-                           )
-                }
-            }
-
-
-            fun show = () -> &Device.stdout.pp local-table
-
-
-            fun dispatch = m -> case m of {
-            | @lookup-proc  -> lookup
-            | @insert-proc! -> insert!
-            | @show-proc    -> show
-            else            -> panic! <|
-                                 "Unknown operation -- TABLE: " ^ show m
-            }
-        in
-            dispatch
-        }
-    }
-
-
-
     ######## String ########
 
     structure String = struct {
@@ -1222,6 +1095,129 @@ structure Umu = struct {
 
         fun msg = expect actual ->
             "Expected: " ^ expect.show ^ ", but: " ^ actual.show
+    }
+
+
+
+    ######## SICP ########
+    (#
+     # Structure and Implementation of Computer Programs -- 2nd ed.
+     #
+     # - Original (English)
+     #       https://web.mit.edu/6.001/6.037/
+     # - Japanease translated
+     #       https://sicp.iijlab.net/
+     #)
+
+    structure SICP = struct {
+        val get = operation-table @lookup-proc
+
+        val put = operation-table @insert-proc!
+
+        val show-op-tbl = operation-table @show-proc
+    } where {
+        import Prelude
+        structure SE = SExpr
+
+
+        ###     assoc : Symbol -> SExpr -> Option SExpr
+        fun rec assoc = (key : Symbol) (records : SExpr) ->
+            cond records of {
+            | SE::Nil?   -> NONE
+            | SE::Value? -> NONE
+            | SE::Cons?  -> let {
+                    val (car: cdr:) = records.contents
+                in
+                    if SE::Cons? car && key == (val-of <| SE::car car)
+                        then Some car
+                        else assoc key cdr
+                }
+            }
+
+
+        fun make-table = records : List -> %S(
+            ("*table*" . ())
+        .
+            %{records |>
+                Morph::foldr SE::NIL {
+                    (k : Symbol, v : SExpr) (se : SExpr)
+                ->
+                    %S(
+                        (%{SE::Value k} . %{v})
+                    .
+                        %{se}
+                    )
+                }
+            }
+        )
+
+
+        fun make-table' = records -> let {
+            val local-table = make-table records
+
+
+            fun lookup = (key-1 : Symbol) (key-2 : Symbol) -> let {
+                val opt-subtable = assoc key-1 <| SE::cdr local-table
+            in
+                case opt-subtable of {
+                | &Some subtable -> let {
+                        val opt-record = assoc key-2 <| SE::cdr subtable
+                    in
+                        case opt-record of {
+                        | &Some record -> Some <| SE::cdr record
+                        | &None        -> NONE
+                        }
+                    }
+                | &None -> NONE
+                }
+            }
+
+
+            fun insert! = (key-1 : Symbol) (key-2 : Symbol) value -> let {
+                val opt-subtable = assoc key-1 <| SE::cdr local-table
+            in
+                case opt-subtable of {
+                | &Some subtable -> let {
+                        val opt-record = assoc key-2 <| SE::cdr subtable
+                    in
+                        case opt-record of {
+                        | &Some record ->
+                            SE::set-cdr! record value
+                        | &None ->
+                            SE::set-cdr! subtable %S(
+                                (%{SE::Value key-2} .  %{value})
+                            .
+                                %{SE::cdr subtable}
+                            )
+                        }
+                    }
+                | &None -> SE::set-cdr! local-table %S(
+                        (
+                            %{SE::Value key-1}
+                            (%{SE::Value key-2} . %{value})
+                        )
+                    .
+                        %{SE::cdr local-table}
+                    )
+                }
+            }
+
+
+            fun show = () -> &Device.stdout.pp local-table
+
+
+            fun dispatch = m -> case m of {
+            | @lookup-proc  -> lookup
+            | @insert-proc! -> insert!
+            | @show-proc    -> show
+            else            -> panic! <|
+                                 "Unknown operation -- TABLE: " ^ show m
+            }
+        in
+            dispatch
+        }
+
+        val operation-table = make-table' []
     }
 }
 

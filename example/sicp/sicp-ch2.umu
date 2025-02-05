@@ -1613,6 +1613,14 @@ fun install-rectangular-package = () -> do (
 }
 
 
+
+;; print "==== BEFORE ===="
+;; SI::show-op-tbl ()
+;; install-rectangular-package ()
+;; print "==== AFTER ===="
+;; SI::show-op-tbl ()
+
+
 #### 2.5 Systems with Generic Operations
 #### 2.5 汎用演算のシステム -- p110
 
