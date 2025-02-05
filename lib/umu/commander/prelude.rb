@@ -1114,7 +1114,7 @@ structure Umu = struct {
 
         val put = operation-table @insert-proc!
 
-        val show-op-tbl = operation-table @show-proc
+        val pp = operation-table @pp-proc
     } where {
         import Prelude
         structure SE = SExpr
@@ -1203,13 +1203,13 @@ structure Umu = struct {
             }
 
 
-            fun show = () -> &Device.stdout.pp local-table
+            fun pp-table = () -> pp local-table
 
 
             fun dispatch = m -> case m of {
             | @lookup-proc  -> lookup
             | @insert-proc! -> insert!
-            | @show-proc    -> show
+            | @pp-proc      -> pp-table
             else            -> panic! <|
                                  "Unknown operation -- TABLE: " ^ show m
             }

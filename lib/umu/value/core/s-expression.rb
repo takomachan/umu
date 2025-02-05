@@ -129,13 +129,7 @@ class Abstract < Object
 
 
     def meth_to_string(loc, env, event)
-        VC.make_string(
-            format("[%s]",
-                self.map { |elem|
-                    elem.meth_to_string(loc, env, event).val
-                }.join(', ')
-            )
-        )
+        VC.make_string self.to_string
     end
 
 

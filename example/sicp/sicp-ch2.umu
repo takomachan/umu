@@ -1586,12 +1586,12 @@ fun install-rectangular-package = () -> do (
     ! SI::put @make-from-real-imag  @rectangular { (x, y) ->
             tag <| make-from-real-imag x y
         }
-    ! SI::put @make-from-mag-ang    @rectangular { (x, y) ->
-            tag <| make-from-mag-ang x y
+    ! SI::put @make-from-mag-ang    @rectangular { (r, a) ->
+            tag <| make-from-mag-ang r a
         }
     ! ()
 ) where {
-    #
+    # internal procedures
 
     fun real-part = z -> fst z
     fun imag-part = z -> snd z
@@ -1607,18 +1607,53 @@ fun install-rectangular-package = () -> do (
     fun make-from-mag-ang   = r a -> (r * cos a, r * sin a)
 
 
-    #
+    # interface to the rest of the system
 
     fun tag = x -> attach-tag @rectangular x 
 }
 
 
+fun install-polar-package = () -> do (
+    ! SI::put @real-part    @polar real-part
+    ! SI::put @imag-part    @polar imag-part
+    ! SI::put @magnitude    @polar magnitude
+    ! SI::put @angle        @polar angle
+    ! SI::put @make-from-real-imag  @polar { (x, y) ->
+            tag <| make-from-real-imag x y
+        }
+    ! SI::put @make-from-mag-ang    @polar { (r, a) ->
+            tag <| make-from-mag-ang r a
+        }
+    ! ()
+) where {
+    # internal procedures
+
+    fun magnitude = z -> fst z
+    fun angle     = z -> snd z
+
+    fun make-from-mag-ang   = r a -> (r, a)
+    fun real-part = z -> (magnitude z) * (cos <| angle z)
+    fun imag-part = z -> (magnitude z) * (sin <| angle z)
+
+    fun make-from-real-imag = x y -> (
+        sqrt <| square x + square y,
+        atan y x
+    )
+
+
+    # interface to the rest of the system
+
+    fun tag = x -> attach-tag @polar x 
+}
+
+
 
 ;; print "==== BEFORE ===="
-;; SI::show-op-tbl ()
+;; SI::pp ()
 ;; install-rectangular-package ()
-;; print "==== AFTER ===="
-;; SI::show-op-tbl ()
+;; install-polar-package ()
+;; print "==== AFTER (pp) ===="
+;; SI::pp ()
 
 
 #### 2.5 Systems with Generic Operations
