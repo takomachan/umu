@@ -54,6 +54,34 @@ end
 
 
 
+class Embeded < Abstract
+    attr_reader :expr
+
+    def initialize(loc, expr)
+        ASSERT.kind_of expr, ASCE::Abstract
+
+        super(loc)
+
+        @expr = expr
+    end
+
+
+    def to_s
+        self.expr.to_s
+    end
+
+
+    def __evaluate__(env, event)
+        val = self.expr.evaluate(env.enter(event)).value
+
+        VC.validate_s_expr val, '<Embeded in S-Expr>', self.loc, env
+
+        val
+    end
+end
+
+
+
 class List < Abstract
     attr_reader :fst_expr, :snd_exprs, :opt_expr
 
@@ -125,6 +153,14 @@ module_function
         ASSERT.kind_of val, VCA::Abstract
 
         SExpression::Atom.new(loc, val).freeze
+    end
+
+
+    def make_s_expr_embeded(loc, expr)
+        ASSERT.kind_of loc,  LOC::Entry
+        ASSERT.kind_of expr, ASCE::Abstract
+
+        SExpression::Embeded.new(loc, expr).freeze
     end
 
 

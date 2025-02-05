@@ -276,25 +276,27 @@ fun insert1! = (key : Symbol) (value : SExpr) (table : SExpr) -> let {
 in
     case opt-record of {
     | &Some record -> SE::set-cdr! record value 
-    | &None        -> SE::set-cdr! table (
-                          SE::Cons
-                              (SE::Cons (SE::Atom key) value)
-                              (SE::cdr table)
+    | &None        -> SE::set-cdr! table %s(
+                          (%{SE::Atom key} . %{value})
+                      .
+                          %{SE::cdr table}
                       )
     }
 }
 
 
-fun make-table = records : List -> (SE::Cons
-    %s("*table*" . ())
-
-    (records |>
+fun make-table = records : List -> %s(
+    ("*table*" . ())
+.
+    %{records |>
         foldr SE::NIL { (k : Symbol, v : SExpr) (se : SExpr) ->
-            SE::Cons
-                (SE::Cons (SE::Atom k) v)
-                se
+            %s(
+                (%{SE::Atom k} . %{v})
+            .
+                %{se}
+            )
         }
-    )
+    }
 )
 
 
@@ -362,21 +364,20 @@ in
         in
             case opt-record of {
             | &Some record -> SE::set-cdr! record value
-            | &None        -> SE::set-cdr! subtable (
-                                  SE::Cons
-                                      (SE::Cons (SE::Atom key-2) value)
-                                      (SE::cdr subtable)
+            | &None        -> SE::set-cdr! subtable %s(
+                                  (%{SE::Atom key-2} . %{value})
+                              .
+                                  %{SE::cdr subtable}
                               )
             }
         }
-    | &None -> SE::set-cdr! table (
-                   SE::Cons
-                       (SE::list [
-                               (SE::Atom key-1),
-                               (SE::Cons (SE::Atom key-2) value)
-                           ]
-                       )
-                       (SE::cdr table)
+    | &None -> SE::set-cdr! table %s(
+                   (
+                       %{SE::Atom key-1}
+                       (%{SE::Atom key-2} . %{value})
+                   )
+               .
+                   %{SE::cdr table}
                )
     }
 }
@@ -483,21 +484,20 @@ fun make-table' = records -> let {
             in
                 case opt-record of {
                 | &Some record -> SE::set-cdr! record value
-                | &None        -> SE::set-cdr! subtable (
-                                      SE::Cons
-                                          (SE::Cons (SE::Atom key-2) value)
-                                          (SE::cdr subtable)
+                | &None        -> SE::set-cdr! subtable %s(
+                                      (%{SE::Atom key-2} . %{value})
+                                  .
+                                      %{SE::cdr subtable}
                                   )
                 }
             }
-        | &None -> SE::set-cdr! local-table (
-                       SE::Cons
-                           (SE::list [
-                                   (SE::Atom key-1),
-                                   (SE::Cons (SE::Atom key-2) value)
-                               ]
-                           )
-                           (SE::cdr local-table)
+        | &None -> SE::set-cdr! local-table %s(
+                       (
+                           %{SE::Atom key-1}
+                           (%{SE::Atom key-2} . %{value})
+                       )
+                   .
+                       %{SE::cdr local-table}
                    )
         }
     }
@@ -510,7 +510,7 @@ fun make-table' = records -> let {
     | @lookup-proc  -> lookup
     | @insert-proc! -> insert!
     | @show-proc    -> show
-    else           -> panic! <| "Unknown operation -- TABLE: " ^ show m
+    else            -> panic! <| "Unknown operation -- TABLE: " ^ show m
     }
 in
     dispatch
@@ -526,6 +526,7 @@ val put = operation-table @insert-proc!
 val show-op-tbl = operation-table @show-proc
 
 
+;; print "== BEFORE =="
 ;; show-op-tbl ()
 # ((@*table*))
 # -> ()
@@ -547,6 +548,7 @@ val show-op-tbl = operation-table @show-proc
 # -> &Some 97
 ;; get @math @"/"
 # -> &None ()
+;; print "== AFTER =="
 ;; show-op-tbl ()
 # (
 #     (@*table*)

@@ -948,10 +948,10 @@ qualifier:
 # S-Expression
 
 s_expr:
-  INT       { result = CSCE.make_s_expr_int    val[0].loc, val[0].val }
-| FLOAT     { result = CSCE.make_s_expr_float  val[0].loc, val[0].val }
-| STRING    { result = CSCE.make_s_expr_string val[0].loc, val[0].val }
-| ID        { result = CSCE.make_s_expr_symbol val[0].loc, val[0].sym }
+  INT           { result = CSCE.make_s_expr_int    val[0].loc, val[0].val }
+| FLOAT         { result = CSCE.make_s_expr_float  val[0].loc, val[0].val }
+| STRING        { result = CSCE.make_s_expr_string val[0].loc, val[0].val }
+| ID            { result = CSCE.make_s_expr_symbol val[0].loc, val[0].sym }
 | '(' ')' {
     result = CSCE.make_s_expr_nil val[0].loc
 }
@@ -960,6 +960,7 @@ s_expr:
 
     result = CSCE.make_s_expr_list bb.loc, expr, exprs, opt_expr
 }
+| '%{' expr '}' { result = CSCE.make_s_expr_embeded val[0].loc, val[1] }
 
 
 s_exprs:

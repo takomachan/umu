@@ -36,15 +36,13 @@ end
 class Atom < Abstract
     attr_reader :atom_val
 
-    def initialize(loc, atom_val); super(loc); @atom_val = atom_val; end
-=begin
+    def initialize(loc, atom_val)
         ASSERT.kind_of atom_val, ::Object
 
         super(loc)
 
         @atom_val = atom_val
-    emd
-=end
+    end
 
 
     def to_s
@@ -56,6 +54,32 @@ private
 
     def __desugar__(env, event)
         ASCE.make_s_expr_atom self.loc, self.atom_val
+    end
+end
+
+
+
+class Embeded < Abstract
+    attr_reader :expr
+
+    def initialize(loc, expr)
+        ASSERT.kind_of expr, CSCE::Abstract
+
+        super(loc)
+
+        @expr = expr
+    end
+
+
+    def to_s
+        self.expr.to_s
+    end
+
+
+private
+
+    def __desugar__(env, event)
+        ASCE.make_s_expr_embeded self.loc, self.expr.desugar(env)
     end
 end
 
@@ -161,6 +185,14 @@ module_function
         SExpression::Atom.new(
             loc, VC.make_symbol(sym)
         ).freeze
+    end
+
+
+    def make_s_expr_embeded(loc, expr)
+        ASSERT.kind_of loc,  LOC::Entry
+        ASSERT.kind_of expr, CSCE::Abstract
+
+        SExpression::Embeded.new(loc, expr).freeze
     end
 
 
