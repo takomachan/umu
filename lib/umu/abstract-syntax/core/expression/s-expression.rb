@@ -48,7 +48,7 @@ class Atom < Abstract
 
 
     def __evaluate__(_env, _event)
-        VC.make_s_expr_atom self.val
+        VC.make_s_expr_value self.val
     end
 end
 
@@ -77,11 +77,7 @@ class Embeded < Abstract
 
 
     def __evaluate__(env, event)
-        val = self.expr.evaluate(env.enter(event)).value
-
-        VC.validate_s_expr val, '<Embeded in S-Expr>', self.loc, env
-
-        val
+        VC.make_s_expr_value self.expr.evaluate(env.enter(event)).value
     end
 end
 
@@ -141,10 +137,20 @@ class List < Abstract
     def __evaluate__(env, event)
         new_env = env.enter event
 
-        head_vals = self.exprs.map { |expr| expr.evaluate(new_env).value }
+        head_vals = self.exprs.map { |expr|
+                        val = expr.evaluate(new_env).value
+
+                        VC.validate_s_expr val, '<S-Expr>', self.loc, env
+
+                        val
+                    }
 
         tail_val = if self.opt_expr
-                        self.opt_expr.evaluate(new_env).value
+                        val = self.opt_expr.evaluate(new_env).value
+
+                        VC.validate_s_expr val, '<S-Expr>', self.loc, env
+
+                        val
                     else
                         VC.make_s_expr_nil
                     end

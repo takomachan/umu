@@ -32,14 +32,14 @@ class Abstract < Object
 
 
     define_class_method(
-        :meth_make_atom,
-        :atom, [],
+        :meth_make_value,
+        :value, [],
         [VCA::Abstract], self
     )
-    def self.meth_make_atom(loc, env, event, val)
+    def self.meth_make_value(loc, env, event, val)
         ASSERT.kind_of val, VCA::Abstract
 
-        VC.make_s_expr_atom val
+        VC.make_s_expr_value val
     end
 
 
@@ -109,11 +109,11 @@ class Abstract < Object
 
 
     define_instance_method(
-        :meth_is_atom,
-        :atom?, [],
+        :meth_is_value,
+        :value?, [],
         [], VCA::Bool
     )
-    def meth_is_atom(_loc, _env, _event)
+    def meth_is_value(_loc, _env, _event)
         VC.make_false
     end
 
@@ -166,14 +166,14 @@ NIL = Nil.new.freeze
 
 
 
-class Atom < Abstract
-    TYPE_SYM = :SExprAtom
+class Value < Abstract
+    TYPE_SYM = :SExprValue
 
 
     attr_reader :val
 
     def initialize(val)
-        ASSERT.kind_of val, VCA::Abstract
+        ASSERT.kind_of val, VC::Top
 
         super()
 
@@ -186,7 +186,12 @@ class Atom < Abstract
     end
 
 
-    def meth_is_atom(_loc, _env, _event)
+    def pretty_print(q)
+        q.pp self.val
+    end
+
+
+    def meth_is_value(_loc, _env, _event)
         VC.make_true
     end
 
@@ -199,13 +204,13 @@ class Atom < Abstract
     define_instance_method(
         :meth_contents,
         :contents, [],
-        [], VCA::Abstract
+        [], VC::Top
     )
     def meth_contents(_loc, _env, _event)
         self.contents
     end
 end
-Atom.freeze
+Value.freeze
 
 
 
@@ -350,7 +355,7 @@ private
         cdr_str = case cdr
             when SExpr::Nil
                 ''
-            when SExpr::Atom
+            when SExpr::Value
                 format " . %s", cdr.val.to_s
             when SExpr::Cons
                 cddr_str = if visiteds.has_key? cdr.object_id
@@ -382,7 +387,7 @@ private
         case cdr
         when SExpr::Nil
             # Nothing to do
-        when SExpr::Atom
+        when SExpr::Value
             q.breakable
 
             q.text '.'
@@ -411,10 +416,10 @@ module_function
     end
 
 
-    def make_s_expr_atom(val)
-        ASSERT.kind_of val, VCA::Abstract
+    def make_s_expr_value(val)
+        ASSERT.kind_of val, VC::Top
 
-        SExpr::Atom.new(val).freeze
+        SExpr::Value.new(val).freeze
     end
 
 

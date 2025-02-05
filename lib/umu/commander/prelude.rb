@@ -507,8 +507,8 @@ structure Umu = struct {
         # NIL : SExprNil
         val NIL = &SExpr.nil
 
-        # Atom : Atom -> SExprAtom
-        fun Atom = x -> &SExpr.atom x
+        # Value : 'a -> SExprValue
+        fun Value = x -> &SExpr.value x
 
         # Cons : SExpr -> SExpr -> SExpr
         fun Cons = (car : SExpr) (cdr : SExpr) -> &SExpr.cons car cdr
@@ -522,8 +522,8 @@ structure Umu = struct {
         # Nil?  : SExpr -> Bool
         fun Nil?  = this : SExpr -> this.nil?
 
-        # Atom? : SExpr -> Bool
-        fun Atom? = this : SExpr -> this.atom?
+        # Value? : SExpr -> Bool
+        fun Value? = this : SExpr -> this.value?
 
         # Cons? : SExpr -> Bool
         fun Cons? = this : SExpr -> this.cons?
@@ -579,9 +579,9 @@ structure Umu = struct {
         ###     assoc : Symbol -> SExpr -> Option SExpr
         fun rec assoc = (key : Symbol) (records : SExpr) ->
             cond records of {
-            | SE::Nil?  -> NONE
-            | SE::Atom? -> panic! <| "Unexpected atom: " ^ records.show
-            | SE::Cons? -> let {
+            | SE::Nil?   -> NONE
+            | SE::Value? -> NONE
+            | SE::Cons?  -> let {
                     val (car: cdr:) = records.contents
                 in
                     if SE::Cons? car && key.== (SE::car car.contents)
@@ -599,7 +599,7 @@ structure Umu = struct {
                     (k : Symbol, v : SExpr) (se : SExpr)
                 ->
                     %S(
-                        (%{SE::Atom k} . %{v})
+                        (%{SE::Value k} . %{v})
                     .
                         %{se}
                     )
@@ -629,8 +629,7 @@ structure Umu = struct {
             }
 
 
-            fun insert! = (key-1 : Symbol) (key-2 : Symbol)
-                           (value : SExpr) -> let {
+            fun insert! = (key-1 : Symbol) (key-2 : Symbol) value -> let {
                 val opt-subtable = assoc key-1 <| SE::cdr local-table
             in
                 case opt-subtable of {
@@ -641,7 +640,7 @@ structure Umu = struct {
                         | &Some record -> SE::set-cdr! record value
                         | &None        -> SE::set-cdr! subtable %S(
                                               (
-                                                %{SE::Atom key-2}
+                                                %{SE::Value key-2}
                                               .
                                                 %{value}
                                               )
@@ -652,8 +651,8 @@ structure Umu = struct {
                     }
                 | &None -> SE::set-cdr! local-table %S(
                                (
-                                   %{SE::Atom key-1}
-                                   (%{SE::Atom key-2} . %{value})
+                                   %{SE::Value key-1}
+                                   (%{SE::Value key-2} . %{value})
                                )
                            .
                                %{SE::cdr local-table}

@@ -65,6 +65,7 @@ class RuntimeError < ExecutionError
 
 
     def initialize(loc, env, msg, *args)
+        ASSERT.kind_of loc, LOC::Entry
         ASSERT.kind_of env, E::Entry
 
         super(loc, msg, *args)
@@ -115,8 +116,17 @@ class UnmatchError          < Abstraction::RuntimeError; end
 class ZeroDivisionError     < Abstraction::RuntimeError; end
 class EmptyError            < Abstraction::RuntimeError; end
 class IndexError            < Abstraction::RuntimeError; end
-class Panic                 < Abstraction::RuntimeError; end
 class AssertionFailure      < Abstraction::RuntimeError; end
+
+class Panic < Abstraction::RuntimeError
+    def initialize(loc, env, msg, *args)
+        ASSERT.kind_of loc, LOC::Entry
+        ASSERT.kind_of env, E::Entry
+        ASSERT.kind_of msg, ::String
+
+        super(loc, env, msg.gsub(/%/, '%%'), *args)
+    end
+end
 
 
 

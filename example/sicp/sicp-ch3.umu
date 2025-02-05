@@ -248,9 +248,9 @@ val D = make-decrementer 25
 
 ###     assoc : Symbol -> SExpr -> Option SExpr
 fun rec assoc = (key : Symbol) (records : SExpr) -> cond records of {
-| SE::Nil?  -> NONE
-| SE::Atom? -> panic! <| "Unexpected atom: " ^ records.show
-| SE::Cons? -> let {
+| SE::Nil?   -> NONE
+| SE::Value? -> panic! <| "Unexpected value: " ^ records.show
+| SE::Cons?  -> let {
         val (car: cdr:) = val-of records
     in
         if SE::Cons? car && key == (val-of <| SE::car car)
@@ -277,7 +277,7 @@ in
     case opt-record of {
     | &Some record -> SE::set-cdr! record value 
     | &None        -> SE::set-cdr! table %S(
-                          (%{SE::Atom key} . %{value})
+                          (%{SE::Value key} . %{value})
                       .
                           %{SE::cdr table}
                       )
@@ -291,7 +291,7 @@ fun make-table = records : List -> %S(
     %{records |>
         foldr SE::NIL { (k : Symbol, v : SExpr) (se : SExpr) ->
             %S(
-                (%{SE::Atom k} . %{v})
+                (%{SE::Value k} . %{v})
             .
                 %{se}
             )
@@ -365,7 +365,7 @@ in
             case opt-record of {
             | &Some record -> SE::set-cdr! record value
             | &None        -> SE::set-cdr! subtable %S(
-                                  (%{SE::Atom key-2} . %{value})
+                                  (%{SE::Value key-2} . %{value})
                               .
                                   %{SE::cdr subtable}
                               )
@@ -373,8 +373,8 @@ in
         }
     | &None -> SE::set-cdr! table %S(
                    (
-                       %{SE::Atom key-1}
-                       (%{SE::Atom key-2} . %{value})
+                       %{SE::Value key-1}
+                       (%{SE::Value key-2} . %{value})
                    )
                .
                    %{SE::cdr table}
@@ -485,7 +485,7 @@ fun make-table' = records -> let {
                 case opt-record of {
                 | &Some record -> SE::set-cdr! record value
                 | &None        -> SE::set-cdr! subtable %S(
-                                      (%{SE::Atom key-2} . %{value})
+                                      (%{SE::Value key-2} . %{value})
                                   .
                                       %{SE::cdr subtable}
                                   )
@@ -493,8 +493,8 @@ fun make-table' = records -> let {
             }
         | &None -> SE::set-cdr! local-table %S(
                        (
-                           %{SE::Atom key-1}
-                           (%{SE::Atom key-2} . %{value})
+                           %{SE::Value key-1}
+                           (%{SE::Value key-2} . %{value})
                        )
                    .
                        %{SE::cdr local-table}
