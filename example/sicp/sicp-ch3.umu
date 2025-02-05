@@ -276,7 +276,7 @@ fun insert1! = (key : Symbol) (value : SExpr) (table : SExpr) -> let {
 in
     case opt-record of {
     | &Some record -> SE::set-cdr! record value 
-    | &None        -> SE::set-cdr! table %s(
+    | &None        -> SE::set-cdr! table %S(
                           (%{SE::Atom key} . %{value})
                       .
                           %{SE::cdr table}
@@ -285,12 +285,12 @@ in
 }
 
 
-fun make-table = records : List -> %s(
+fun make-table = records : List -> %S(
     ("*table*" . ())
 .
     %{records |>
         foldr SE::NIL { (k : Symbol, v : SExpr) (se : SExpr) ->
-            %s(
+            %S(
                 (%{SE::Atom k} . %{v})
             .
                 %{se}
@@ -302,9 +302,9 @@ fun make-table = records : List -> %s(
 
 
 ;; val t1 = make-table [
-    (@a, %s(1)),
-    (@b, %s(2)),
-    (@c, %s(3))
+    (@a, %S(1)),
+    (@b, %S(2)),
+    (@c, %S(3))
 ]
 (#
     a:  1
@@ -318,11 +318,11 @@ fun make-table = records : List -> %s(
 # -> &Some 2
 ;; lookup1 @d t1
 # -> &None ()
-;; insert1! @d %s(4) t1
+;; insert1! @d %S(4) t1
 # -> ()
 ;; t1
 # -> ((@*table*) (@d . 4) (@a . 1) (@b . 2) (@c . 3))
-;; insert1! @b %s(20) t1
+;; insert1! @b %S(20) t1
 # -> ()
 ;; t1
 # -> ((@*table*) (@d . 4) (@a . 1) (@b . 20) (@c . 3))
@@ -364,14 +364,14 @@ in
         in
             case opt-record of {
             | &Some record -> SE::set-cdr! record value
-            | &None        -> SE::set-cdr! subtable %s(
+            | &None        -> SE::set-cdr! subtable %S(
                                   (%{SE::Atom key-2} . %{value})
                               .
                                   %{SE::cdr subtable}
                               )
             }
         }
-    | &None -> SE::set-cdr! table %s(
+    | &None -> SE::set-cdr! table %S(
                    (
                        %{SE::Atom key-1}
                        (%{SE::Atom key-2} . %{value})
@@ -385,11 +385,11 @@ in
 
 ;; val t2 = make-table [
                 (@math,
-                    %s(("+" . 43) ("-" . 45) ("*" . 42))
+                    %S(("+" . 43) ("-" . 45) ("*" . 42))
                 ),
 
                 (@letters,
-                    %s((a . 97) (b . 98))
+                    %S((a . 97) (b . 98))
                 )
             ]
 (#
@@ -416,7 +416,7 @@ in
 # -> &None ()
 ;; lookup2 @math @"/" t2
 # -> &None ()
-;; insert2! @math @"/" %s(40) t2
+;; insert2! @math @"/" %S(40) t2
 # -> ()
 ;; t2
 # -> (
@@ -424,7 +424,7 @@ in
 #     (@math (@/ . 40) (@+ . 43) (@- . 45) (@* . 42))
 #     (@letters (@a . 97) (@b . 98))
 # )
-;; insert2! @math @"-" %s(999) t2
+;; insert2! @math @"-" %S(999) t2
 # -> ()
 ;; t2
 # -> (
@@ -432,7 +432,7 @@ in
 #     (@math (@/ . 40) (@+ . 43) (@- . 999) (@* . 42))
 #     (@letters (@a . 97) (@b . 98))
 # )
-;; insert2! @letters @"c" %s(99) t2
+;; insert2! @letters @"c" %S(99) t2
 # -> ()
 ;; t2
 # -> (
@@ -440,7 +440,7 @@ in
 #     (@math (@/ . 40) (@+ . 43) (@- . 999) (@* . 42))
 #     (@letters (@c . 99) (@a . 97) (@b . 98))
 # )
-;; insert2! @letters @"a" %s(10000) t2
+;; insert2! @letters @"a" %S(10000) t2
 # -> ()
 ;; t2
 # -> (
@@ -484,14 +484,14 @@ fun make-table' = records -> let {
             in
                 case opt-record of {
                 | &Some record -> SE::set-cdr! record value
-                | &None        -> SE::set-cdr! subtable %s(
+                | &None        -> SE::set-cdr! subtable %S(
                                       (%{SE::Atom key-2} . %{value})
                                   .
                                       %{SE::cdr subtable}
                                   )
                 }
             }
-        | &None -> SE::set-cdr! local-table %s(
+        | &None -> SE::set-cdr! local-table %S(
                        (
                            %{SE::Atom key-1}
                            (%{SE::Atom key-2} . %{value})
@@ -532,15 +532,15 @@ val show-op-tbl = operation-table @show-proc
 # -> ()
 ;; get @math @"-"
 # -> &None ()
-;; put @math @"+" %s(43)
+;; put @math @"+" %S(43)
 # -> ()
-;; put @math @"-" %s(45)
+;; put @math @"-" %S(45)
 # -> ()
-;; put @math @"*" %s(42)
+;; put @math @"*" %S(42)
 # -> ()
-;; put @letters @a %s(97)
+;; put @letters @a %S(97)
 # -> ()
-;; put @letters @b %s(98)
+;; put @letters @b %S(98)
 # -> ()
 ;; get @math @"-"
 # -> &Some 45

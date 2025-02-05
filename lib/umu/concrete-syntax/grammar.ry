@@ -793,10 +793,10 @@ atom_expr:
 
     result = CSCE.make_named_tuple bb.loc, [fld1, fld2] + flds
 }
-| '%s(' ')' {
+| '%S(' ')' {
     result = CSCE.make_s_expr_nil val[0].loc
 }
-| '%s(' s_expr s_exprs opt_dot_s_expr ')' {
+| '%S(' s_expr s_exprs opt_dot_s_expr ')' {
     bb, expr, exprs, opt_expr, _ = val
 
     result = CSCE.make_s_expr_list bb.loc, expr, exprs, opt_expr
