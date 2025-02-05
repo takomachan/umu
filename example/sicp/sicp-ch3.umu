@@ -371,7 +371,7 @@ in
         }
     | &None -> SE::set-cdr! table (
                    SE::Cons
-                       (SE::make [
+                       (SE::list [
                                (SE::Atom key-1),
                                (SE::Cons (SE::Atom key-2) value)
                            ]
@@ -492,7 +492,7 @@ fun make-table' = records -> let {
             }
         | &None -> SE::set-cdr! local-table (
                        SE::Cons
-                           (SE::make [
+                           (SE::list [
                                    (SE::Atom key-1),
                                    (SE::Cons (SE::Atom key-2) value)
                                ]

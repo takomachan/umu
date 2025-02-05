@@ -513,11 +513,8 @@ structure Umu = struct {
         # Cons : SExpr -> SExpr -> SExpr
         fun Cons = (car : SExpr) (cdr : SExpr) -> &SExpr.cons car cdr
 
-        # make : %[SExpr] -> SExpr
-        fun make = xs : Morph -> &SExpr.make xs
-
-        # make : %[SExpr] -> SExpr
-        fun make = xs : Morph -> &SExpr.make xs
+        # list : %[SExpr] -> SExpr
+        fun list = xs : Morph -> &SExpr.make xs
 
 
         #### Classifier
