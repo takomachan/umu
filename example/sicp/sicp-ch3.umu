@@ -249,7 +249,7 @@ val D = make-decrementer 25
 ###     assoc : Symbol -> SExpr -> Option SExpr
 fun rec assoc = (key : Symbol) (records : SExpr) -> cond records of {
 | SE::Nil?   -> NONE
-| SE::Value? -> panic! <| "Unexpected value: " ^ records.show
+| SE::Value? -> NONE
 | SE::Cons?  -> let {
         val (car: cdr:) = val-of records
     in

@@ -1115,6 +1115,8 @@ structure Umu = struct {
         val put = operation-table @insert-proc!
 
         val pp = operation-table @pp-proc
+
+        val print = operation-table @print-proc
     } where {
         import Prelude
         structure SE = SExpr
@@ -1206,10 +1208,67 @@ structure Umu = struct {
             fun pp-table = () -> pp local-table
 
 
+            fun print-table = () -> (
+                print-table' local-table
+            ) where {
+                fun print-entry = cons : SExprCons -> let {
+                    val (car:key-1 cdr:) = val-of cons
+                in
+                    case cdr of {
+                    | &SExprNil ->
+                         ()
+                    | &SExprValue v ->
+                         panic! <| "Unexpectd value: " ^ v.show
+                    | &SExprCons (car:entry cdr:) -> let {
+                            val (car:key-2 cdr:) = val-of entry
+                        in
+                            do (
+                                ! print <| "- key-1:" ^ key-1.show
+                                ! print <| "  key-2:" ^ key-2.show
+                            )
+                        }
+                    }
+                }
+
+                fun rec print-table' = table : SExpr -> (
+                    case table of {
+                    | &SExprNil -> NONE
+                    | &SExprValue v -> do (
+                            #! print "== Value(1) =="
+                            ! print-table' v
+                            ! NONE
+                        )
+                    | &SExprCons (car: cdr: records) -> do (
+                        #! print "== Cons(1) =="
+                        ! print-entry car
+                        #! pp car
+                        ! &List.unfoldr records { cell : SExpr ->
+                                case cell of {
+                                | &SExprNil -> NONE
+                                | &SExprValue v -> do (
+                                        #! print "== Value(2) =="
+                                        ! print-table' v
+                                        ! NONE
+                                    )
+                                | &SExprCons (car: cdr:) -> do (
+                                        #! print "== Cons(2) =="
+                                        ! print-entry car
+                                        #! pp car
+                                        ! Some ((), cdr)
+                                    )
+                                }
+                            }
+                        )
+                    }
+                )
+            }
+
+
             fun dispatch = m -> case m of {
             | @lookup-proc  -> lookup
             | @insert-proc! -> insert!
             | @pp-proc      -> pp-table
+            | @print-proc   -> print-table
             else            -> panic! <|
                                  "Unknown operation -- TABLE: " ^ show m
             }

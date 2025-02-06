@@ -65,7 +65,9 @@ private
             )
         end
 
-        raise self.exception_class.new(self.loc, env, msg_value.val)
+        raise self.exception_class.new(
+                    self.loc, env, msg_value.val.gsub(/%/, '%%')
+                )
     end
 end
 

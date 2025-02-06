@@ -1649,11 +1649,11 @@ fun install-polar-package = () -> do (
 
 
 ;; print "==== BEFORE ===="
-;; SI::pp ()
+;; SI::print ()
 ;; install-rectangular-package ()
 ;; install-polar-package ()
-;; print "==== AFTER (pp) ===="
-;; SI::pp ()
+;; print "==== AFTER ===="
+;; SI::print ()
 
 
 #### 2.5 Systems with Generic Operations
