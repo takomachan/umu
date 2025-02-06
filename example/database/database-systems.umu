@@ -6,6 +6,10 @@
 
 structure UAS = Umu::Assert
 
+val exists?     : Fun = not << empty?
+val not-exists? : Fun = empty?
+
+
 
 # 3 Data Structures and Corresponding Operators -- p63
 # 3 データ構造および対応する演算子 -- p65
@@ -768,7 +772,7 @@ pp (
      [|sname|
          val (sno: sname:) <- S::rows
 
-         if not <| empty? [|sp|
+         if exists? [|()|
              val sp <- SP::rows
 
              if sp$sno == sno
@@ -801,7 +805,7 @@ pp (
      [|sname|
          val (sno: sname:) <- S::rows
 
-         if empty? [|sp|
+         if not-exists? [|()|
              val sp <- SP::rows
 
              if sp$sno == sno
@@ -835,10 +839,10 @@ pp (
      [|sname|
          val (sno:s-sno sname:) <- S::rows
 
-         if empty? [|()|
+         if not-exists? [|()|
              val (pno:p-pno) <- P::rows
 
-             if empty? [|()|
+             if not-exists? [|()|
                  val (sno: pno:) <- SP::rows
 
                  if sno == s-sno
