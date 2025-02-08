@@ -1133,7 +1133,6 @@ structure Umu = struct {
                 ) -> let {
                     val (
                         car:record-key-value : SExprValue
-                        cdr:_                : SExprNil
                     ) = val-of record-cons
                 in
                     if (val-of record-key-value) == target-key

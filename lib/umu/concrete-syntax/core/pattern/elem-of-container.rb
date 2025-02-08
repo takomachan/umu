@@ -115,6 +115,11 @@ class Field < Abstract
     end
 
 
+    def opt_type_sym
+        self.var_pat.opt_type_sym
+    end
+
+
     def to_s
         self.label.to_s + self.var_pat.to_s
     end

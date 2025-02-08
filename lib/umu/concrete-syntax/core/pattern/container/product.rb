@@ -201,31 +201,23 @@ class Entry < Abstract
             ASSERT.kind_of label,  Label
             ASSERT.kind_of vpat,   ElementOfContainer::Variable
 
-            if vpat.wildcard?
-                [
-                    l_hash,
-                    v_hash,
-                    index + 1
-                ]
-            else
-                [
-                    l_hash.merge(label => index) { |key, _, _|
-                        raise X::SyntaxError.new(
-                            loc,
-                            "Duplicated pattern label: '%s'", key.to_s
-                        )
-                    },
+            [
+                l_hash.merge(label => index) { |key, _, _|
+                    raise X::SyntaxError.new(
+                        loc,
+                        "Duplicated pattern label: '%s'", key.to_s
+                    )
+                },
 
-                    v_hash.merge(vpat => true) { |key, _, _|
-                        raise X::SyntaxError.new(
-                            loc,
-                            "Duplicated pattern variable: '%s'", key.to_s
-                        )
-                    },
+                v_hash.merge(vpat => true) { |key, _, _|
+                    raise X::SyntaxError.new(
+                        loc,
+                        "Duplicated pattern variable: '%s'", key.to_s
+                    )
+                },
 
-                    index + 1
-                ]
-            end
+                index + 1
+            ]
         }
 
         super(loc, vpat_hash.keys)
