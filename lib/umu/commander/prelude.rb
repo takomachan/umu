@@ -1123,16 +1123,22 @@ structure Umu = struct {
 
 
         ###     assoc : Symbol -> SExpr -> Option SExpr
-        fun rec assoc = (key : Symbol) (records : SExpr) ->
-            cond records of {
-            | SE::Nil?   -> NONE
-            | SE::Value? -> NONE
-            | SE::Cons?  -> let {
-                    val (car: cdr:) = records.contents
+        fun rec assoc = (target-key : Symbol) (records : SExpr) ->
+            case records of {
+            | &SExprNil   -> NONE
+            | &SExprValue -> NONE
+            | &SExprCons (
+                    car:record-cons : SExprCons
+                    cdr:next-records
+                ) -> let {
+                    val (
+                        car:record-key-value : SExprValue
+                        cdr:_                : SExprNil
+                    ) = val-of record-cons
                 in
-                    if SE::Cons? car && key == (val-of <| SE::car car)
-                        then Some car
-                        else assoc key cdr
+                    if (val-of record-key-value) == target-key
+                        then Some record-cons
+                        else assoc target-key next-records
                 }
             }
 
@@ -1166,8 +1172,10 @@ structure Umu = struct {
                         val opt-record = assoc key-2 <| SE::cdr subtable
                     in
                         case opt-record of {
-                        | &Some record -> Some <| SE::cdr record
-                        | &None        -> NONE
+                        | &Some (record-cons : SExprCons) ->
+                                (Some << val-of << SE::cdr) record-cons
+                        | &None ->
+                                NONE
                         }
                     }
                 | &None -> NONE
@@ -1175,7 +1183,8 @@ structure Umu = struct {
             }
 
 
-            fun insert! = (key-1 : Symbol) (key-2 : Symbol) value -> let {
+            fun insert! = (key-1 : Symbol) (key-2 : Symbol)
+                           (value : Object) -> let {
                 val opt-subtable = assoc key-1 <| SE::cdr local-table
             in
                 case opt-subtable of {
@@ -1183,24 +1192,32 @@ structure Umu = struct {
                         val opt-record = assoc key-2 <| SE::cdr subtable
                     in
                         case opt-record of {
-                        | &Some record ->
-                            SE::set-cdr! record value
-                        | &None ->
-                            SE::set-cdr! subtable %S(
-                                (%{SE::Value key-2} .  %{value})
-                            .
-                                %{SE::cdr subtable}
-                            )
+                        | &Some record -> SE::set-cdr!
+                                                 record
+                                                 (SE::Value value)
+                        | &None        -> SE::set-cdr! subtable %S(
+                                              (
+                                                  %{SE::Value key-2}
+                                              .
+                                                  %{SE::Value value}
+                                              )
+                                          .
+                                              %{SE::cdr subtable}
+                                          )
                         }
                     }
                 | &None -> SE::set-cdr! local-table %S(
-                        (
-                            %{SE::Value key-1}
-                            (%{SE::Value key-2} . %{value})
-                        )
-                    .
-                        %{SE::cdr local-table}
-                    )
+                               (
+                                   %{SE::Value key-1}
+                                   (
+                                       %{SE::Value key-2}
+                                   .
+                                       %{SE::Value value}
+                                   )
+                               )
+                           .
+                               %{SE::cdr local-table}
+                           )
                 }
             }
 
@@ -1212,7 +1229,11 @@ structure Umu = struct {
                 print-table' local-table
             ) where {
                 fun print-entry = cons : SExprCons -> let {
-                    val (car:key-1 cdr:) = val-of cons
+                    val (
+                            car:key-1-value : SExprValue
+                            cdr:
+                        ) = val-of cons
+                    val key-1-sym = val-of key-1-value
                 in
                     case cdr of {
                     | &SExprNil ->
@@ -1220,11 +1241,15 @@ structure Umu = struct {
                     | &SExprValue v ->
                          panic! <| "Unexpectd value: " ^ v.show
                     | &SExprCons (car:entry cdr:) -> let {
-                            val (car:key-2 cdr:) = val-of entry
+                            val (
+                                    car:key-2-value : SExprValue
+                                    cdr:
+                                ) = val-of entry
+                            val key-2-sym = val-of key-2-value
                         in
                             do (
-                                ! print <| "- key-1:" ^ key-1.show
-                                ! print <| "  key-2:" ^ key-2.show
+                                ! print <| "- key-1:" ^ key-1-sym.show
+                                ! print <| "  key-2:" ^ key-2-sym.show
                             )
                         }
                     }

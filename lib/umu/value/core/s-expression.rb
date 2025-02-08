@@ -34,10 +34,10 @@ class Abstract < Object
     define_class_method(
         :meth_make_value,
         :value, [],
-        [VCA::Abstract], self
+        [VC::Top], self
     )
     def self.meth_make_value(loc, env, event, val)
-        ASSERT.kind_of val, VCA::Abstract
+        ASSERT.kind_of val, VC::Top
 
         VC.make_s_expr_value val
     end
@@ -176,12 +176,14 @@ class Value < Abstract
 
 
     def to_string(visiteds = {})
-        self.val.to_s
+        format "%%V(%s)", self.val
     end
 
 
     def pretty_print(q)
-        q.pp self.val
+        PRT.group q, bb:'%V(', eb:')' do
+            q.pp self.val
+        end
     end
 
 

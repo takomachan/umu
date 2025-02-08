@@ -1395,7 +1395,7 @@ fun magnitude = z -> sqrt (
 )
 
 fun angle = z -> (
-    atan (imag-part z) (real-part z)
+    atan (imag-part z, (real-part z))
 )
 
 fun make-from-real-imag = x y -> (x, y)
@@ -1416,7 +1416,7 @@ fun real-part = z -> magnitude z * cos (angle z)
 fun imag-part = z -> magnitude z * sin (angle z)
 
 fun make-from-real-imag = x y -> (
-    (sqrt (square x + square y), atan y x)
+    (sqrt (square x + square y), atan (y, x))
 )
 
 fun make-from-mag-ang = r a -> (r, a)
@@ -1572,7 +1572,7 @@ fun div-complex = z1 z2 -> (
 #### 2.4.3 Data-Directed Programming and Additivity
 #### 2.4.3 データ主導プログラミングと加法性 -- p105
 
-import Umu { structure SI = SICP }
+import Umu { structure (SE = SExpr, SI = SICP) }
 
 
 ;; print "\n\nSECTION 2.4.3"
@@ -1583,10 +1583,10 @@ fun install-rectangular-package = () -> do (
     ! SI::put @imag-part    @rectangular imag-part
     ! SI::put @magnitude    @rectangular magnitude
     ! SI::put @angle        @rectangular angle
-    ! SI::put @make-from-real-imag  @rectangular { (x, y) ->
+    ! SI::put @make-from-real-imag  @rectangular { x y ->
             tag <| make-from-real-imag x y
         }
-    ! SI::put @make-from-mag-ang    @rectangular { (r, a) ->
+    ! SI::put @make-from-mag-ang    @rectangular { r a ->
             tag <| make-from-mag-ang r a
         }
     ! ()
@@ -1600,7 +1600,7 @@ fun install-rectangular-package = () -> do (
         square (real-part z) + square (imag-part z)
     )
     fun angle     = z -> (
-        atan (imag-part z) (real-part z)
+        atan (imag-part z, real-part z)
     )
 
     fun make-from-real-imag = x y -> (x, y)
@@ -1618,10 +1618,10 @@ fun install-polar-package = () -> do (
     ! SI::put @imag-part    @polar imag-part
     ! SI::put @magnitude    @polar magnitude
     ! SI::put @angle        @polar angle
-    ! SI::put @make-from-real-imag  @polar { (x, y) ->
+    ! SI::put @make-from-real-imag  @polar { x y ->
             tag <| make-from-real-imag x y
         }
-    ! SI::put @make-from-mag-ang    @polar { (r, a) ->
+    ! SI::put @make-from-mag-ang    @polar { r a ->
             tag <| make-from-mag-ang r a
         }
     ! ()
@@ -1637,7 +1637,7 @@ fun install-polar-package = () -> do (
 
     fun make-from-real-imag = x y -> (
         sqrt <| square x + square y,
-        atan y x
+        atan (y, x)
     )
 
 
@@ -1647,13 +1647,95 @@ fun install-polar-package = () -> do (
 }
 
 
-
 ;; print "==== BEFORE ===="
 ;; SI::print ()
 ;; install-rectangular-package ()
 ;; install-polar-package ()
 ;; print "==== AFTER ===="
 ;; SI::print ()
+;;
+
+
+fun apply-generic = (op : Symbol) (arg : Datum) -> let {
+    val opt-proc : Option = SI::get.apply-binary op (type-tag arg)
+    #val _ = pp (op: arg: opt-proc: line:__LINE__)
+in
+    case opt-proc of {
+    | &Some (proc : Fun) -> proc.apply (contents arg)
+    | &None -> panic! <| "No method for these types -- APPLY-GENERIC: " ^
+                            show (op: arg:)
+    }
+}
+
+
+fun real-part = z -> apply-generic @real-part z
+fun imag-part = z -> apply-generic @imag-part z
+fun magnitude = z -> apply-generic @magnitude z
+fun angle     = z -> apply-generic @angle z
+
+fun make-from-real-imag = x y ->
+    case SI::get @make-from-real-imag @rectangular of {
+    | &Some proc -> proc x y
+    | &None      -> panic! <| show __LINE__
+    }
+
+fun make-from-mag-ang =  r a ->
+    case SI::get @make-from-mag-ang @polar of {
+    | &Some proc -> proc r a
+    | &None      -> panic! <| show __LINE__
+    }
+
+
+#### same as before ####
+
+fun add-complex = z1 z2 -> (
+    make-from-real-imag
+        (real-part z1 + real-part z2)
+        (imag-part z1 + imag-part z2)
+)
+
+fun sub-complex = z1 z2 -> (
+    make-from-real-imag
+        (real-part z1 - real-part z2)
+        (imag-part z1 - imag-part z2)
+)
+
+fun mul-complex = z1 z2 -> (
+    make-from-mag-ang
+        (magnitude z1 * magnitude z2)
+        (angle z1     + angle z2)
+)
+
+fun div-complex = z1 z2 -> (
+    make-from-mag-ang
+        (magnitude z1 / magnitude z2)
+        (angle z1     - angle z2)
+)
+
+
+(#
+;; make-from-real-imag 1.0 2.0
+# -> rectanglar (1.0, 2.0)
+
+;; make-from-mag-ang 2.0 0.0
+# -> polar (2.0, 0.0)
+
+;; make-from-mag-ang 2.0 PI
+# -> polar (2.0, 3.141592653589793)
+
+;; add-complex (make-from-real-imag 1.0 2.0) (make-from-real-imag 2.0 3.0)
+# -> rectanglar (3.0, 5.0)
+
+;; sub-complex (make-from-real-imag 1.0 2.0) (make-from-real-imag 2.0 3.0)
+# -> rectanglar (-1.0, -1.0)
+
+;; mul-complex (make-from-real-imag 1.0 2.0) (make-from-real-imag 2.0 3.0)
+# -> polar (8.06225774829855, 2.0899424410414196)
+;;
+#)
+
+
+
 
 
 #### 2.5 Systems with Generic Operations

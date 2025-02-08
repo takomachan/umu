@@ -247,17 +247,24 @@ val D = make-decrementer 25
 ;;
 
 ###     assoc : Symbol -> SExpr -> Option SExpr
-fun rec assoc = (key : Symbol) (records : SExpr) -> cond records of {
-| SE::Nil?   -> NONE
-| SE::Value? -> NONE
-| SE::Cons?  -> let {
-        val (car: cdr:) = val-of records
-    in
-        if SE::Cons? car && key == (val-of <| SE::car car)
-            then Some car
-            else assoc key cdr
+fun rec assoc = (target-key : Symbol) (records : SExpr) ->
+    case records of {
+    | &SExprNil   -> NONE
+    | &SExprValue -> NONE
+    | &SExprCons (
+            car:record-cons : SExprCons
+            cdr:next-records
+        ) -> let {
+            val (
+                car:record-key-value : SExprValue
+                cdr:_                : SExprNil
+            ) = val-of record-cons
+        in
+            if (val-of record-key-value) == target-key
+                then Some record-cons
+                else assoc target-key next-records
+        }
     }
-}
 
 
 ### lookup1 = Symbol -> SExpr -> Option SExpr
@@ -265,19 +272,23 @@ fun lookup1 = (key : Symbol) (table : SExpr) -> let {
     val opt-record = assoc key <| SE::cdr table
 in
     case opt-record of {
-    | &Some cons -> Some <| SE::cdr cons
-    | &None      -> NONE
+    | &Some (record : SExprCons) -> let {
+            val (car: cdr: value : SExprValue) = val-of record
+        in
+            Some <| val-of value
+        }
+    | &None -> NONE
     }
 }
 
 
-fun insert1! = (key : Symbol) (value : SExpr) (table : SExpr) -> let {
+fun insert1! = (key : Symbol) (value : Object) (table : SExpr) -> let {
     val opt-record = assoc key <| SE::cdr table
 in
     case opt-record of {
-    | &Some record -> SE::set-cdr! record value 
+    | &Some record -> SE::set-cdr! record (SE::Value value) 
     | &None        -> SE::set-cdr! table %S(
-                          (%{SE::Value key} . %{value})
+                          (%{SE::Value key} . %{SE::Value value})
                       .
                           %{SE::cdr table}
                       )
@@ -302,9 +313,9 @@ fun make-table = records : List -> %S(
 
 
 ;; val t1 = make-table [
-    (@a, %S(1)),
-    (@b, %S(2)),
-    (@c, %S(3))
+    (@a, SE::Value 1),
+    (@b, SE::Value 2),
+    (@c, SE::Value 3)
 ]
 (#
     a:  1
@@ -313,19 +324,35 @@ fun make-table = records : List -> %S(
 #)
 
 ;; t1
-# -> ((@*table*) (@a . 1) (@b . 2) (@c . 3))
+# -> %S(%S(%V(@*table*)) %S(%V(@a) . %V(1)) %S(%V(@b) . %V(2)) %S(%V(@c) . %V(3)))
+
 ;; lookup1 @b t1
 # -> &Some 2
 ;; lookup1 @d t1
 # -> &None ()
-;; insert1! @d %S(4) t1
+;; insert1! @d 4 t1
 # -> ()
 ;; t1
-# -> ((@*table*) (@d . 4) (@a . 1) (@b . 2) (@c . 3))
-;; insert1! @b %S(20) t1
+# -> %S(
+#     %S(%V(@*table*))
+#     %S(%V(@d) . %V(4))
+#     ^^^^^^^^^^^^^^^^^^
+#     %S(%V(@a) . %V(1))
+#     %S(%V(@b) . %V(2))
+#     %S(%V(@c) . %V(3))
+# )
+;; insert1! @b 2000 t1
 # -> ()
 ;; t1
-# -> ((@*table*) (@d . 4) (@a . 1) (@b . 20) (@c . 3))
+# -> %S(
+#     %S(%V(@*table*))
+#     %S(%V(@d) . %V(20))
+#     %S(%V(@a) . %V(1))
+#     %S(%V(@b) . %V(2000))
+#                    ^^^^
+#     %S(%V(@c) . %V(3))
+# )
+
 ;;
 
 
@@ -345,8 +372,12 @@ in
             val opt-record = assoc key-2 <| SE::cdr subtable
         in
             case opt-record of {
-            | &Some record -> Some <| SE::cdr record
-            | &None        -> NONE
+            | &Some (record-cons : SExprCons) -> let {
+                    val (cdr:record-value : SExprValue) = val-of record-cons
+                in
+                    Some <| val-of record-value
+                }
+            | &None -> NONE
             }
         }
     | &None -> NONE
@@ -355,7 +386,7 @@ in
 
 
 fun insert2! = (key-1 : Symbol) (key-2 : Symbol)
-               (value : SExpr) (table : SExpr) -> let {
+               (value : Object) (table : SExpr) -> let {
     val opt-subtable = assoc key-1 <| SE::cdr table
 in
     case opt-subtable of {
@@ -363,9 +394,9 @@ in
             val opt-record = assoc key-2 <| SE::cdr subtable
         in
             case opt-record of {
-            | &Some record -> SE::set-cdr! record value
+            | &Some record -> SE::set-cdr! record (SE::Value value)
             | &None        -> SE::set-cdr! subtable %S(
-                                  (%{SE::Value key-2} . %{value})
+                                  (%{SE::Value key-2} . %{SE::Value value})
                               .
                                   %{SE::cdr subtable}
                               )
@@ -374,7 +405,7 @@ in
     | &None -> SE::set-cdr! table %S(
                    (
                        %{SE::Value key-1}
-                       (%{SE::Value key-2} . %{value})
+                       (%{SE::Value key-2} . %{SE::Value value})
                    )
                .
                    %{SE::cdr table}
@@ -403,50 +434,83 @@ in
 #)
 
 ;; t2
-# -> (
-#    (@*table*)
-#    (@math (@+ . 43) (@- . 45) (@* . 42))
-#    (@letters (@a . 97) (@b . 98))
+# -> %S(
+#     %S(%V(@*table*))
+#     %S(%V(@math) %S(%V(@+) . %V(43)) %S(%V(@-) . %V(45)) %S(%V(@*) . %V(42)))
+#     %S(%V(@letters) %S(%V(@a) . %V(97)) %S(%V(@b) . %V(98)))
 # )
 ;; lookup2 @math @"-" t2
-# -> &Some 45
+# -> &Some  %V(45)
 ;; lookup2 @letters @a t2
-# -> &Some 97
+# -> &Some %V(97)
 ;; lookup2 @nath @"-" t2
 # -> &None ()
 ;; lookup2 @math @"/" t2
 # -> &None ()
-;; insert2! @math @"/" %S(40) t2
+;; insert2! @math @"/" (SE::Value 40) t2
 # -> ()
 ;; t2
-# -> (
-#     (@*table*)
-#     (@math (@/ . 40) (@+ . 43) (@- . 45) (@* . 42))
-#     (@letters (@a . 97) (@b . 98))
+# -> %S(
+#     %S(%V(@*table*))
+#     %S(
+#         %V(@math)
+#         %S(%V(@/) . %V(40))
+#         ^^^^^^^^^^^^^^^^^^^
+#         %S(%V(@+) . %V(43))
+#         %S(%V(@-) . %V(45))
+#         %S(%V(@*) . %V(42))
+#     )
+#     %S(%V(@letters) %S(%V(@a) . %V(97)) %S(%V(@b) . %V(98)))
 # )
-;; insert2! @math @"-" %S(999) t2
+;; insert2! @math @"-" (SE::Value 999) t2
 # -> ()
 ;; t2
-# -> (
-#     (@*table*)
-#     (@math (@/ . 40) (@+ . 43) (@- . 999) (@* . 42))
-#     (@letters (@a . 97) (@b . 98))
+# -> %S(
+#     %S(%V(@*table*))
+#     %S(
+#         %V(@math)
+#         %S(%V(@/) . %V(40))
+#         %S(%V(@+) . %V(43))
+#         %S(%V(@-) . %V(999))
+#                        ^^^
+#         %S(%V(@*) . %V(42))
+#     )
+#     %S(%V(@letters) %S(%V(@a) . %V(97)) %S(%V(@b) . %V(98)))
 # )
-;; insert2! @letters @"c" %S(99) t2
+;; insert2! @letters @"c" (SE::Value 99) t2
 # -> ()
 ;; t2
-# -> (
-#     (@*table*)
-#     (@math (@/ . 40) (@+ . 43) (@- . 999) (@* . 42))
-#     (@letters (@c . 99) (@a . 97) (@b . 98))
+# -> %S(
+#     %S(%V(@*table*))
+#     %S(
+#         %V(@math)
+#         %S(%V(@/) . %V(40))
+#         %S(%V(@+) . %V(43))
+#         %S(%V(@-) . %V(999))
+#         %S(%V(@*) . %V(42))
+#     )
+#     %S(%V(@letters) %S(%V(@c) . %V(99)) %S(%V(@a) . %V(97)) %S(%V(@b) . %V(98)))
+#                     ^^^^^^^^^^^^^^^^^^^
 # )
-;; insert2! @letters @"a" %S(10000) t2
+;; insert2! @letters @"a" (SE::Value 100000000) t2
 # -> ()
 ;; t2
-# -> (
-#     (@*table*)
-#     (@math (@/ . 40) (@+ . 43) (@- . 999) (@* . 42))
-#     (@letters (@c . 99) (@a . 10000) (@b . 98))
+# -> %S(
+#     %S(%V(@*table*))
+#     %S(
+#         %V(@math)
+#         %S(%V(@/) . %V(40))
+#         %S(%V(@+) . %V(43))
+#         %S(%V(@-) . %V(999))
+#         %S(%V(@*) . %V(42))
+#     )
+#     %S(
+#         %V(@letters)
+#         %S(%V(@c) . %V(99))
+#         %S(%V(@a) . %V(100000000))
+#                        ^^^^^^^^^
+#         %S(%V(@b) . %V(98))
+#     )
 # )
 ;;
 
@@ -465,8 +529,10 @@ fun make-table' = records -> let {
                 val opt-record = assoc key-2 <| SE::cdr subtable
             in
                 case opt-record of {
-                | &Some record -> Some <| SE::cdr record
-                | &None        -> NONE
+                | &Some (record-cons : SExprCons) ->
+                        (Some << val-of << SE::cdr) record-cons
+                | &None ->
+                        NONE
                 }
             }
         | &None -> NONE
@@ -475,7 +541,7 @@ fun make-table' = records -> let {
 
 
     fun insert! = (key-1 : Symbol) (key-2 : Symbol)
-                   (value : SExpr) -> let {
+                   (value : Object) -> let {
         val opt-subtable = assoc key-1 <| SE::cdr local-table
     in
         case opt-subtable of {
@@ -483,9 +549,13 @@ fun make-table' = records -> let {
                 val opt-record = assoc key-2 <| SE::cdr subtable
             in
                 case opt-record of {
-                | &Some record -> SE::set-cdr! record value
+                | &Some record -> SE::set-cdr! record (SE::Value value)
                 | &None        -> SE::set-cdr! subtable %S(
-                                      (%{SE::Value key-2} . %{value})
+                                      (
+                                          %{SE::Value key-2}
+                                      .
+                                          %{SE::Value value}
+                                      )
                                   .
                                       %{SE::cdr subtable}
                                   )
@@ -494,7 +564,11 @@ fun make-table' = records -> let {
         | &None -> SE::set-cdr! local-table %S(
                        (
                            %{SE::Value key-1}
-                           (%{SE::Value key-2} . %{value})
+                           (
+                               %{SE::Value key-2}
+                           .
+                               %{SE::Value value}
+                           )
                        )
                    .
                        %{SE::cdr local-table}
@@ -528,32 +602,32 @@ val show-op-tbl = operation-table @show-proc
 
 ;; print "== BEFORE =="
 ;; show-op-tbl ()
-# ((@*table*))
+# %S(%S(%V(@*table*)))
 # -> ()
 ;; get @math @"-"
 # -> &None ()
-;; put @math @"+" %S(43)
+;; put @math @"+" 43
 # -> ()
-;; put @math @"-" %S(45)
+;; put @math @"-" 45
 # -> ()
-;; put @math @"*" %S(42)
+;; put @math @"*" 42
 # -> ()
-;; put @letters @a %S(97)
+;; put @letters @a 97
 # -> ()
-;; put @letters @b %S(98)
+;; put @letters @b 98
 # -> ()
 ;; get @math @"-"
 # -> &Some 45
 ;; get @letters @a
-# -> &Some 97
+# -> &Some  97
 ;; get @math @"/"
 # -> &None ()
 ;; print "== AFTER =="
 ;; show-op-tbl ()
-# (
-#     (@*table*)
-#     (@letters (@b . 98) (@a . 97))
-#     (@math (@* . 42) (@- . 45) (@+ . 43))
+# %S(
+#     %S(%V(@*table*))
+#     %S(%V(@letters) %S(%V(@b) . %V(98)) %S(%V(@a) . %V(97)))
+#     %S(%V(@math) %S(%V(@*) . %V(42)) %S(%V(@-) . %V(45)) %S(%V(@+) . %V(43)))
 # )
 # -> ()
 ;;

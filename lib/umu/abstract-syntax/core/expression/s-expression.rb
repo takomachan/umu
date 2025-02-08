@@ -77,7 +77,11 @@ class Embeded < Abstract
 
 
     def __evaluate__(env, event)
-        VC.make_s_expr_value self.expr.evaluate(env.enter(event)).value
+        value = self.expr.evaluate(env.enter(event)).value
+
+        VC.validate_s_expr value, '<Embeded S-Expr>', self.loc, env
+
+        value
     end
 end
 
