@@ -672,7 +672,7 @@ class Abstract < Object
              loc,     env,     event, VC.make_false
         ) { |new_loc, new_env, x,     bool|
 
-            value = x.meth_equal loc, new_env, event, member
+            value = x.meth_is_equal loc, new_env, event, member
             VC.validate_bool value, 'include?', loc, env
 
             break VC.make_true if value.true?
@@ -974,7 +974,7 @@ class Abstract < Object
                         [
                             x1,
 
-                            if x1.meth_equal(
+                            if x1.meth_is_equal(
                                 loc, env, event, before
                             ).true? 
                                 ys

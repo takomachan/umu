@@ -257,7 +257,6 @@ fun rec assoc = (target-key : Symbol) (records : SExpr) ->
         ) -> let {
             val (
                 car:record-key-value : SExprValue
-                cdr:_                : SExprNil
             ) = val-of record-cons
         in
             if (val-of record-key-value) == target-key

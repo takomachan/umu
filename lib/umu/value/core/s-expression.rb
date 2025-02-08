@@ -155,7 +155,7 @@ class Nil < Abstract
     end
 
 
-    def meth_equal(_loc, _env, _event, other)
+    def meth_is_equal(_loc, _env, _event, other)
         ASSERT.kind_of other, VC::Top
 
         VC.make_bool other.kind_of?(Nil)
@@ -214,12 +214,12 @@ class Value < Abstract
     end
 
 
-    def meth_equal(loc, env, event, other)
+    def meth_is_equal(loc, env, event, other)
         ASSERT.kind_of other, VC::Top
 
         VC.make_bool(
             other.kind_of?(Value) &&
-            self.val.meth_equal(loc, env, event, other.val).true?
+            self.val.meth_is_equal(loc, env, event, other.val).true?
         )
     end
 end
@@ -348,13 +348,13 @@ class Cons < Abstract
     end
 
 
-    def meth_equal(loc, env, event, other)
+    def meth_is_equal(loc, env, event, other)
         ASSERT.kind_of other, VC::Top
 
         VC.make_bool(
             other.kind_of?(Cons) &&
-            self.car.meth_equal(loc, env, event, other.car).true? &&
-            self.cdr.meth_equal(loc, env, event, other.cdr).true?
+            self.car.meth_is_equal(loc, env, event, other.car).true? &&
+            self.cdr.meth_is_equal(loc, env, event, other.cdr).true?
         )
     end
 

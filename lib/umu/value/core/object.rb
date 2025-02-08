@@ -44,11 +44,11 @@ class Object < Top
 
 
     define_instance_method(
-        :meth_equal,
+        :meth_is_equal,
         :'==', [],
         [self], VCA::Bool
     )
-    def meth_equal(loc, env, _event, _other)
+    def meth_is_equal(loc, env, _event, _other)
         raise X::EqualityError.new(
             loc,
             env,

@@ -60,14 +60,14 @@ class Datum < Abstract
     end
 
 
-    def meth_equal(loc, env, event, other)
+    def meth_is_equal(loc, env, event, other)
         ASSERT.kind_of other, VC::Top
 
         VC.make_bool(
             (
                 other.kind_of?(self.class) &&
                 self.tag_sym == other.tag_sym &&
-                self.contents.meth_equal(
+                self.contents.meth_is_equal(
                     loc, env, event, other.contents
                 ).true?
             )

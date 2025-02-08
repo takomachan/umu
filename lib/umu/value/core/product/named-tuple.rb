@@ -109,7 +109,7 @@ class Named < Abstract
     end
 
 
-    def meth_equal(loc, env, event, other)
+    def meth_is_equal(loc, env, event, other)
         ASSERT.kind_of other, VC::Top
 
         unless other.kind_of?(self.class) && self.arity == other.arity
@@ -121,7 +121,7 @@ class Named < Abstract
                 |self_value, other_value|
 
                 other_value.kind_of?(self_value.class) &&
-                self_value.meth_equal(loc, env, event, other_value).true?
+                self_value.meth_is_equal(loc, env, event, other_value).true?
             }
         )
     end
@@ -197,7 +197,7 @@ class Named < Abstract
                 loc, env, event, other_value
             ).true?
                 break VC.make_true
-            elsif self_value.meth_equal(        # self = other
+            elsif self_value.meth_is_equal(     # self = other
                 loc, env, event, other_value
             ).true?
                 [res, index + 1]
