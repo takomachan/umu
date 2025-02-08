@@ -380,7 +380,7 @@ private
             when SExpr::Nil
                 ''
             when SExpr::Value
-                format " . %s", cdr.val.to_s
+                format " . %s", cdr.to_s
             when SExpr::Cons
                 cddr_str = if visiteds.has_key? cdr.object_id
                                 '....'
