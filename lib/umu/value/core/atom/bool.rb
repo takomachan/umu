@@ -50,11 +50,11 @@ class Bool < Abstract
 
 
     define_instance_method(
-        :meth_less_than,
+        :meth_is_less_than,
         :'<', [],
         [self], self
     )
-    def meth_less_than(_loc, _env, _event, other)
+    def meth_is_less_than(_loc, _env, _event, other)
         ASSERT.kind_of other, Bool
 
         VC.make_bool(

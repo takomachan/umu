@@ -35,7 +35,7 @@ class String < Abstract
 
 
     define_instance_method(
-        :meth_less_than,
+        :meth_is_less_than,
         :'<', [],
         [self], VCA::Bool
     )

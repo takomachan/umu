@@ -564,7 +564,7 @@ class Abstract < Object
                 )
             end
 
-            if y.meth_less_than(loc, env, event, x).true?
+            if y.meth_is_less_than(loc, env, event, x).true?
                 x
             else
                 y
@@ -603,7 +603,7 @@ class Abstract < Object
                 )
             end
 
-            if x.meth_less_than(loc, env, event, y).true?
+            if x.meth_is_less_than(loc, env, event, y).true?
                 x
             else
                 y
@@ -1067,7 +1067,7 @@ class Abstract < Object
 
                     value.val
                 else
-                    if x.meth_less_than(
+                    if x.meth_is_less_than(
                         new_loc, new_env, event, pivot
                     ).true?
                         -1

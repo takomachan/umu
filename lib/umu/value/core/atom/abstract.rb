@@ -34,11 +34,11 @@ class Abstract < Object
 
 
     define_instance_method(
-        :meth_less_than,
+        :meth_is_less_than,
         :'<', [],
         [self], VCA::Bool
     )
-    def meth_less_than(_loc, _env, _event, other)
+    def meth_is_less_than(_loc, _env, _event, other)
         ASSERT.kind_of other, Atom::Abstract
 
         VC.make_bool self.val < other.val

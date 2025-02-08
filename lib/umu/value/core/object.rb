@@ -60,11 +60,11 @@ class Object < Top
 
 
     define_instance_method(
-        :meth_less_than,
+        :meth_is_less_than,
         :'<', [],
         [self], VCA::Bool
     )
-    def meth_less_than(loc, env, _event, _other)
+    def meth_is_less_than(loc, env, _event, _other)
         raise X::OrderError.new(
             loc,
             env,
