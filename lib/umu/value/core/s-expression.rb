@@ -153,6 +153,13 @@ class Nil < Abstract
     def meth_is_nil(_loc, _env, _event)
         VC.make_true
     end
+
+
+    def meth_equal(_loc, _env, _event, other)
+        ASSERT.kind_of other, VC::Top
+
+        VC.make_bool other.kind_of?(Nil)
+    end
 end
 Nil.freeze
 
@@ -204,6 +211,16 @@ class Value < Abstract
     )
     def meth_contents(_loc, _env, _event)
         self.contents
+    end
+
+
+    def meth_equal(loc, env, event, other)
+        ASSERT.kind_of other, VC::Top
+
+        VC.make_bool(
+            other.kind_of?(Value) &&
+            self.val.meth_equal(loc, env, event, other.val).true?
+        )
     end
 end
 Value.freeze
@@ -328,6 +345,17 @@ class Cons < Abstract
         @mutable_cdr = cdr
 
         VC.make_unit
+    end
+
+
+    def meth_equal(loc, env, event, other)
+        ASSERT.kind_of other, VC::Top
+
+        VC.make_bool(
+            other.kind_of?(Cons) &&
+            self.car.meth_equal(loc, env, event, other.car).true? &&
+            self.cdr.meth_equal(loc, env, event, other.cdr).true?
+        )
     end
 
 
