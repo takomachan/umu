@@ -1713,7 +1713,6 @@ fun div-complex = z1 z2 -> (
 )
 
 
-(#
 ;; make-from-real-imag 1.0 2.0
 # -> rectanglar (1.0, 2.0)
 
@@ -1732,9 +1731,40 @@ fun div-complex = z1 z2 -> (
 ;; mul-complex (make-from-real-imag 1.0 2.0) (make-from-real-imag 2.0 3.0)
 # -> polar (8.06225774829855, 2.0899424410414196)
 ;;
-#)
 
 
+
+#### Message passing
+
+fun make-from-real-imag' = x y -> let {
+    fun dispatch = op -> case op of {
+      | @real-part    -> x
+      | @imag-part    -> y
+      | @magnitude    -> square x + square y
+      | @angle        -> atan (y, x)
+        else -> panic! <| "Unknown op -- MAKE-FROM-REAL-IMAG: " ^ show op
+    }
+in
+    dispatch
+}
+
+fun apply-generic' = (op : Symbol) (arg : Fun) -> arg op
+
+fun real-part' = z -> apply-generic' @real-part z
+fun imag-part' = z -> apply-generic' @imag-part z
+fun magnitude' = z -> apply-generic' @magnitude z
+fun angle'     = z -> apply-generic' @angle z
+
+
+val c = make-from-real-imag' 1.0 2.0
+;; real-part'c 
+# -> 1.0
+;; imag-part'c 
+# -> 2.0
+;; magnitude'c 
+# -> 5.0
+;; angle'c 
+# -> 1.1071487177940904
 
 
 
