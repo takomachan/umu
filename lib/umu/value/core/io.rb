@@ -59,6 +59,29 @@ class Input  < Abstract
             VC.make_none
         end
     end
+
+
+    FN_IS_EMPTY = lambda { |input| input.io.eof? }
+
+    FN_DEST = lambda { |input|
+                         s = input.io.gets
+                         unless s
+                            raise ::StopIteration
+                         end
+
+                         str_val = VC.make_string s.chomp
+
+                         VC.make_tuple str_val, input
+                     }
+
+    define_instance_method(
+        :meth_each_line,
+        :'each-line', [],
+        [], VCM::Enum
+    )
+    def meth_each_line(_loc, _env, _event)
+        VC.make_enumerator self, FN_IS_EMPTY, FN_DEST
+    end
 end
 Input.freeze
 

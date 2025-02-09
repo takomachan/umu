@@ -167,6 +167,7 @@ FILES = [
     'value/core/morph.rb',
     'value/core/morph/abstract.rb',
     'value/core/morph/interval.rb',
+    'value/core/morph/enumerator.rb',
     'value/core/morph/list.rb',
     'value/core/s-expression.rb',
     'value/core/function.rb',
