@@ -489,12 +489,8 @@ structure Umu = struct {
     ######## List ########
 
     structure List = struct {
-        # unfoldr : 'b -> ('b -> Option ('a, 'b)) -> ['a]
-        fun unfoldr = x (f : Fun) -> &List.unfoldr x f
-
-
-        # unfoldl : 'b -> ('b -> Option ('a, 'b)) -> ['a]
-        fun unfoldl = x (f : Fun) -> &List.unfoldl x f
+        # unfold : 'b -> ('b -> Option (['a], 'b)) -> ['a]
+        fun unfold = x (f : Fun) -> &List.unfold x f
     }
 
 
@@ -943,11 +939,8 @@ structure Umu = struct {
 
         #### List ####
 
-        # unfoldr : 'b -> ('b -> Option ('a, 'b)) -> ['a]
-        val unfoldr = List::unfoldr
-
-        # unfoldl : 'b -> ('b -> Option ('a, 'b)) -> ['a]
-        val unfoldl = List::unfoldl
+        # unfold : 'b -> ('b -> Option (['a], 'b)) -> ['a]
+        val unfold = List::unfold
 
 
         #### High order Function ####
@@ -1266,7 +1259,7 @@ structure Umu = struct {
                         #! print "== Cons(1) =="
                         ! print-entry car
                         #! pp car
-                        ! &List.unfoldr records { cell : SExpr ->
+                        ! &List.unfold records { cell : SExpr ->
                                 case cell of {
                                 | &SExprNil -> NONE
                                 | &SExprValue v -> do (
@@ -1278,7 +1271,7 @@ structure Umu = struct {
                                         #! print "== Cons(2) =="
                                         ! print-entry car
                                         #! pp car
-                                        ! Some ((), cdr)
+                                        ! Some ([()], cdr)
                                     )
                                 }
                             }

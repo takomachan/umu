@@ -55,24 +55,36 @@ class Abstract < Object
 
     * Same to: [1 .. 5].to-list
 
-        > &List.unfoldr 1 { x -> if x <= 5 then Some (x, x + 1) else NONE }
+        > &List.unfold 1 { x ->
+        *     if x <= 5 then Some ([x], x + 1) else NONE
+        * }
         val it : Cons = [1, 2, 3, 4, 5]
 
     * Same to: [1, 2, 3].map to-s
 
-        > &List.unfoldr [1, 2, 3] { xs ->
+        > &List.unfold [1, 2, 3] { xs ->
         *     case xs of {
-        *       [x|xs'] -> Some (x.to-s, xs')
+        *       [x|xs'] -> Some ([x.to-s], xs')
         *       else    -> NONE
         *     }
         * }
         val it : Cons = ["1", "2", "3"]
 
+    * Same to: [1, 2, 3].select odd?
+
+        > &List.unfold [1, 2, 3] { xs ->
+        *     case xs of {
+        *       [x|xs'] -> Some (if odd? x then [x] else [], xs')
+        *       else    -> NONE
+        *     }
+        * }
+        val it : Cons = [1, 3]
+
     * Same to: STDIN.each-line.to-list
 
-        > &List.unfoldr STDIN { io ->
+        > &List.unfold STDIN { io ->
         *     case io.gets of {
-        *       &Some s -> Some (s, io)
+        *       &Some s -> Some ([s], io)
         *       else    -> NONE
         *     }
         * }
@@ -83,27 +95,11 @@ class Abstract < Object
         val it : Cons = ["a", "b", "c"]
 =end
     define_class_method(
-        :meth_unfoldr,
-        :unfoldr, [],
+        :meth_unfold,
+        :unfold, [],
         [VC::Top, VC::Fun], self
     )
-    def self.meth_unfoldr(loc, env, event, x, func)
-        ASSERT.kind_of x,    VC::Top
-        ASSERT.kind_of func, VC::Fun
-
-        result = self.meth_unfoldl(loc, env, event, x, func)
-                     .meth_reverse(loc, env, event)
-
-        ASSERT.kind_of result, VC::Top
-    end
-
-
-    define_class_method(
-        :meth_unfoldl,
-        :unfoldl, [],
-        [VC::Top, VC::Fun], self
-    )
-    def self.meth_unfoldl(loc, env, event, x, func)
+    def self.meth_unfold(loc, env, event, x, func)
         ASSERT.kind_of x,    VC::Top
         ASSERT.kind_of func, VC::Fun
 
@@ -111,7 +107,7 @@ class Abstract < Object
 
         _, result = loop.inject(
              [x,  self.meth_make_empty(loc, new_env, event)]
-        ) { |(x1, ys                                       ), _|
+        ) { |(x1, yss                                      ), _|
             value = func.apply x1, [], loc, new_env
             ASSERT.kind_of value, VC::Top
 
@@ -119,12 +115,14 @@ class Abstract < Object
 
             case value
             when VCU::Option::None
-                break [x1, ys]
+                break [x1, yss]
             when VCU::Option::Some
                 tuple      = value.contents
-                x2, next_x = VC.validate_pair tuple, "unfoldl", loc, env
+                ys, next_x = VC.validate_pair tuple, "unfoldl", loc, env
 
-                [next_x, ys.meth_cons(loc, new_env, event, x2)]
+                VC.validate_morph ys, 'unfoldl', loc, new_env
+
+                [next_x, yss.meth_append(loc, new_env, event, ys)]
             else
                 ASSERT.abort "No case"
             end
