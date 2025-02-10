@@ -38,7 +38,7 @@ class Delay < Abstract
 private
 
     def __evaluate__(env, event)
-        VC.make_suspend self.expr, env.va_context
+        VC.make_suspension self.expr, env.va_context
     end
 end
 

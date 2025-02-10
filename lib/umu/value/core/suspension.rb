@@ -62,7 +62,7 @@ Susp.freeze
 
 module_function
 
-    def make_suspend(expr, va_context)
+    def make_suspension(expr, va_context)
         ASSERT.kind_of expr,       ASCE::Abstract
         ASSERT.kind_of va_context, ECV::Abstract
 
