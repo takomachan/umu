@@ -10,20 +10,20 @@ module Value
 module Core
 
 class Dir < Object
-    attr_reader :dir_enum
+    attr_reader :obj
 
 
-    def initialize(dir_enum)
-        ASSERT.kind_of dir_enum, ::Enumerator
+    def initialize(obj)
+        ASSERT.kind_of obj, ::Dir
 
         super()
 
-        @dir_enum = dir_enum
+        @obj = obj
     end
 
 
     def to_s
-        self.dir_enum.inspect
+        format "#Dir<\"%s\">", self.obj.path
     end
 
 
@@ -33,23 +33,42 @@ class Dir < Object
         [], VC::Unit
     )
     def meth_seen(_loc, _env, _event)
+        self.obj.close
+
         VC.make_unit
     end
 
 
     define_instance_method(
-        :meth_get_string,
-        :gets, [],
-        [], VCU::Option::Abstract
+        :meth_to_string,
+        :'to-s', [],
+        [], VCA::String
     )
-    def meth_get_string(_loc, _env, _event)
-        begin
-            str = self.dir_enum.next
+    def meth_to_string(_loc, _env, _event)
+        VC.make_string self.obj.path
+    end
 
-            VC.make_some VC.make_string str
-        rescue ::StopIteration
-            VC.make_none
-        end
+
+    FN_IS_EMPTY = lambda { |_dir| VC.make_false }
+
+    FN_DEST = lambda { |dir|
+                         s = dir.obj.read
+                         unless s
+                            raise ::StopIteration
+                         end
+
+                         str_val = VC.make_string s
+
+                         VC.make_tuple str_val, dir
+                     }
+
+    define_instance_method(
+        :meth_each,
+        :'each', [],
+        [], VCM::Enum
+    )
+    def meth_each(_loc, _env, _event)
+        VC.make_enumerator self, FN_IS_EMPTY, FN_DEST
     end
 end
 Dir.freeze
@@ -57,10 +76,10 @@ Dir.freeze
 
 module_function
 
-    def make_dir(dir_enum)
-        ASSERT.kind_of dir_enum, ::Enumerator
+    def make_dir(obj)
+        ASSERT.kind_of obj, ::Dir
 
-        Dir.new(dir_enum).freeze
+        Dir.new(obj).freeze
     end
 
 end # Umu::Value::Core

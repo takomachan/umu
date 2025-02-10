@@ -43,7 +43,7 @@ class Enum < Morph::Abstract
 
 
     def fn_empty?
-        @fn_is_empty.call self.source
+        @fn_is_empty.call(self.source).true?
     end
 
 
@@ -68,7 +68,7 @@ class Enum < Morph::Abstract
         raise X::NotImplemented.new(
                     loc,
                     env,
-                    "cons: Empty morph cannot be constructible"
+                    "cons: Emnumerator morph cannot be constructible"
                 )
     end
 
@@ -86,35 +86,6 @@ class Enum < Morph::Abstract
         VC.make_tuple(
             x,
             VC.make_enumerator(xs, @fn_is_empty, @fn_dest)
-        )
-    end
-
-
-    define_instance_method(
-        :meth_map,
-        :map, [],
-        [VC::Fun], self
-    )
-    def meth_map(loc, env, event, func)
-        ASSERT.kind_of func, VC::Fun
-
-        new_env = env.enter event
-
-        if self.fn_empty?
-            raise ::StopIteration
-        end
-
-        tuple = self.fn_dest!
-        ASSERT.kind_of tuple, VCP::Tuple
-        x, xs = tuple.values
-
-        VC.make_enumerator(
-            xs.meth_cons(
-                loc, new_env, event,
-                func.apply(x, [], loc, new_env)
-            ),
-            @fn_is_empty,
-            @fn_dest
         )
     end
 end

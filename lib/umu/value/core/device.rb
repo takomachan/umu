@@ -79,9 +79,9 @@ class Device < Top
     def self.meth_see_dir(_loc, _env, _event, file_path)
         ASSERT.kind_of file_path, VCA::String
 
-        dir_enum = ::Dir.foreach file_path.val
+        dir = ::Dir.open file_path.val
 
-        VC.make_dir dir_enum
+        VC.make_dir dir
     end
 
     define_class_method(
@@ -93,8 +93,8 @@ class Device < Top
         ASSERT.kind_of file_path, VCA::String
         ASSERT.kind_of func,      VC::Fun
 
-        ::Dir.foreach(file_path.val) do |entry_name|
-            func.apply VC.make_string(entry_name), [], loc, env.enter(event)
+        ::Dir.open(file_path.val) do |dir|
+            func.apply VC.make_dir(dir), [], loc, env.enter(event)
         end
 
         VC.make_unit
