@@ -67,9 +67,9 @@ class Abstract < Object
         result = xs.foldr(
              loc,     env,     event, VC.make_s_expr_nil
         ) { |new_loc, new_env, x,     s_expr|
-            VC.validate_s_expr x, 'make', new_loc, new_env
+            value = VC.make_s_expr_value x
 
-            VC.make_s_expr_cons x, s_expr
+            VC.make_s_expr_cons value, s_expr
         }
 
         ASSERT.kind_of result, VC::SExpr::Abstract
