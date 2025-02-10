@@ -1,0 +1,92 @@
+# - Eager evaluation
+#
+# sum-ints 9
+# ^^^^^^^^^^
+# sum (integers-between (1, 9))
+#      ^^^^^^^^^^^^^^^^^^^^^^^
+# sum [1 | integers-between (2, 9)]
+#          ^^^^^^^^^^^^^^^^^^^^^^^
+# sum [1, 2 | integers-between (3, 9)]
+#             ^^^^^^^^^^^^^^^^^^^^^^^
+# sum [1, 2, 3 | integers-between (4, 9)]
+#        :       ^^^^^^^^^^^^^^^^^^^^^^^
+#        :
+# sum [1, 2, 3, ..., 9] | integers-between (10, 9)]
+#                         ^^^^^^^^^^^^^^^^^^^^^^^^
+# sum [1, 2, 3, ..., 9] | []]
+#                         ^^
+# sum [1, 2, 3, ..., 9]
+# ^^^^^^^^^^^^^^^^^^^^^
+# 1 + sum [2, 3, 4, ..., 9]
+#     ^^^^^^^^^^^^^^^^^^^^^
+# 1 + 2 + sum [3, 4, 5, ..., 9]
+#         ^^^^^^^^^^^^^^^^^^^^^
+# 1 + 2 + 3 + sum [4, 5, 6, ..., 9]
+#        :    ^^^^^^^^^^^^^^^^^^^^^
+#        :
+# 1 + 2 + 3 + ... + 9 + sum []
+#                       ~~~~~~
+# 1 + 2 + 3 + ... + 9 + 0
+# ^^^^^^^^^^^^^^^^^^^^^^^
+# 45
+
+
+fun rec integers-between = (m : Int, n : Int) -> (
+    if m > n then
+        []
+    else 
+        [m | integers-between (m + 1, n)]
+)
+
+fun rec sum = xs : List -> case xs of {
+  | []      -> 0
+  | [x|xs'] -> x + sum xs'
+}
+
+fun sum-ints = n -> sum (integers-between (1, n))
+
+
+
+# - Lazy evaluation
+#
+# sum-ints 9
+# ^^^^^^^^^^
+# sum (integers-between (1, 9))
+#     ^^^^^^^^^^^^^^^^^^^^^^^^^
+# sum [1 | integers-between (2, 9)]
+# ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+# 1 + sum (integers-between (2, 9))
+#         ^^^^^^^^^^^^^^^^^^^^^^^^^
+# 1 + sum [2 | integers-between (3, 9)]
+#     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+# 1 + 2 + sum (integers-between (3, 9))
+# ~~~~~       ^^^^^^^^^^^^^^^^^^^^^^^^^
+# 3 + sum [3 | integers-between (4, 9)]
+#     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+# 3 + 3 + sum (integers-between (4, 9))
+# ~~~~~  :    ^^^^^^^^^^^^^^^^^^^^^^^^^
+#        :
+# 36 + sum [9 | integers-between (10, 9)]
+#      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+# 36 + 9 + sum (integers-between (10, 9))
+# ~~~~^~       ^^^^^^^^^^^^^^^^^^^^^^^^^
+# 45 + sum []
+#          ^^
+# 45 + 0
+# ^^^^^^
+# 45
+
+
+fun rec integers-between' = (m : Int, n : Int) -> (
+    if m > n then
+        &{}
+    else
+        &{ m | integers-between' (m + 1, n) }
+)
+
+fun rec sum' = xs : Stream -> case xs.dest of {
+  | &None                         -> 0
+  | &Some (x : Int, xs' : Stream) -> x + sum' xs'
+}
+
+fun sum-ints' = n -> sum' (integers-between' (1, n))

@@ -25,13 +25,14 @@ class Force < Abstract
 
 
     def to_s
-        format "%%FORCE %s", self.expr.to_s
+        format "(%%FORCE %s)", self.expr.to_s
     end
 
 
     def pretty_print(q)
-        q.text "%%FORCE "
-        q.pp self.expr
+        PRT.group q, bb:'(%FORCE ', eb:')' do
+            q.pp self.expr
+        end
     end
 
 

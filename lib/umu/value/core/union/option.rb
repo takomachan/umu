@@ -14,6 +14,16 @@ module Union
 module Option
 
 class Abstract < Union::Abstract
+    def none?
+        false
+    end
+
+
+    def some?
+        false
+    end
+
+
     define_instance_method(
         :meth_is_none,
         :none?, [],
@@ -45,6 +55,11 @@ class None < Abstract
     )
     def self.meth_make(_loc, _env, _event)
         VC.make_none
+    end
+
+
+    def none?
+        true
     end
 
 
@@ -80,6 +95,11 @@ class Some < Abstract
         super()
 
         @contents = contents
+    end
+
+
+    def some?
+        true
     end
 
 

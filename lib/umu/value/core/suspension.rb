@@ -11,8 +11,7 @@ module Core
 
 class Susp < Object
     attr_reader :expr, :va_context
-    attr_reader :value
-
+    attr_reader :memoized_value
 
     def initialize(expr, va_context)
         ASSERT.kind_of expr,       ASCE::Abstract
@@ -23,7 +22,7 @@ class Susp < Object
         @expr       = expr
         @va_context = va_context
 
-        @value = nil
+        @memoized_value = nil
     end
 
 
@@ -40,21 +39,21 @@ class Susp < Object
 
 
     def force(loc, env, event)
-        ASSERT.kind_of loc,      LOC::Entry
-        ASSERT.kind_of env, E::Entry
-        ASSERT.kind_of event,    E::Tracer::Event
+        ASSERT.kind_of loc,     LOC::Entry
+        ASSERT.kind_of env,     E::Entry
+        ASSERT.kind_of event,   E::Tracer::Event
 
-        unless @value
+        unless @memoized_value
             new_env = env.update_va_context(self.va_context)
                          .enter(event)
 
             result  = self.expr.evaluate new_env
             ASSERT.kind_of result, ASR::Value
 
-            @value = result.value
+            @memoized_value = result.value
         end
 
-        ASSERT.kind_of @value, VC::Top
+        ASSERT.kind_of @memoized_value, VC::Top
     end
 end
 Susp.freeze

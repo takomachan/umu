@@ -43,7 +43,7 @@ class Enum < Morph::Abstract
 
 
     def fn_empty?
-        @fn_is_empty.call(self.source).true?
+        @fn_is_empty.call(self.source)
     end
 
 

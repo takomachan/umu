@@ -30,7 +30,7 @@ class Delay < Abstract
 
 
     def pretty_print(q)
-        q.text "%%DELAY "
+        q.text '%DELAY '
         q.pp self.expr
     end
 
