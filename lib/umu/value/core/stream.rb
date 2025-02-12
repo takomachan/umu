@@ -16,8 +16,6 @@ module Value
 
 module Core
 
-module Suspension
-
 module Stream
 
 module Cell
@@ -71,7 +69,7 @@ class Cons < Abstract
 
     def initialize(head_expr, tail_stream)
         ASSERT.kind_of head_expr,   ASCE::Abstract
-        ASSERT.kind_of tail_stream, Suspension::Stream::Entry::Abstract
+        ASSERT.kind_of tail_stream, Stream::Entry::Abstract
 
         @head_expr   = head_expr
         @tail_stream = tail_stream
@@ -97,7 +95,7 @@ class Cons < Abstract
         head_value  = self.head_expr.evaluate(new_env).value
 
         tail_stream  = self.tail_stream.step(new_env)
-        unless tail_stream.kind_of? Suspension::Stream::Entry::Abstract
+        unless tail_stream.kind_of? Stream::Entry::Abstract
             raise X::TypeError.new(
                 loc,
                 new_env,
@@ -108,7 +106,7 @@ class Cons < Abstract
         end
 
         if (
-            head_value.kind_of?(Suspension::Stream::Entry::Abstract) &&
+            head_value.kind_of?(Stream::Entry::Abstract) &&
             head_value.cell.nil? &&
             tail_stream.cell.nil?
         )
@@ -131,12 +129,12 @@ module_function
 
     def make_cons(head_expr, tail_stream)
         ASSERT.kind_of head_expr,   ASCE::Abstract
-        ASSERT.kind_of tail_stream, Suspension::Stream::Entry::Abstract
+        ASSERT.kind_of tail_stream, Stream::Entry::Abstract
 
         Cons.new(head_expr, tail_stream).freeze
     end
 
-end # Umu::Value::Core::Suspension::Stream::Cell
+end # Umu::Value::Core::Stream::Cell
 
 
 
@@ -275,7 +273,7 @@ class Cell < Abstract
     alias cell obj
 
     def initialize(cell, va_context)
-        ASSERT.kind_of cell,        Suspension::Stream::Cell::Abstract
+        ASSERT.kind_of cell,        Stream::Cell::Abstract
         ASSERT.kind_of va_context,  ECV::Abstract
 
         super
@@ -322,11 +320,9 @@ private
     end
 end
 
-end # Umu::Value::Core::Suspension::Stream::Entry
+end # Umu::Value::Core::Stream::Entry
 
-end # Umu::Value::Core::Suspension::Stream
-
-end # Umu::Value::Core::Suspension
+end # Umu::Value::Core::Stream
 
 
 
@@ -336,7 +332,7 @@ module_function
         ASSERT.kind_of va_context,  ECV::Abstract
 
         VC.make_stream_cell_entry(
-            Suspension::Stream::Cell.make_nil,
+            Stream::Cell.make_nil,
             va_context
         )
     end
@@ -344,21 +340,21 @@ module_function
 
     def make_stream_cons(head_expr, tail_stream, va_context)
         ASSERT.kind_of head_expr,   ASCE::Abstract
-        ASSERT.kind_of tail_stream, Suspension::Stream::Entry::Abstract
+        ASSERT.kind_of tail_stream, Stream::Entry::Abstract
         ASSERT.kind_of va_context,  ECV::Abstract
 
         VC.make_stream_cell_entry(
-            Suspension::Stream::Cell.make_cons(head_expr, tail_stream),
+            Stream::Cell.make_cons(head_expr, tail_stream),
             va_context
         )
     end
 
 
     def make_stream_cell_entry(cell, va_context)
-        ASSERT.kind_of cell,        Suspension::Stream::Cell::Abstract
+        ASSERT.kind_of cell,        Stream::Cell::Abstract
         ASSERT.kind_of va_context,  ECV::Abstract
 
-        Suspension::Stream::Entry::Cell.new(cell, va_context).freeze
+        Stream::Entry::Cell.new(cell, va_context).freeze
     end
 
 
@@ -366,7 +362,7 @@ module_function
         ASSERT.kind_of expr,        ASCE::Abstract
         ASSERT.kind_of va_context,  ECV::Abstract
 
-        Suspension::Stream::Entry::Expression.new(expr, va_context).freeze
+        Stream::Entry::Expression.new(expr, va_context).freeze
     end
 
 end # Umu::Value::Core

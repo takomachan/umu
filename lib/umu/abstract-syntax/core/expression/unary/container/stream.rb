@@ -81,7 +81,7 @@ private
                     VC.make_stream_cons expr, stream, new_env.va_context
                 }
 
-        ASSERT.kind_of result, VC::Suspension::Stream::Entry::Cell
+        ASSERT.kind_of result, VC::Stream::Entry::Cell
     end
 end
 
