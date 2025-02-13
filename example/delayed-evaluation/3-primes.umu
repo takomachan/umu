@@ -8,6 +8,7 @@ See: 新世代プログラミング, 淵一博＋黒川利明 編著, 1986年
 #)
 
 
+
 # By simple stream
 
 fun primes = () -> (
