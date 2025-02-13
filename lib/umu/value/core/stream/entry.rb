@@ -203,7 +203,7 @@ class Memorization < Abstract
     attr_reader :memorized_value
 
     def initialize(stream_expr, va_context)
-        ASSERT.kind_of stream_expr, ASCEU::Container::Stream
+        ASSERT.kind_of stream_expr, ASCE::MemoStream::Abstract
         ASSERT.kind_of va_context,  ECV::Abstract
 
         super
@@ -226,20 +226,16 @@ private
                      .enter(event)
 
         @memorized_value ||= (
-            if self.stream_expr.empty?
+            case self.stream_expr
+            when ASCE::MemoStream::Nil
                 VC.make_none
-            else
+            when ASCE::MemoStream::Cons
                 # Evaluate head expression
-                ASSERT.assert self.stream_expr.exprs.size == 1
-                head_expr = self.stream_expr.exprs[0]
-                ASSERT.kind_of head_expr, ASCE::Abstract
+                head_expr  = self.stream_expr.head_expr
                 head_value = head_expr.evaluate(new_env).value
 
                 # Evaluate tail expression
-                ASSERT.kind_of self.stream_expr.opt_last_expr,
-                                                     ASCE::Abstract
-                tail_expr = self.stream_expr.opt_last_expr
-                ASSERT.kind_of head_expr, ASCE::Abstract
+                tail_expr   = self.stream_expr.tail_expr
                 tail_stream = tail_expr.evaluate(new_env).value
                 unless tail_stream.kind_of? Stream::Entry::Abstract
                     raise X::TypeError.new(
@@ -253,6 +249,8 @@ private
 
                 # Make the result of forcing stream
                 VC.make_some VC.make_tuple(head_value, tail_stream)
+            else
+                ASSERT.abort 'No case'
             end
         )
 
@@ -307,7 +305,7 @@ module_function
 
 
     def make_stream_memo_entry(stream_expr, va_context)
-        ASSERT.kind_of stream_expr, ASCEU::Container::Stream
+        ASSERT.kind_of stream_expr, ASCE::MemoStream::Abstract
         ASSERT.kind_of va_context,  ECV::Abstract
                                                     # Does NOT freeze!!
         Stream::Entry::Memorization.new(stream_expr, va_context)

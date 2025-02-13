@@ -117,26 +117,6 @@ module_function
         ).freeze
     end
 
-
-    def make_memo_stream_nil(loc)
-        ASSERT.kind_of loc, LOC::Entry
-
-        Unary::Container::Stream.new(
-            loc, true, [].freeze, nil
-        ).freeze
-    end
-
-
-    def make_memo_stream_cons(loc, head_expr, tail_expr)
-        ASSERT.kind_of loc,         LOC::Entry
-        ASSERT.kind_of head_expr,   CSCE::Abstract
-        ASSERT.kind_of tail_expr,   CSCE::Abstract
-
-        Unary::Container::Stream.new(
-            loc, true, [head_expr].freeze, tail_expr
-        ).freeze
-    end
-
 end # Umu::ConcreteSyntax::Core::Expression
 
 end # Umu::ConcreteSyntax::Core
