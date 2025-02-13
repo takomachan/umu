@@ -1,3 +1,15 @@
+(#
+See: 新世代プログラミング, 淵一博＋黒川利明 編著, 1986年
+        4 関数型言語KRC, 4.5.1 エラトステネスのふるい, p42
+または
+    bit 1983年10月号(通巻176号)
+    新世代プログラミング④ 新しいプログラミング・スタイルと言語
+    (2) 関数型プログラミング言語KRCを中心として, 井田哲雄 著, p108
+#)
+
+
+# By simple stream
+
 fun primes = () -> (
     shift <| generate 2
 ) where {
@@ -33,4 +45,50 @@ first (10, it)
 
     $ ../../exe/umu -i 2-sum-ints.umu 3-primes.umu
 #)
+
+
+
+# By memorized stream
+
+fun primes' = () -> (
+    shift <| generate 2
+) where {
+    fun rec generate = n : Int -> &{n | generate (n + 1)}
+
+    fun rec shift = xs : Stream -> let {
+        val (x, xs') = xs.dest!
+    in
+        &{x | shift <| filter x xs'}
+    } where {
+        fun rec filter = (p : Int) (xs : Stream) -> (
+            case xs.dest of {
+              | &None ->
+                    &{}
+              | &Some (x : Int, xs' : Stream) ->
+                    if x mod p == 0 then filter p xs'
+                                    else &{x | filter p xs'}
+            }
+        )
+    }
+}
+;;
+
+
+val xs = primes ()
+;; # ==> #CellStream< ... >
+first (20, xs)
+:: # ==> [2, 3, 5, 7, ... ]     # Wait for seconds, 1st
+first (20, xs)
+:: # ==> [2, 3, 5, 7, ... ]     # Wait for seconds, 2nd
+first (20, xs)
+:: # ==> [2, 3, 5, 7, ... ]     # Wait for seconds, 3rd
+
+val ys = primes ()
+;; # ==> #MemoStream< ... >
+first (20, ys)
+:: # ==> [2, 3, 5, 7, ... ]     # Wait for seconds, 1st
+first (20, ys)
+:: # ==> [2, 3, 5, 7, ... ]     # Without waiting!!, 2nd
+first (20, ys)
+:: # ==> [2, 3, 5, 7, ... ]     # Without waiting!!, 3rd
 
