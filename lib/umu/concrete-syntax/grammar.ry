@@ -859,6 +859,14 @@ atom_expr:
 
     result = CSCE.make_comprehension bbr.loc, expr, qual
 }
+| '&[' ']' {
+    result = CSCE.make_stream val[0].loc, []
+}
+| '&[' expr com_exprs opt_last_expr ']' {
+    bb, expr, exprs, opt_expr, _ = val
+
+    result = CSCE.make_stream bb.loc, [expr] + exprs, opt_expr
+}
 
 # Braket: { ... }
 | '{' pat pats '->' expr inner_where_decls '}' {
@@ -867,12 +875,12 @@ atom_expr:
     result = CSCE.make_lambda bb.loc, [pat] + pats, expr, decls
 }
 | '&{' '}' {
-    result = CSCE.make_stream val[0].loc, []
+    result = CSCE.make_memo_stream_nil val[0].loc
 }
-| '&{' expr com_exprs opt_last_expr '}' {
-    bb, expr, exprs, opt_expr, _ = val
+| '&{' expr '|' expr '}' {
+    bb, head_expr, _, tail_expr, _ = val
 
-    result = CSCE.make_stream bb.loc, [expr] + exprs, opt_expr
+    result = CSCE.make_memo_stream_cons bb.loc, head_expr, tail_expr
 }
 
 

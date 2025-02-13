@@ -110,7 +110,8 @@ BRAKET_PAIRS = [
     ['%S(', ')'],   # S-Expression
     ['%{',  '}'],   # Embeded-expression in S-expression, or Map
     ['&(',  ')'],   # Instance message
-    ['&{',  '}'],   # Stream -- Infinity list
+    ['&[',  ']'],   # Simple stream    -- Infinity list
+    ['&{',  '}'],   # Memorized stream -- Infinity list
     ['$(',  ')'],   # Named tuple modifier
 
 
@@ -123,7 +124,7 @@ BRAKET_PAIRS = [
     ['%(',  ')'],   # Set
     ['@[',  ']'],   # Assoc -- Key-Value list
     ['@(',  ')'],   # Dict  -- Key-Value set
-    ['&[',  ']']    # Channel -- For concurrency
+    ['$[',  ']']    # Channel -- For concurrency
 ]
 
 

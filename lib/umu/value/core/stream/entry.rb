@@ -193,6 +193,73 @@ private
     end
 end
 
+
+
+class Memorization < Abstract
+    TYPE_SYM = :MemoStream
+
+
+    alias       stream_expr obj
+    attr_reader :memorized_value
+
+    def initialize(stream_expr, va_context)
+        ASSERT.kind_of stream_expr, ASCEU::Container::Stream
+        ASSERT.kind_of va_context,  ECV::Abstract
+
+        super
+
+        @memorized_value = nil
+    end
+
+
+    def step(env)
+        # @memorized_value ||= self.stream_expr.evaluate(env).value
+
+        ASSERT.abort "No case"
+    end
+
+
+private
+
+    def __force__(loc, env, event)
+        new_env = env.update_va_context(self.va_context)
+                     .enter(event)
+
+        @memorized_value ||= (
+            if self.stream_expr.empty?
+                VC.make_none
+            else
+                # Evaluate head expression
+                ASSERT.assert self.stream_expr.exprs.size == 1
+                head_expr = self.stream_expr.exprs[0]
+                ASSERT.kind_of head_expr, ASCE::Abstract
+                head_value = head_expr.evaluate(new_env).value
+
+                # Evaluate tail expression
+                ASSERT.kind_of self.stream_expr.opt_last_expr,
+                                                     ASCE::Abstract
+                tail_expr = self.stream_expr.opt_last_expr
+                ASSERT.kind_of head_expr, ASCE::Abstract
+                tail_stream = tail_expr.evaluate(new_env).value
+                unless tail_stream.kind_of? Stream::Entry::Abstract
+                    raise X::TypeError.new(
+                        loc,
+                        new_env,
+                        "force: Expected a Stream, but %s : %s",
+                        tail_stream.to_s,
+                        tail_stream.type_sym.to_s
+                    )
+                end
+
+                # Make the result of forcing stream
+                VC.make_some VC.make_tuple(head_value, tail_stream)
+            end
+        )
+
+        ASSERT.kind_of @memorized_value, VCU::Option::Abstract
+    end
+end
+
 end # Umu::Value::Core::Stream::Entry
 
 end # Umu::Value::Core::Stream
@@ -236,6 +303,14 @@ module_function
         ASSERT.kind_of va_context,  ECV::Abstract
 
         Stream::Entry::Expression.new(expr, va_context).freeze
+    end
+
+
+    def make_stream_memo_entry(stream_expr, va_context)
+        ASSERT.kind_of stream_expr, ASCEU::Container::Stream
+        ASSERT.kind_of va_context,  ECV::Abstract
+                                                    # Does NOT freeze!!
+        Stream::Entry::Memorization.new(stream_expr, va_context)
     end
 
 end # Umu::Value::Core
