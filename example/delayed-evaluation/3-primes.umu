@@ -78,18 +78,18 @@ fun primes' = () -> (
 val xs = primes ()
 ;; # ==> #CellStream< ... >
 first (20, xs)
-:: # ==> [2, 3, 5, 7, ... ]     # Wait for seconds, 1st
+;; # ==> [2, 3, 5, 7, ... ]     # Wait for seconds, 1st
 first (20, xs)
-:: # ==> [2, 3, 5, 7, ... ]     # Wait for seconds, 2nd
+;; # ==> [2, 3, 5, 7, ... ]     # Wait for seconds, 2nd
 first (20, xs)
-:: # ==> [2, 3, 5, 7, ... ]     # Wait for seconds, 3rd
+;; # ==> [2, 3, 5, 7, ... ]     # Wait for seconds, 3rd
 
 val ys = primes ()
 ;; # ==> #MemoStream< ... >
 first (20, ys)
-:: # ==> [2, 3, 5, 7, ... ]     # Wait for seconds, 1st
+;; # ==> [2, 3, 5, 7, ... ]     # Wait for seconds, 1st
 first (20, ys)
-:: # ==> [2, 3, 5, 7, ... ]     # Without waiting!!, 2nd
+;; # ==> [2, 3, 5, 7, ... ]     # Without waiting!!, 2nd
 first (20, ys)
-:: # ==> [2, 3, 5, 7, ... ]     # Without waiting!!, 3rd
+;; # ==> [2, 3, 5, 7, ... ]     # Without waiting!!, 3rd
 
