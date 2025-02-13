@@ -1,0 +1,31 @@
+# See: お気楽 Standard ML of New Jersey 入門, 遅延評価と遅延ストリーム
+#   http://www.nct9.ne.jp/m_hiroi/func/smlnj16.html
+
+
+fun rec tarai = (x, y, z) -> (
+    if x <= y then
+        y
+    else
+        tarai (
+            tarai (x - 1, y, z),
+            tarai (y - 1, z, x),
+            tarai (z - 1, x, y)
+        )
+)
+
+
+
+fun rec tarai' = (x, y, z) -> (
+    if x <= y then
+        y
+    else let {
+        val zz = force z
+    in
+        tarai' (
+            tarai' (x - 1, y, z),
+            tarai' (y - 1, zz, x),
+            delay (tarai' (zz - 1, x, delay y))
+        )
+    }
+)
+

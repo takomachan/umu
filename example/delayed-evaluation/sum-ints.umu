@@ -1,3 +1,15 @@
+(#
+FUNCTIONAL PROGRAMMING, Applivation and Implementation,
+    PETER HENDERSON, University of Newcastle, 1980,
+    8.1 Delayed evaluation, p215-218
+
+関数型プログラミング,
+    PETER HENDERSON 著, 杉藤芳雄・二木厚吉 訳, 1985年
+    8.1 遅延評価, p233-237
+#)
+
+
+
 # - Eager evaluation
 #
 # sum-ints 9
@@ -47,7 +59,7 @@ fun sum-ints = n -> sum (integers-between (1, n))
 
 
 
-# - Lazy evaluation
+# - Delayed evaluation
 #
 # sum-ints 9
 # ^^^^^^^^^^
