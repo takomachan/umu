@@ -56,6 +56,11 @@ fun rec sum = xs : List -> case xs of {
 }
 
 fun sum-ints = n -> sum (integers-between (1, n))
+;;
+
+
+sum-ints 9
+;; # => 45
 
 
 
@@ -99,12 +104,21 @@ fun rec integers-between' = (m : Int, n : Int) -> (
         &[ m | integers-between' (m + 1, n) ]
 )
 
-fun rec sum' = xs : Stream -> case xs.dest of {
-  | &None                         -> 0
-  | &Some (x : Int, xs' : Stream) -> x + sum' xs'
-}
+fun rec sum' = xs : Stream -> (
+    case xs.dest of {
+      | &None ->
+          0
+      | &Some (x : Int, xs' : Stream) ->
+          x + sum' xs'
+    }
+)
 
 fun sum-ints' = n -> sum' (integers-between' (1, n))
+;;
+
+
+sum-ints' 9
+;; # => 45
 
 
 
@@ -117,6 +131,11 @@ fun rec integers-between'' = (m : Int, n : Int) -> (
 )
 
 fun sum-ints'' = n -> sum' (integers-between'' (1, n))
+;;
+
+
+sum-ints'' 9
+;; # => 45
 
 
 

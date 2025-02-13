@@ -12,6 +12,11 @@ fun rec tarai = (x, y, z) -> (
             tarai (z - 1, x, y)
         )
 )
+;;
+
+
+tarai (7, 3, 0)     # Wait for seconds
+;; # ==> 7
 
 
 
@@ -28,4 +33,9 @@ fun rec tarai' = (x, y, z) -> (
         )
     }
 )
+;;
+
+
+tarai' (7, 3, 0)    # Without waiting
+;; # ==> 7
 

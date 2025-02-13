@@ -1,0 +1,36 @@
+fun primes = () -> (
+    shift <| generate 2
+) where {
+    fun rec generate = n : Int -> &[n | generate (n + 1)]
+
+    fun rec shift = xs : Stream -> let {
+        val (x, xs') = xs.dest!
+    in
+        &[x | shift <| filter x xs']
+    } where {
+        fun rec filter = (p : Int) (xs : Stream) -> (
+            case xs.dest of {
+              | &None ->
+                    &[]
+              | &Some (x : Int, xs' : Stream) ->
+                    if x mod p == 0 then filter p xs'
+                                    else &[x | filter p xs']
+            }
+        )
+    }
+}
+;;
+
+
+primes ()
+;; # ==> #CellStream< ... >
+first (10, it)
+;; # ==> [2, 3, 5, 7, 11, 13, 17, 19, 23, 29]
+
+
+(# [NOTE]
+    The function 'first' is defined in 'sum-ints.umu'
+
+    $ ../../exe/umu -i 2-sum-ints.umu 3-primes.umu
+#)
+
