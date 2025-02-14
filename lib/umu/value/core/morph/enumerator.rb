@@ -68,7 +68,7 @@ class Enum < Morph::Abstract
         raise X::NotImplemented.new(
                     loc,
                     env,
-                    "cons: Emnumerator morph cannot be constructible"
+                    "cons: Emnumerator morph is not be constructible"
                 )
     end
 

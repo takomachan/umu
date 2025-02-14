@@ -126,7 +126,7 @@ class Abstract < Object
         raise X::NotImplemented.new(
                     loc,
                     env,
-                    "cons: Stream morph cannot be constructible"
+                    "cons: Stream morph is not be constructible"
                 )
     end
 
