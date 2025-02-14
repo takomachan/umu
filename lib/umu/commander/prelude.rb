@@ -495,6 +495,15 @@ structure Umu = struct {
 
 
 
+    ######## Stream ########
+
+    structure Stream = struct {
+        # take : Int -> <Stream> 'a -> ['s]
+        fun take = (n : Int) (xs : Stream) -> xs.take n
+    }
+
+
+
     ######## S-Expression ########
 
     structure SExpr = struct {

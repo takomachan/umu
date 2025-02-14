@@ -3,9 +3,13 @@ See: 新世代プログラミング, 淵一博＋黒川利明 編著, 1986年
         4 関数型言語KRC, 4.5.1 エラトステネスのふるい, p42
 または
     bit 1983年10月号(通巻176号)
-    新世代プログラミング④ 新しいプログラミング・スタイルと言語
+    新世代プログラミング ④ 新しいプログラミング・スタイルと言語
     (2) 関数型プログラミング言語KRCを中心として, 井田哲雄 著, p108
 #)
+
+
+
+import Umu::Stream { fun take }
 
 
 
@@ -37,15 +41,8 @@ fun primes = () -> (
 
 primes ()
 ;; # ==> #CellStream< ... >
-first (10, it)
+take 10 it
 ;; # ==> [2, 3, 5, 7, 11, 13, 17, 19, 23, 29]
-
-
-(# [NOTE]
-    The function 'first' is defined in 'sum-ints.umu'
-
-    $ ../../exe/umu -i 2-sum-ints.umu 3-primes.umu
-#)
 
 
 
@@ -77,19 +74,19 @@ fun primes' = () -> (
 
 val xs = primes ()
 ;; # ==> #CellStream< ... >
-first (20, xs)
+take 20 xs
 ;; # ==> [2, 3, 5, 7, ... ]     # Wait for seconds, 1st
-first (20, xs)
+take 20 xs
 ;; # ==> [2, 3, 5, 7, ... ]     # Wait for seconds, 2nd
-first (20, xs)
+take 20 xs
 ;; # ==> [2, 3, 5, 7, ... ]     # Wait for seconds, 3rd
 
 val ys = primes ()
 ;; # ==> #MemoStream< ... >
-first (20, ys)
+take 20 ys
 ;; # ==> [2, 3, 5, 7, ... ]     # Wait for seconds, 1st
-first (20, ys)
+take 20 ys
 ;; # ==> [2, 3, 5, 7, ... ]     # Without waiting!!, 2nd
-first (20, ys)
+take 20 ys
 ;; # ==> [2, 3, 5, 7, ... ]     # Without waiting!!, 3rd
 

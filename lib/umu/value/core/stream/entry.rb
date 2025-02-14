@@ -130,6 +130,46 @@ class Abstract < Object
     end
 
 
+    define_instance_method(
+        :meth_take,
+        :take, [],
+        [VCAN::Int], VCM::List::Abstract
+    )
+    def meth_take(loc, env, event, value)
+        ASSERT.kind_of value, VCAN::Int
+
+        zs, _, _ = loop.inject(
+             [VC.make_nil, self, value.val]
+        ) { |(ys,          xs,   n), _|
+            if n <= 0
+                break [ys, xs, n]
+            end
+
+            val_of_opt = xs.force(loc, env, event)
+            case val_of_opt
+            when VCU::Option::None
+                break [ys, xs, n]
+            when VCU::Option::Some
+                pair = val_of_opt.contents
+                ASSERT.kind_of pair, VCP::Tuple
+                x, xs1 = pair.values
+
+                [
+                    ys.meth_cons(loc, env, event, x),
+                    xs1,
+                    n - 1
+                ]
+            else
+                ASSERT.abort "No case: ", val_of_opt.inspect
+            end
+        }
+
+        result = zs.meth_reverse(loc, env, event)
+
+        ASSERT.kind_of result, VCM::List::Abstract
+    end
+
+
 private
 
     def __force__(loc, env, event)
