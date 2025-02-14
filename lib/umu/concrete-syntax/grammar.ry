@@ -326,11 +326,6 @@ _expr:
 
     result = CSCE.make_sequential  kw.loc, exprs
 }
-| FORCE expr {
-    kw, expr = val
-
-    result = CSCE.make_force  kw.loc, expr
-}
 
 opt_vert: /* empty */ | '|'
 

@@ -195,11 +195,6 @@ class Top < ::Object
     end
 
 
-    def force(_loc, _env, _event)
-        self
-    end
-
-
 private
 
     def __invoke__(meth_sym, loc, env, event, arg_values)

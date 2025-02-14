@@ -73,6 +73,16 @@ class Object < Top
                 self.type_sym.to_s
         )
     end
+
+
+    define_instance_method(
+        :meth_force,
+        :force, [],
+        [], VC::Top
+    )
+    def meth_force(_loc, _env, _event)
+        self
+    end
 end
 Object.freeze
 

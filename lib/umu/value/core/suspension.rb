@@ -38,7 +38,7 @@ class Susp < Object
     end
 
 
-    def force(loc, env, event)
+    def meth_force(loc, env, event)
         ASSERT.kind_of loc,     LOC::Entry
         ASSERT.kind_of env,     E::Entry
         ASSERT.kind_of event,   E::Tracer::Event

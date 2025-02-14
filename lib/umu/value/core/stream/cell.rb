@@ -25,6 +25,11 @@ class Abstract < Top
     def step(env)
         VC.make_stream_cell_entry self, env.va_context
     end
+
+
+    def force(_loc, _env, _event)
+        raise X::InternalSubclassResponsibility
+    end
 end
 
 

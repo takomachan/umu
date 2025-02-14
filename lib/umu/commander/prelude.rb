@@ -622,6 +622,9 @@ structure Umu = struct {
                             else
                                 1
 
+        # force     : 'a -> 'a
+        val force = &(force)
+
 
         #### Bool ####
 

@@ -55,11 +55,11 @@ class Abstract < Object
 
 
     define_instance_method(
-        :force,
+        :meth_force,
         :force, [:dest],
         [], VCU::Option::Abstract
     )
-    def force(loc, env, event)
+    def meth_force(loc, env, event)
         new_env = env.update_va_context(self.va_context)
                      .enter(event)
 
@@ -71,7 +71,7 @@ class Abstract < Object
                             loc,
                             self.to_s,
         ) { |new_event|
-            __force__ loc, new_env, new_event
+            __meth_force__ loc, new_env, new_event
         }
         ASSERT.kind_of value, VCU::Option::Abstract
     end
@@ -83,7 +83,7 @@ class Abstract < Object
         [], VCA::Bool
     )
     def meth_is_empty(loc, env, event)
-        val_of_opt = self.force loc, env, event
+        val_of_opt = self.meth_force loc, env, event
         ASSERT.kind_of val_of_opt, VCU::Option::Abstract
 
         result = val_of_opt.meth_is_none loc, env, event
@@ -98,7 +98,7 @@ class Abstract < Object
         [], VCP::Tuple
     )
     def meth_dest!(loc, env, event)
-        val_of_opt = self.force loc, env, event
+        val_of_opt = self.meth_force loc, env, event
         ASSERT.kind_of val_of_opt, VCU::Option::Abstract
 
         unless val_of_opt.some?
@@ -145,7 +145,7 @@ class Abstract < Object
                 break [ys, xs, n]
             end
 
-            val_of_opt = xs.force(loc, env, event)
+            val_of_opt = xs.meth_force(loc, env, event)
             case val_of_opt
             when VCU::Option::None
                 break [ys, xs, n]
@@ -172,7 +172,7 @@ class Abstract < Object
 
 private
 
-    def __force__(loc, env, event)
+    def __meth_force__(loc, env, event)
         raise X::InternalSubclassResponsibility
     end
 end
@@ -200,7 +200,7 @@ class Cell < Abstract
 
 private
 
-    def __force__(loc, env, event)
+    def __meth_force__(loc, env, event)
         self.cell.force loc, env, event
     end
 end
@@ -228,7 +228,7 @@ class Expression < Abstract
 
 private
 
-    def __force__(loc, env, event)
+    def __meth_force__(loc, env, event)
         self.expr.evaluate(env).value
     end
 end
@@ -261,7 +261,7 @@ class Memorization < Abstract
 
 private
 
-    def __force__(loc, env, event)
+    def __meth_force__(loc, env, event)
         new_env = env.update_va_context(self.va_context)
                      .enter(event)
 
