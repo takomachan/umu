@@ -20,10 +20,15 @@ class Abstract < Object
     define_class_method(
         :meth_make_empty,
         :empty, [],
-        [], VCM::List::Abstract
+        [], self
     )
-    def self.meth_make_empty(_loc, _env, _event)
-        VC.make_nil
+    def self.meth_make_empty(loc, env, _event)
+        raise X::NotImplemented.new(
+                    loc,
+                    env,
+                    "empty: Abstract class cannot be respond " +
+                                                    "to any messages"
+                )
     end
 
 
@@ -183,6 +188,16 @@ class Cell < Abstract
     TYPE_SYM = :CellStream
 
 
+    define_class_method(
+        :meth_make_empty,
+        :empty, [],
+        [], self
+    )
+    def self.meth_make_empty(_loc, env, _event)
+        VC.make_cell_stream_nil env.va_context
+    end
+
+
     alias cell obj
 
     def initialize(cell, va_context)
@@ -237,6 +252,16 @@ end
 
 class Memorization < Abstract
     TYPE_SYM = :MemoStream
+
+
+    define_class_method(
+        :meth_make_empty,
+        :empty, [],
+        [], self
+    )
+    def self.meth_make_empty(_loc, env, _event)
+        VC.make_memo_stream_nil env.va_context
+    end
 
 
     alias       stream_expr obj
@@ -306,6 +331,8 @@ end # Umu::Value::Core::Stream
 
 module_function
 
+    # For Cell Stream
+
     def make_cell_stream_nil(va_context)
         ASSERT.kind_of va_context,  ECV::Abstract
 
@@ -343,6 +370,19 @@ module_function
         Stream::Entry::Expression.new(expr, va_context).freeze
     end
 
+
+    # For Memo Stream
+
+    def make_memo_stream_nil(va_context)
+        ASSERT.kind_of va_context,  ECV::Abstract
+
+        VC.make_memo_stream_entry(
+            ASCE.make_memo_stream_nil(
+                LOC.make_location(__FILE__, __LINE__)
+            ),
+            va_context
+        )
+    end
 
     def make_memo_stream_entry(stream_expr, va_context)
         ASSERT.kind_of stream_expr, ASCE::MemoStream::Abstract
