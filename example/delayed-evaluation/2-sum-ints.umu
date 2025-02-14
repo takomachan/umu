@@ -10,7 +10,7 @@ FUNCTIONAL PROGRAMMING, Applivation and Implementation,
 
 
 
-# Eager evaluation
+# 1. Eager evaluation
 
 # sum-ints 9
 # ^^^^^^^^^^
@@ -37,7 +37,7 @@ FUNCTIONAL PROGRAMMING, Applivation and Implementation,
 #        :    ^^^^^^^^^^^^^^^^^^^^^
 #        :
 # 1 + 2 + 3 + ... + 9 + sum []
-#                       ~~~~~~
+#                       ^^^^^^
 # 1 + 2 + 3 + ... + 9 + 0
 # ^^^^^^^^^^^^^^^^^^^^^^^
 # 45
@@ -47,7 +47,7 @@ fun rec integers-between = (m : Int, n : Int) -> (
     if m > n then
         []
     else 
-        [m | integers-between (m + 1, n)]
+        [ m | integers-between (m + 1, n) ]
 )
 
 fun rec sum = xs : List -> case xs of {
@@ -64,7 +64,7 @@ sum-ints 9
 
 
 
-# Delayed evaluation
+# 2. Delayed evaluation
 
 #
 # sum-ints 9
@@ -96,7 +96,7 @@ sum-ints 9
 
 
 
-# By simple stream
+# 2.1 By cell stream
 fun rec integers-between' = (m : Int, n : Int) -> (
     if m > n then
         &[]
@@ -122,7 +122,7 @@ sum-ints' 9
 
 
 
-# By memorized stream
+# 2.2 By memorized stream
 fun rec integers-between'' = (m : Int, n : Int) -> (
     if m > n then
         &{}
@@ -139,7 +139,7 @@ sum-ints'' 9
 
 
 
-# Infinite stream (1)
+# 3. Infinite stream (1)
 
 fun rec first = (k : Int, xs : Stream) -> (
     if k <= 0 then
@@ -149,12 +149,13 @@ fun rec first = (k : Int, xs : Stream) -> (
           | &None ->
                 []
           | &Some (x : Int, xs' : Stream) ->
-                [x | first (k - 1, xs')]
+                [ x | first (k - 1, xs') ]
         }
 )
 
 fun rec integers-from = m : Int -> &[m | integers-from (m + 1)]
 ;;
+
 
 integers-from 3
 ;; # ==> #CellStream< ... >
@@ -163,7 +164,7 @@ first (5, it)
 
 
 
-# Infinite stream (2)
+# 4. Infinite stream (2)
 
 fun first-sums = k : Int -> (
     first (k, sums (0, integers-from 1))
@@ -176,5 +177,7 @@ fun first-sums = k : Int -> (
 }
 ;;
 
+
 first-sums 5
 ;; # ==> [1, 3, 6, 10, 15]
+

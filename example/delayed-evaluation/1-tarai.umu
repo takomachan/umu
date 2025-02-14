@@ -2,6 +2,9 @@
 #   http://www.nct9.ne.jp/m_hiroi/func/smlnj16.html
 
 
+
+# 1. Eager evaluation
+
 fun rec tarai = (x, y, z) -> (
     if x <= y then
         y
@@ -19,6 +22,8 @@ tarai (7, 3, 0)     # Wait for seconds
 ;; # ==> 7
 
 
+
+# 2. Delayed evaluation
 
 fun rec tarai' = (x, y, z) -> (
     if x <= y then
@@ -38,4 +43,17 @@ fun rec tarai' = (x, y, z) -> (
 
 tarai' (7, 3, 0)    # Without waiting
 ;; # ==> 7
+
+
+
+# 3. Delayed evaluate the eager function
+
+val s = delay tarai (7, 3, 0)
+;; # ==> #Susp<(tarai (7, 3, 0))>   # Without waiting
+force s
+;; # ==> 7                          # Wait for seconds, 1st
+force s
+;; # ==> 7                          # Without waiting!!, 2nd
+force s
+;; # ==> 7                          # Without waiting!!, 3rd
 
