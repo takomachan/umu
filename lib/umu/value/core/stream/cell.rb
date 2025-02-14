@@ -23,7 +23,7 @@ class Abstract < Top
 
 
     def step(env)
-        VC.make_stream_cell_entry self, env.va_context
+        VC.make_cell_stream_entry self, env.va_context
     end
 
 

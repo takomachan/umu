@@ -306,29 +306,29 @@ end # Umu::Value::Core::Stream
 
 module_function
 
-    def make_stream_nil(va_context)
+    def make_cell_stream_nil(va_context)
         ASSERT.kind_of va_context,  ECV::Abstract
 
-        VC.make_stream_cell_entry(
+        VC.make_cell_stream_entry(
             Stream::Cell.make_nil,
             va_context
         )
     end
 
 
-    def make_stream_cons(head_expr, tail_stream, va_context)
+    def make_cell_stream_cons(head_expr, tail_stream, va_context)
         ASSERT.kind_of head_expr,   ASCE::Abstract
         ASSERT.kind_of tail_stream, Stream::Entry::Abstract
         ASSERT.kind_of va_context,  ECV::Abstract
 
-        VC.make_stream_cell_entry(
+        VC.make_cell_stream_entry(
             Stream::Cell.make_cons(head_expr, tail_stream),
             va_context
         )
     end
 
 
-    def make_stream_cell_entry(cell, va_context)
+    def make_cell_stream_entry(cell, va_context)
         ASSERT.kind_of cell,        Stream::Cell::Abstract
         ASSERT.kind_of va_context,  ECV::Abstract
 
@@ -336,7 +336,7 @@ module_function
     end
 
 
-    def make_stream_expr_entry(expr, va_context)
+    def make_expr_stream_entry(expr, va_context)
         ASSERT.kind_of expr,        ASCE::Abstract
         ASSERT.kind_of va_context,  ECV::Abstract
 
@@ -344,7 +344,7 @@ module_function
     end
 
 
-    def make_stream_memo_entry(stream_expr, va_context)
+    def make_memo_stream_entry(stream_expr, va_context)
         ASSERT.kind_of stream_expr, ASCE::MemoStream::Abstract
         ASSERT.kind_of va_context,  ECV::Abstract
                                                     # Does NOT freeze!!

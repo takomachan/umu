@@ -95,22 +95,24 @@ private
 
         result = (
              if self.memorized?
-                VC.make_stream_memo_entry self, new_env.va_context
+                VC.make_memo_stream_entry self, new_env.va_context
             else
                 init_stream =
                     if self.opt_last_expr
-                        VC.make_stream_expr_entry(
+                        VC.make_expr_stream_entry(
                             self.opt_last_expr,
                             new_env.va_context
                         )
                     else
-                        VC.make_stream_nil new_env.va_context
+                        VC.make_cell_stream_nil new_env.va_context
                     end
 
                 self.exprs.reverse.inject(init_stream) {
                     |stream, expr|
 
-                    VC.make_stream_cons expr, stream, new_env.va_context
+                    VC.make_cell_stream_cons(
+                        expr, stream, new_env.va_context
+                    )
                 }
             end
         )

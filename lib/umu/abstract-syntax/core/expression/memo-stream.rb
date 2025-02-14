@@ -15,7 +15,7 @@ module MemoStream
 
 class Abstract < Expression::Abstract
     def __evaluate__(env, event)
-        VC.make_stream_memo_entry self, env.va_context
+        VC.make_memo_stream_entry self, env.va_context
     end
 
     private :__evaluate__
