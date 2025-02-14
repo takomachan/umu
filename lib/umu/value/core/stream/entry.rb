@@ -22,13 +22,9 @@ class Abstract < Object
         :empty, [],
         [], self
     )
-    def self.meth_make_empty(loc, env, _event)
-        raise X::NotImplemented.new(
-                    loc,
-                    env,
-                    "empty: Abstract class cannot be respond " +
-                                                    "to any messages"
-                )
+    def self.meth_make_empty(_loc, env, _event)
+        # Cell stream is default stream
+        VC.make_cell_stream_nil(env.va_context)
     end
 
 

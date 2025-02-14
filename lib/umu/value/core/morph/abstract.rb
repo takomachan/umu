@@ -33,7 +33,8 @@ class Abstract < Object
         [], self
     )
     def self.meth_make_empty(_loc, _env, _event)
-        raise X::InternalSubclassResponsibility
+        # List is default morph
+        VC.make_nil
     end
 
 
