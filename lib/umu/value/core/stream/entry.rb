@@ -319,6 +319,59 @@ private
     end
 end
 
+
+
+class Suspended < Abstract
+    TYPE_SYM = :SuspStream
+
+
+    alias expr obj
+
+    def initialize(expr, va_context)
+        ASSERT.kind_of expr,        ASCE::Abstract
+        ASSERT.kind_of va_context,  ECV::Abstract
+
+        super
+    end
+
+
+    def step(env)
+        ASSERT.abort "No case"
+    end
+
+
+private
+
+    def __meth_force__(loc, env, event)
+        new_env = env.update_va_context(self.va_context)
+                     .enter(event)
+
+        stream_value = self.expr.evaluate(new_env).value
+        unless stream_value.kind_of? Stream::Entry::Abstract
+            raise X::TypeError.new(
+                loc,
+                new_env,
+                "force: Expected a Stream, but %s : %s",
+                stream_value.to_s,
+                stream_value.type_sym.to_s
+            )
+        end
+
+        option_value = stream_value.meth_force loc, new_env, event
+        unless option_value.kind_of? VCU::Option::Abstract
+            raise X::TypeError.new(
+                loc,
+                new_env,
+                "force: Expected a Option, but %s : %s",
+                option_value.to_s,
+                option_value.type_sym.to_s
+            )
+        end
+
+        ASSERT.kind_of option_value, VCU::Option::Abstract
+    end
+end
+
 end # Umu::Value::Core::Stream::Entry
 
 end # Umu::Value::Core::Stream
@@ -385,6 +438,16 @@ module_function
         ASSERT.kind_of va_context,  ECV::Abstract
                                                     # Does NOT freeze!!
         Stream::Entry::Memorization.new(stream_expr, va_context)
+    end
+
+
+    # For Look Ahead Stream
+
+    def make_suspended_stream(expr, va_context)
+        ASSERT.kind_of expr,        ASCE::Abstract
+        ASSERT.kind_of va_context,  ECV::Abstract
+
+        Stream::Entry::Suspended.new(expr, va_context)
     end
 
 end # Umu::Value::Core

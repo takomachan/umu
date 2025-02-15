@@ -877,6 +877,11 @@ atom_expr:
 
     result = CSCE.make_memo_stream_cons bb.loc, head_expr, tail_expr
 }
+| '&{' expr '}' {
+    bb, expr, _ = val
+
+    result = CSCE.make_suspended_stream bb.loc, expr
+}
 
 
 # Module path (Core Language)
