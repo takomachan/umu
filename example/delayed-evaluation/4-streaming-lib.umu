@@ -1,0 +1,191 @@
+# Streaming Library
+
+(#
+
+    +----------+    +-----------+    +----------+
+    | Producer |--->| Processor |--->| Consumer |
+    +----------+    +-----------+    +----------+
+
+   (from-by 3 10 |>  filter odd?
+                 |>  map to-s      |>  take-to-list 5)
+
+   # ==> ["3", "13", "23", "33", "43"]
+#)
+
+
+
+structure Stream = struct {
+    #### 1. Producer
+
+    # 1.1 From integer
+
+    fun from = m : Int ->
+        __from-to-by__ (m, NONE, NONE)
+
+    fun from-to = (m : Int) (n : Int) ->
+        __from-to-by__ (m, Some n, NONE)
+
+    fun from-by = (m : Int) (d : Int) ->
+        __from-to-by__ (m, NONE, Some d)
+
+    fun from-to-by = (m : Int) (n : Int) (d : Int) ->
+        __from-to-by__ (m, Some n, Some d)
+
+
+    # 1.2 From morph
+
+    fun rec list = xs : Morph ->
+        case xs.dest of {
+          | &None          -> &[]
+          | &Some (x, xs') -> &[ x | list xs' ]
+        }
+
+
+    # 1.3 From input device
+
+(#
+    fun read = () -> &{
+        case gets () of {
+          | &None      -> NONE
+          | &Some line -> Some &[ line | __read__ <| gets () ]
+        }
+    } where {
+        fun rec __read__ = opt-line : Option ->
+            case opt-line of {
+              | &None      -> &[]
+              | &Some line -> &[ line | __read__ <| gets () ]
+            }
+    }
+#)
+
+
+
+    ####  2. Processor
+
+    fun rec filter = (f : Fun) (xs : Stream) ->
+        case xs.dest of {
+          | &None ->
+                &[]
+          | &Some (x : Int, xs') ->
+                if f x then &[ x | filter f xs' ]
+                       else filter f xs'
+        }
+
+    fun rec map = (f : Fun) (xs : Stream) ->
+        case xs.dest of {
+          | &None          -> &[]
+          | &Some (x, xs') -> &[ f x | map f xs' ]
+        }
+                                        # The xs must be finite stream
+    fun rec append = (xs : Stream) (ys : Stream) ->
+        case xs.dest of {
+          | &None          -> ys
+          | &Some (x, xs') -> &[ x | append xs' ys ]
+        }
+
+                                        # The f must return finite stream
+    fun rec concat-map = (f : Fun) (xs : Stream) ->
+        case xs.dest of {
+          | &None          -> &[]
+          | &Some (x, xs') -> append (f x)  (concat-map f xs')
+        }
+
+    fun rec take = (n : Int) (xs : Stream) ->
+        if n <= 0 then
+            &[]
+        else
+            case xs.dest of {
+              | &None          -> &[]
+              | &Some (x, xs') -> &[ x | take (n - 1) xs' ]
+            }
+
+
+
+    #### 3. Consumer
+
+    # 3.1 General purpose
+
+    fun rec foldr = a (f : Fun) (xs : Stream) ->
+        case xs.dest of {
+          | &None          -> a
+          | &Some (x, xs') -> f x (foldr a f xs')
+        }
+
+    fun rec foldl = a (f : Fun) (xs : Stream) ->
+        case xs.dest of {
+          | &None          -> a
+          | &Some (x, xs') -> foldl (f x a) f xs'
+        }
+
+
+    # 3.2 To list
+
+    fun rec take-to-list = (n : Int) (xs : Stream) ->
+        if n <= 0 then
+            []
+        else
+            case xs.dest of {
+              | &None          -> []
+              | &Some (x, xs') -> [ x | take-to-list (n - 1) xs' ]
+            }
+
+    fun to-list = xs : Stream -> foldr [] (|) xs    # Only finite stream
+
+
+    # 3.3 To number (only finite stream)
+
+    fun count = xs : Stream -> foldl 0 { _ n -> n + 1 } xs
+
+    fun sum = xs : Stream -> foldl 0 (+) xs
+
+    fun avg = xs : Stream -> let {
+        val (sum, num) = foldl (0, 1) __avg__ xs
+    in
+        to-f sum / to-f num
+    } where {
+        fun __avg__ = x (sum, num) -> (sum + x, num + 1)
+    }
+
+
+    # 3.4 To output device
+
+    fun write = xs : Stream -> foldl () __write__ xs
+    where {
+        fun __write__ = line _ -> print line
+    }
+} where {
+    fun rec __from-to-by__ = (
+        current  : Int,
+        opt-stop : Option,
+        opt-step : Option
+    ) -> &[
+        current
+    |
+        let {
+            val step = case opt-step of {
+                         | &None      -> 1
+                         | &Some step -> step
+                       }
+
+            val next = current + step
+
+            val stop? = case opt-stop of {
+                          | &None      -> FALSE
+                          | &Some stop -> next > stop
+                        }
+        in
+            if stop?
+                then &[]
+                else __from-to-by__ (next, opt-stop, opt-step)
+        }
+    ]
+}
+
+
+
+;; (Stream::from-by 3 10 |> Stream::filter odd?
+                         |> Stream::map to-s    |>  Stream::take-to-list 5)
+# ==> ["3", "13", "23", "33", "43"]
+
+# Please use: 'import Stream' or 'structure S = Stream'
+

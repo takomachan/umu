@@ -11,7 +11,8 @@ FILES =	[
     'sicp/sicp-ch3.umu',
     'delayed-evaluation/1-tarai.umu',
     'delayed-evaluation/2-sum-ints.umu',
-    'delayed-evaluation/3-primes.umu'
+    'delayed-evaluation/3-primes.umu',
+    'delayed-evaluation/4-streaming-lib.umu'
 ]
 
 
