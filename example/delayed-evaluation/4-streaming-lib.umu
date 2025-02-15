@@ -189,9 +189,28 @@ structure Stream = struct {
 
 
 
-;; (Stream::from-by 3 10 |> Stream::filter odd?
-                         |> Stream::map to-s    |>  Stream::take-to-list 5)
+#### EXAMPLES ####
+
+import Stream
+
+
+# 1. Basic
+
+;; (from-by 3 10 |>  filter odd?
+                 |>  map to-s      |>  take-to-list 5)
 # ==> ["3", "13", "23", "33", "43"]
 
-# Please use: 'import Stream' or 'structure S = Stream'
+
+
+# 2. "What's the sum of the first 10 natural number
+#                                   whose square value is divisible by 5?"
+# See: Functional programming with Ruby, Arnau Sanchez, 2012
+#       https://qiita.com/JuanitoFatas/items/68dbdc53a816568700e8
+#
+# 2.「二乗して5で割り切れる自然数について、最初の10個の合計はいくつ？」
+# See: Rubyによる関数型プログラミング
+#       http://xtmlab.com/misc/FPwithRuby.html 
+
+;; from 1 |> filter { x -> x pow 2 mod 5 == 0 } |> take 10 |> foldl 0 (+)
+# ==> 275
 
