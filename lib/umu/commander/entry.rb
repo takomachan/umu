@@ -295,7 +295,7 @@ end
 
             if pref.dump_mode?
                 output_tokens.each do |token|
-                    tk_line_num = tolen.loc.line_num
+                    tk_line_num = token.loc.line_num
 
                     if tk_line_num != before_line_num
                         STDERR.printf "\n%04d: ", tk_line_num + 1
