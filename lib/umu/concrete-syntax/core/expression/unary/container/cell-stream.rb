@@ -15,7 +15,7 @@ module Unary
 
 module Container
 
-class Stream < Container::Abstract
+class CellStream < Container::Abstract
     attr_reader :opt_last_expr
 
 
@@ -112,7 +112,7 @@ module_function
         ASSERT.kind_of      exprs,          ::Array
         ASSERT.opt_kind_of  opt_last_expr,  CSCE::Abstract
 
-        Unary::Container::Stream.new(
+        Unary::Container::CellStream.new(
             loc, false, exprs.freeze, opt_last_expr
         ).freeze
     end
