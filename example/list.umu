@@ -13,8 +13,8 @@ structure List = struct {
 
     # singleton? : ['a] -> BOOL
     fun singleton? = xs -> case xs of {
-    [_]  -> TRUE
-    else -> FALSE
+    [_|xs] -> empty? xs
+    else   -> FALSE
     }
 
 
@@ -168,9 +168,12 @@ structure List = struct {
     # unzip : [('a, 'b)] -> (['a], ['b])
     fun rec unzip = xs -> case xs of {
     | []         -> ([], [])
-    | [pair|xs'] -> ([y|ys'], [z|zs'])
-                    where val (y, z)     = pair
-                          val (ys', zs') = unzip xs'
+    | [pair|xs'] -> let {
+                        val (y, z)     = pair
+                        val (ys', zs') = unzip xs'
+                    in
+                        ([y|ys'], [z|zs'])
+                    }
     }
 
     val unzip' = foldr ([], []) { (y, z) (ys, zs) -> ([y|ys], [z|zs]) }
@@ -179,8 +182,11 @@ structure List = struct {
     # partition : ('a -> BOOL) -> ['a] -> (['a], ['a])
     fun rec partition = f xs -> case xs of {
     | []      -> ([], [])
-    | [x|xs'] -> if f x then ([x|ys], zs) else (ys, [x|zs])
-                 where val (ys, zs) = partition f xs'
+    | [x|xs'] -> let {
+                     val (ys, zs) = partition f xs'
+                 in
+                     if f x then ([x|ys], zs) else (ys, [x|zs])
+                 }
     }
 
     fun partition' = f -> foldr ([], []) { x (ys, zs) ->
@@ -191,9 +197,12 @@ structure List = struct {
     # sort : ('a -> 'a -> BOOL) -> ['a] -> ['a]
     fun rec sort = lt? xs -> case xs of {
     | []          -> []
-    | [pivot|xs'] -> sort lt? littles ++ [pivot] ++ sort lt? bigs
-                     where val (littles, bigs) =
+    | [pivot|xs'] -> let {
+                         val (littles, bigs) =
                                     partition { x -> lt? x pivot } xs'
+                     in
+                         sort lt? littles ++ [pivot] ++ sort lt? bigs
+                     }
     }
 }
 

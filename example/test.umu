@@ -4,18 +4,18 @@ fun curry-add = x y     -> x + y
 
 
 ## Recuesive function for number - factorial
-fun rec fact = x ->
+fun rec fact = x -> (
     if x <= 1 then
         1
     else
         x * fact (x - 1)
+)
 
 
 ## Recursive function for list - map
-fun rec map = f xs -> cond xs of {
-empty? -> []
-else   -> [f x|map f xs']
-    where val [x|xs'] = xs
+fun rec map = f xs -> case xs of {
+ | []      -> []
+ | [x|xs'] -> [f x|map f xs']
 }
 
 

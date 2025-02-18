@@ -1254,12 +1254,14 @@ fun decode = bits tree -> (
 
     fun rec decode1 = bits current-branch -> case bits of {
     | []     -> []
-    | [x|xs] -> if leaf? next-branch then
-                        [symbol-leaf next-branch | decode1 xs tree]
-                else
-                        decode1 xs next-branch
-
-                where val next-branch = choose-branch x current-branch
+    | [x|xs] -> let {
+                    val next-branch = choose-branch x current-branch
+                in
+                    if leaf? next-branch then
+                            [symbol-leaf next-branch | decode1 xs tree]
+                    else
+                            decode1 xs next-branch
+                }
     }
 }
 

@@ -56,13 +56,77 @@ private
             ASSERT.kind_of pat,     CSCP::Abstract
             ASSERT.kind_of index,   ::Integer
 
-            result = pat.desugar_lambda index + 1, new_env
-            ASSERT.kind_of result, CSCP::Result
-            param = ASCE.make_parameter(
-                        result.ident.loc, result.ident, result.opt_type_sym
+            seq_num = index + 1
+
+            opt_result = pat.desugar_lambda seq_num, new_env
+            ASSERT.opt_kind_of opt_result, CSCP::Result
+            if opt_result
+                result = opt_result
+
+                param = ASCE.make_parameter(
+                            result.ident.loc,
+                            result.ident,
+                            result.opt_type_sym
                     )
 
-            [params + [param], decls + result.decls]
+
+                [
+                    params + [param],
+                    decls  + result.decls
+                ]
+            else
+                ident_sym = format("%%x_%d", seq_num).to_sym
+
+                param = ASCE.make_parameter(
+                        pat.loc,
+                        ASCE.make_identifier(loc, ident_sym)
+                    )
+
+                decl = ASCD.make_value(
+                        loc,
+
+                        WILDCARD,
+
+                        ASCE.make_if(
+                            loc,
+
+                            [
+                                ASCE.make_rule(
+                                    loc,
+
+                                    ASCE.make_send(
+                                        loc,
+
+                                        ASCE.make_identifier(
+                                            loc,
+                                            ident_sym
+                                        ),
+
+                                        ASCE.make_message(loc, :'empty?')
+                                    ),
+
+                                    ASCE.make_unit(loc)
+                                )
+                            ],
+
+                            ASCE.make_raise(
+                                loc,
+
+                                X::EmptyError,
+
+                                ASCE.make_string(
+                                    loc,
+                                    "Empty morph cannot be destructible"
+                                )
+                            )
+                        )
+                    )
+
+                [
+                    params + [param],
+                    decls  + [decl]
+                ]
+            end
         }
 
         local_decls = lamb_decls + self.decls.desugar(new_env).to_a

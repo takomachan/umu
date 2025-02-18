@@ -24,7 +24,7 @@ class Abstract < Expression::Abstract
     )
         ASSERT.kind_of      expr,           CSCE::Abstract
         ASSERT.kind_of      fst_rule,
-                            CSCEN::Rule::Abstraction::WithDeclaration
+                                CSCEN::Rule::Abstraction::Abstract
         ASSERT.kind_of      snd_rules,      ::Array
         ASSERT.opt_kind_of  opt_else_expr,  CSCE::Abstract
         ASSERT.kind_of      else_decls,     CSCD::SeqOfDeclaration
@@ -115,7 +115,7 @@ private
 
 
     def __desugar_body_expr__(env, rule)
-        ASSERT.kind_of rule, Nary::Rule::Abstraction::WithDeclaration
+        ASSERT.kind_of rule, Nary::Rule::Abstraction::WithHead
 
         body_expr_  = rule.body_expr.desugar(env)
         body_expr   = unless rule.decls.empty?

@@ -115,14 +115,15 @@ module_function
     def class_to_string(klass)
         ASSERT.kind_of klass, ::Class
 
-        _, *fully_qualified_module_names = klass.to_s.split(/::/)
-        *module_names, class_name = fully_qualified_module_names
+        class_name, *fully_qualified_module_names = klass.to_s.split(/::/)
 
-        s = if module_names.empty?
+        s = if fully_qualified_module_names.empty?
                 class_name
             else
+                *module_names, fq_class_name = fully_qualified_module_names
+
                 format("%s (%s)",
-                        class_name,
+                        fq_class_name,
                         Tracer.abbreviate(module_names).join('::')
                 )
             end

@@ -107,24 +107,24 @@ BRAKET_PAIRS = [
     ['(',   ')'],   # Tuple, etc
     ['[',   ']'],   # List
     ['{',   '}'],   # Lambda, etc
+    ['%[',  ']'],   # Polymorphic pattern
     ['%S(', ')'],   # S-Expression
-    ['%{',  '}'],   # Embeded-expression in S-expression, or Map
+    ['%{',  '}'],   # Embeded-expression in S-expression (and Map)
     ['&(',  ')'],   # Instance message
-    ['&[',  ']'],   # Simple stream    -- Infinity list
-    ['&{',  '}'],   # Memorized stream -- Infinity list
+    ['&[',  ']'],   # Cell stream
+    ['&{',  '}'],   # Memorized and Suspended stream
     ['$(',  ')'],   # Named tuple modifier
 
 
     # Not used, but reserved for future
 
-    ['%[',  ']'],   # Morph -- Polymorphism
     ['%q[', ']'],   # Queue
     ['%v[', ']'],   # Vector
     ['%a[', ']'],   # Array
     ['%(',  ')'],   # Set
     ['@[',  ']'],   # Assoc -- Key-Value list
     ['@(',  ')'],   # Dict  -- Key-Value set
-    ['$[',  ']']    # Channel -- For concurrency
+    ['$[',  ']']    # Communication channel -- For concurrency
 ]
 
 

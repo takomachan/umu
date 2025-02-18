@@ -404,38 +404,38 @@ _case_rules:
   '|' case_rule             { result = [val[1]] }
 | '|' case_rule _case_rules { result = [val[1]] + val[2] }
 
-case_rule: case_rule_head '->' expr inner_where_decls {
-    head, _, body_expr, decls = val
+case_rule: case_rule_head '->' expr {
+    head, _, body_expr = val
 
-    result = CSCE.make_case_rule head.loc, head, body_expr, decls
+    result = CSCE.make_case_rule head.loc, head, body_expr
 }
 
 case_rule_head:
-  INT       { result = CSCE.make_case_rule_atom(
+  INT       { result = CSCE.make_case_rule_head_atom(
                                 val[0].loc, VC.make_integer(val[0].val)
                             )
 }
-| FLOAT     { result = CSCE.make_case_rule_atom(
+| FLOAT     { result = CSCE.make_case_rule_head_atom(
                                 val[0].loc, VC.make_float(val[0].val)
                             )
 }
-| STRING    { result = CSCE.make_case_rule_atom(
+| STRING    { result = CSCE.make_case_rule_head_atom(
                                 val[0].loc, VC.make_string(val[0].val)
                             )
 }
-| SYMBOL    { result = CSCE.make_case_rule_atom(
+| SYMBOL    { result = CSCE.make_case_rule_head_atom(
                                 val[0].loc, VC.make_symbol(val[0].val)
                             )
 }
 | ID opt_pat {
     id, opt_pat = val
 
-    result = CSCE.make_case_rule_datum id.loc, id.sym, opt_pat
+    result = CSCE.make_case_rule_head_datum id.loc, id.sym, opt_pat
 }
 | '&' ID opt_pat {
     kw, id, opt_pat = val
 
-    result = CSCE.make_case_rule_class(
+    result = CSCE.make_case_rule_head_class(
                         kw.loc,
                         CSCE.make_identifier(id.loc, id.sym),
                         opt_pat
@@ -444,28 +444,30 @@ case_rule_head:
 | '[' ']' {
     bb, _ = val
 
-    result = CSCE.make_case_rule_class(
+    result = CSCE.make_case_rule_head_class(
                         bb.loc,
                         CSCE.make_identifier(bb.loc, :Nil),
                         nil,
                         CSCE.make_identifier(bb.loc, :List)
                     )
 }
-| '[' var_pat opt_last_pat ']' {
-    bb, var_pat, opt_last_pat, _ = val
+| '[' var_pat '|' var_pat ']' {
+    bb, head_pat, _, tail_pat, _ = val
 
-    tail = if opt_last_pat
-                opt_last_pat
-            else
-                CSCP.make_variable bb.loc, WILDCARD, :Nil
-            end
-
-    result = CSCE.make_case_rule_class(
+    result = CSCE.make_case_rule_head_class(
                         bb.loc,
                         CSCE.make_identifier(bb.loc, :Cons),
-                        CSCP.make_tuple(bb.loc, [var_pat, tail]),
+                        CSCP.make_tuple(bb.loc, [head_pat, tail_pat]),
                         CSCE.make_identifier(bb.loc, :List)
                     )
+}
+| '%[' ']' {
+    result = CSCE.make_case_rule_head_poly_nil val[0].loc
+}
+| '%[' var_pat '|' var_pat ']' {
+    bb, head_pat, _, tail_pat, _ = val
+
+    result = CSCE.make_case_rule_head_poly_cons bb.loc, head_pat, tail_pat
 }
 
 
@@ -1032,12 +1034,22 @@ pat:
 | '[' ']' {
     bb, _ = val
 
-    result = CSCP.make_list bb.loc, [],     nil
+    result = CSCP.make_list bb.loc
 }
 | '[' var_pat com_pats opt_last_pat ']' {
     bb, pat, pats, opt_pat, _ = val
 
     result = CSCP.make_list bb.loc, [pat] + pats, opt_pat
+}
+| '%[' ']' {
+    bb, _ = val
+
+    result = CSCP.make_poly bb.loc
+}
+| '%[' var_pat com_pats opt_last_pat ']' {
+    bb, pat, pats, opt_pat, _ = val
+
+    result = CSCP.make_poly bb.loc, [pat] + pats, opt_pat
 }
 
 

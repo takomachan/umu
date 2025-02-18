@@ -19,6 +19,11 @@ class Model
 
 
     def to_s
+        pp({
+            msg:"============ InternalSubclassResponsibility ============",
+            type:self.class
+        })
+
         raise X::InternalSubclassResponsibility
     end
 end

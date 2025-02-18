@@ -18,6 +18,19 @@ module Rule
 module Abstraction
 
 class Abstract < Umu::Abstraction::Model
+    def line_num
+        self.loc.line_num
+    end
+
+
+    def desugar_poly_rule(env)
+        raise X::InternalSubclassResponsibility
+    end
+end
+
+
+
+class WithHead < Abstract
     attr_reader :head, :body_expr
 
 
@@ -32,25 +45,8 @@ class Abstract < Umu::Abstraction::Model
     end
 
 
-    def pretty_print(q)
-        raise X::InternalSubclassResponsibility
-    end
-end
-
-
-
-class WithDeclaration < Abstract
-    attr_reader :decls
-
-
-    def initialize(loc, head, body_expr, decls)
-        ASSERT.kind_of head,        Umu::Abstraction::Model
-        ASSERT.kind_of body_expr,   CSCE::Abstract
-        ASSERT.kind_of decls,       CSCD::SeqOfDeclaration
-
-        super(loc, head, body_expr)
-
-        @decls = decls
+    def decls
+        CSCD.make_empty_seq_of_declaration
     end
 
 
@@ -81,15 +77,33 @@ class WithDeclaration < Abstract
     end
 end
 
+
+
+class WithDeclaration < WithHead
+    attr_reader :decls
+
+
+    def initialize(loc, body_expr, head, decls)
+        ASSERT.kind_of head,        Umu::Abstraction::Model
+        ASSERT.kind_of body_expr,   CSCE::Abstract
+        ASSERT.kind_of decls,       CSCD::SeqOfDeclaration
+
+        super(loc, body_expr, head)
+
+        @decls = decls
+    end
 end
 
+end # Umu::ConcreteSyntax::Core::Expression::Nary::Rule::Abstraction
 
 
-class If < Abstraction::Abstract
+
+class If < Abstraction::WithHead
     alias head_expr head
 
     def initialize(loc, head_expr, body_expr)
-        ASSERT.kind_of head_expr, CSCE::Abstract
+        ASSERT.kind_of head_expr,   CSCE::Abstract
+        ASSERT.kind_of body_expr,   CSCE::Abstract
 
         super
     end
@@ -113,7 +127,9 @@ class Cond < Abstraction::WithDeclaration
     alias head_expr head
 
     def initialize(loc, head_expr, body_expr, decls)
-        ASSERT.kind_of head_expr, CSCE::Abstract
+        ASSERT.kind_of head_expr,   CSCE::Abstract
+        ASSERT.kind_of body_expr,   CSCE::Abstract
+        ASSERT.kind_of decls,       CSCD::SeqOfDeclaration
 
         super
     end
@@ -280,10 +296,124 @@ class Class < Abstract
     end
 end
 
+
+
+module Poly
+
+class Abstract < Head::Abstract; end
+
+
+
+class Nil < Abstract
+    def initialize(loc)
+        ASSERT.kind_of loc, LOC::Entry
+
+        super(loc, nil)
+    end
+
+
+    def type_sym
+        :PolyNil
+    end
+
+
+    def to_s
+        '%%[]'
+    end
+
+
+    def pretty_print(q)
+        q.text '%[]'
+    end
+end
+
+
+
+class Cons < Abstract
+    alias       head_pat obj
+    attr_reader :tail_pat
+
+    def initialize(loc, head_pat, tail_pat)
+        ASSERT.kind_of head_pat,    CSCP::Abstract
+        ASSERT.kind_of tail_pat,    CSCP::Abstract
+
+        super(loc, head_pat)
+        @tail_pat = tail_pat
+    end
+
+
+    def type_sym
+        :PolyCons
+    end
+
+
+    def to_s
+        format("%%[%s%s]",
+                self.head_pat.to_s,
+
+                format(" | %s", self.tail_pat.to_s)
+        )
+    end
+
+
+    def pretty_print(q)
+        PRT.group q, bb:'%[', eb:']' do
+            q.pp self.head_pat
+
+            if self.tail_pat
+                q.breakable
+
+                q.text '|'
+
+                q.breakable
+
+                q.pp self.tail_pat
+            end
+        end
+    end
+end
+
+end # Umu::ConcreteSyntax::Core::Expression::Nary::Rule::Case::Head::Poly
+
 end # Umu::ConcreteSyntax::Core::Expression::Nary::Rule::Case::Head
 
 
-class Entry < Abstraction::WithDeclaration; end
+class Otherwise < Abstraction::Abstract
+    attr_reader :expr
+
+    def initialize(loc, expr)
+        ASSERT.kind_of expr, CSCE::Abstract
+
+        super(loc)
+
+        @expr = expr
+    end
+
+
+    def desugar_poly_rule(env)
+        self.expr.desugar env
+    end
+end
+
+
+
+class Unmatch < Abstraction::Abstract
+    def desugar_poly_rule(_env)
+        ASCE.make_raise(
+            self.loc,
+            X::UnmatchError,
+            ASCE.make_string(self.loc, "No rules matched")
+        )
+    end
+end
+
+
+
+class Entry < Abstraction::WithHead
+    def desugar_poly_rule(env)
+        self.body_expr.desugar env
+    end
+end
 
 end # Umu::ConcreteSyntax::Core::Expression::Nary::Rule::Case
 
@@ -300,7 +430,7 @@ module_function
         ASSERT.kind_of body_expr,   CSCE::Abstract
 
         Nary::Rule::If.new(
-            loc, head_expr, body_expr
+            loc, head_expr, body_expr 
         ).freeze
     end
 
@@ -317,19 +447,31 @@ module_function
     end
 
 
-    def make_case_rule(loc, head, body_expr, decls)
+    def make_case_rule(loc, head, body_expr)
         ASSERT.kind_of loc,         LOC::Entry
         ASSERT.kind_of head,        CSCEN::Rule::Case::Head::Abstract
         ASSERT.kind_of body_expr,   CSCE::Abstract
-        ASSERT.kind_of decls,       CSCD::SeqOfDeclaration
 
-        Nary::Rule::Case::Entry.new(
-            loc, head, body_expr, decls.freeze
-        ).freeze
+        Nary::Rule::Case::Entry.new(loc, head, body_expr).freeze
     end
 
 
-    def make_case_rule_atom(loc, atom_value)
+    def make_case_rule_otherwise(loc, expr)
+        ASSERT.kind_of loc,     LOC::Entry
+        ASSERT.kind_of expr,    CSCE::Abstract
+
+        Nary::Rule::Case::Otherwise.new(loc, expr).freeze
+    end
+
+
+    def make_case_rule_unmatch(loc)
+        ASSERT.kind_of loc, LOC::Entry
+
+        Nary::Rule::Case::Unmatch.new(loc).freeze
+    end
+
+
+    def make_case_rule_head_atom(loc, atom_value)
         ASSERT.kind_of loc,         LOC::Entry
         ASSERT.kind_of atom_value,  VCA::Abstract
 
@@ -339,7 +481,7 @@ module_function
     end
 
 
-    def make_case_rule_datum(loc, tag_sym, opt_contents_pat)
+    def make_case_rule_head_datum(loc, tag_sym, opt_contents_pat)
         ASSERT.kind_of      loc,                LOC::Entry
         ASSERT.kind_of      tag_sym,            ::Symbol
         ASSERT.opt_kind_of  opt_contents_pat,   CSCP::Abstract
@@ -350,7 +492,7 @@ module_function
     end
 
 
-    def make_case_rule_class(
+    def make_case_rule_head_class(
         loc, class_ident, opt_contents_pat, opt_superclass_ident = nil
     )
         ASSERT.kind_of      loc,                  LOC::Entry
@@ -360,6 +502,24 @@ module_function
 
         Nary::Rule::Case::Head::Class.new(
             loc, class_ident, opt_contents_pat, opt_superclass_ident
+        ).freeze
+    end
+
+
+    def make_case_rule_head_poly_nil(loc)
+        ASSERT.kind_of loc, LOC::Entry
+
+        Nary::Rule::Case::Head::Poly::Nil.new(loc).freeze
+    end
+
+
+    def make_case_rule_head_poly_cons(loc, head_pat, tail_pat)
+        ASSERT.kind_of loc,         LOC::Entry
+        ASSERT.kind_of head_pat,    CSCP::Abstract
+        ASSERT.kind_of tail_pat,    CSCP::Abstract
+
+        Nary::Rule::Case::Head::Poly::Cons.new(
+            loc, head_pat, tail_pat
         ).freeze
     end
 
