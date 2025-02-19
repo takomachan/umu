@@ -36,8 +36,8 @@ private
                     __desugar_datum__ new_env, fst_head
                 when Rule::Case::Head::Class
                     __desugar_class__ new_env, fst_head
-                when Rule::Case::Head::Poly::Abstract
-                    __desugar_poly__  new_env, fst_head
+                when Rule::Case::Head::Morph::Abstract
+                    __desugar_morph__  new_env, fst_head
                 else
                     ASSERT.abort "Np case: %s", fst_head.inspect
                 end
@@ -153,7 +153,7 @@ private
 
                         ASCD.make_seq_of_declaration(
                             rule.loc,
-                            [contents_decl] + rule.decls.desugar(env).to_a
+                            [contents_decl]
                         ),
 
                         rule.body_expr.desugar(env)
@@ -301,7 +301,7 @@ private
 
                         ASCD.make_seq_of_declaration(
                             rule.loc,
-                            [contents_decl] + rule.decls.desugar(env).to_a
+                            [contents_decl]
                         ),
 
                         rule.body_expr.desugar(env)
@@ -315,19 +315,21 @@ private
     end
 
 
-    def __desugar_poly__(env, fst_head)
-        ASSERT.kind_of fst_head, Rule::Case::Head::Poly::Abstract
+    def __desugar_morph__(env, fst_head)
+        ASSERT.kind_of fst_head, Rule::Case::Head::Morph::Abstract
 
-        opt_nil_rule, opt_cons_rule = self.rules.inject(
-             [nil,          nil]
-        ) { |(opt_nil_rule, opt_cons_rule), rule|
+        opt_nil_rule,
+        opt_cons_rule,
+        opt_source_type_sym = self.rules.inject(
+             [nil,          nil,           nil]
+        ) { |(opt_nil_rule, opt_cons_rule, opt_source_type_sym), rule|
             ASSERT.opt_kind_of opt_nil_rule,    Rule::Abstraction::Abstract
             ASSERT.opt_kind_of opt_cons_rule,   Rule::Abstraction::Abstract
             ASSERT.kind_of     rule,            Rule::Abstraction::Abstract
 
             head = rule.head
             ASSERT.kind_of head, Rule::Case::Head::Abstract
-            unless head.kind_of? Rule::Case::Head::Poly::Abstract
+            unless head.kind_of? Rule::Case::Head::Morph::Abstract
                 raise X::SyntaxError.new(
                     rule.loc,
                     format("case: Inconsistent rule types, " +
@@ -341,37 +343,38 @@ private
             end
 
             case head
-            when Rule::Case::Head::Poly::Nil
+            when Rule::Case::Head::Morph::Nil
                 if opt_nil_rule
                     raise X::SyntaxError.new(
                         rule.loc,
-                        format("case: Duplicated polymorphic " +
+                        format("case: Duplicated " +
                                     "empty morph pattern: %s ",
                             head.type_sym.to_s
                         )
                     )
                 end
 
-                [rule,         opt_cons_rule]
-            when Rule::Case::Head::Poly::Cons
+                [rule,         opt_cons_rule, head.opt_source_type_sym]
+            when Rule::Case::Head::Morph::Cons
                 if opt_cons_rule
                     raise X::SyntaxError.new(
                         rule.loc,
-                        format("case: Duplicated polymorphic " +
+                        format("case: Duplicated " +
                                     "not empty morph pattern: %s ",
                             head.type_sym.to_s
                         )
                     )
                 end
 
-                [opt_nil_rule, rule]
+                [opt_nil_rule, rule, head.opt_source_type_sym]
             else
                 ASSERT.abort "No case: %s", head.inspect
             end
         }
 
-        ASSERT.opt_kind_of opt_nil_rule,    Rule::Abstraction::Abstract
-        ASSERT.opt_kind_of opt_cons_rule,   Rule::Abstraction::Abstract
+        ASSERT.opt_kind_of opt_nil_rule,        Rule::Abstraction::Abstract
+        ASSERT.opt_kind_of opt_cons_rule,       Rule::Abstraction::Abstract
+        ASSERT.opt_kind_of opt_source_type_sym, ::Symbol
 
         opt_otherwise_rule = (
             if self.opt_else_expr
@@ -431,8 +434,8 @@ private
         ASSERT.kind_of else_rule, Nary::Rule::Abstraction::Abstract
         ASSERT.bool    has_cons
 
-        then_expr = then_rule.desugar_poly_rule env
-        else_expr = else_rule.desugar_poly_rule env
+        then_expr = then_rule.desugar_morph_rule env
+        else_expr = else_rule.desugar_morph_rule env
         body_expr = self.expr.desugar env
 
         if has_cons
@@ -459,7 +462,7 @@ private
             #         }
             #     }
             cons_head = else_rule.head
-            ASSERT.kind_of cons_head, Nary::Rule::Case::Head::Poly::Cons
+            ASSERT.kind_of cons_head, Nary::Rule::Case::Head::Morph::Cons
 
             test_expr = ASCE.make_test_kind_of(
                 body_expr.loc,
@@ -491,16 +494,17 @@ private
                             :Product
                         ),
 
-                        __make_value_poly__(
+                        __make_value_morph__(
                             loc,
                             cons_head.head_pat.var_sym,
                             1
                         ),
 
-                        __make_value_poly__(
+                        __make_value_morph__(
                             loc,
                             cons_head.tail_pat.var_sym,
-                            2
+                            2,
+                            opt_source_type_sym
                         )
                     ]
                 ),
@@ -522,7 +526,9 @@ private
                             ASCE.make_send(
                                 body_expr.loc,
                                 body_expr,
-                                ASCE.make_message(body_expr.loc, :dest)
+                                ASCE.make_message(body_expr.loc, :dest),
+                                [],
+                                opt_source_type_sym
                             )
                         )
                     ]
@@ -556,7 +562,9 @@ private
                 ASCE.make_send(
                     body_expr.loc,
                     body_expr,
-                    ASCE.make_message(body_expr.loc, :dest)
+                    ASCE.make_message(body_expr.loc, :dest),
+                    [],
+                    opt_source_type_sym
                 ),
 
                 ASCE.make_identifier(body_expr.loc, :None),
@@ -579,10 +587,11 @@ private
     end
 
 
-    def __make_value_poly__(loc, var_sym, num)
-        ASSERT.kind_of loc,         LOC::Entry
-        ASSERT.kind_of var_sym,     ::Symbol
-        ASSERT.kind_of num,         ::Integer
+    def __make_value_morph__(loc, var_sym, num, opt_source_type_sym = nil)
+        ASSERT.kind_of     loc,                 LOC::Entry
+        ASSERT.kind_of     var_sym,             ::Symbol
+        ASSERT.kind_of     num,                 ::Integer
+        ASSERT.opt_kind_of opt_source_type_sym, ::Symbol
 
         ASCD.make_value(
             loc,
@@ -593,7 +602,9 @@ private
                 loc,
                 ASCE.make_identifier(loc, :'%p'),
                 ASCE.make_number_selector(loc, num)
-            )
+            ),
+
+            opt_source_type_sym
         )
     end
 end
@@ -605,17 +616,16 @@ end # Umu::ConcreteSyntax::Core::Expression::Nary
 
 module_function
 
-    def make_case(loc, expr, fst_rule, snd_rules, opt_else_expr, else_decls)
+    def make_case(loc, expr, fst_rule, snd_rules, opt_else_expr)
         ASSERT.kind_of      loc,            LOC::Entry
         ASSERT.kind_of      expr,           CSCE::Abstract
         ASSERT.kind_of      fst_rule,
                                 CSCEN::Rule::Abstraction::Abstract
         ASSERT.kind_of      snd_rules,      ::Array
         ASSERT.opt_kind_of  opt_else_expr,  CSCE::Abstract
-        ASSERT.kind_of      else_decls,     CSCD::SeqOfDeclaration
 
         Nary::Branch::Case.new(
-            loc, expr, fst_rule, snd_rules, opt_else_expr, else_decls
+            loc, expr, fst_rule, snd_rules, opt_else_expr
         ).freeze
     end
 

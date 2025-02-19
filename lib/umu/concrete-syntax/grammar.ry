@@ -302,19 +302,15 @@ _expr:
 }
 | COND expr OF '{' opt_vert cond_rule cond_rules '}' {
     kw, expr, _, _, _, rule, rules_with_clause, _ = val
-    rules, else_expr, else_decls               = rules_with_clause
+    rules, else_expr                              = rules_with_clause
 
-    result = CSCE.make_cond(
-                kw.loc, expr, rule, rules, else_expr, else_decls
-            )
+    result = CSCE.make_cond kw.loc, expr, rule, rules, else_expr
 }
 | CASE expr OF '{' opt_vert case_rule case_rules '}' {
     kw, expr, _, _, _, rule, rules_with_clause, _ = val
-    rules, else_expr, else_decls               = rules_with_clause
+    rules, else_expr                              = rules_with_clause
 
-    result = CSCE.make_case(
-                kw.loc, expr, rule, rules, else_expr, else_decls
-            )
+    result = CSCE.make_case kw.loc, expr, rule, rules, else_expr
 }
 | LET '{' core_decls IN expr '}' {
     kw, _, decls, _, expr, _ = val
@@ -350,32 +346,28 @@ if_rule: expr THEN expr {
 # Cond-expresson Rule
 
 cond_rules:
-  /* empty */   {
-    result = [[],     nil,  CSCD.make_empty_seq_of_declaration]
-}
-| _cond_rules   {
-    result = [val[0], nil,  CSCD.make_empty_seq_of_declaration]
-}
-| ELSE '->' expr inner_where_decls {
+  /* empty */       { result = [[],     nil] }
+| _cond_rules       { result = [val[0], nil] }
+| ELSE '->' expr {
     _, _, expr, decls = val
 
-    result = [[],     expr, decls]
+    result = [[],     expr]
 }
-| _cond_rules ELSE '->' expr inner_where_decls {
-    rules, _, _, expr, decls = val
+| _cond_rules ELSE '->' expr {
+    rules, _, _, expr = val
 
-    result = [rules,  expr, decls]
+    result = [rules,  expr]
 }
 
 _cond_rules:
   '|' cond_rule             { result = [val[1]] }
 | '|' cond_rule _cond_rules { result = [val[1]] + val[2] }
 
-cond_rule: expr '->' expr inner_where_decls {
-    head_expr, _, body_expr, decls = val
+cond_rule: expr '->' expr {
+    head_expr, _, body_expr = val
 
     result = CSCE.make_cond_rule(
-                     head_expr.loc, head_expr, body_expr, decls
+                     head_expr.loc, head_expr, body_expr
                 )
 }
 
@@ -383,21 +375,17 @@ cond_rule: expr '->' expr inner_where_decls {
 # Case-expresson Rule
 
 case_rules:
-  /* empty */   {
-    result = [[],     nil,  CSCD.make_empty_seq_of_declaration]
-}
-| _case_rules   {
-    result = [val[0], nil,  CSCD.make_empty_seq_of_declaration]
-}
-| ELSE '->' expr inner_where_decls {
-    _, _, expr, decls = val
+  /* empty */       { result = [[],     nil] }
+| _case_rules       { result = [val[0], nil] }
+| ELSE '->' expr {
+    _, _, expr = val
 
-    result = [[],     expr, decls]
+    result = [[],     expr]
 }
-| _case_rules ELSE '->' expr inner_where_decls {
-    rules, _, _, expr, decls = val
+| _case_rules ELSE '->' expr {
+    rules, _, _, expr = val
 
-    result = [rules,  expr, decls]
+    result = [rules,  expr]
 }
 
 _case_rules:
@@ -441,33 +429,65 @@ case_rule_head:
                         opt_pat
                     )
 }
-| '[' ']' {
-    bb, _ = val
-
-    result = CSCE.make_case_rule_head_class(
-                        bb.loc,
-                        CSCE.make_identifier(bb.loc, :Nil),
-                        nil,
-                        CSCE.make_identifier(bb.loc, :List)
-                    )
-}
-| '[' var_pat '|' var_pat ']' {
-    bb, head_pat, _, tail_pat, _ = val
-
-    result = CSCE.make_case_rule_head_class(
-                        bb.loc,
-                        CSCE.make_identifier(bb.loc, :Cons),
-                        CSCP.make_tuple(bb.loc, [head_pat, tail_pat]),
-                        CSCE.make_identifier(bb.loc, :List)
-                    )
-}
 | '%[' ']' {
-    result = CSCE.make_case_rule_head_poly_nil val[0].loc
+    result = CSCE.make_case_rule_head_morph_nil(
+                            val[0].loc
+                        )
 }
 | '%[' var_pat '|' var_pat ']' {
     bb, head_pat, _, tail_pat, _ = val
 
-    result = CSCE.make_case_rule_head_poly_cons bb.loc, head_pat, tail_pat
+    result = CSCE.make_case_rule_head_morph_cons(
+                            bb.loc, head_pat, tail_pat
+                        )
+}
+| '[' ']' {
+    result = CSCE.make_case_rule_head_morph_nil(
+                            val[0].loc, :List
+                        )
+}
+| '[' var_pat '|' var_pat ']' {
+    bb, head_pat, _, tail_pat, _ = val
+
+    cstream_tail_pat = CSCP.make_variable(
+                            tail_pat.loc, tail_pat.var_sym, :List
+                        )
+
+    result = CSCE.make_case_rule_head_morph_cons(
+                            bb.loc, head_pat, cstream_tail_pat, :List
+                        )
+}
+| '&[' ']' {
+    result = CSCE.make_case_rule_head_morph_nil(
+                            val[0].loc, :CellStream
+                        )
+}
+| '&[' var_pat '|' var_pat ']' {
+    bb, head_pat, _, tail_pat, _ = val
+
+    cstream_tail_pat = CSCP.make_variable(
+                            tail_pat.loc, tail_pat.var_sym, :CellStream
+                        )
+
+    result = CSCE.make_case_rule_head_morph_cons(
+                            bb.loc, head_pat, cstream_tail_pat, :CellStream
+                        )
+}
+| '&{' '}' {
+    result = CSCE.mmake_case_rule_head_morph_nil(
+                            val[0].loc, :MemoStream
+                        )
+}
+| '&{' var_pat '|' var_pat '}' {
+    bb, head_pat, _, tail_pat, _ = val
+
+    cstream_tail_pat = CSCP.make_variable(
+                            tail_pat.loc, tail_pat.var_sym, :MemoStream
+                        )
+
+    result = CSCE.make_case_rule_head_morph_cons(
+                            bb.loc, head_pat, cstream_tail_pat, :MemoStream
+                        )
 }
 
 

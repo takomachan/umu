@@ -16,18 +16,15 @@ module Nary
 module Branch
 
 class Abstract < Expression::Abstract
-    attr_reader :expr, :fst_rule, :snd_rules, :opt_else_expr, :else_decls
+    attr_reader :expr, :fst_rule, :snd_rules, :opt_else_expr
 
 
-    def initialize(
-        loc, expr, fst_rule, snd_rules, opt_else_expr, else_decls
-    )
+    def initialize(loc, expr, fst_rule, snd_rules, opt_else_expr)
         ASSERT.kind_of      expr,           CSCE::Abstract
         ASSERT.kind_of      fst_rule,
                                 CSCEN::Rule::Abstraction::Abstract
         ASSERT.kind_of      snd_rules,      ::Array
         ASSERT.opt_kind_of  opt_else_expr,  CSCE::Abstract
-        ASSERT.kind_of      else_decls,     CSCD::SeqOfDeclaration
 
         super(loc)
 
@@ -35,7 +32,6 @@ class Abstract < Expression::Abstract
         @fst_rule   = fst_rule
         @snd_rules  = snd_rules
         @opt_else_expr  = opt_else_expr
-        @else_decls = else_decls
     end
 
 
@@ -48,16 +44,7 @@ class Abstract < Expression::Abstract
             self.rules.map(&:to_s).join(' | '),
             (
                 if self.opt_else_expr
-                    format("%%ELSE -> %s%s",
-                        self.opt_else_expr.to_s,
-                        (
-                            if self.else_decls.empty?
-                                ' '
-                            else
-                                format " %%WHERE %s ", self.else_decls.to_s
-                            end
-                        )
-                    )
+                    format("%%ELSE -> %s", self.opt_else_expr.to_s)
                 else
                     ''
                 end
@@ -88,11 +75,6 @@ class Abstract < Expression::Abstract
 
             PRT.group q, bb:'%ELSE -> ' do
                 q.pp else_expr
-
-                unless self.else_decls.empty?
-                    q.text ' %WHERE '
-                    q.pp self.else_decls
-                end
             end
         end
 
@@ -117,21 +99,7 @@ private
     def __desugar_body_expr__(env, rule)
         ASSERT.kind_of rule, Nary::Rule::Abstraction::WithHead
 
-        body_expr_  = rule.body_expr.desugar(env)
-        body_expr   = unless rule.decls.empty?
-            ASCE.make_let(
-                rule.loc,
-
-                ASCD.make_seq_of_declaration(
-                    rule.loc,
-                    rule.decls.desugar(env)
-                ),
-
-                body_expr_
-            )
-        else
-            body_expr_
-        end
+        body_expr = rule.body_expr.desugar(env)
 
         ASSERT.kind_of body_expr, ASCE::Abstract
     end
@@ -139,22 +107,7 @@ private
 
     def __desugar_else_expr__(env)
         else_expr = if self.opt_else_expr
-            else_expr_ = self.opt_else_expr.desugar(env)
-
-            unless self.else_decls.empty?
-                ASCE.make_let(
-                    else_expr_.loc,
-
-                    ASCD.make_seq_of_declaration(
-                        else_expr_.loc,
-                        self.else_decls.desugar(env)
-                    ),
-
-                    else_expr_
-                )
-            else
-                else_expr_
-            end
+            self.opt_else_expr.desugar(env)
         else
             ASCE.make_raise(
                 self.loc,

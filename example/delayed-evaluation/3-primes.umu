@@ -90,7 +90,7 @@ take 20 xs
 take 20 xs
 ;; # ==> [2, 3, 5, 7, ... ]     # Wait for seconds, 3rd
 
-val ys = primes ()
+val ys = primes' ()
 ;; # ==> #MemoStream< ... >
 take 20 ys
 ;; # ==> [2, 3, 5, 7, ... ]     # Wait for seconds, 1st

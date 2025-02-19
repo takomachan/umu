@@ -23,7 +23,7 @@ class Abstract < Umu::Abstraction::Model
     end
 
 
-    def desugar_poly_rule(env)
+    def desugar_morph_rule(env)
         raise X::InternalSubclassResponsibility
     end
 end
@@ -45,23 +45,8 @@ class WithHead < Abstract
     end
 
 
-    def decls
-        CSCD.make_empty_seq_of_declaration
-    end
-
-
     def to_s
-        format("%s -> %s%s",
-                self.head.to_s,
-
-                self.body_expr.to_s,
-
-                if self.decls.empty?
-                    ''
-                else
-                    format " %%WHERE %s", self.decls.to_s
-                end
-        )
+        format "%s -> %s", self.head.to_s, self.body_expr.to_s
     end
 
 
@@ -69,28 +54,6 @@ class WithHead < Abstract
         q.pp self.head
         q.text ' -> '
         q.pp self.body_expr
-
-        unless self.decls.empty?
-            q.text ' %WHERE '
-            q.pp self.decls
-        end
-    end
-end
-
-
-
-class WithDeclaration < WithHead
-    attr_reader :decls
-
-
-    def initialize(loc, body_expr, head, decls)
-        ASSERT.kind_of head,        Umu::Abstraction::Model
-        ASSERT.kind_of body_expr,   CSCE::Abstract
-        ASSERT.kind_of decls,       CSCD::SeqOfDeclaration
-
-        super(loc, body_expr, head)
-
-        @decls = decls
     end
 end
 
@@ -123,16 +86,8 @@ end
 
 
 
-class Cond < Abstraction::WithDeclaration
+class Cond < Abstraction::WithHead
     alias head_expr head
-
-    def initialize(loc, head_expr, body_expr, decls)
-        ASSERT.kind_of head_expr,   CSCE::Abstract
-        ASSERT.kind_of body_expr,   CSCE::Abstract
-        ASSERT.kind_of decls,       CSCD::SeqOfDeclaration
-
-        super
-    end
 end
 
 
@@ -298,52 +253,60 @@ end
 
 
 
-module Poly
+module Morph
 
-class Abstract < Head::Abstract; end
+class Abstract < Head::Abstract
+    alias opt_source_type_sym obj
+
+    def initialize(loc, opt_source_type_sym)
+        ASSERT.opt_kind_of opt_source_type_sym, ::Symbol
+
+        super
+    end
+end
 
 
 
 class Nil < Abstract
-    def initialize(loc)
-        ASSERT.kind_of loc, LOC::Entry
-
-        super(loc, nil)
-    end
-
-
     def type_sym
-        :PolyNil
+        :MorphNil
     end
 
 
     def to_s
-        '%%[]'
+        format("%%[]%s",
+            if self.opt_source_type_sym
+                format " : %s", self.opt_source_type_sym
+            else
+                ''
+            end
+        )
     end
 
 
     def pretty_print(q)
-        q.text '%[]'
+        q.text self.to_s
     end
 end
 
 
 
 class Cons < Abstract
-    alias       head_pat obj
-    attr_reader :tail_pat
+    attr_reader :head_pat, :tail_pat
 
-    def initialize(loc, head_pat, tail_pat)
-        ASSERT.kind_of head_pat,    CSCP::Abstract
-        ASSERT.kind_of tail_pat,    CSCP::Abstract
+    def initialize(loc, head_pat, tail_pat, opt_source_type_sym)
+        ASSERT.kind_of     head_pat,            CSCP::Abstract
+        ASSERT.kind_of     tail_pat,            CSCP::Abstract
+        ASSERT.opt_kind_of opt_source_type_sym, ::Symbol
 
-        super(loc, head_pat)
+        super(loc, opt_source_type_sym)
+        @head_pat = head_pat
         @tail_pat = tail_pat
     end
 
 
     def type_sym
-        :PolyCons
+        :MorphCons
     end
 
 
@@ -373,7 +336,7 @@ class Cons < Abstract
     end
 end
 
-end # Umu::ConcreteSyntax::Core::Expression::Nary::Rule::Case::Head::Poly
+end # Umu::ConcreteSyntax::Core::Expression::Nary::Rule::Case::Head::Morph
 
 end # Umu::ConcreteSyntax::Core::Expression::Nary::Rule::Case::Head
 
@@ -390,7 +353,7 @@ class Otherwise < Abstraction::Abstract
     end
 
 
-    def desugar_poly_rule(env)
+    def desugar_morph_rule(env)
         self.expr.desugar env
     end
 end
@@ -398,7 +361,7 @@ end
 
 
 class Unmatch < Abstraction::Abstract
-    def desugar_poly_rule(_env)
+    def desugar_morph_rule(_env)
         ASCE.make_raise(
             self.loc,
             X::UnmatchError,
@@ -410,7 +373,7 @@ end
 
 
 class Entry < Abstraction::WithHead
-    def desugar_poly_rule(env)
+    def desugar_morph_rule(env)
         self.body_expr.desugar env
     end
 end
@@ -435,15 +398,12 @@ module_function
     end
 
 
-    def make_cond_rule(loc, head_expr, body_expr, decls)
+    def make_cond_rule(loc, head_expr, body_expr)
         ASSERT.kind_of loc,         LOC::Entry
         ASSERT.kind_of head_expr,   CSCE::Abstract
         ASSERT.kind_of body_expr,   CSCE::Abstract
-        ASSERT.kind_of decls,       CSCD::SeqOfDeclaration
 
-        Nary::Rule::Cond.new(
-            loc, head_expr, body_expr, decls.freeze
-        ).freeze
+        Nary::Rule::Cond.new(loc, head_expr, body_expr).freeze
     end
 
 
@@ -506,20 +466,26 @@ module_function
     end
 
 
-    def make_case_rule_head_poly_nil(loc)
-        ASSERT.kind_of loc, LOC::Entry
+    def make_case_rule_head_morph_nil(loc, opt_source_type_sym = nil)
+        ASSERT.kind_of     loc,                 LOC::Entry
+        ASSERT.opt_kind_of opt_source_type_sym, ::Symbol
 
-        Nary::Rule::Case::Head::Poly::Nil.new(loc).freeze
+        Nary::Rule::Case::Head::Morph::Nil.new(
+            loc, opt_source_type_sym, 
+        ).freeze
     end
 
 
-    def make_case_rule_head_poly_cons(loc, head_pat, tail_pat)
+    def make_case_rule_head_morph_cons(
+        loc, head_pat, tail_pat, opt_source_type_sym = nil
+    )
         ASSERT.kind_of loc,         LOC::Entry
         ASSERT.kind_of head_pat,    CSCP::Abstract
         ASSERT.kind_of tail_pat,    CSCP::Abstract
+        ASSERT.opt_kind_of opt_source_type_sym, ::Symbol
 
-        Nary::Rule::Case::Head::Poly::Cons.new(
-            loc, head_pat, tail_pat
+        Nary::Rule::Case::Head::Morph::Cons.new(
+            loc, head_pat, tail_pat, opt_source_type_sym
         ).freeze
     end
 
