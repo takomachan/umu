@@ -15,6 +15,16 @@ module Nary
 
 module Branch
 
+module Rule
+
+class Cond < Abstraction::HasHead
+    alias head_expr head
+end
+
+end # Umu::ConcreteSyntax::Core::Expression::Nary::Branch::Rule
+
+
+
 class Cond < Abstract
 
 private
@@ -32,7 +42,7 @@ private
         if opnd_expr.simple? || self.rules.size <= 1
             rules = __desugar_rules__(env) { |_| opnd_expr }
 
-            ASCE.make_if self.loc, rules, __desugar_else_expr__(new_env)
+            ASCE.make_if self.loc, rules, self.desugar_else_expr(new_env)
         else
             ASCE.make_let(
                 self.loc,
@@ -47,7 +57,7 @@ private
                     __desugar_rules__(env) { |loc|
                         ASCE.make_identifier loc, :'%x'
                     },
-                    __desugar_else_expr__(new_env)
+                    self.desugar_else_expr(new_env)
                 )
             )
         end
@@ -62,7 +72,7 @@ private
             head_expr   = ASCE.make_apply(
                                 rule.loc, opr_expr, fn.call(rule.loc)
                             )
-            body_expr   = __desugar_body_expr__ env, rule
+            body_expr   = self.desugar_body_expr env, rule
 
             ASCE.make_rule rule.loc, head_expr, body_expr
         }
@@ -76,10 +86,19 @@ end # Umu::ConcreteSyntax::Core::Expression::Nary
 
 module_function
 
+    def make_cond_rule(loc, head_expr, body_expr)
+        ASSERT.kind_of loc,         LOC::Entry
+        ASSERT.kind_of head_expr,   CSCE::Abstract
+        ASSERT.kind_of body_expr,   CSCE::Abstract
+
+        Nary::Branch::Rule::Cond.new(loc, head_expr, body_expr).freeze
+    end
+
+
     def make_cond(loc, expr, fst_rule, snd_rules, opt_else_expr)
         ASSERT.kind_of      loc,            LOC::Entry
         ASSERT.kind_of      expr,           CSCE::Abstract
-        ASSERT.kind_of      fst_rule,       CSCEN::Rule::Cond
+        ASSERT.kind_of      fst_rule,       CSCEN::Branch::Rule::Cond
         ASSERT.kind_of      snd_rules,      ::Array
         ASSERT.opt_kind_of  opt_else_expr,  CSCE::Abstract
 

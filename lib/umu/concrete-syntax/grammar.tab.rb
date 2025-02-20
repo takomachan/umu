@@ -2243,7 +2243,7 @@ module_eval(<<'.,.,', 'grammar.ry', 395)
 
 module_eval(<<'.,.,', 'grammar.ry', 401)
   def _reduce_80(val, _values, result)
-     result = CSCE.make_case_rule_head_atom(
+     result = CSCE.make_case_rule_atom(
                                 val[0].loc, VC.make_integer(val[0].val)
                             )
 
@@ -2253,7 +2253,7 @@ module_eval(<<'.,.,', 'grammar.ry', 401)
 
 module_eval(<<'.,.,', 'grammar.ry', 405)
   def _reduce_81(val, _values, result)
-     result = CSCE.make_case_rule_head_atom(
+     result = CSCE.make_case_rule_atom(
                                 val[0].loc, VC.make_float(val[0].val)
                             )
 
@@ -2263,7 +2263,7 @@ module_eval(<<'.,.,', 'grammar.ry', 405)
 
 module_eval(<<'.,.,', 'grammar.ry', 409)
   def _reduce_82(val, _values, result)
-     result = CSCE.make_case_rule_head_atom(
+     result = CSCE.make_case_rule_atom(
                                 val[0].loc, VC.make_string(val[0].val)
                             )
 
@@ -2273,7 +2273,7 @@ module_eval(<<'.,.,', 'grammar.ry', 409)
 
 module_eval(<<'.,.,', 'grammar.ry', 413)
   def _reduce_83(val, _values, result)
-     result = CSCE.make_case_rule_head_atom(
+     result = CSCE.make_case_rule_atom(
                                 val[0].loc, VC.make_symbol(val[0].val)
                             )
 
@@ -2285,7 +2285,7 @@ module_eval(<<'.,.,', 'grammar.ry', 418)
   def _reduce_84(val, _values, result)
         id, opt_pat = val
 
-    result = CSCE.make_case_rule_head_datum id.loc, id.sym, opt_pat
+    result = CSCE.make_case_rule_datum id.loc, id.sym, opt_pat
 
     result
   end
@@ -2295,7 +2295,7 @@ module_eval(<<'.,.,', 'grammar.ry', 423)
   def _reduce_85(val, _values, result)
         kw, id, opt_pat = val
 
-    result = CSCE.make_case_rule_head_class(
+    result = CSCE.make_case_rule_class(
                         kw.loc,
                         CSCE.make_identifier(id.loc, id.sym),
                         opt_pat
@@ -2307,7 +2307,7 @@ module_eval(<<'.,.,', 'grammar.ry', 423)
 
 module_eval(<<'.,.,', 'grammar.ry', 432)
   def _reduce_86(val, _values, result)
-        result = CSCE.make_case_rule_head_morph_nil(
+        result = CSCE.make_case_rule_poly_nil(
                             val[0].loc
                         )
 
@@ -2319,7 +2319,7 @@ module_eval(<<'.,.,', 'grammar.ry', 437)
   def _reduce_87(val, _values, result)
         bb, head_pat, _, tail_pat, _ = val
 
-    result = CSCE.make_case_rule_head_morph_cons(
+    result = CSCE.make_case_rule_poly_cons(
                             bb.loc, head_pat, tail_pat
                         )
 
@@ -2329,7 +2329,7 @@ module_eval(<<'.,.,', 'grammar.ry', 437)
 
 module_eval(<<'.,.,', 'grammar.ry', 444)
   def _reduce_88(val, _values, result)
-        result = CSCE.make_case_rule_head_morph_nil(
+        result = CSCE.make_case_rule_poly_nil(
                             val[0].loc, :List
                         )
 
@@ -2345,7 +2345,7 @@ module_eval(<<'.,.,', 'grammar.ry', 449)
                             tail_pat.loc, tail_pat.var_sym, :List
                         )
 
-    result = CSCE.make_case_rule_head_morph_cons(
+    result = CSCE.make_case_rule_poly_cons(
                             bb.loc, head_pat, cstream_tail_pat, :List
                         )
 
@@ -2355,8 +2355,8 @@ module_eval(<<'.,.,', 'grammar.ry', 449)
 
 module_eval(<<'.,.,', 'grammar.ry', 460)
   def _reduce_90(val, _values, result)
-        result = CSCE.make_case_rule_head_morph_nil(
-                            val[0].loc, :CellStream
+        result = CSCE.make_case_rule_poly_nil(
+                            val[0].loc, :Stream
                         )
 
     result
@@ -2368,11 +2368,11 @@ module_eval(<<'.,.,', 'grammar.ry', 465)
         bb, head_pat, _, tail_pat, _ = val
 
     cstream_tail_pat = CSCP.make_variable(
-                            tail_pat.loc, tail_pat.var_sym, :CellStream
+                            tail_pat.loc, tail_pat.var_sym, :Stream
                         )
 
-    result = CSCE.make_case_rule_head_morph_cons(
-                            bb.loc, head_pat, cstream_tail_pat, :CellStream
+    result = CSCE.make_case_rule_poly_cons(
+                            bb.loc, head_pat, cstream_tail_pat, :Stream
                         )
 
     result
@@ -2381,8 +2381,8 @@ module_eval(<<'.,.,', 'grammar.ry', 465)
 
 module_eval(<<'.,.,', 'grammar.ry', 476)
   def _reduce_92(val, _values, result)
-        result = CSCE.mmake_case_rule_head_morph_nil(
-                            val[0].loc, :MemoStream
+        result = CSCE.mmake_case_rule_poly_nil(
+                            val[0].loc, :Stream
                         )
 
     result
@@ -2394,11 +2394,11 @@ module_eval(<<'.,.,', 'grammar.ry', 481)
         bb, head_pat, _, tail_pat, _ = val
 
     cstream_tail_pat = CSCP.make_variable(
-                            tail_pat.loc, tail_pat.var_sym, :MemoStream
+                            tail_pat.loc, tail_pat.var_sym, :Stream
                         )
 
-    result = CSCE.make_case_rule_head_morph_cons(
-                            bb.loc, head_pat, cstream_tail_pat, :MemoStream
+    result = CSCE.make_case_rule_poly_cons(
+                            bb.loc, head_pat, cstream_tail_pat, :Stream
                         )
 
     result

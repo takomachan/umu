@@ -399,50 +399,50 @@ case_rule: case_rule_head '->' expr {
 }
 
 case_rule_head:
-  INT       { result = CSCE.make_case_rule_head_atom(
+  INT       { result = CSCE.make_case_rule_atom(
                                 val[0].loc, VC.make_integer(val[0].val)
                             )
 }
-| FLOAT     { result = CSCE.make_case_rule_head_atom(
+| FLOAT     { result = CSCE.make_case_rule_atom(
                                 val[0].loc, VC.make_float(val[0].val)
                             )
 }
-| STRING    { result = CSCE.make_case_rule_head_atom(
+| STRING    { result = CSCE.make_case_rule_atom(
                                 val[0].loc, VC.make_string(val[0].val)
                             )
 }
-| SYMBOL    { result = CSCE.make_case_rule_head_atom(
+| SYMBOL    { result = CSCE.make_case_rule_atom(
                                 val[0].loc, VC.make_symbol(val[0].val)
                             )
 }
 | ID opt_pat {
     id, opt_pat = val
 
-    result = CSCE.make_case_rule_head_datum id.loc, id.sym, opt_pat
+    result = CSCE.make_case_rule_datum id.loc, id.sym, opt_pat
 }
 | '&' ID opt_pat {
     kw, id, opt_pat = val
 
-    result = CSCE.make_case_rule_head_class(
+    result = CSCE.make_case_rule_class(
                         kw.loc,
                         CSCE.make_identifier(id.loc, id.sym),
                         opt_pat
                     )
 }
 | '%[' ']' {
-    result = CSCE.make_case_rule_head_morph_nil(
+    result = CSCE.make_case_rule_poly_nil(
                             val[0].loc
                         )
 }
 | '%[' var_pat '|' var_pat ']' {
     bb, head_pat, _, tail_pat, _ = val
 
-    result = CSCE.make_case_rule_head_morph_cons(
+    result = CSCE.make_case_rule_poly_cons(
                             bb.loc, head_pat, tail_pat
                         )
 }
 | '[' ']' {
-    result = CSCE.make_case_rule_head_morph_nil(
+    result = CSCE.make_case_rule_poly_nil(
                             val[0].loc, :List
                         )
 }
@@ -453,40 +453,40 @@ case_rule_head:
                             tail_pat.loc, tail_pat.var_sym, :List
                         )
 
-    result = CSCE.make_case_rule_head_morph_cons(
+    result = CSCE.make_case_rule_poly_cons(
                             bb.loc, head_pat, cstream_tail_pat, :List
                         )
 }
 | '&[' ']' {
-    result = CSCE.make_case_rule_head_morph_nil(
-                            val[0].loc, :CellStream
+    result = CSCE.make_case_rule_poly_nil(
+                            val[0].loc, :Stream
                         )
 }
 | '&[' var_pat '|' var_pat ']' {
     bb, head_pat, _, tail_pat, _ = val
 
     cstream_tail_pat = CSCP.make_variable(
-                            tail_pat.loc, tail_pat.var_sym, :CellStream
+                            tail_pat.loc, tail_pat.var_sym, :Stream
                         )
 
-    result = CSCE.make_case_rule_head_morph_cons(
-                            bb.loc, head_pat, cstream_tail_pat, :CellStream
+    result = CSCE.make_case_rule_poly_cons(
+                            bb.loc, head_pat, cstream_tail_pat, :Stream
                         )
 }
 | '&{' '}' {
-    result = CSCE.mmake_case_rule_head_morph_nil(
-                            val[0].loc, :MemoStream
+    result = CSCE.mmake_case_rule_poly_nil(
+                            val[0].loc, :Stream
                         )
 }
 | '&{' var_pat '|' var_pat '}' {
     bb, head_pat, _, tail_pat, _ = val
 
     cstream_tail_pat = CSCP.make_variable(
-                            tail_pat.loc, tail_pat.var_sym, :MemoStream
+                            tail_pat.loc, tail_pat.var_sym, :Stream
                         )
 
-    result = CSCE.make_case_rule_head_morph_cons(
-                            bb.loc, head_pat, cstream_tail_pat, :MemoStream
+    result = CSCE.make_case_rule_poly_cons(
+                            bb.loc, head_pat, cstream_tail_pat, :Stream
                         )
 }
 

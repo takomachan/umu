@@ -1,5 +1,7 @@
-#!/usr/bin/env ruby3.3 -I../lib
+#!/usr/bin/env ruby -I../lib
+#!/usr/bin/env ruby3.1 -I../lib
 ###!/usr/bin/env ruby2.6 -I../lib
+###!/usr/bin/env ruby1.9 -I../lib
 ###!/usr/bin/env ruby -I../lib
 
 require_relative '../lib/umu'

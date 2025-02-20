@@ -13,12 +13,43 @@ module Expression
 
 module Nary
 
+module Branch
+
+module Rule
+
+class If < Abstraction::HasHead
+    alias head_expr head
+
+    def initialize(loc, head_expr, body_expr)
+        ASSERT.kind_of head_expr,   CSCE::Abstract
+        ASSERT.kind_of body_expr,   CSCE::Abstract
+
+        super
+    end
+
+
+    def to_s
+        format "%s %%THEN %s", self.head_expr, self.body_expr
+    end
+
+
+    def pretty_print(q)
+        q.pp self.head_expr
+        q.text ' %THEN '
+        q.pp self.body_expr
+    end
+end
+
+end # Umu::ConcreteSyntax::Core::Expression::Nary::Branch::Rule
+
+
+
 class If < Expression::Abstract
     attr_reader :if_rule, :elsif_rules, :else_expr
 
 
     def initialize(loc, if_rule, elsif_rules, else_expr)
-        ASSERT.kind_of if_rule,     Nary::Rule::If
+        ASSERT.kind_of if_rule,     Nary::Branch::Rule::If
         ASSERT.kind_of elsif_rules, ::Array
         ASSERT.kind_of else_expr,   CSCE::Abstract
 
@@ -81,7 +112,7 @@ private
             self.loc,
 
             ([self.if_rule] + self.elsif_rules).map { |rule|
-                ASSERT.kind_of rule, Nary::Rule::If
+                ASSERT.kind_of rule, Nary::Branch::Rule::If
 
                 ASCE.make_rule(
                     rule.loc,
@@ -95,6 +126,8 @@ private
     end
 end
 
+end # Umu::ConcreteSyntax::Core::Expression::Nary::Branch
+
 end # Umu::ConcreteSyntax::Core::Expression::Nary
 
 
@@ -102,11 +135,22 @@ module_function
 
     def make_if(loc, if_rule, elsif_rules, else_expr)
         ASSERT.kind_of loc,         LOC::Entry
-        ASSERT.kind_of if_rule,     Nary::Rule::If
+        ASSERT.kind_of if_rule,     Nary::Branch::Rule::If
         ASSERT.kind_of elsif_rules, ::Array
         ASSERT.kind_of else_expr,   CSCE::Abstract
 
-        Nary::If.new(loc, if_rule, elsif_rules, else_expr).freeze
+        Nary::Branch::If.new(loc, if_rule, elsif_rules, else_expr).freeze
+    end
+
+
+    def make_if_rule(loc, head_expr, body_expr)
+        ASSERT.kind_of loc,         LOC::Entry
+        ASSERT.kind_of head_expr,   CSCE::Abstract
+        ASSERT.kind_of body_expr,   CSCE::Abstract
+
+        Nary::Branch::Rule::If.new(
+            loc, head_expr, body_expr 
+        ).freeze
     end
 
 end # Umu::ConcreteSyntax::Core::Expression

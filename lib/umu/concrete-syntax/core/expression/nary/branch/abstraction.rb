@@ -15,6 +15,56 @@ module Nary
 
 module Branch
 
+module Rule
+
+module Abstraction
+
+class Abstract < Umu::Abstraction::Model
+    def line_num
+        self.loc.line_num
+    end
+
+
+    def desugar_poly_rule(env)
+        raise X::InternalSubclassResponsibility
+    end
+end
+
+
+
+class HasHead < Abstract
+    attr_reader :head, :body_expr
+
+
+    def initialize(loc, head, body_expr)
+        ASSERT.kind_of head,        Umu::Abstraction::Model
+        ASSERT.kind_of body_expr,   CSCE::Abstract
+
+        super(loc)
+
+        @head       = head
+        @body_expr  = body_expr
+    end
+
+
+    def to_s
+        format "%s -> %s", self.head.to_s, self.body_expr.to_s
+    end
+
+
+    def pretty_print(q)
+        q.pp self.head
+        q.text ' -> '
+        q.pp self.body_expr
+    end
+end
+
+end # Umu::ConcreteSyntax::Core::Expression::Nary::Branch::Rule::Abstraction
+
+end # Umu::ConcreteSyntax::Core::Expression::Nary::Branch::Rule
+
+
+
 class Abstract < Expression::Abstract
     attr_reader :expr, :fst_rule, :snd_rules, :opt_else_expr
 
@@ -22,7 +72,7 @@ class Abstract < Expression::Abstract
     def initialize(loc, expr, fst_rule, snd_rules, opt_else_expr)
         ASSERT.kind_of      expr,           CSCE::Abstract
         ASSERT.kind_of      fst_rule,
-                                CSCEN::Rule::Abstraction::Abstract
+                                CSCEN::Branch::Rule::Abstraction::Abstract
         ASSERT.kind_of      snd_rules,      ::Array
         ASSERT.opt_kind_of  opt_else_expr,  CSCE::Abstract
 
@@ -89,15 +139,8 @@ class Abstract < Expression::Abstract
     end
 
 
-private
-
-    def __keyword__
-        raise X::InternalSubclassResponsibility
-    end
-
-
-    def __desugar_body_expr__(env, rule)
-        ASSERT.kind_of rule, Nary::Rule::Abstraction::WithHead
+    def desugar_body_expr(env, rule)
+        ASSERT.kind_of rule, Nary::Branch::Rule::Abstraction::HasHead
 
         body_expr = rule.body_expr.desugar(env)
 
@@ -105,7 +148,7 @@ private
     end
 
 
-    def __desugar_else_expr__(env)
+    def desugar_else_expr(env)
         else_expr = if self.opt_else_expr
             self.opt_else_expr.desugar(env)
         else
@@ -117,6 +160,13 @@ private
         end
 
         ASSERT.kind_of else_expr, ASCE::Abstract
+    end
+
+
+private
+
+    def __keyword__
+        raise X::InternalSubclassResponsibility
     end
 end
 

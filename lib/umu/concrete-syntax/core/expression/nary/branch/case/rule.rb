@@ -1,0 +1,6 @@
+require_relative 'rule/abstract'
+require_relative 'rule/atom'
+require_relative 'rule/datum'
+require_relative 'rule/class'
+require_relative 'rule/polymoph'
+require_relative 'rule/entry'
