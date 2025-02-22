@@ -62,10 +62,10 @@ private
 
                     ASCE.make_raise(
                         loc,
-                        X::EmptyError,
+                        X::UnmatchError,
                         ASCE.make_string(
-                            loc,
-                            "Empty morph cannot be destructible"
+                            self.loc,
+                            "No empty pattern matched"
                         )
                     )
                 )
@@ -107,7 +107,7 @@ private
 
 
     def __opt_type_sym_of_morph__
-        nil
+        self.opt_type_sym
     end
 
 
