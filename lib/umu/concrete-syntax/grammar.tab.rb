@@ -2308,8 +2308,8 @@ module_eval(<<'.,.,', 'grammar.ry', 423)
 module_eval(<<'.,.,', 'grammar.ry', 432)
   def _reduce_86(val, _values, result)
         result = CSCE.make_case_rule_poly_nil(
-                            val[0].loc
-                        )
+                        val[0].loc
+                    )
 
     result
   end
@@ -2320,8 +2320,8 @@ module_eval(<<'.,.,', 'grammar.ry', 437)
         bb, head_pat, _, tail_pat, _ = val
 
     result = CSCE.make_case_rule_poly_cons(
-                            bb.loc, head_pat, tail_pat
-                        )
+                        bb.loc, head_pat, tail_pat
+                    )
 
     result
   end
@@ -2329,9 +2329,9 @@ module_eval(<<'.,.,', 'grammar.ry', 437)
 
 module_eval(<<'.,.,', 'grammar.ry', 444)
   def _reduce_88(val, _values, result)
-        result = CSCE.make_case_rule_poly_nil(
-                            val[0].loc, :List
-                        )
+        result = CSCE.make_case_rule_list_nil(
+                        val[0].loc
+                    )
 
     result
   end
@@ -2341,99 +2341,87 @@ module_eval(<<'.,.,', 'grammar.ry', 449)
   def _reduce_89(val, _values, result)
         bb, head_pat, _, tail_pat, _ = val
 
-    cstream_tail_pat = CSCP.make_variable(
-                            tail_pat.loc, tail_pat.var_sym, :List
-                        )
-
-    result = CSCE.make_case_rule_poly_cons(
-                            bb.loc, head_pat, cstream_tail_pat, :List
-                        )
+    result = CSCE.make_case_rule_list_cons(
+                        bb.loc, head_pat, tail_pat
+                    )
 
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 460)
+module_eval(<<'.,.,', 'grammar.ry', 456)
   def _reduce_90(val, _values, result)
-        result = CSCE.make_case_rule_poly_nil(
-                            val[0].loc, :Stream
-                        )
+        result = CSCE.make_case_rule_cell_stream_nil(
+                        val[0].loc
+                    )
 
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 465)
+module_eval(<<'.,.,', 'grammar.ry', 461)
   def _reduce_91(val, _values, result)
         bb, head_pat, _, tail_pat, _ = val
 
-    cstream_tail_pat = CSCP.make_variable(
-                            tail_pat.loc, tail_pat.var_sym, :Stream
-                        )
-
-    result = CSCE.make_case_rule_poly_cons(
-                            bb.loc, head_pat, cstream_tail_pat, :Stream
-                        )
+    result = CSCE.make_case_rule_cell_stream_cons(
+                        bb.loc, head_pat, tail_pat
+                    )
 
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 476)
+module_eval(<<'.,.,', 'grammar.ry', 468)
   def _reduce_92(val, _values, result)
-        result = CSCE.mmake_case_rule_poly_nil(
-                            val[0].loc, :Stream
-                        )
+        result = CSCE.make_case_rule_memo_stream_nil(
+                        val[0].loc
+                    )
 
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 481)
+module_eval(<<'.,.,', 'grammar.ry', 473)
   def _reduce_93(val, _values, result)
         bb, head_pat, _, tail_pat, _ = val
 
-    cstream_tail_pat = CSCP.make_variable(
-                            tail_pat.loc, tail_pat.var_sym, :Stream
-                        )
-
-    result = CSCE.make_case_rule_poly_cons(
-                            bb.loc, head_pat, cstream_tail_pat, :Stream
-                        )
+    result = CSCE.make_case_rule_memo_stream_cons(
+                        bb.loc, head_pat, tail_pat
+                    )
 
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 496)
+module_eval(<<'.,.,', 'grammar.ry', 484)
   def _reduce_94(val, _values, result)
      result = []
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 497)
+module_eval(<<'.,.,', 'grammar.ry', 485)
   def _reduce_95(val, _values, result)
      result = val[0]
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 500)
+module_eval(<<'.,.,', 'grammar.ry', 488)
   def _reduce_96(val, _values, result)
      result = [val[1]]
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 501)
+module_eval(<<'.,.,', 'grammar.ry', 489)
   def _reduce_97(val, _values, result)
      result = [val[1]] + val[2]
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 508)
+module_eval(<<'.,.,', 'grammar.ry', 496)
   def _reduce_98(val, _values, result)
         result = val[0]
 
@@ -2441,7 +2429,7 @@ module_eval(<<'.,.,', 'grammar.ry', 508)
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 511)
+module_eval(<<'.,.,', 'grammar.ry', 499)
   def _reduce_99(val, _values, result)
         lhs, op, hd_rhs, tl_rhs = val
 
@@ -2451,7 +2439,7 @@ module_eval(<<'.,.,', 'grammar.ry', 511)
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 516)
+module_eval(<<'.,.,', 'grammar.ry', 504)
   def _reduce_100(val, _values, result)
         lhs, op, hd_rhs, tl_rhs = val
 
@@ -2461,35 +2449,35 @@ module_eval(<<'.,.,', 'grammar.ry', 516)
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 522)
+module_eval(<<'.,.,', 'grammar.ry', 510)
   def _reduce_101(val, _values, result)
      result = []
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 523)
+module_eval(<<'.,.,', 'grammar.ry', 511)
   def _reduce_102(val, _values, result)
      result = [val[1]] + val[2]
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 526)
+module_eval(<<'.,.,', 'grammar.ry', 514)
   def _reduce_103(val, _values, result)
      result = []
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 527)
+module_eval(<<'.,.,', 'grammar.ry', 515)
   def _reduce_104(val, _values, result)
      result = [val[1]] + val[2]
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 535)
+module_eval(<<'.,.,', 'grammar.ry', 523)
   def _reduce_105(val, _values, result)
         result = val[0]
 
@@ -2497,7 +2485,7 @@ module_eval(<<'.,.,', 'grammar.ry', 535)
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 538)
+module_eval(<<'.,.,', 'grammar.ry', 526)
   def _reduce_106(val, _values, result)
         lhs, op, hd_rhs, tl_rhs = val
 
@@ -2507,7 +2495,7 @@ module_eval(<<'.,.,', 'grammar.ry', 538)
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 543)
+module_eval(<<'.,.,', 'grammar.ry', 531)
   def _reduce_107(val, _values, result)
         lhs, op, hd_rhs, tl_rhs = val
 
@@ -2517,28 +2505,28 @@ module_eval(<<'.,.,', 'grammar.ry', 543)
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 549)
+module_eval(<<'.,.,', 'grammar.ry', 537)
   def _reduce_108(val, _values, result)
      result = []
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 550)
+module_eval(<<'.,.,', 'grammar.ry', 538)
   def _reduce_109(val, _values, result)
      result = [val[1]] + val[2]
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 553)
+module_eval(<<'.,.,', 'grammar.ry', 541)
   def _reduce_110(val, _values, result)
      result = []
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 554)
+module_eval(<<'.,.,', 'grammar.ry', 542)
   def _reduce_111(val, _values, result)
      result = [val[1]] + val[2]
     result
@@ -2547,7 +2535,7 @@ module_eval(<<'.,.,', 'grammar.ry', 554)
 
 # reduce 112 omitted
 
-module_eval(<<'.,.,', 'grammar.ry', 563)
+module_eval(<<'.,.,', 'grammar.ry', 551)
   def _reduce_113(val, _values, result)
         lhs, op, id = val
 
@@ -2559,7 +2547,7 @@ module_eval(<<'.,.,', 'grammar.ry', 563)
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 570)
+module_eval(<<'.,.,', 'grammar.ry', 558)
   def _reduce_114(val, _values, result)
         lhs, op, rhs = val
 
@@ -2569,7 +2557,7 @@ module_eval(<<'.,.,', 'grammar.ry', 570)
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 575)
+module_eval(<<'.,.,', 'grammar.ry', 563)
   def _reduce_115(val, _values, result)
         lhs, op, rhs = val
 
@@ -2581,7 +2569,7 @@ module_eval(<<'.,.,', 'grammar.ry', 575)
 
 # reduce 116 omitted
 
-module_eval(<<'.,.,', 'grammar.ry', 586)
+module_eval(<<'.,.,', 'grammar.ry', 574)
   def _reduce_117(val, _values, result)
         lhs, op, rhs = val[0]
 
@@ -2591,42 +2579,42 @@ module_eval(<<'.,.,', 'grammar.ry', 586)
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 592)
+module_eval(<<'.,.,', 'grammar.ry', 580)
   def _reduce_118(val, _values, result)
      result = val
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 593)
+module_eval(<<'.,.,', 'grammar.ry', 581)
   def _reduce_119(val, _values, result)
      result = val
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 594)
+module_eval(<<'.,.,', 'grammar.ry', 582)
   def _reduce_120(val, _values, result)
      result = val
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 595)
+module_eval(<<'.,.,', 'grammar.ry', 583)
   def _reduce_121(val, _values, result)
      result = val
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 596)
+module_eval(<<'.,.,', 'grammar.ry', 584)
   def _reduce_122(val, _values, result)
      result = val
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 598)
+module_eval(<<'.,.,', 'grammar.ry', 586)
   def _reduce_123(val, _values, result)
         result = [
                 val[0],
@@ -2638,7 +2626,7 @@ module_eval(<<'.,.,', 'grammar.ry', 598)
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 605)
+module_eval(<<'.,.,', 'grammar.ry', 593)
   def _reduce_124(val, _values, result)
         result = [
                 val[0],
@@ -2650,70 +2638,70 @@ module_eval(<<'.,.,', 'grammar.ry', 605)
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 611)
+module_eval(<<'.,.,', 'grammar.ry', 599)
   def _reduce_125(val, _values, result)
      result = val
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 612)
+module_eval(<<'.,.,', 'grammar.ry', 600)
   def _reduce_126(val, _values, result)
      result = val
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 613)
+module_eval(<<'.,.,', 'grammar.ry', 601)
   def _reduce_127(val, _values, result)
      result = val
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 614)
+module_eval(<<'.,.,', 'grammar.ry', 602)
   def _reduce_128(val, _values, result)
      result = val
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 615)
+module_eval(<<'.,.,', 'grammar.ry', 603)
   def _reduce_129(val, _values, result)
      result = val
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 616)
+module_eval(<<'.,.,', 'grammar.ry', 604)
   def _reduce_130(val, _values, result)
      result = val
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 617)
+module_eval(<<'.,.,', 'grammar.ry', 605)
   def _reduce_131(val, _values, result)
      result = val
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 618)
+module_eval(<<'.,.,', 'grammar.ry', 606)
   def _reduce_132(val, _values, result)
      result = val
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 619)
+module_eval(<<'.,.,', 'grammar.ry', 607)
   def _reduce_133(val, _values, result)
      result = val
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 625)
+module_eval(<<'.,.,', 'grammar.ry', 613)
   def _reduce_134(val, _values, result)
         expr, msgs = val
 
@@ -2729,35 +2717,35 @@ module_eval(<<'.,.,', 'grammar.ry', 625)
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 637)
+module_eval(<<'.,.,', 'grammar.ry', 625)
   def _reduce_135(val, _values, result)
      result = []
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 638)
+module_eval(<<'.,.,', 'grammar.ry', 626)
   def _reduce_136(val, _values, result)
      result = val[0]
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 641)
+module_eval(<<'.,.,', 'grammar.ry', 629)
   def _reduce_137(val, _values, result)
      result = [val[0]]
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 642)
+module_eval(<<'.,.,', 'grammar.ry', 630)
   def _reduce_138(val, _values, result)
      result = [val[0]] + val[1]
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 646)
+module_eval(<<'.,.,', 'grammar.ry', 634)
   def _reduce_139(val, _values, result)
         kw, _, msg, exprs, _ = val
 
@@ -2767,7 +2755,7 @@ module_eval(<<'.,.,', 'grammar.ry', 646)
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 651)
+module_eval(<<'.,.,', 'grammar.ry', 639)
   def _reduce_140(val, _values, result)
         msg, exprs = val
 
@@ -2777,7 +2765,7 @@ module_eval(<<'.,.,', 'grammar.ry', 651)
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 656)
+module_eval(<<'.,.,', 'grammar.ry', 644)
   def _reduce_141(val, _values, result)
         kw, _, opr, exprs, _ = val
 
@@ -2787,7 +2775,7 @@ module_eval(<<'.,.,', 'grammar.ry', 656)
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 661)
+module_eval(<<'.,.,', 'grammar.ry', 649)
   def _reduce_142(val, _values, result)
         kw, opr, exprs = val
 
@@ -2797,7 +2785,7 @@ module_eval(<<'.,.,', 'grammar.ry', 661)
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 666)
+module_eval(<<'.,.,', 'grammar.ry', 654)
   def _reduce_143(val, _values, result)
         kw, _, fld, flds, _ = val
 
@@ -2807,7 +2795,7 @@ module_eval(<<'.,.,', 'grammar.ry', 666)
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 671)
+module_eval(<<'.,.,', 'grammar.ry', 659)
   def _reduce_144(val, _values, result)
         kw, _, expr, exprs, _ = val
 
@@ -2817,7 +2805,7 @@ module_eval(<<'.,.,', 'grammar.ry', 671)
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 680)
+module_eval(<<'.,.,', 'grammar.ry', 668)
   def _reduce_145(val, _values, result)
         expr, exprs = val
 
@@ -2833,21 +2821,21 @@ module_eval(<<'.,.,', 'grammar.ry', 680)
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 695)
+module_eval(<<'.,.,', 'grammar.ry', 683)
   def _reduce_146(val, _values, result)
      result = []
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 696)
+module_eval(<<'.,.,', 'grammar.ry', 684)
   def _reduce_147(val, _values, result)
      result = [val[0]] + val[1]
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 699)
+module_eval(<<'.,.,', 'grammar.ry', 687)
   def _reduce_148(val, _values, result)
         expr, oprs = val
 
@@ -2863,35 +2851,35 @@ module_eval(<<'.,.,', 'grammar.ry', 699)
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 711)
+module_eval(<<'.,.,', 'grammar.ry', 699)
   def _reduce_149(val, _values, result)
      result = []
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 712)
+module_eval(<<'.,.,', 'grammar.ry', 700)
   def _reduce_150(val, _values, result)
      result = val[0]
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 715)
+module_eval(<<'.,.,', 'grammar.ry', 703)
   def _reduce_151(val, _values, result)
      result = [val[0]]
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 716)
+module_eval(<<'.,.,', 'grammar.ry', 704)
   def _reduce_152(val, _values, result)
      result = [val[0]] + val[1]
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 720)
+module_eval(<<'.,.,', 'grammar.ry', 708)
   def _reduce_153(val, _values, result)
         kw, int = val
 
@@ -2901,7 +2889,7 @@ module_eval(<<'.,.,', 'grammar.ry', 720)
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 725)
+module_eval(<<'.,.,', 'grammar.ry', 713)
   def _reduce_154(val, _values, result)
         result = CSCE.make_label_selector  val[0].loc, val[0].sym
 
@@ -2909,7 +2897,7 @@ module_eval(<<'.,.,', 'grammar.ry', 725)
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 728)
+module_eval(<<'.,.,', 'grammar.ry', 716)
   def _reduce_155(val, _values, result)
         bb, fld, flds, _ = val
 
@@ -2919,21 +2907,21 @@ module_eval(<<'.,.,', 'grammar.ry', 728)
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 737)
+module_eval(<<'.,.,', 'grammar.ry', 725)
   def _reduce_156(val, _values, result)
      result = []
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 738)
+module_eval(<<'.,.,', 'grammar.ry', 726)
   def _reduce_157(val, _values, result)
      result = [val[0]] + val[1]
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 743)
+module_eval(<<'.,.,', 'grammar.ry', 731)
   def _reduce_158(val, _values, result)
         result = CSCE.make_identifier val[0].loc, val[0].sym
 
@@ -2941,7 +2929,7 @@ module_eval(<<'.,.,', 'grammar.ry', 743)
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 746)
+module_eval(<<'.,.,', 'grammar.ry', 734)
   def _reduce_159(val, _values, result)
         bb, opr, _ = val
 
@@ -2951,7 +2939,7 @@ module_eval(<<'.,.,', 'grammar.ry', 746)
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 751)
+module_eval(<<'.,.,', 'grammar.ry', 739)
   def _reduce_160(val, _values, result)
         dir, path, id = val
 
@@ -2966,7 +2954,7 @@ module_eval(<<'.,.,', 'grammar.ry', 751)
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 761)
+module_eval(<<'.,.,', 'grammar.ry', 749)
   def _reduce_161(val, _values, result)
         dir, path, _, id, _ = val
 
@@ -2981,7 +2969,7 @@ module_eval(<<'.,.,', 'grammar.ry', 761)
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 771)
+module_eval(<<'.,.,', 'grammar.ry', 759)
   def _reduce_162(val, _values, result)
         result = CSCE.make_class val[1].loc, val[1].sym
 
@@ -2989,35 +2977,35 @@ module_eval(<<'.,.,', 'grammar.ry', 771)
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 775)
+module_eval(<<'.,.,', 'grammar.ry', 763)
   def _reduce_163(val, _values, result)
      result = CSCE.make_integer    val[0].loc, val[0].val
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 776)
+module_eval(<<'.,.,', 'grammar.ry', 764)
   def _reduce_164(val, _values, result)
      result = CSCE.make_float      val[0].loc, val[0].val
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 777)
+module_eval(<<'.,.,', 'grammar.ry', 765)
   def _reduce_165(val, _values, result)
      result = CSCE.make_string     val[0].loc, val[0].val
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 778)
+module_eval(<<'.,.,', 'grammar.ry', 766)
   def _reduce_166(val, _values, result)
      result = CSCE.make_symbol     val[0].loc, val[0].sym
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 780)
+module_eval(<<'.,.,', 'grammar.ry', 768)
   def _reduce_167(val, _values, result)
         loc = val[0].loc
 
@@ -3027,7 +3015,7 @@ module_eval(<<'.,.,', 'grammar.ry', 780)
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 785)
+module_eval(<<'.,.,', 'grammar.ry', 773)
   def _reduce_168(val, _values, result)
         loc = val[0].loc
 
@@ -3037,7 +3025,7 @@ module_eval(<<'.,.,', 'grammar.ry', 785)
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 792)
+module_eval(<<'.,.,', 'grammar.ry', 780)
   def _reduce_169(val, _values, result)
         result = CSCE.make_unit val[0].loc
 
@@ -3045,7 +3033,7 @@ module_eval(<<'.,.,', 'grammar.ry', 792)
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 795)
+module_eval(<<'.,.,', 'grammar.ry', 783)
   def _reduce_170(val, _values, result)
         result = val[1]
 
@@ -3053,7 +3041,7 @@ module_eval(<<'.,.,', 'grammar.ry', 795)
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 798)
+module_eval(<<'.,.,', 'grammar.ry', 786)
   def _reduce_171(val, _values, result)
         bb, opr, expr = val
 
@@ -3063,7 +3051,7 @@ module_eval(<<'.,.,', 'grammar.ry', 798)
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 803)
+module_eval(<<'.,.,', 'grammar.ry', 791)
   def _reduce_172(val, _values, result)
         bb, expr1, _, expr2, exprs, _ = val
 
@@ -3073,7 +3061,7 @@ module_eval(<<'.,.,', 'grammar.ry', 803)
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 808)
+module_eval(<<'.,.,', 'grammar.ry', 796)
   def _reduce_173(val, _values, result)
         bb, fld1, fld2, flds, _ = val
 
@@ -3083,7 +3071,7 @@ module_eval(<<'.,.,', 'grammar.ry', 808)
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 813)
+module_eval(<<'.,.,', 'grammar.ry', 801)
   def _reduce_174(val, _values, result)
         result = CSCE.make_s_expr_nil val[0].loc
 
@@ -3091,7 +3079,7 @@ module_eval(<<'.,.,', 'grammar.ry', 813)
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 816)
+module_eval(<<'.,.,', 'grammar.ry', 804)
   def _reduce_175(val, _values, result)
         bb, expr, exprs, opt_expr, _ = val
 
@@ -3101,7 +3089,7 @@ module_eval(<<'.,.,', 'grammar.ry', 816)
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 821)
+module_eval(<<'.,.,', 'grammar.ry', 809)
   def _reduce_176(val, _values, result)
         bb, msg, _ = val
 
@@ -3114,7 +3102,7 @@ module_eval(<<'.,.,', 'grammar.ry', 821)
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 829)
+module_eval(<<'.,.,', 'grammar.ry', 817)
   def _reduce_177(val, _values, result)
         bb, klass, msg, _ = val
 
@@ -3128,7 +3116,7 @@ module_eval(<<'.,.,', 'grammar.ry', 829)
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 838)
+module_eval(<<'.,.,', 'grammar.ry', 826)
   def _reduce_178(val, _values, result)
         bb, msg, _ = val
 
@@ -3141,7 +3129,7 @@ module_eval(<<'.,.,', 'grammar.ry', 838)
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 848)
+module_eval(<<'.,.,', 'grammar.ry', 836)
   def _reduce_179(val, _values, result)
         result = CSCE.make_list val[0].loc, [],                nil
 
@@ -3149,7 +3137,7 @@ module_eval(<<'.,.,', 'grammar.ry', 848)
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 851)
+module_eval(<<'.,.,', 'grammar.ry', 839)
   def _reduce_180(val, _values, result)
         bb, expr, exprs, opt_expr, _ = val
 
@@ -3159,7 +3147,7 @@ module_eval(<<'.,.,', 'grammar.ry', 851)
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 856)
+module_eval(<<'.,.,', 'grammar.ry', 844)
   def _reduce_181(val, _values, result)
         bb, fst_expr, opt_snd_expr, _, lst_expr, _ = val
 
@@ -3169,7 +3157,7 @@ module_eval(<<'.,.,', 'grammar.ry', 856)
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 861)
+module_eval(<<'.,.,', 'grammar.ry', 849)
   def _reduce_182(val, _values, result)
         bbr, bba, expr, exprs, _, qual, _ = val
 
@@ -3185,7 +3173,7 @@ module_eval(<<'.,.,', 'grammar.ry', 861)
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 872)
+module_eval(<<'.,.,', 'grammar.ry', 860)
   def _reduce_183(val, _values, result)
         bbr, bba, fld1, fld2, flds, _, qual, _ = val
 
@@ -3197,7 +3185,7 @@ module_eval(<<'.,.,', 'grammar.ry', 872)
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 879)
+module_eval(<<'.,.,', 'grammar.ry', 867)
   def _reduce_184(val, _values, result)
         result = CSCE.make_stream val[0].loc, []
 
@@ -3205,7 +3193,7 @@ module_eval(<<'.,.,', 'grammar.ry', 879)
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 882)
+module_eval(<<'.,.,', 'grammar.ry', 870)
   def _reduce_185(val, _values, result)
         bb, expr, exprs, opt_expr, _ = val
 
@@ -3215,7 +3203,7 @@ module_eval(<<'.,.,', 'grammar.ry', 882)
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 889)
+module_eval(<<'.,.,', 'grammar.ry', 877)
   def _reduce_186(val, _values, result)
         bb, pat, pats, _, expr, decls, _ = val
 
@@ -3225,7 +3213,7 @@ module_eval(<<'.,.,', 'grammar.ry', 889)
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 894)
+module_eval(<<'.,.,', 'grammar.ry', 882)
   def _reduce_187(val, _values, result)
         result = CSCE.make_memo_stream_nil val[0].loc
 
@@ -3233,7 +3221,7 @@ module_eval(<<'.,.,', 'grammar.ry', 894)
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 897)
+module_eval(<<'.,.,', 'grammar.ry', 885)
   def _reduce_188(val, _values, result)
         bb, head_expr, _, tail_expr, _ = val
 
@@ -3243,7 +3231,7 @@ module_eval(<<'.,.,', 'grammar.ry', 897)
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 902)
+module_eval(<<'.,.,', 'grammar.ry', 890)
   def _reduce_189(val, _values, result)
         bb, expr, _ = val
 
@@ -3253,14 +3241,14 @@ module_eval(<<'.,.,', 'grammar.ry', 902)
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 911)
+module_eval(<<'.,.,', 'grammar.ry', 899)
   def _reduce_190(val, _values, result)
      result = []
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 913)
+module_eval(<<'.,.,', 'grammar.ry', 901)
   def _reduce_191(val, _values, result)
         dir, path = val
 
@@ -3270,91 +3258,91 @@ module_eval(<<'.,.,', 'grammar.ry', 913)
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 922)
+module_eval(<<'.,.,', 'grammar.ry', 910)
   def _reduce_192(val, _values, result)
      result = []
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 923)
+module_eval(<<'.,.,', 'grammar.ry', 911)
   def _reduce_193(val, _values, result)
      result = val[0]
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 926)
+module_eval(<<'.,.,', 'grammar.ry', 914)
   def _reduce_194(val, _values, result)
      result = [val[1]]
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 927)
+module_eval(<<'.,.,', 'grammar.ry', 915)
   def _reduce_195(val, _values, result)
      result = [val[1]] + val[2]
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 933)
+module_eval(<<'.,.,', 'grammar.ry', 921)
   def _reduce_196(val, _values, result)
      result = nil
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 934)
+module_eval(<<'.,.,', 'grammar.ry', 922)
   def _reduce_197(val, _values, result)
      result = val[1]
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 940)
+module_eval(<<'.,.,', 'grammar.ry', 928)
   def _reduce_198(val, _values, result)
      result = nil
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 941)
+module_eval(<<'.,.,', 'grammar.ry', 929)
   def _reduce_199(val, _values, result)
      result = val[1]
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 947)
+module_eval(<<'.,.,', 'grammar.ry', 935)
   def _reduce_200(val, _values, result)
      result = []
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 948)
+module_eval(<<'.,.,', 'grammar.ry', 936)
   def _reduce_201(val, _values, result)
      result = val[0]
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 951)
+module_eval(<<'.,.,', 'grammar.ry', 939)
   def _reduce_202(val, _values, result)
      result = [val[0]]
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 952)
+module_eval(<<'.,.,', 'grammar.ry', 940)
   def _reduce_203(val, _values, result)
      result = [val[0]] + val[1]
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 955)
+module_eval(<<'.,.,', 'grammar.ry', 943)
   def _reduce_204(val, _values, result)
         lab, opt_expr = val
 
@@ -3364,42 +3352,42 @@ module_eval(<<'.,.,', 'grammar.ry', 955)
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 964)
+module_eval(<<'.,.,', 'grammar.ry', 952)
   def _reduce_205(val, _values, result)
      result = []
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 965)
+module_eval(<<'.,.,', 'grammar.ry', 953)
   def _reduce_206(val, _values, result)
      result = [val[0]]
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 966)
+module_eval(<<'.,.,', 'grammar.ry', 954)
   def _reduce_207(val, _values, result)
      result = [val[0]] + val[1]
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 969)
+module_eval(<<'.,.,', 'grammar.ry', 957)
   def _reduce_208(val, _values, result)
      result = [val[0]]
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 970)
+module_eval(<<'.,.,', 'grammar.ry', 958)
   def _reduce_209(val, _values, result)
      result = [val[0]] + val[1]
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 974)
+module_eval(<<'.,.,', 'grammar.ry', 962)
   def _reduce_210(val, _values, result)
         kw, pat, _, expr = val
 
@@ -3409,7 +3397,7 @@ module_eval(<<'.,.,', 'grammar.ry', 974)
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 979)
+module_eval(<<'.,.,', 'grammar.ry', 967)
   def _reduce_211(val, _values, result)
         kw, expr = val
 
@@ -3419,35 +3407,35 @@ module_eval(<<'.,.,', 'grammar.ry', 979)
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 988)
+module_eval(<<'.,.,', 'grammar.ry', 976)
   def _reduce_212(val, _values, result)
      result = CSCE.make_s_expr_int    val[0].loc, val[0].val
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 989)
+module_eval(<<'.,.,', 'grammar.ry', 977)
   def _reduce_213(val, _values, result)
      result = CSCE.make_s_expr_float  val[0].loc, val[0].val
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 990)
+module_eval(<<'.,.,', 'grammar.ry', 978)
   def _reduce_214(val, _values, result)
      result = CSCE.make_s_expr_string val[0].loc, val[0].val
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 991)
+module_eval(<<'.,.,', 'grammar.ry', 979)
   def _reduce_215(val, _values, result)
      result = CSCE.make_s_expr_symbol val[0].loc, val[0].sym
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 993)
+module_eval(<<'.,.,', 'grammar.ry', 981)
   def _reduce_216(val, _values, result)
         result = CSCE.make_s_expr_nil val[0].loc
 
@@ -3455,7 +3443,7 @@ module_eval(<<'.,.,', 'grammar.ry', 993)
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 996)
+module_eval(<<'.,.,', 'grammar.ry', 984)
   def _reduce_217(val, _values, result)
         bb, expr, exprs, opt_expr, _ = val
 
@@ -3465,63 +3453,63 @@ module_eval(<<'.,.,', 'grammar.ry', 996)
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 1000)
+module_eval(<<'.,.,', 'grammar.ry', 988)
   def _reduce_218(val, _values, result)
      result = CSCE.make_s_expr_embeded val[0].loc, val[1]
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 1004)
+module_eval(<<'.,.,', 'grammar.ry', 992)
   def _reduce_219(val, _values, result)
      result = []
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 1005)
+module_eval(<<'.,.,', 'grammar.ry', 993)
   def _reduce_220(val, _values, result)
      result = [val[0]] + val[1]
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 1009)
+module_eval(<<'.,.,', 'grammar.ry', 997)
   def _reduce_221(val, _values, result)
      result = nil
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 1010)
+module_eval(<<'.,.,', 'grammar.ry', 998)
   def _reduce_222(val, _values, result)
      result = val[1]
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 1019)
+module_eval(<<'.,.,', 'grammar.ry', 1007)
   def _reduce_223(val, _values, result)
      result = []
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 1020)
+module_eval(<<'.,.,', 'grammar.ry', 1008)
   def _reduce_224(val, _values, result)
      result = [val[0]] + val[1]
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 1024)
+module_eval(<<'.,.,', 'grammar.ry', 1012)
   def _reduce_225(val, _values, result)
      result = nil
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 1025)
+module_eval(<<'.,.,', 'grammar.ry', 1013)
   def _reduce_226(val, _values, result)
      result = val[0]
     result
@@ -3530,7 +3518,7 @@ module_eval(<<'.,.,', 'grammar.ry', 1025)
 
 # reduce 227 omitted
 
-module_eval(<<'.,.,', 'grammar.ry', 1034)
+module_eval(<<'.,.,', 'grammar.ry', 1022)
   def _reduce_228(val, _values, result)
         bb, _ = val
 
@@ -3540,7 +3528,7 @@ module_eval(<<'.,.,', 'grammar.ry', 1034)
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 1039)
+module_eval(<<'.,.,', 'grammar.ry', 1027)
   def _reduce_229(val, _values, result)
         _, result, _ = val
 
@@ -3548,7 +3536,7 @@ module_eval(<<'.,.,', 'grammar.ry', 1039)
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 1042)
+module_eval(<<'.,.,', 'grammar.ry', 1030)
   def _reduce_230(val, _values, result)
         bb, pat1, _, pat2, pats, _ = val
 
@@ -3558,7 +3546,7 @@ module_eval(<<'.,.,', 'grammar.ry', 1042)
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 1047)
+module_eval(<<'.,.,', 'grammar.ry', 1035)
   def _reduce_231(val, _values, result)
         bb, pat, pats, _ = val
 
@@ -3568,7 +3556,7 @@ module_eval(<<'.,.,', 'grammar.ry', 1047)
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 1054)
+module_eval(<<'.,.,', 'grammar.ry', 1042)
   def _reduce_232(val, _values, result)
         bb, _ = val
 
@@ -3578,7 +3566,7 @@ module_eval(<<'.,.,', 'grammar.ry', 1054)
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 1059)
+module_eval(<<'.,.,', 'grammar.ry', 1047)
   def _reduce_233(val, _values, result)
         bb, pat, pats, opt_pat, _ = val
 
@@ -3588,7 +3576,7 @@ module_eval(<<'.,.,', 'grammar.ry', 1059)
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 1064)
+module_eval(<<'.,.,', 'grammar.ry', 1052)
   def _reduce_234(val, _values, result)
         bb, _ = val
 
@@ -3598,7 +3586,7 @@ module_eval(<<'.,.,', 'grammar.ry', 1064)
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 1069)
+module_eval(<<'.,.,', 'grammar.ry', 1057)
   def _reduce_235(val, _values, result)
         bb, pat, pats, opt_pat, _ = val
 
@@ -3608,63 +3596,63 @@ module_eval(<<'.,.,', 'grammar.ry', 1069)
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 1078)
+module_eval(<<'.,.,', 'grammar.ry', 1066)
   def _reduce_236(val, _values, result)
      result = []
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 1079)
+module_eval(<<'.,.,', 'grammar.ry', 1067)
   def _reduce_237(val, _values, result)
      result = val[0]
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 1082)
+module_eval(<<'.,.,', 'grammar.ry', 1070)
   def _reduce_238(val, _values, result)
      result = [val[1]]
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 1083)
+module_eval(<<'.,.,', 'grammar.ry', 1071)
   def _reduce_239(val, _values, result)
      result = [val[1]] + val[2]
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 1089)
+module_eval(<<'.,.,', 'grammar.ry', 1077)
   def _reduce_240(val, _values, result)
      result = []
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 1090)
+module_eval(<<'.,.,', 'grammar.ry', 1078)
   def _reduce_241(val, _values, result)
      result = val[0]
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 1093)
+module_eval(<<'.,.,', 'grammar.ry', 1081)
   def _reduce_242(val, _values, result)
      result = [val[0]]
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 1094)
+module_eval(<<'.,.,', 'grammar.ry', 1082)
   def _reduce_243(val, _values, result)
      result = [val[0]] + val[1]
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 1097)
+module_eval(<<'.,.,', 'grammar.ry', 1085)
   def _reduce_244(val, _values, result)
         lab, opt_pat = val
 
@@ -3683,35 +3671,35 @@ module_eval(<<'.,.,', 'grammar.ry', 1097)
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 1115)
+module_eval(<<'.,.,', 'grammar.ry', 1103)
   def _reduce_245(val, _values, result)
      result = nil
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 1116)
+module_eval(<<'.,.,', 'grammar.ry', 1104)
   def _reduce_246(val, _values, result)
      result = val[1]
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 1122)
+module_eval(<<'.,.,', 'grammar.ry', 1110)
   def _reduce_247(val, _values, result)
      result = nil
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 1123)
+module_eval(<<'.,.,', 'grammar.ry', 1111)
   def _reduce_248(val, _values, result)
      result = val[0]
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 1127)
+module_eval(<<'.,.,', 'grammar.ry', 1115)
   def _reduce_249(val, _values, result)
         id, opt_type = val
 
@@ -3721,7 +3709,7 @@ module_eval(<<'.,.,', 'grammar.ry', 1127)
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 1132)
+module_eval(<<'.,.,', 'grammar.ry', 1120)
   def _reduce_250(val, _values, result)
         _, opr, _ = val
 
@@ -3731,7 +3719,7 @@ module_eval(<<'.,.,', 'grammar.ry', 1132)
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 1137)
+module_eval(<<'.,.,', 'grammar.ry', 1125)
   def _reduce_251(val, _values, result)
         wc, opt_type = val
 
@@ -3741,14 +3729,14 @@ module_eval(<<'.,.,', 'grammar.ry', 1137)
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 1143)
+module_eval(<<'.,.,', 'grammar.ry', 1131)
   def _reduce_252(val, _values, result)
      result = nil
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 1144)
+module_eval(<<'.,.,', 'grammar.ry', 1132)
   def _reduce_253(val, _values, result)
      result = val[1].sym
     result
@@ -3767,14 +3755,14 @@ module_eval(<<'.,.,', 'grammar.ry', 1144)
 
 # reduce 259 omitted
 
-module_eval(<<'.,.,', 'grammar.ry', 1161)
+module_eval(<<'.,.,', 'grammar.ry', 1149)
   def _reduce_260(val, _values, result)
      result = LT.make_reserved_symbol(val[0].loc, 'mod')
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'grammar.ry', 1162)
+module_eval(<<'.,.,', 'grammar.ry', 1150)
   def _reduce_261(val, _values, result)
      result = LT.make_reserved_symbol(val[0].loc, 'pow')
     result

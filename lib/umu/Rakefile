@@ -83,6 +83,7 @@ FILES = [
     'concrete-syntax/core/expression/nary/branch/case/rule/datum.rb',
     'concrete-syntax/core/expression/nary/branch/case/rule/class.rb',
     'concrete-syntax/core/expression/nary/branch/case/rule/polymoph.rb',
+    'concrete-syntax/core/expression/nary/branch/case/rule/monomoph.rb',
     'concrete-syntax/core/expression/nary/branch/case/rule/entry.rb',
     'concrete-syntax/core/expression/nary/branch/case/entry.rb',
     'concrete-syntax/core/expression/nary/lambda.rb',

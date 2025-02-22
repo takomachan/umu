@@ -67,30 +67,30 @@ structure Stream = struct {
 
     fun rec filter = (f : Fun) (xs : Stream) -> &{
         case xs of {
-          | &[]      -> &[]
-          | &[x|xs'] -> if f x then &[ x | filter f xs' ]
+          | %[]      -> &[]
+          | %[x|xs'] -> if f x then &[ x | filter f xs' ]
                                else filter f xs'
         }
     }
 
     fun rec map = (f : Fun) (xs : Stream) -> &{
         case xs of {
-          | &[]      -> &[]
-          | &[x|xs'] -> &[ f x | map f xs' ]
+          | %[]      -> &[]
+          | %[x|xs'] -> &[ f x | map f xs' ]
         }
     }
                                         # The xs must be finite stream
     fun rec append = (xs : Stream) (ys : Stream) -> &{
         case xs of {
-          | &[]      -> ys
-          | &[x|xs'] -> &[ x | append xs' ys ]
+          | %[]      -> ys
+          | %[x|xs'] -> &[ x | append xs' ys ]
         }
     }
                                         # The f must return finite stream
     fun rec concat-map = (f : Fun) (xs : Stream) -> &{
         case xs of {
-          | &[]      -> &[]
-          | &[x|xs'] -> append (f x) (concat-map f xs')
+          | %[]      -> &[]
+          | %[x|xs'] -> append (f x) (concat-map f xs')
         }
     }
 
@@ -99,8 +99,8 @@ structure Stream = struct {
             &[]
         else
             case xs of {
-              | &[]      -> &[]
-              | &[x|xs'] -> &[ x | take (n - 1) xs' ]
+              | %[]      -> &[]
+              | %[x|xs'] -> &[ x | take (n - 1) xs' ]
             }
     }
 
@@ -112,14 +112,14 @@ structure Stream = struct {
 
     fun rec foldr = a (f : Fun) (xs : Stream) ->
         case xs of {
-          | &[]      -> a
-          | &[x|xs'] -> f x (foldr a f xs')
+          | %[]      -> a
+          | %[x|xs'] -> f x (foldr a f xs')
         }
 
     fun rec foldl = a (f : Fun) (xs : Stream) ->
         case xs of {
-          | &[]      -> a
-          | &[x|xs'] -> foldl (f x a) f xs'
+          | %[]      -> a
+          | %[x|xs'] -> foldl (f x a) f xs'
         }
 
 
@@ -130,8 +130,8 @@ structure Stream = struct {
             []
         else
             case xs of {
-              | &[]      -> []
-              | &[x|xs'] -> [ x | take-to-list (n - 1) xs' ]
+              | %[]      -> []
+              | %[x|xs'] -> [ x | take-to-list (n - 1) xs' ]
             }
 
     fun to-list = xs : Stream -> foldr [] (|) xs    # Only finite stream

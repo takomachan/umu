@@ -38,6 +38,8 @@ private
                     fst_head.desugar_for_rule new_env, self
                 when Rule::Case::Polymorph::Abstract
                     fst_head.desugar_for_rule new_env, self
+                when Rule::Case::Monomorph::Abstraction::Abstract
+                    fst_head.desugar_for_rule new_env, self
                 else
                     ASSERT.abort "Np case: %s", fst_head.inspect
                 end

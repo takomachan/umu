@@ -431,63 +431,51 @@ case_rule_head:
 }
 | '%[' ']' {
     result = CSCE.make_case_rule_poly_nil(
-                            val[0].loc
-                        )
+                        val[0].loc
+                    )
 }
 | '%[' var_pat '|' var_pat ']' {
     bb, head_pat, _, tail_pat, _ = val
 
     result = CSCE.make_case_rule_poly_cons(
-                            bb.loc, head_pat, tail_pat
-                        )
+                        bb.loc, head_pat, tail_pat
+                    )
 }
 | '[' ']' {
-    result = CSCE.make_case_rule_poly_nil(
-                            val[0].loc, :List
-                        )
+    result = CSCE.make_case_rule_list_nil(
+                        val[0].loc
+                    )
 }
 | '[' var_pat '|' var_pat ']' {
     bb, head_pat, _, tail_pat, _ = val
 
-    cstream_tail_pat = CSCP.make_variable(
-                            tail_pat.loc, tail_pat.var_sym, :List
-                        )
-
-    result = CSCE.make_case_rule_poly_cons(
-                            bb.loc, head_pat, cstream_tail_pat, :List
-                        )
+    result = CSCE.make_case_rule_list_cons(
+                        bb.loc, head_pat, tail_pat
+                    )
 }
 | '&[' ']' {
-    result = CSCE.make_case_rule_poly_nil(
-                            val[0].loc, :Stream
-                        )
+    result = CSCE.make_case_rule_cell_stream_nil(
+                        val[0].loc
+                    )
 }
 | '&[' var_pat '|' var_pat ']' {
     bb, head_pat, _, tail_pat, _ = val
 
-    cstream_tail_pat = CSCP.make_variable(
-                            tail_pat.loc, tail_pat.var_sym, :Stream
-                        )
-
-    result = CSCE.make_case_rule_poly_cons(
-                            bb.loc, head_pat, cstream_tail_pat, :Stream
-                        )
+    result = CSCE.make_case_rule_cell_stream_cons(
+                        bb.loc, head_pat, tail_pat
+                    )
 }
 | '&{' '}' {
-    result = CSCE.mmake_case_rule_poly_nil(
-                            val[0].loc, :Stream
-                        )
+    result = CSCE.make_case_rule_memo_stream_nil(
+                        val[0].loc
+                    )
 }
 | '&{' var_pat '|' var_pat '}' {
     bb, head_pat, _, tail_pat, _ = val
 
-    cstream_tail_pat = CSCP.make_variable(
-                            tail_pat.loc, tail_pat.var_sym, :Stream
-                        )
-
-    result = CSCE.make_case_rule_poly_cons(
-                            bb.loc, head_pat, cstream_tail_pat, :Stream
-                        )
+    result = CSCE.make_case_rule_memo_stream_cons(
+                        bb.loc, head_pat, tail_pat
+                    )
 }
 
 
