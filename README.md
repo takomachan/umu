@@ -23,15 +23,11 @@ $ git clone https://github.com/takomachan/umu
 
 ## Documentation
 
-See [Wiki](https://github.com/takomachan/umu/wiki)
+See [Project Home](http://xtmlab.com/umu/index-jp.html)
 
 - Users Guide
 - Programming Guide
-
-
-## Inside of Interpreter
-
-See [TmDoc](http://xtmlab.com/umu/tmdoc/html/).
+- Inside of Interpreter
 
 
 ## License
