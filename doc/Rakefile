@@ -1,0 +1,36 @@
+ASCIIDOCTOR = '$HOME/.gem/ruby/3.3.0/bin/asciidoctor'
+
+FILE_NAMES = [
+    'index',
+    'index-jp',
+    'users-guide',
+    'users-guide-jp',
+    'prog-guide',
+    'prog-guide-jp',
+    'design-background-jp'
+]
+
+HTML_FILES = FILE_NAMES.map { |f| f + ".html" }
+
+
+task :default => :build
+
+
+task :build  => HTML_FILES
+
+
+task :files do
+    FILES.each do |file|
+        puts file
+    end
+end
+
+
+task :clean do
+    sh 'rm *.html'
+end
+
+
+rule '.html' => '.adoc' do |task|
+    sh "#{ASCIIDOCTOR} -o html/#{task.name} #{task.source}"
+end

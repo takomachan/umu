@@ -1,0 +1,80 @@
+== ラムダ式と関数
+
+=== ラムダ式
+```
+umu:1> { x y -> x + y }
+fun it = #<{ x y -> (+ x y) }>
+umu:2> it 3 4
+val it : Int = 7
+umu:3>
+```
+
+```
+umu:1> { x y -> x + y } 3
+fun it = #<{ y -> (+ x y) }>
+umu:2> it 4
+val it : Int = 7
+umu:3>
+```
+
+```
+umu:1> { (x, y) -> 3 + 4 }
+fun it = #<{ %a1 : Product -> %LET { %VAL x = (%a1)$1 %VAL y = (%a1)$2 %IN (+ 3 4) } }>
+umu:2> it (3, 4)
+val it : Int = 7
+umu:3>
+```
+
+=== 関数定義
+
+==== 単純な関数
+
+宣言 `val` は値(value)を識別子(identifier)に束縛(bind)します。
+ここで、その値は関数オブジェクト(function object)です。
+
+```
+umu:1> val add = { x y -> x + y }
+fun add = #<{ x y -> (+ x y) }>
+umu:2> add 3 4
+val it : Int = 7
+umu:3>
+```
+
+宣言 `fun` は関数オブジェクトの束縛に関する構文糖(syntactic sugar)です。
+
+```
+umu:1> fun add' = x y -> x + y
+fun add' = #<add': { x y -> (+ x y) }>
+umu:2> add' 3 4
+val it : Int = 7
+umu:3>
+```
+
+```
+umu:1> fun add'' = (x, y) -> x + y
+fun add'' = #<add'': { %a1 : Product
+**> %LET { %VAL x = (%a1)$1 %VAL y = (%a1)$2 %IN (+ x y) }
+    }>
+umu:2> add'' (3, 4)
+val it : Int = 7
+umu:3>
+```
+
+
+==== 再帰関数
+
+再帰関数(recursive function)は宣言 `fun rec` で定義します。
+
+```
+umu:1> fun rec factorial = x -> (    # 'umu/example/factorial.umu'をコピー＆ペースト
+umu:2*     if x <= 1 then
+umu:3*         1   
+umu:4*     else
+umu:5*         x * factorial (x - 1)
+umu:6* )
+fun factorial = #<factorial: { x -> (%IF (<= x 1) %THEN 1 %ELSE (* x (factorial (- x 1)))) }>
+umu:7> factorial 3
+val it : Int = 6
+umu:8>
+```
+

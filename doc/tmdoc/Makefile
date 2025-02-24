@@ -1,11 +1,11 @@
-FILE_DIR  = ../lib/umu
+FILE_DIR  = ../../lib/umu
 FILE_HOME = $(FILE_DIR)/version.rb
 include Make.FILES
 
 TMDOCPROC		= tmdoc
 DBTOEPUB		= /opt/local/share/xsl/docbook-xsl/epub/bin/dbtoepub
 
-DOC_ROOT		= tmdoc
+DOC_ROOT		= .
 TMDOC_LOG		= $(DOC_ROOT)/LOG.txt
 DBOOK_TO_HTML	= $(DOC_ROOT)/dbook-to-html.xsl
 DBOOK_TO_EPUB	= $(DOC_ROOT)/dbook-to-epub.xsl

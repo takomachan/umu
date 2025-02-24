@@ -1,0 +1,142 @@
+== インターバル
+
+インターバル(interval, 間隔)は整数の列を表現するオブジェクトです。
+リストと似ていますが、以下に示す違いがあります。
+
+* リストの要素は任意のオブジェクトですが、インターバルの要素は整数に限られます。
+* インターバルは以下の３つの属性だけから構成されているので、長い列ではメモリ効率が優れています。
+** current: 現在値
+** stop: 停止値
+** step: 間隔値
+* インターバルは単なるデータ表現だけでなく、反復制御に用いることができます。たとえば、
+** C言語の `for (i = 1 ; i <= 10 ; i++) { ... }` という手続き型のループ処理は、
+** インターバルを使って `[1 .. 10].for-each { i -> ... }` と書きます。 
+
+
+=== インターバルオブジェクトの生成
+
+==== (1) インターバル式で
+
+```
+umu:1> [1 .. 10]
+val it : Interval = [1 .. 10 (+1)]
+umu:2> [1, 3 .. 10]
+val it : Interval = [1 .. 10 (+2)]
+umu:3> it.contents
+val it : Named = (current:1 stop:10 step:2)
+umu:4>
+```
+
+==== (2) インスタンスオブジェクトへの送信式で
+
+===== (2-1) 二項インスタンスメッセージ
+
+二項インスタンスメッセージ `Int#to : Int -> Interval` を送信
+
+```
+umu:1> 1.to 10
+val it : Interval = [1 .. 10 (+1)]
+umu:2> 1.to
+fun it = #<{ %x_1 -> (%r).(to %x_1) }>
+umu:3> it 10
+val it : Interval = [1 .. 10 (+1)]
+umu:4>
+```
+
+多項インスタンスメッセージ `Int#to-by : Int -> Int -> Interval` を送信
+
+```
+umu:1> 1.to-by 10 2
+val it : Interval = [1 .. 10 (+2)]
+umu:2> 1.to-by
+fun it = #<{ %x_1 %x_2 -> (%r).(to-by %x_1 %x_2) }>
+umu:3> it 10
+fun it = #<{ %x_2 -> (%r).(to-by %x_1 %x_2) }>
+umu:4> it 2
+val it : Interval = [1 .. 10 (+2)]
+umu:5>
+```
+
+===== (2-2) キーワードインスタンスメッセージ
+
+キーワードインスタンスメッセージ `Int#(to:Int) -> Interval` と `Int#(to:Int by:Int) -> Interval` を送信
+
+```
+umu:1> 1.(to:10)
+val it : Interval = [1 .. 10 (+1)]
+umu:2> 1.(to:10 by:2)
+val it : Interval = [1 .. 10 (+2)]
+umu:3>
+```
+
+==== (3) クラスオブジェクトへの送信式で
+
+===== (3-1) 単純クラスメッセージ
+
+単純クラスメッセージ `&Interval.make : Int -> Int -> Interval` を送信
+
+```
+umu:1> &Interval.make 1 10
+val it : Interval = [1 .. 10 (+1)]
+umu:2> &Interval.make
+fun it = #<{ %x_1 %x_2 -> (%r).(make %x_1 %x_2) }>
+umu:3> it 1
+fun it = #<{ %x_2 -> (%r).(make %x_1 %x_2) }>
+umu:4> it 10
+val it : Interval = [1 .. 10 (+1)]
+umu:5>
+```
+
+単純クラスメッセージ `&Interval.make-by : Int -> Int -> Int -> Interval` を送信
+
+```
+umu:1> &Interval.make-by 1 10 2
+val it : Interval = [1 .. 10 (+2)]
+umu:2> &Interval.make-by
+fun it = #<{ %x_1 %x_2 %x_3 -> (%r).(make-by %x_1 %x_2 %x_3) }>
+umu:3> it 1
+fun it = #<{ %x_2 %x_3 -> (%r).(make-by %x_1 %x_2 %x_3) }>
+umu:4> it 10
+fun it = #<{ %x_3 -> (%r).(make-by %x_1 %x_2 %x_3) }>
+umu:5> it 2
+val it : Interval = [1 .. 10 (+2)]
+umu:6>
+```
+
+===== (3-2) キーワードクラスメッセージ
+
+キーワードクラスメッセージ `&Interval.(from:Int to:Int) -> Interval` と
+`&Interval.(from:Int to:Int by:Int) -> Interval` を送信
+
+```
+umu:1> &Interval.(from:1 to:10)
+val it : Interval = [1 .. 10 (+1)]
+umu:2> &Interval.(from:1 to:10 by:2)
+val it : Interval = [1 .. 10 (+2)]
+umu:3>
+```
+
+=== インターバルオブジェクトの操作
+
+インターバルはリストと同じくモルフ(morph)と呼ばれるコレクションの一種ですから、
+リストと同様なメッセージに応答できます。
+
+```
+umu:1> [1 .. 10].to-list
+val it : Cons = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+umu:2> [1, 3 .. 10].to-list
+val it : Cons = [1, 3, 5, 7, 9]
+umu:3> [1 .. 10].select odd?
+val it : Cons = [1, 3, 5, 7, 9]
+umu:4> [1 .. 10].map to-s
+val it : Cons = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
+umu:5> [1 .. 10].select odd?.map to-s
+val it : Cons = ["1", "3", "5", "7", "9"]
+umu:6> [1 .. 3].for-each print
+1
+2
+3
+val it : Unit = ()
+umu:7>
+```
+

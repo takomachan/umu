@@ -1,0 +1,51 @@
+== アトム
+
+=== 整数
+```
+umu:1> 3
+val it : Int = 3
+umu:2> 3 + 4
+val it : Int = 7
+umu:3>
+```
+
+=== 小数
+```
+umu:1> 3.0
+val it : Float = 3.0
+umu:2> 3.0 + 4.0
+val it : Float = 7.0
+umu:3>
+```
+
+=== 文字列
+```
+umu:1> "Hello"
+val it : String = "Hello"
+umu:2> "Hello" ^ " world"
+val it : String = "Hello world"
+umu:3>
+```
+
+=== シンボル
+```
+umu:1> @hello
+val it : Symbol = @hello
+umu:2> to-s @hello
+val it : String = "hello"
+umu:3> show @hello
+val it : String = "@hello"
+umu:4>
+```
+
+=== 論理値
+```
+umu:1> TRUE
+val it : Bool = TRUE
+umu:2> 3 == 3
+val it : Bool = TRUE
+umu:3> 3 == 4
+val it : Bool = FALSE
+umu:4>
+```
+

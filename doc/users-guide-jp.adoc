@@ -1,0 +1,158 @@
+= Umu ユーザーガイド
+
+この文書では、Umuインタプリタの使い方を解説します。
+
+
+== 最初の一歩
+```
+$ umu/exe/umu -i
+umu:1> print "Hello world"
+Hello world
+val it : Unit = ()
+umu:2>                  # [Ctrl]+[d]を入力
+$
+```
+
+== スクリプトを付けてREPLを起動
+```
+$ cat umu/example/factorial.umu 
+fun rec factorial = x -> (
+    if x <= 1 then
+        1
+    else
+        x * factorial (x - 1)
+)
+$ umu/exe/umu -i umu/example/factorial.umu 
+umu:1> factorial 3
+val it : Int = 6
+umu:2>
+```
+
+== REPLのサブコマンド
+
+=== :class
+
+==== 概要
+
+クラス間の継承(インヘリタンス)関係を階層的に表示します。
+
+```
+umu:1> :class
+Top/
+    Class
+    Object/
+        Atom/
+            Bool
+            Number/
+                Float
+                Int
+            String
+            Symbol
+    :
+    :
+    :
+umu:2>
+```
+==== 詳細
+
+指定されたクラスの情報とそのクラスが応答できるメッセージの一覧を表示します。
+
+```
+umu:1> :class Bool
+ABSTRACT CLASS?: No, this is a concrete class
+SUPERCLASS: Atom
+ANCESTORS: Atom, Object, Top
+CLASS MESSAGES:
+    &Bool.false : Bool
+    &Bool.true : Bool
+INSTANCE MESSAGES:
+    Bool#< : Bool -> Bool
+    Bool#== : Object -> Bool
+    Bool#contents : Top
+    Bool#not : Bool
+    Bool#show : String
+    Bool#to-s : String
+umu:2>
+```
+
+=== :dump と :nodump
+
+インタプリタは入力されたスクリプトを以下の流れで処理します。
+
+```
+/ソース(スクリプト)/ ->
+    <字句解析> -> [トークンの並び] ->
+    <構文解析> -> [具象構文木] ->
+    <脱糖化>   -> [抽象構文木] ->
+    <評価> ->
+/結果(環境と値)/
+```
+
+この処理の過程で生成される中間オブジェクトである：
+
+* トークンの並び(tokens)
+* 具象構文木(concrete syntax tree)
+* 抽象構文木(abstract syntax tree)
+
+を表示します。
+
+```
+umu:1> :dump
+umu:2> 3 + 4
+________ Source: '<stdin>' ________
+0002: 3 + 4
+
+________ Tokens: '<stdin>' ________
+0002: INT(3) SP '+' SP INT(4) NL("\n")
+
+________ Concrete Syntax: #2 in "<stdin>" ________
+(3 + 4)
+
+________ Abstract Syntax: #2 in "<stdin>" ________
+(+ 3 4)
+
+val it : Int = 7
+umu:3> :nodump
+umu:4>
+```
+
+
+=== :trace と :notrace
+
+インタプリタ内部の脱糖化(desugaring)処理と評価(evaluation)処理について、
+その過程を階層的な軌跡(trace)で表示します。
+
+```
+umu:1> :trace
+umu:2> 3 + 4
+________ Source: '<stdin>' ________
+0002: 3 + 4
+
+________ Desugar Trace ________
+[Desu] Redefinable (CSCEB::Infix): (3 + 4)
+| [Desu] Int (CSCEUA::Number): 3 --> Int (ASCEUA::Number): 3
+| [Desu] Int (CSCEUA::Number): 4 --> Int (ASCEUA::Number): 4
+--> Apply (ASCEB): (+ 3 4)
+
+________ Evaluator Trace ________
+[Eval(Expr)] Apply (ASCEB): (+ 3 4)
+| [Eval(Expr)] Short (ASCEU::Identifier): +
+| --> Fun (VC): #<+: {x : Number y : Number -> (x).(+ y)}>
+| [Eval(Expr)] Int (ASCEUA::Number): 3 --> Int (VCAN): 3
+| [Eval(Expr)] Int (ASCEUA::Number): 4 --> Int (VCAN): 4
+| [Apply] Fun (VC): (#<+: {x : Number y : Number -> (x).(+ y)}> 3 4)
+| | [Eval(Expr)] Entry (ASCEB::Send): (x).(+ y)
+| | | [Eval(Expr)] Short (ASCEU::Identifier): x
+| | | --> Int (VCAN): 3
+| | | [Eval(Expr)] Short (ASCEU::Identifier): y
+| | | --> Int (VCAN): 4
+| | | [Invoke] Int (VCAN): (3).meth_add(4 : Int) -> Int
+| | | --> Int (VCAN): 7
+| | --> Int (VCAN): 7
+| --> Int (VCAN): 7
+--> Int (VCAN): 7
+
+val it : Int = 7
+umu:3> :notrace
+umu:4>
+```
