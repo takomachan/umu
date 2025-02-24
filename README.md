@@ -23,7 +23,7 @@ $ git clone https://github.com/takomachan/umu
 
 ## Documentation
 
-See [Project Home](http://xtmlab.com/umu/index-jp.html)
+See [Project Home](http://xtmlab.com/umu/index.html)
 
 - Users Guide
 - Programming Guide
