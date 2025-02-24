@@ -15,13 +15,9 @@
 - ユーザーガイド
 - プログラミングガイド
 - 言語設計の背景
+- インタプリタ実装の内部
 
 [Umu ホームページ](http://xtmlab.com/umu/index-jp.html)を参照
-
-
-## インタプリタ実装の内部
-
-[TmDoc](http://xtmlab.com/umu/tmdoc/html/)を参照
 
 
 ## ライセンス
