@@ -16,7 +16,7 @@
 - プログラミングガイド
 - 言語設計の背景
 
-[Umu ホームページ](http://xtmlab.com/umu/)を参照
+[Umu ホームページ](http://xtmlab.com/umu/index-jp.html)を参照
 
 
 ## インタプリタ実装の内部
