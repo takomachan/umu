@@ -440,56 +440,113 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#_atom">1. Atom</a>
+<li><a href="#_overview_empty">1. Overview (empty)</a>
 <ul class="sectlevel2">
-<li><a href="#_integer">1.1. Integer</a></li>
-<li><a href="#_float">1.2. Float</a></li>
-<li><a href="#_string">1.3. String</a></li>
-<li><a href="#_symbol">1.4. Symbol</a></li>
-<li><a href="#_bool">1.5. Bool</a></li>
+<li><a href="#_evaluation">1.1. Evaluation</a></li>
+<li><a href="#_expression_and_value">1.2. Expression and Value</a></li>
+<li><a href="#_declaration_and_environment">1.3. Declaration and Environment</a></li>
+<li><a href="#_function_and_message">1.4. Function and Message</a></li>
+<li><a href="#_type_and_class">1.5. Type and Class</a></li>
 </ul>
 </li>
-<li><a href="#_lambda_expression_and_function_definition">2. Lambda expression and Function definition</a></li>
-<li><a href="#_lambda_expression">3. Lambda expression</a></li>
-<li><a href="#_function_definition">4. Function definition</a>
+<li><a href="#_atom">2. Atom</a>
 <ul class="sectlevel2">
-<li><a href="#_simple_function">4.1. Simple function</a></li>
-<li><a href="#_recursive_function">4.2. Recursive function</a></li>
+<li><a href="#_integer">2.1. Integer</a></li>
+<li><a href="#_float">2.2. Float</a></li>
+<li><a href="#_string">2.3. String</a></li>
+<li><a href="#_symbol">2.4. Symbol</a></li>
+<li><a href="#_bool">2.5. Bool</a></li>
 </ul>
 </li>
-<li><a href="#_function_application_and_message_sending">5. Function application and Message sending</a></li>
-<li><a href="#_message_chaining_pipelined_application_and_function_composition">6. Message chaining, Pipelined application and Function composition</a>
+<li><a href="#_direct_propuct_empty">3. Direct Propuct (empty)</a>
 <ul class="sectlevel2">
-<li><a href="#_message_chaining">6.1. Message Chaining</a></li>
-<li><a href="#_pipelined_application">6.2. Pipelined Application</a></li>
-<li><a href="#_another_pipelined_application">6.3. Another Pipelined Application</a></li>
-<li><a href="#_function_composition">6.4. Function Composition</a></li>
-<li><a href="#_another_function_composition">6.5. Another Function Composition</a></li>
-<li><a href="#_traditional_nested_function_application">6.6. Traditional nested function application</a></li>
+<li><a href="#_tuple">3.1. Tuple</a></li>
+<li><a href="#_named_tuple">3.2. Named Tuple</a></li>
 </ul>
 </li>
-<li><a href="#_message">7. Message</a>
+<li><a href="#_disjoint_union_empty">4. Disjoint Union (empty)</a>
 <ul class="sectlevel2">
-<li><a href="#_instance_message_and_class_message">7.1. Instance message and Class message</a></li>
-<li><a href="#_simple_message_and_keyword_message">7.2. Simple message and Keyword message</a></li>
+<li><a href="#_option">4.1. Option</a></li>
+<li><a href="#_result">4.2. Result</a></li>
+<li><a href="#_taged_data">4.3. Taged Data</a></li>
 </ul>
 </li>
-<li><a href="#_interval">8. Interval</a>
+<li><a href="#_list_empty">5. List (empty)</a></li>
+<li><a href="#_list_comprehension">6. List Comprehension</a></li>
+<li><a href="#_lambda_expression_and_function_definition">7. Lambda expression and Function definition</a>
 <ul class="sectlevel2">
-<li><a href="#_makeing_interval_object">8.1. Makeing interval object</a></li>
-<li><a href="#_operation_to_interval_object">8.2. Operation to interval object</a></li>
+<li><a href="#_lambda_expression">7.1. Lambda expression</a></li>
+<li><a href="#_function_definition">7.2. Function definition</a></li>
 </ul>
 </li>
-<li><a href="#_list_comprehension">9. List Comprehension</a></li>
+<li><a href="#_message_and_send_expression">8. Message and Send Expression</a>
+<ul class="sectlevel2">
+<li><a href="#_message">8.1. Message</a></li>
+<li><a href="#_instance_message_and_class_message">8.2. Instance message and Class message</a></li>
+<li><a href="#_simple_message_and_keyword_message">8.3. Simple message and Keyword message</a></li>
+<li><a href="#_function_application_and_message_sending">8.4. Function application and Message sending</a></li>
+<li><a href="#_message_chaining_pipelined_application_and_function_composition">8.5. Message chaining, Pipelined application and Function composition</a></li>
+</ul>
+</li>
+<li><a href="#_pattern_empty">9. Pattern (empty)</a></li>
+<li><a href="#_branch_expression_empty">10. Branch Expression (empty)</a>
+<ul class="sectlevel2">
+<li><a href="#_if_expression">10.1. if-Expression</a></li>
+<li><a href="#_cond_expression">10.2. cond-Expression</a></li>
+<li><a href="#_case_expression">10.3. case-Expression</a></li>
+</ul>
+</li>
+<li><a href="#_interval">11. Interval</a>
+<ul class="sectlevel2">
+<li><a href="#_makeing_interval_object">11.1. Makeing interval object</a></li>
+<li><a href="#_operation_to_interval_object">11.2. Operation to interval object</a></li>
+</ul>
+</li>
+<li><a href="#_delayed_evaluation_and_stream_empty">12. Delayed Evaluation and Stream (empty)</a></li>
+<li><a href="#_input_and_output_empty">13. Input and Output (empty)</a>
+<ul class="sectlevel2">
+<li><a href="#_io_empty">13.1. I/O (empty)</a></li>
+<li><a href="#_sequential_expression">13.2. Sequential Expression</a></li>
+<li><a href="#_file_and_directory">13.3. File and Directory</a></li>
+</ul>
+</li>
+<li><a href="#_reference_empty">14. Reference (empty)</a></li>
+<li><a href="#_s_expression_empty">15. S-Expression (empty)</a></li>
+<li><a href="#_module_empty">16. Module (empty)</a></li>
 </ul>
 </div>
 </div>
 <div id="content">
 <div class="sect1">
-<h2 id="_atom">1. Atom</h2>
+<h2 id="_overview_empty">1. Overview (empty)</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_integer">1.1. Integer</h3>
+<h3 id="_evaluation">1.1. Evaluation</h3>
+
+</div>
+<div class="sect2">
+<h3 id="_expression_and_value">1.2. Expression and Value</h3>
+
+</div>
+<div class="sect2">
+<h3 id="_declaration_and_environment">1.3. Declaration and Environment</h3>
+
+</div>
+<div class="sect2">
+<h3 id="_function_and_message">1.4. Function and Message</h3>
+
+</div>
+<div class="sect2">
+<h3 id="_type_and_class">1.5. Type and Class</h3>
+
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_atom">2. Atom</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_integer">2.1. Integer</h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code>umu:1&gt; 3
@@ -501,7 +558,7 @@ umu:3&gt;</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_float">1.2. Float</h3>
+<h3 id="_float">2.2. Float</h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code>umu:1&gt; 3.0
@@ -513,7 +570,7 @@ umu:3&gt;</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_string">1.3. String</h3>
+<h3 id="_string">2.3. String</h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code>umu:1&gt; "Hello"
@@ -525,7 +582,7 @@ umu:3&gt;</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_symbol">1.4. Symbol</h3>
+<h3 id="_symbol">2.4. Symbol</h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code>umu:1&gt; @hello
@@ -539,7 +596,7 @@ umu:4&gt;</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_bool">1.5. Bool</h3>
+<h3 id="_bool">2.5. Bool</h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code>umu:1&gt; TRUE
@@ -555,14 +612,77 @@ umu:4&gt;</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_lambda_expression_and_function_definition">2. Lambda expression and Function definition</h2>
+<h2 id="_direct_propuct_empty">3. Direct Propuct (empty)</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_tuple">3.1. Tuple</h3>
+
+</div>
+<div class="sect2">
+<h3 id="_named_tuple">3.2. Named Tuple</h3>
+
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_disjoint_union_empty">4. Disjoint Union (empty)</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_option">4.1. Option</h3>
+
+</div>
+<div class="sect2">
+<h3 id="_result">4.2. Result</h3>
+
+</div>
+<div class="sect2">
+<h3 id="_taged_data">4.3. Taged Data</h3>
+
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_list_empty">5. List (empty)</h2>
 <div class="sectionbody">
 
 </div>
 </div>
 <div class="sect1">
-<h2 id="_lambda_expression">3. Lambda expression</h2>
+<h2 id="_list_comprehension">6. List Comprehension</h2>
 <div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>umu:1&gt; [|x| val x &lt;- [1 .. 10]]
+val it : Cons = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+umu:2&gt; [|x| val x &lt;- [1 .. 10] if odd? x]
+val it : Cons = [1, 3, 5, 7, 9]
+umu:3&gt; [|to-s x| val x &lt;- [1 .. 10] ]
+val it : Cons = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
+umu:4&gt; [|to-s x| val x &lt;- [1 .. 10] if odd? x]
+val it : Cons = ["1", "3", "5", "7", "9"]</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>umu:1&gt; [|k, v| val k &lt;- [@a, @b] val v &lt;- [1 .. 3]]
+val it : Cons = [(@a, 1), (@a, 2), (@a, 3), (@b, 1), (@b, 2), (@b, 3)]
+umu:2&gt; [|k: v:| val k &lt;- [@a, @b] val v &lt;- [1 .. 3]]
+val it : Cons = [(k:@a v:1), (k:@a v:2), (k:@a v:3), (k:@b v:1), (k:@b v:2), (k:@b v:3)]
+umu:3&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For  advanced usage of the list comprehension,
+please refer to the
+<a href="https://github.com/takomachan/umu/tree/main/example/database">database examples</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_lambda_expression_and_function_definition">7. Lambda expression and Function definition</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_lambda_expression">7.1. Lambda expression</h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code>umu:1&gt; { x y -&gt; x + y }
@@ -591,12 +711,10 @@ umu:3&gt;</code></pre>
 </div>
 </div>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_function_definition">4. Function definition</h2>
-<div class="sectionbody">
 <div class="sect2">
-<h3 id="_simple_function">4.1. Simple function</h3>
+<h3 id="_function_definition">7.2. Function definition</h3>
+<div class="sect3">
+<h4 id="_simple_function">7.2.1. Simple function</h4>
 <div class="paragraph">
 <p>The declaration <code>val</code> binds a value to an identifier.
 Here, the value is a function object.</p>
@@ -634,8 +752,8 @@ umu:3&gt;</code></pre>
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_recursive_function">4.2. Recursive function</h3>
+<div class="sect3">
+<h4 id="_recursive_function">7.2.2. Recursive function</h4>
 <div class="paragraph">
 <p>A recursive function is defined with the declaration <code>fun rec</code>.</p>
 </div>
@@ -656,144 +774,12 @@ umu:8&gt;</code></pre>
 </div>
 </div>
 </div>
-<div class="sect1">
-<h2 id="_function_application_and_message_sending">5. Function application and Message sending</h2>
-<div class="sectionbody">
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code>umu:1&gt; 3 + 4             # Infix orepator expression
-val it : Int = 7
-umu:2&gt; (+) 3 4           # Infix operator as function object
-val it : Int = 7
-umu:3&gt; ((+) 3) 4         # Partial application for first parameter
-val it : Int = 7
-umu:4&gt; (+ 4) 3           # Partial application for second parameter
-val it : Int = 7</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code>umu:5&gt; 3.(+ 4)           # Send binary message '+ 4' to integer object 3
-val it : Int = 7
-umu:6&gt; 3.+ 4             # Brakets are optional
-val it : Int = 7
-umu:7&gt; (3.+) 4           # Send only binary message keyword '+'
-val it : Int = 7
-umu:8&gt; &amp;(+) 3 4          # Binary message as function object
-val it : Int = 7
-umu:9&gt; (&amp;(+) 3) 4        # Partial application for first parameter
-val it : Int = 7</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code>umu:10&gt; (+).apply-binary 3 4    # Send apply message to function object
-val it : Int = 7
-umu:11&gt; (+).[3, 4]       # Another apply message notation (syntactic sugar)
-val it : Int = 7</code></pre>
-</div>
-</div>
-</div>
 </div>
 <div class="sect1">
-<h2 id="_message_chaining_pipelined_application_and_function_composition">6. Message chaining, Pipelined application and Function composition</h2>
+<h2 id="_message_and_send_expression">8. Message and Send Expression</h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>See edvakf&#8217;s blog article:
-<a href="https://edvakf.hatenadiary.org/entry/20090405/1238885788">PythonでもRubyみたいに配列をメソッドチェーンでつなげたい</a>.</p>
-</div>
 <div class="sect2">
-<h3 id="_message_chaining">6.1. Message Chaining</h3>
-<div class="paragraph">
-<p>OOP(object oriented programming) style</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code>umu:1&gt; [1, 4, 3, 2]
-val it : Cons = [1, 4, 3, 2]
-umu:2&gt; [1, 4, 3, 2].sort
-val it : Cons = [1, 2, 3, 4]
-umu:3&gt; [1, 4, 3, 2].sort.reverse
-val it : Cons = [4, 3, 2, 1]
-umu:4&gt; [1, 4, 3, 2].sort.reverse.map to-s
-val it : Cons = ["4", "3", "2", "1"]
-umu:5&gt; [1, 4, 3, 2].sort.reverse.map to-s.join-by "-"
-val it : String = "4-3-2-1"
-umu:6&gt;</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_pipelined_application">6.2. Pipelined Application</h3>
-<div class="paragraph">
-<p>Like F#, Ocaml, Scala, Elixir &#8230;&#8203; etc</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code>umu:1&gt; [1, 4, 3, 2] |&gt; sort |&gt; reverse |&gt; map to-s |&gt; join-by "-"
-val it : String = "4-3-2-1"
-umu:2&gt;</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_another_pipelined_application">6.3. Another Pipelined Application</h3>
-<div class="paragraph">
-<p>Like a Haskell&#8217;s $-operator</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code>umu:1&gt; join-by "-" &lt;| map to-s &lt;| reverse &lt;| sort [1, 4, 3, 2]
-val it : String = "4-3-2-1"
-umu:2&gt;</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_function_composition">6.4. Function Composition</h3>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code>umu:1&gt; (sort &gt;&gt; reverse &gt;&gt; map to-s &gt;&gt; join-by "-") [1, 4, 3, 2]
-val it : String = "4-3-2-1"
-umu:2&gt; [1, 4, 3, 2] |&gt; sort &gt;&gt; reverse &gt;&gt; map to-s &gt;&gt; join-by "-"
-val it : String = "4-3-2-1"
-umu:3&gt;</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_another_function_composition">6.5. Another Function Composition</h3>
-<div class="paragraph">
-<p>Like a Haskell&#8217;s point-free style</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code>umu:1&gt; (join-by "-" &lt;&lt; map to-s &lt;&lt; reverse &lt;&lt; sort) [1, 4, 3, 2]
-val it : String = "4-3-2-1"
-umu:2&gt; join-by "-" &lt;&lt; map to-s &lt;&lt; reverse &lt;&lt; sort &lt;| [1, 4, 3, 2]
-val it : String = "4-3-2-1"
-umu:3&gt;</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_traditional_nested_function_application">6.6. Traditional nested function application</h3>
-<div class="paragraph">
-<p>Like Lisp, Python, Pascal, Fortran, &#8230;&#8203; etc</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code>umu:1&gt; join-by "-" (map to-s (reverse (sort [1, 4, 3, 2])))
-val it : String = "4-3-2-1"
-umu:2&gt;</code></pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_message">7. Message</h2>
-<div class="sectionbody">
+<h3 id="_message">8.1. Message</h3>
 <div class="paragraph">
 <p>Messages are classified as follows:</p>
 </div>
@@ -945,8 +931,9 @@ umu:2&gt;</code></pre>
 </li>
 </ul>
 </div>
+</div>
 <div class="sect2">
-<h3 id="_instance_message_and_class_message">7.1. Instance message and Class message</h3>
+<h3 id="_instance_message_and_class_message">8.2. Instance message and Class message</h3>
 <div class="paragraph">
 <p>Instance messages are ordinary messages.</p>
 </div>
@@ -965,7 +952,7 @@ In the future, when user-defined functionality for classes is provided, the synt
 </div>
 </div>
 <div class="sect2">
-<h3 id="_simple_message_and_keyword_message">7.2. Simple message and Keyword message</h3>
+<h3 id="_simple_message_and_keyword_message">8.3. Simple message and Keyword message</h3>
 <div class="paragraph">
 <p>Simple messages are messages that are curried and
 are suitable for mixed object-oriented and functional programming styles.</p>
@@ -975,10 +962,164 @@ are suitable for mixed object-oriented and functional programming styles.</p>
 are more readable than simple messages when they involve complex arguments.</p>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_function_application_and_message_sending">8.4. Function application and Message sending</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>umu:1&gt; 3 + 4             # Infix orepator expression
+val it : Int = 7
+umu:2&gt; (+) 3 4           # Infix operator as function object
+val it : Int = 7
+umu:3&gt; ((+) 3) 4         # Partial application for first parameter
+val it : Int = 7
+umu:4&gt; (+ 4) 3           # Partial application for second parameter
+val it : Int = 7</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>umu:5&gt; 3.(+ 4)           # Send binary message '+ 4' to integer object 3
+val it : Int = 7
+umu:6&gt; 3.+ 4             # Brakets are optional
+val it : Int = 7
+umu:7&gt; (3.+) 4           # Send only binary message keyword '+'
+val it : Int = 7
+umu:8&gt; &amp;(+) 3 4          # Binary message as function object
+val it : Int = 7
+umu:9&gt; (&amp;(+) 3) 4        # Partial application for first parameter
+val it : Int = 7</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>umu:10&gt; (+).apply-binary 3 4    # Send apply message to function object
+val it : Int = 7
+umu:11&gt; (+).[3, 4]       # Another apply message notation (syntactic sugar)
+val it : Int = 7</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_message_chaining_pipelined_application_and_function_composition">8.5. Message chaining, Pipelined application and Function composition</h3>
+<div class="paragraph">
+<p>See edvakf&#8217;s blog article:
+<a href="https://edvakf.hatenadiary.org/entry/20090405/1238885788">PythonでもRubyみたいに配列をメソッドチェーンでつなげたい</a>.</p>
+</div>
+<div class="sect3">
+<h4 id="_message_chaining">8.5.1. Message Chaining</h4>
+<div class="paragraph">
+<p>OOP(object oriented programming) style</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>umu:1&gt; [1, 4, 3, 2]
+val it : Cons = [1, 4, 3, 2]
+umu:2&gt; [1, 4, 3, 2].sort
+val it : Cons = [1, 2, 3, 4]
+umu:3&gt; [1, 4, 3, 2].sort.reverse
+val it : Cons = [4, 3, 2, 1]
+umu:4&gt; [1, 4, 3, 2].sort.reverse.map to-s
+val it : Cons = ["4", "3", "2", "1"]
+umu:5&gt; [1, 4, 3, 2].sort.reverse.map to-s.join-by "-"
+val it : String = "4-3-2-1"
+umu:6&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_pipelined_application">8.5.2. Pipelined Application</h4>
+<div class="paragraph">
+<p>Like F#, Ocaml, Scala, Elixir &#8230;&#8203; etc</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>umu:1&gt; [1, 4, 3, 2] |&gt; sort |&gt; reverse |&gt; map to-s |&gt; join-by "-"
+val it : String = "4-3-2-1"
+umu:2&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_another_pipelined_application">8.5.3. Another Pipelined Application</h4>
+<div class="paragraph">
+<p>Like a Haskell&#8217;s $-operator</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>umu:1&gt; join-by "-" &lt;| map to-s &lt;| reverse &lt;| sort [1, 4, 3, 2]
+val it : String = "4-3-2-1"
+umu:2&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_function_composition">8.5.4. Function Composition</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>umu:1&gt; (sort &gt;&gt; reverse &gt;&gt; map to-s &gt;&gt; join-by "-") [1, 4, 3, 2]
+val it : String = "4-3-2-1"
+umu:2&gt; [1, 4, 3, 2] |&gt; sort &gt;&gt; reverse &gt;&gt; map to-s &gt;&gt; join-by "-"
+val it : String = "4-3-2-1"
+umu:3&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_another_function_composition">8.5.5. Another Function Composition</h4>
+<div class="paragraph">
+<p>Like a Haskell&#8217;s point-free style</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>umu:1&gt; (join-by "-" &lt;&lt; map to-s &lt;&lt; reverse &lt;&lt; sort) [1, 4, 3, 2]
+val it : String = "4-3-2-1"
+umu:2&gt; join-by "-" &lt;&lt; map to-s &lt;&lt; reverse &lt;&lt; sort &lt;| [1, 4, 3, 2]
+val it : String = "4-3-2-1"
+umu:3&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_traditional_nested_function_application">8.5.6. Traditional nested function application</h4>
+<div class="paragraph">
+<p>Like Lisp, Python, Pascal, Fortran, &#8230;&#8203; etc</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>umu:1&gt; join-by "-" (map to-s (reverse (sort [1, 4, 3, 2])))
+val it : String = "4-3-2-1"
+umu:2&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_interval">8. Interval</h2>
+<h2 id="_pattern_empty">9. Pattern (empty)</h2>
+<div class="sectionbody">
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="_branch_expression_empty">10. Branch Expression (empty)</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_if_expression">10.1. if-Expression</h3>
+
+</div>
+<div class="sect2">
+<h3 id="_cond_expression">10.2. cond-Expression</h3>
+
+</div>
+<div class="sect2">
+<h3 id="_case_expression">10.3. case-Expression</h3>
+
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_interval">11. Interval</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>An interval is an object that represents a sequence of integers.
@@ -1021,9 +1162,9 @@ Similar to list, but with the following differences:</p>
 </ul>
 </div>
 <div class="sect2">
-<h3 id="_makeing_interval_object">8.1. Makeing interval object</h3>
+<h3 id="_makeing_interval_object">11.1. Makeing interval object</h3>
 <div class="sect3">
-<h4 id="_by_interval_expression">8.1.1. By interval-expression</h4>
+<h4 id="_by_interval_expression">11.1.1. By interval-expression</h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code>umu:1&gt; [1 .. 10]
@@ -1036,9 +1177,9 @@ val it : Named = (current:1 stop:10 step:2)</code></pre>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_by_send_expression_to_instance_object">8.1.2. By send-expression to instance object</h4>
+<h4 id="_by_send_expression_to_instance_object">11.1.2. By send-expression to instance object</h4>
 <div class="sect4">
-<h5 id="_binary_instance_message">8.1.2.1. Binary instance message</h5>
+<h5 id="_binary_instance_message">11.1.2.1. Binary instance message</h5>
 <div class="paragraph">
 <p>Send binary instance message 'Int#to : Int &#8594; Interval'</p>
 </div>
@@ -1071,7 +1212,7 @@ umu:5&gt;</code></pre>
 </div>
 </div>
 <div class="sect4">
-<h5 id="_keyword_instance_message">8.1.2.2. Keyword instance message</h5>
+<h5 id="_keyword_instance_message">11.1.2.2. Keyword instance message</h5>
 <div class="paragraph">
 <p>Send keyword instance message 'Int#(to:Int) &#8594; Interval' and
 'Int#(to:Int by:Int) &#8594; Interval'</p>
@@ -1088,9 +1229,9 @@ umu:3&gt;</code></pre>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_by_send_expression_to_class_object">8.1.3. By send-expression to class object</h4>
+<h4 id="_by_send_expression_to_class_object">11.1.3. By send-expression to class object</h4>
 <div class="sect4">
-<h5 id="_binary_class_message">8.1.3.1. Binary class message</h5>
+<h5 id="_binary_class_message">11.1.3.1. Binary class message</h5>
 <div class="paragraph">
 <p>Send binary class message '&amp;Interval.make : Int &#8594; Int &#8594; Interval'</p>
 </div>
@@ -1127,7 +1268,7 @@ umu:6&gt;</code></pre>
 </div>
 </div>
 <div class="sect4">
-<h5 id="_keyword_class_message">8.1.3.2. Keyword class message</h5>
+<h5 id="_keyword_class_message">11.1.3.2. Keyword class message</h5>
 <div class="paragraph">
 <p>Send keyword class message '&amp;Interval.(from:Int to:Int) &#8594; Interval' and
 '&amp;Interval.(from:Int to:Int by:Int) &#8594; Interval'</p>
@@ -1145,7 +1286,7 @@ umu:3&gt;</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_operation_to_interval_object">8.2. Operation to interval object</h3>
+<h3 id="_operation_to_interval_object">11.2. Operation to interval object</h3>
 <div class="paragraph">
 <p>Like lists, intervals are a type of collection called morphs,
 so they can respond to the same messages as lists.</p>
@@ -1174,40 +1315,50 @@ umu:7&gt;</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_list_comprehension">9. List Comprehension</h2>
+<h2 id="_delayed_evaluation_and_stream_empty">12. Delayed Evaluation and Stream (empty)</h2>
 <div class="sectionbody">
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code>umu:1&gt; [|x| val x &lt;- [1 .. 10]]
-val it : Cons = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-umu:2&gt; [|x| val x &lt;- [1 .. 10] if odd? x]
-val it : Cons = [1, 3, 5, 7, 9]
-umu:3&gt; [|to-s x| val x &lt;- [1 .. 10] ]
-val it : Cons = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
-umu:4&gt; [|to-s x| val x &lt;- [1 .. 10] if odd? x]
-val it : Cons = ["1", "3", "5", "7", "9"]</code></pre>
+
 </div>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code>umu:1&gt; [|k, v| val k &lt;- [@a, @b] val v &lt;- [1 .. 3]]
-val it : Cons = [(@a, 1), (@a, 2), (@a, 3), (@b, 1), (@b, 2), (@b, 3)]
-umu:2&gt; [|k: v:| val k &lt;- [@a, @b] val v &lt;- [1 .. 3]]
-val it : Cons = [(k:@a v:1), (k:@a v:2), (k:@a v:3), (k:@b v:1), (k:@b v:2), (k:@b v:3)]
-umu:3&gt;</code></pre>
+<div class="sect1">
+<h2 id="_input_and_output_empty">13. Input and Output (empty)</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_io_empty">13.1. I/O (empty)</h3>
+
+</div>
+<div class="sect2">
+<h3 id="_sequential_expression">13.2. Sequential Expression</h3>
+
+</div>
+<div class="sect2">
+<h3 id="_file_and_directory">13.3. File and Directory</h3>
+
 </div>
 </div>
-<div class="paragraph">
-<p>For  advanced usage of the list comprehension,
-please refer to the
-<a href="https://github.com/takomachan/umu/tree/main/example/database">database examples</a>.</p>
 </div>
+<div class="sect1">
+<h2 id="_reference_empty">14. Reference (empty)</h2>
+<div class="sectionbody">
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="_s_expression_empty">15. S-Expression (empty)</h2>
+<div class="sectionbody">
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="_module_empty">16. Module (empty)</h2>
+<div class="sectionbody">
+
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2025-02-24 22:16:47 +0900
+Last updated 2025-02-25 16:06:21 +0900
 </div>
 </div>
 </body>

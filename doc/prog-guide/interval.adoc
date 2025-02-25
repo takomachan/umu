@@ -1,0 +1,143 @@
+== Interval
+
+An interval is an object that represents a sequence of integers.
+Similar to list, but with the following differences:
+
+* The elements of a list can be any objects, but the elements of an interval can only be integers.
+* Intervals are memory efficient for long sequence because they consist of only three attributes:
+** `current`: current value
+** `stop`: stop value
+** `step`: step value
+* Intervals can be used not only to represent data, but also to control repetition. For example,
+** The procedural loop processing `for (i = 1 ; i <= 10 ; i++) { ... }` in C language
+** uses intervals to `[1 .. 10].for-each { i -> ... }` is written.
+
+
+
+=== Makeing interval object
+
+==== By interval-expression
+
+```
+umu:1> [1 .. 10]
+val it : Interval = [1 .. 10 (+1)]
+umu:2> [1, 3 .. 10]
+val it : Interval = [1 .. 10 (+2)]
+umu:3> it.contents
+val it : Named = (current:1 stop:10 step:2)
+```
+
+==== By send-expression to instance object
+
+===== Binary instance message
+
+Send binary instance message 'Int#to : Int -> Interval'
+
+```
+umu:1> 1.to 10
+val it : Interval = [1 .. 10 (+1)]
+umu:2> 1.to
+fun it = #<{ %x_1 -> (%r).(to %x_1) }>
+umu:3> it 10
+val it : Interval = [1 .. 10 (+1)]
+umu:4>
+```
+
+Send binary instance message 'Int#to-by : Int -> Int -> Interval'
+
+```
+umu:1> 1.to-by 10 2
+val it : Interval = [1 .. 10 (+2)]
+umu:2> 1.to-by
+fun it = #<{ %x_1 %x_2 -> (%r).(to-by %x_1 %x_2) }>
+umu:3> it 10
+fun it = #<{ %x_2 -> (%r).(to-by %x_1 %x_2) }>
+umu:4> it 2
+val it : Interval = [1 .. 10 (+2)]
+umu:5>
+```
+
+===== Keyword instance message
+
+Send keyword instance message 'Int#(to:Int) -> Interval' and
+'Int#(to:Int by:Int) -> Interval'
+
+```
+umu:1> 1.(to:10)
+val it : Interval = [1 .. 10 (+1)]
+umu:2> 1.(to:10 by:2)
+val it : Interval = [1 .. 10 (+2)]
+umu:3>
+```
+
+==== By send-expression to class object
+
+===== Binary class message
+
+Send binary class message '&Interval.make : Int -> Int -> Interval'
+
+```
+umu:1> &Interval.make 1 10
+val it : Interval = [1 .. 10 (+1)]
+umu:2> &Interval.make
+fun it = #<{ %x_1 %x_2 -> (%r).(make %x_1 %x_2) }>
+umu:3> it 1
+fun it = #<{ %x_2 -> (%r).(make %x_1 %x_2) }>
+umu:4> it 10
+val it : Interval = [1 .. 10 (+1)]
+umu:5>
+```
+
+Send binary class message '&Interval.make-by : Int -> Int -> Int -> Interval'
+
+```
+umu:1> &Interval.make-by 1 10 2
+val it : Interval = [1 .. 10 (+2)]
+umu:2> &Interval.make-by
+fun it = #<{ %x_1 %x_2 %x_3 -> (%r).(make-by %x_1 %x_2 %x_3) }>
+umu:3> it 1
+fun it = #<{ %x_2 %x_3 -> (%r).(make-by %x_1 %x_2 %x_3) }>
+umu:4> it 10
+fun it = #<{ %x_3 -> (%r).(make-by %x_1 %x_2 %x_3) }>
+umu:5> it 2
+val it : Interval = [1 .. 10 (+2)]
+umu:6>
+```
+
+===== Keyword class message
+
+Send keyword class message '&Interval.(from:Int to:Int) -> Interval' and
+'&Interval.(from:Int to:Int by:Int) -> Interval'
+
+```
+umu:1> &Interval.(from:1 to:10)
+val it : Interval = [1 .. 10 (+1)]
+umu:2> &Interval.(from:1 to:10 by:2)
+val it : Interval = [1 .. 10 (+2)]
+umu:3>
+```
+
+=== Operation to interval object
+
+Like lists, intervals are a type of collection called morphs,
+so they can respond to the same messages as lists.
+
+```
+umu:1> [1 .. 10].to-list
+val it : Cons = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+umu:2> [1, 3 .. 10].to-list
+val it : Cons = [1, 3, 5, 7, 9]
+umu:3> [1 .. 10].select odd?
+val it : Cons = [1, 3, 5, 7, 9]
+umu:4> [1 .. 10].map to-s
+val it : Cons = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
+umu:5> [1 .. 10].select odd?.map to-s
+val it : Cons = ["1", "3", "5", "7", "9"]
+umu:6> [1 .. 3].for-each print
+1
+2
+3
+val it : Unit = ()
+umu:7>
+```
+

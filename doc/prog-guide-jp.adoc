@@ -22,7 +22,8 @@
 
 
 // アトム
-include::prog-guide-jp/atom-jp.adoc[]
+include::prog-guide/atom-jp.adoc[]
+
 
 == 直積（未）
 
@@ -44,25 +45,25 @@ include::prog-guide-jp/atom-jp.adoc[]
 
 
 // インターバル
-include::prog-guide-jp/interval-jp.adoc[]
+include::prog-guide/interval-jp.adoc[]
 
 
 // リスト内包表記
-include::prog-guide-jp/list-compreh-jp.adoc[]
+include::prog-guide/list-compreh-jp.adoc[]
 
 
 // ラムダ式と関数
-include::prog-guide-jp/lambda-func-jp.adoc[]
+include::prog-guide/lambda-func-jp.adoc[]
 
 
 //メッセージと送信式
-include::prog-guide-jp/message-send-jp.adoc[]
+include::prog-guide/message-send-jp.adoc[]
 
 
 == パターン（未）
 
 
-== 分岐（未）
+== 分岐式（未）
 
 === if式
 
@@ -81,7 +82,7 @@ include::prog-guide-jp/message-send-jp.adoc[]
 
 
 // リファレンス
-include::prog-guide-jp/reference-jp.adoc[]
+include::prog-guide/reference-jp.adoc[]
 
 
 == S-式（未）

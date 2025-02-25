@@ -1,0 +1,80 @@
+== Lambda expression and Function definition
+
+=== Lambda expression
+```
+umu:1> { x y -> x + y }
+fun it = #<{ x y -> (+ x y) }>
+umu:2> it 3 4
+val it : Int = 7
+umu:3>
+```
+
+```
+umu:1> { x y -> x + y } 3
+fun it = #<{ y -> (+ x y) }>
+umu:2> it 4
+val it : Int = 7
+umu:3>
+```
+
+```
+umu:1> { (x, y) -> 3 + 4 }
+fun it = #<{ %a1 : Product -> %LET { %VAL x = (%a1)$1 %VAL y = (%a1)$2 %IN (+ 3 4) } }>
+umu:2> it (3, 4)
+val it : Int = 7
+umu:3>
+```
+
+=== Function definition
+
+==== Simple function
+
+The declaration `val` binds a value to an identifier.
+Here, the value is a function object.
+
+```
+umu:1> val add = { x y -> x + y }
+fun add = #<{ x y -> (+ x y) }>
+umu:2> add 3 4
+val it : Int = 7
+umu:3>
+```
+
+The declaration `fun` is syntactic sugar for binding function objects.
+
+```
+umu:1> fun add' = x y -> x + y
+fun add' = #<add': { x y -> (+ x y) }>
+umu:2> add' 3 4
+val it : Int = 7
+umu:3>
+```
+
+```
+umu:1> fun add'' = (x, y) -> x + y
+fun add'' = #<add'': { %a1 : Product
+    -> %LET { %VAL x = (%a1)$1 %VAL y = (%a1)$2 %IN (+ x y) }
+    }>
+umu:2> add'' (3, 4)
+val it : Int = 7
+umu:3>
+```
+
+
+==== Recursive function
+
+A recursive function is defined with the declaration `fun rec`.
+
+```
+umu:1> fun rec factorial = x -> (    # Copy&Paste: 'umu/example/factorial.umu'
+umu:2*     if x <= 1 then
+umu:3*         1   
+umu:4*     else
+umu:5*         x * factorial (x - 1)
+umu:6* )
+fun factorial = #<factorial: { x -> (%IF (<= x 1) %THEN 1 %ELSE (* x (factorial (- x 1)))) }>
+umu:7> factorial 3
+val it : Int = 6
+umu:8>
+```
+

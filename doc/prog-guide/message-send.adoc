@@ -1,0 +1,174 @@
+== Message and Send Expression
+
+=== Message
+
+Messages are classified as follows:
+
+* Instance message
+** Simple instance message
+*** Unary Instance message
+**** [Example] Int#to-s : String
+**** [Example] Bool#not : Bool
+**** [Example] List#join : String
+*** Binary instance message
+**** [Example] Int#+ : Int -> Int
+**** [Example] Int#to : Int -> Interval
+**** [Example] String#^ : String -> String
+**** [Example] List#cons : Top -> List
+**** [Example] List#join-by : String -> String
+**** [Example] Fun#apply : Top -> Top
+*** N-ary instance message
+**** [Example] Int#to-by : Int -> Int -> Interval
+**** [Example] List#foldr : Top -> Fun -> Top
+**** [Example] Fun#apply-binary : Top -> Top -> Top
+**** [Example] Fun#apply-nary : Top -> Top -> Morph -> Top
+** Keyword instance message
+*** [Example] Int#(to:Int) -> Interval
+*** [Example] Int#(to:Int by:Int) -> Interval
+*** [Example] List#(join:String) -> String
+* Class message
+** Simple class message
+*** [Example] &Bool.true : Bool
+*** [Example] &Float.nan : Float
+*** [Example] &Some.make : Top -> Some
+*** [Example] &Datum.make : Symbol -> Top -> Datum
+*** [Example] &List.cons : Top -> Morph -> Morph
+*** [Example] &Interval.make : Int -> Int -> Interval
+*** [Example] &Interval.make-by : Int -> Int -> Int -> Interval
+** Keyword class message
+*** [Example] &Datum.(tag:Symbol contents:Top) -> Datum
+*** [Example] &List.(head:Top tail:Morph) -> Morph
+*** [Example] &Interval.(from:Int to:Int) -> Interval
+*** [Example] &Interval.(from:Int to:Int by:Int) -> Interval
+
+
+=== Instance message and Class message
+
+Instance messages are ordinary messages.
+
+A class message is a message to the class object created by the class expression `&Foo`.
+This is often used to create an instance of a class.
+
+> [!NOTE]
+> Currently, the reserved word `new` for instantiation found in Java and Ruby is defined but not used.
+> In the future, when user-defined functionality for classes is provided, the syntax will be `new Foo x`.
+
+
+=== Simple message and Keyword message
+
+Simple messages are messages that are curried and
+are suitable for mixed object-oriented and functional programming styles.
+
+
+Keyword messages are non-curried messages and
+are more readable than simple messages when they involve complex arguments.
+
+=== Function application and Message sending
+
+```
+umu:1> 3 + 4             # Infix orepator expression
+val it : Int = 7
+umu:2> (+) 3 4           # Infix operator as function object
+val it : Int = 7
+umu:3> ((+) 3) 4         # Partial application for first parameter
+val it : Int = 7
+umu:4> (+ 4) 3           # Partial application for second parameter
+val it : Int = 7
+```
+
+```
+umu:5> 3.(+ 4)           # Send binary message '+ 4' to integer object 3
+val it : Int = 7
+umu:6> 3.+ 4             # Brakets are optional
+val it : Int = 7
+umu:7> (3.+) 4           # Send only binary message keyword '+'
+val it : Int = 7
+umu:8> &(+) 3 4          # Binary message as function object
+val it : Int = 7
+umu:9> (&(+) 3) 4        # Partial application for first parameter
+val it : Int = 7
+```
+
+```
+umu:10> (+).apply-binary 3 4    # Send apply message to function object
+val it : Int = 7
+umu:11> (+).[3, 4]       # Another apply message notation (syntactic sugar)
+val it : Int = 7
+```
+
+
+=== Message chaining, Pipelined application and Function composition
+
+See edvakf's blog article:
+link:https://edvakf.hatenadiary.org/entry/20090405/1238885788[PythonでもRubyみたいに配列をメソッドチェーンでつなげたい].
+
+==== Message Chaining
+
+OOP(object oriented programming) style
+
+```
+umu:1> [1, 4, 3, 2]
+val it : Cons = [1, 4, 3, 2]
+umu:2> [1, 4, 3, 2].sort
+val it : Cons = [1, 2, 3, 4]
+umu:3> [1, 4, 3, 2].sort.reverse
+val it : Cons = [4, 3, 2, 1]
+umu:4> [1, 4, 3, 2].sort.reverse.map to-s
+val it : Cons = ["4", "3", "2", "1"]
+umu:5> [1, 4, 3, 2].sort.reverse.map to-s.join-by "-"
+val it : String = "4-3-2-1"
+umu:6>
+```
+
+==== Pipelined Application
+
+Like F#, Ocaml, Scala, Elixir ... etc
+
+```
+umu:1> [1, 4, 3, 2] |> sort |> reverse |> map to-s |> join-by "-"
+val it : String = "4-3-2-1"
+umu:2>
+```
+
+==== Another Pipelined Application
+
+Like a Haskell's $-operator
+
+```
+umu:1> join-by "-" <| map to-s <| reverse <| sort [1, 4, 3, 2]
+val it : String = "4-3-2-1"
+umu:2>
+```
+
+==== Function Composition
+
+```
+umu:1> (sort >> reverse >> map to-s >> join-by "-") [1, 4, 3, 2]
+val it : String = "4-3-2-1"
+umu:2> [1, 4, 3, 2] |> sort >> reverse >> map to-s >> join-by "-"
+val it : String = "4-3-2-1"
+umu:3>
+```
+
+==== Another Function Composition
+
+Like a Haskell's point-free style
+
+```
+umu:1> (join-by "-" << map to-s << reverse << sort) [1, 4, 3, 2]
+val it : String = "4-3-2-1"
+umu:2> join-by "-" << map to-s << reverse << sort <| [1, 4, 3, 2]
+val it : String = "4-3-2-1"
+umu:3>
+```
+
+==== Traditional nested function application
+
+Like Lisp, Python, Pascal, Fortran, ... etc
+
+```
+umu:1> join-by "-" (map to-s (reverse (sort [1, 4, 3, 2])))
+val it : String = "4-3-2-1"
+umu:2>
+```
+

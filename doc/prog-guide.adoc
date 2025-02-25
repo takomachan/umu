@@ -1,487 +1,92 @@
 = Umu Programming Guide
 :doctype: book
-:scripts: cjk
+//:scripts: cjk
 //:pdf-theme: default-with-font-fallbacks
 :sectnumlevels: 4
 :sectnums:
 :toc: left
 
+== Overview (empty)
 
+=== Evaluation
 
+=== Expression and Value
 
-== Atom
-
-=== Integer
-```
-umu:1> 3
-val it : Int = 3
-umu:2> 3 + 4
-val it : Int = 7
-umu:3>
-```
-
-=== Float
-```
-umu:1> 3.0
-val it : Float = 3.0
-umu:2> 3.0 + 4.0
-val it : Float = 7.0
-umu:3>
-```
-
-=== String
-```
-umu:1> "Hello"
-val it : String = "Hello"
-umu:2> "Hello" ^ " world"
-val it : String = "Hello world"
-umu:3>
-```
-
-=== Symbol
-```
-umu:1> @hello
-val it : Symbol = @hello
-umu:2> to-s @hello
-val it : String = "hello"
-umu:3> show @hello
-val it : String = "@hello"
-umu:4>
-```
-
-=== Bool
-```
-umu:1> TRUE
-val it : Bool = TRUE
-umu:2> 3 == 3
-val it : Bool = TRUE
-umu:3> 3 == 4
-val it : Bool = FALSE
-umu:4>
-```
-
-== Lambda expression and Function definition
-
-== Lambda expression
-```
-umu:1> { x y -> x + y }
-fun it = #<{ x y -> (+ x y) }>
-umu:2> it 3 4
-val it : Int = 7
-umu:3>
-```
-
-```
-umu:1> { x y -> x + y } 3
-fun it = #<{ y -> (+ x y) }>
-umu:2> it 4
-val it : Int = 7
-umu:3>
-```
-
-```
-umu:1> { (x, y) -> 3 + 4 }
-fun it = #<{ %a1 : Product -> %LET { %VAL x = (%a1)$1 %VAL y = (%a1)$2 %IN (+ 3 4) } }>
-umu:2> it (3, 4)
-val it : Int = 7
-umu:3>
-```
-
-== Function definition
-
-=== Simple function
-
-The declaration `val` binds a value to an identifier.
-Here, the value is a function object.
-
-```
-umu:1> val add = { x y -> x + y }
-fun add = #<{ x y -> (+ x y) }>
-umu:2> add 3 4
-val it : Int = 7
-umu:3>
-```
-
-The declaration `fun` is syntactic sugar for binding function objects.
-
-```
-umu:1> fun add' = x y -> x + y
-fun add' = #<add': { x y -> (+ x y) }>
-umu:2> add' 3 4
-val it : Int = 7
-umu:3>
-```
-
-```
-umu:1> fun add'' = (x, y) -> x + y
-fun add'' = #<add'': { %a1 : Product
-    -> %LET { %VAL x = (%a1)$1 %VAL y = (%a1)$2 %IN (+ x y) }
-    }>
-umu:2> add'' (3, 4)
-val it : Int = 7
-umu:3>
-```
-
-
-=== Recursive function
-
-A recursive function is defined with the declaration `fun rec`.
-
-```
-umu:1> fun rec factorial = x -> (    # Copy&Paste: 'umu/example/factorial.umu'
-umu:2*     if x <= 1 then
-umu:3*         1   
-umu:4*     else
-umu:5*         x * factorial (x - 1)
-umu:6* )
-fun factorial = #<factorial: { x -> (%IF (<= x 1) %THEN 1 %ELSE (* x (factorial (- x 1)))) }>
-umu:7> factorial 3
-val it : Int = 6
-umu:8>
-```
-
-
-== Function application and Message sending
-```
-umu:1> 3 + 4             # Infix orepator expression
-val it : Int = 7
-umu:2> (+) 3 4           # Infix operator as function object
-val it : Int = 7
-umu:3> ((+) 3) 4         # Partial application for first parameter
-val it : Int = 7
-umu:4> (+ 4) 3           # Partial application for second parameter
-val it : Int = 7
-```
-
-```
-umu:5> 3.(+ 4)           # Send binary message '+ 4' to integer object 3
-val it : Int = 7
-umu:6> 3.+ 4             # Brakets are optional
-val it : Int = 7
-umu:7> (3.+) 4           # Send only binary message keyword '+'
-val it : Int = 7
-umu:8> &(+) 3 4          # Binary message as function object
-val it : Int = 7
-umu:9> (&(+) 3) 4        # Partial application for first parameter
-val it : Int = 7
-```
-
-```
-umu:10> (+).apply-binary 3 4    # Send apply message to function object
-val it : Int = 7
-umu:11> (+).[3, 4]       # Another apply message notation (syntactic sugar)
-val it : Int = 7
-```
-
-
-== Message chaining, Pipelined application and Function composition
-
-See edvakf's blog article:
-link:https://edvakf.hatenadiary.org/entry/20090405/1238885788[PythonでもRubyみたいに配列をメソッドチェーンでつなげたい].
-
-=== Message Chaining
-
-OOP(object oriented programming) style
-
-```
-umu:1> [1, 4, 3, 2]
-val it : Cons = [1, 4, 3, 2]
-umu:2> [1, 4, 3, 2].sort
-val it : Cons = [1, 2, 3, 4]
-umu:3> [1, 4, 3, 2].sort.reverse
-val it : Cons = [4, 3, 2, 1]
-umu:4> [1, 4, 3, 2].sort.reverse.map to-s
-val it : Cons = ["4", "3", "2", "1"]
-umu:5> [1, 4, 3, 2].sort.reverse.map to-s.join-by "-"
-val it : String = "4-3-2-1"
-umu:6>
-```
-
-=== Pipelined Application
-
-Like F#, Ocaml, Scala, Elixir ... etc
-
-```
-umu:1> [1, 4, 3, 2] |> sort |> reverse |> map to-s |> join-by "-"
-val it : String = "4-3-2-1"
-umu:2>
-```
-
-=== Another Pipelined Application
-
-Like a Haskell's $-operator
-
-```
-umu:1> join-by "-" <| map to-s <| reverse <| sort [1, 4, 3, 2]
-val it : String = "4-3-2-1"
-umu:2>
-```
-
-=== Function Composition
-
-```
-umu:1> (sort >> reverse >> map to-s >> join-by "-") [1, 4, 3, 2]
-val it : String = "4-3-2-1"
-umu:2> [1, 4, 3, 2] |> sort >> reverse >> map to-s >> join-by "-"
-val it : String = "4-3-2-1"
-umu:3>
-```
-
-=== Another Function Composition
-
-Like a Haskell's point-free style
-
-```
-umu:1> (join-by "-" << map to-s << reverse << sort) [1, 4, 3, 2]
-val it : String = "4-3-2-1"
-umu:2> join-by "-" << map to-s << reverse << sort <| [1, 4, 3, 2]
-val it : String = "4-3-2-1"
-umu:3>
-```
-
-=== Traditional nested function application
-
-Like Lisp, Python, Pascal, Fortran, ... etc
-
-```
-umu:1> join-by "-" (map to-s (reverse (sort [1, 4, 3, 2])))
-val it : String = "4-3-2-1"
-umu:2>
-```
-
-
-
-== Message
-
-Messages are classified as follows:
-
-* Instance message
-** Simple instance message
-*** Unary Instance message
-**** [Example] Int#to-s : String
-**** [Example] Bool#not : Bool
-**** [Example] List#join : String
-*** Binary instance message
-**** [Example] Int#+ : Int -> Int
-**** [Example] Int#to : Int -> Interval
-**** [Example] String#^ : String -> String
-**** [Example] List#cons : Top -> List
-**** [Example] List#join-by : String -> String
-**** [Example] Fun#apply : Top -> Top
-*** N-ary instance message
-**** [Example] Int#to-by : Int -> Int -> Interval
-**** [Example] List#foldr : Top -> Fun -> Top
-**** [Example] Fun#apply-binary : Top -> Top -> Top
-**** [Example] Fun#apply-nary : Top -> Top -> Morph -> Top
-** Keyword instance message
-*** [Example] Int#(to:Int) -> Interval
-*** [Example] Int#(to:Int by:Int) -> Interval
-*** [Example] List#(join:String) -> String
-* Class message
-** Simple class message
-*** [Example] &Bool.true : Bool
-*** [Example] &Float.nan : Float
-*** [Example] &Some.make : Top -> Some
-*** [Example] &Datum.make : Symbol -> Top -> Datum
-*** [Example] &List.cons : Top -> Morph -> Morph
-*** [Example] &Interval.make : Int -> Int -> Interval
-*** [Example] &Interval.make-by : Int -> Int -> Int -> Interval
-** Keyword class message
-*** [Example] &Datum.(tag:Symbol contents:Top) -> Datum
-*** [Example] &List.(head:Top tail:Morph) -> Morph
-*** [Example] &Interval.(from:Int to:Int) -> Interval
-*** [Example] &Interval.(from:Int to:Int by:Int) -> Interval
-
-
-=== Instance message and Class message
-
-Instance messages are ordinary messages.
-
-A class message is a message to the class object created by the class expression `&Foo`.
-This is often used to create an instance of a class.
-
-> [!NOTE]
-> Currently, the reserved word `new` for instantiation found in Java and Ruby is defined but not used.
-> In the future, when user-defined functionality for classes is provided, the syntax will be `new Foo x`.
-
-
-=== Simple message and Keyword message
-
-Simple messages are messages that are curried and
-are suitable for mixed object-oriented and functional programming styles.
-
-
-Keyword messages are non-curried messages and
-are more readable than simple messages when they involve complex arguments.
-
-
-
-
-
-== Interval
-
-An interval is an object that represents a sequence of integers.
-Similar to list, but with the following differences:
-
-* The elements of a list can be any objects, but the elements of an interval can only be integers.
-* Intervals are memory efficient for long sequence because they consist of only three attributes:
-** `current`: current value
-** `stop`: stop value
-** `step`: step value
-* Intervals can be used not only to represent data, but also to control repetition. For example,
-** The procedural loop processing `for (i = 1 ; i <= 10 ; i++) { ... }` in C language
-** uses intervals to `[1 .. 10].for-each { i -> ... }` is written.
-
-
-
-=== Makeing interval object
-
-==== By interval-expression
-
-```
-umu:1> [1 .. 10]
-val it : Interval = [1 .. 10 (+1)]
-umu:2> [1, 3 .. 10]
-val it : Interval = [1 .. 10 (+2)]
-umu:3> it.contents
-val it : Named = (current:1 stop:10 step:2)
-```
-
-==== By send-expression to instance object
-
-===== Binary instance message
-
-Send binary instance message 'Int#to : Int -> Interval'
-
-```
-umu:1> 1.to 10
-val it : Interval = [1 .. 10 (+1)]
-umu:2> 1.to
-fun it = #<{ %x_1 -> (%r).(to %x_1) }>
-umu:3> it 10
-val it : Interval = [1 .. 10 (+1)]
-umu:4>
-```
-
-Send binary instance message 'Int#to-by : Int -> Int -> Interval'
-
-```
-umu:1> 1.to-by 10 2
-val it : Interval = [1 .. 10 (+2)]
-umu:2> 1.to-by
-fun it = #<{ %x_1 %x_2 -> (%r).(to-by %x_1 %x_2) }>
-umu:3> it 10
-fun it = #<{ %x_2 -> (%r).(to-by %x_1 %x_2) }>
-umu:4> it 2
-val it : Interval = [1 .. 10 (+2)]
-umu:5>
-```
-
-===== Keyword instance message
-
-Send keyword instance message 'Int#(to:Int) -> Interval' and
-'Int#(to:Int by:Int) -> Interval'
-
-```
-umu:1> 1.(to:10)
-val it : Interval = [1 .. 10 (+1)]
-umu:2> 1.(to:10 by:2)
-val it : Interval = [1 .. 10 (+2)]
-umu:3>
-```
-
-==== By send-expression to class object
-
-===== Binary class message
-
-Send binary class message '&Interval.make : Int -> Int -> Interval'
-
-```
-umu:1> &Interval.make 1 10
-val it : Interval = [1 .. 10 (+1)]
-umu:2> &Interval.make
-fun it = #<{ %x_1 %x_2 -> (%r).(make %x_1 %x_2) }>
-umu:3> it 1
-fun it = #<{ %x_2 -> (%r).(make %x_1 %x_2) }>
-umu:4> it 10
-val it : Interval = [1 .. 10 (+1)]
-umu:5>
-```
-
-Send binary class message '&Interval.make-by : Int -> Int -> Int -> Interval'
-
-```
-umu:1> &Interval.make-by 1 10 2
-val it : Interval = [1 .. 10 (+2)]
-umu:2> &Interval.make-by
-fun it = #<{ %x_1 %x_2 %x_3 -> (%r).(make-by %x_1 %x_2 %x_3) }>
-umu:3> it 1
-fun it = #<{ %x_2 %x_3 -> (%r).(make-by %x_1 %x_2 %x_3) }>
-umu:4> it 10
-fun it = #<{ %x_3 -> (%r).(make-by %x_1 %x_2 %x_3) }>
-umu:5> it 2
-val it : Interval = [1 .. 10 (+2)]
-umu:6>
-```
-
-===== Keyword class message
-
-Send keyword class message '&Interval.(from:Int to:Int) -> Interval' and
-'&Interval.(from:Int to:Int by:Int) -> Interval'
-
-```
-umu:1> &Interval.(from:1 to:10)
-val it : Interval = [1 .. 10 (+1)]
-umu:2> &Interval.(from:1 to:10 by:2)
-val it : Interval = [1 .. 10 (+2)]
-umu:3>
-```
-
-=== Operation to interval object
-
-Like lists, intervals are a type of collection called morphs,
-so they can respond to the same messages as lists.
-
-```
-umu:1> [1 .. 10].to-list
-val it : Cons = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-umu:2> [1, 3 .. 10].to-list
-val it : Cons = [1, 3, 5, 7, 9]
-umu:3> [1 .. 10].select odd?
-val it : Cons = [1, 3, 5, 7, 9]
-umu:4> [1 .. 10].map to-s
-val it : Cons = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
-umu:5> [1 .. 10].select odd?.map to-s
-val it : Cons = ["1", "3", "5", "7", "9"]
-umu:6> [1 .. 3].for-each print
-1
-2
-3
-val it : Unit = ()
-umu:7>
-```
-
-== List Comprehension
-
-```
-umu:1> [|x| val x <- [1 .. 10]]
-val it : Cons = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-umu:2> [|x| val x <- [1 .. 10] if odd? x]
-val it : Cons = [1, 3, 5, 7, 9]
-umu:3> [|to-s x| val x <- [1 .. 10] ]
-val it : Cons = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
-umu:4> [|to-s x| val x <- [1 .. 10] if odd? x]
-val it : Cons = ["1", "3", "5", "7", "9"]
-```
-
-```
-umu:1> [|k, v| val k <- [@a, @b] val v <- [1 .. 3]]
-val it : Cons = [(@a, 1), (@a, 2), (@a, 3), (@b, 1), (@b, 2), (@b, 3)]
-umu:2> [|k: v:| val k <- [@a, @b] val v <- [1 .. 3]]
-val it : Cons = [(k:@a v:1), (k:@a v:2), (k:@a v:3), (k:@b v:1), (k:@b v:2), (k:@b v:3)]
-umu:3>
-```
-
-For  advanced usage of the list comprehension,
-please refer to the
-link:https://github.com/takomachan/umu/tree/main/example/database[database examples].
+=== Declaration and Environment
+
+=== Function and Message
+
+=== Type and Class
+
+
+// Atom
+include::prog-guide/atom.adoc[]
+
+
+== Direct Propuct (empty)
+
+=== Tuple
+
+=== Named Tuple
+
+
+== Disjoint Union (empty)
+
+=== Option
+
+=== Result
+
+=== Taged Data
+
+
+== List (empty)
+
+
+// List Comprehension
+include::prog-guide/list-compreh.adoc[]
+
+
+// Lambda Expression and Function
+include::prog-guide/lambda-func.adoc[]
+
+
+// Message and Send Expression
+include::prog-guide/message-send.adoc[]
+
+
+== Pattern (empty)
+
+
+== Branch Expression (empty)
+
+=== if-Expression
+
+=== cond-Expression
+
+=== case-Expression
+
+
+// Interval
+include::prog-guide/interval.adoc[]
+
+
+== Delayed Evaluation and Stream (empty)
+
+
+== Input and Output (empty)
+
+=== I/O (empty)
+
+=== Sequential Expression
+
+=== File and Directory
+
+
+== Reference (empty)
+
+
+== S-Expression (empty)
+
+
+== Module (empty)
+
