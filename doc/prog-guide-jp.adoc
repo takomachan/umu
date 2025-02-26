@@ -6,19 +6,8 @@
 :sectnums:
 :toc: left
 
-== 概要（未）
-
-
-=== 式と値
-
-
-=== 宣言と環境
-
-
-=== 関数とメッセージ
-
-
-=== 型とクラス
+// 概要
+include::prog-guide/overview-jp.adoc[]
 
 
 // アトム

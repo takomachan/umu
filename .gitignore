@@ -12,3 +12,6 @@ doc/Make.FILES
 doc/tmdoc/LOG.txt
 doc/tmdoc/dbook/
 doc/tmdoc/html/
+doc/html/
+doc/prog-guide/*.ps
+doc/prog-guide/*.eps

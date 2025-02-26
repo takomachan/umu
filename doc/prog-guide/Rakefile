@@ -1,0 +1,79 @@
+ASCIIDOCTOR = '$HOME/.gem/ruby/3.3.0/bin/asciidoctor'
+GROFF       = 'groff'
+PS2EPS      = 'ps2eps'
+CONVERT     = 'convert'
+#PS2PDF      = 'ps2pdf'
+#PDFTOCAIRO  = 'pdftocairo'
+
+FILE_NAMES = [
+    'compute',
+    'evaluate',
+    'eval-const',
+    'eval-var',
+    'eval-decl',
+    'side-effect'
+]
+
+PNG_FILES, PNG_FILE_MAP = FILE_NAMES.inject(
+         [[],    {}]
+    ) { |(files, file_map), name|
+        
+        source =              name + ".eps"
+        target = "../html/" + name + ".png"
+
+        [files + [target], file_map.merge(target => source)]
+    }
+
+FILES = PNG_FILES
+#FILES = SVG_FILES
+
+FILE_MAP = PNG_FILE_MAP
+#FILE_MAP = SVG_FILE_MAP
+
+
+task :default => :build
+
+
+task :build  => FILES
+
+
+task :files do
+    FILES.each do |file|
+        puts file
+    end
+end
+
+
+task :clean do
+    sh 'rm -f *.ps *.eps *.pdf ../html/*.png ../html/*.svg'
+end
+
+
+rule '.ps' => '.pic' do |task|
+    sh "#{GROFF} -p #{task.source} > #{task.name}"
+end
+
+
+rule '.eps' => '.ps' do |task|
+    sh "#{PS2EPS} --loose < #{task.source} > #{task.name}"
+end
+
+
+FILE_MAP.each do |target, source|
+    file target => source do |task|
+        sh "#{CONVERT} -density 150x150 #{task.source} #{task.name}"
+    end
+end
+
+
+#FIXME: Tasks for SVG file
+=begin
+rule '.pdf' => '.eps' do |task|
+    sh "#{PS2PDF} -sOutputFile=#{task.name} #{task.source}"
+end
+
+
+rule '.svg' => '.pdf' do |task|
+    sh "#{PDFTOCAIRO} -svg #{task.source}"
+end
+=end

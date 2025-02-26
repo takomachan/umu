@@ -440,12 +440,15 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#_概要未">1. 概要（未）</a>
+<li><a href="#_概要">1. 概要</a>
 <ul class="sectlevel2">
-<li><a href="#_式と値">1.1. 式と値</a></li>
-<li><a href="#_宣言と環境">1.2. 宣言と環境</a></li>
-<li><a href="#_関数とメッセージ">1.3. 関数とメッセージ</a></li>
-<li><a href="#_型とクラス">1.4. 型とクラス</a></li>
+<li><a href="#_評価">1.1. 評価</a></li>
+<li><a href="#_式と定数">1.2. 式と定数</a></li>
+<li><a href="#_変数と環境">1.3. 変数と環境</a></li>
+<li><a href="#_宣言と環境">1.4. 宣言と環境</a></li>
+<li><a href="#_作用と副作用">1.5. 作用と副作用</a></li>
+<li><a href="#_関数とメッセージ_empty">1.6. 関数とメッセージ (empty)</a></li>
+<li><a href="#_型とクラス_empty">1.7. 型とクラス (empty)</a></li>
 </ul>
 </li>
 <li><a href="#_アトム">2. アトム</a>
@@ -512,22 +515,272 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div id="content">
 <div class="sect1">
-<h2 id="_概要未">1. 概要（未）</h2>
+<h2 id="_概要">1. 概要</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>この章では、関数型言語とオブジェクト指向を
+理解するのに必要となる、基本の概念と用語を説明します。
+すでに分かっている人であれば、 読み飛ばしてもかまいません。</p>
+</div>
 <div class="sect2">
-<h3 id="_式と値">1.1. 式と値</h3>
+<h3 id="_評価">1.1. 評価</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>人間：「３と４を足すといくつ？]
+計算機：「７です]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>計算機(computer)は
+人間からの質問(question)に対して答え(answer)を返します。</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="compute.png" alt="compute">
+</div>
+</div>
+<div class="paragraph">
+<p>この処理を関数型言語では評価(evaluation)と呼び、
+人間から受ける質問の事を文(statemennt)、
+そして人間へ返す答えの事を作用(effect)と呼びます。</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="evaluate.png" alt="evaluate">
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>umu:1&gt; 3 + 4
+val it : Int = 7</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>ここで、文は以下の二つに分類されます。</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>文</p>
+<div class="ulist">
+<ul>
+<li>
+<p>式</p>
+</li>
+<li>
+<p>宣言</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>また作用は以下の二つに分類されます。</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>作用</p>
+<div class="ulist">
+<ul>
+<li>
+<p>値</p>
+</li>
+<li>
+<p>環境</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>先の実行例であれば、
+「式 <code>3 + 4</code> を評価した結果は値 <code>7</code> である」
+と解釈します。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_式と定数">1.2. 式と定数</h3>
+<div class="paragraph">
+<p>式(expression)とは多くの要素に構成される文の一種です。
+その中から、最も単純な二つの構成要素について
+評価の方法を以下に示します。</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>定数(constant): [例] <code>3</code></p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>その値そのものを返します。</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>演算子(operator): [例] <code>+</code></p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>まずその被演算子(operand)を再帰的に評価し、</p>
+</li>
+<li>
+<p>その値を元に演算して結果を返します。</p>
+</li>
+</ol>
+</div>
+</li>
+</ul>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="eval-const.png" alt="eval const">
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_変数と環境">1.3. 変数と環境</h3>
+<div class="paragraph">
+<p>値には名前を付けることができます。
+たとえば円周率を表すのに
+毎回 <code>3.14159265358979</code> と書くのは
+面倒ですからそれを <code>PI</code> と命名し、
+その名前で円周率の値を表すものと解釈します。
+ここで、値に付けられた名前の事を変数(variable)と呼び、
+名前と値の対応が記録された辞書の事を
+環境(environment)と呼びます。</p>
+</div>
+<div class="paragraph">
+<p>変数は以下のように評価します。</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>変数(variable): [例] <code>PI</code>, <code>TRUE</code></p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>その名前と対応する値を環境(environment)から検索し、</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>見つかればその値を返し、</p>
+</li>
+<li>
+<p>見つからなければエラーとします。</p>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+</li>
+</ul>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="eval-var.png" alt="eval var">
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>umu:1&gt; TRUE
+val it : Bool = TRUE
+umu:2&gt; Umu::Math::PI
+val it : Float = 3.141592653589793
+umu:3&gt; foo
+
+[NameError] Unbound value identifier: 'foo' -- #3 in "&lt;stdin&gt;"
+umu:4&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_宣言と環境">1.4. 宣言と環境</h3>
+<div class="paragraph">
+<p>宣言(declaration)とは変数と式から構成される文の一種であり、
+現在の環境(environment)へ新しい変数を登録できるようになります。</p>
+</div>
+<div class="paragraph">
+<p>宣言は以下のように評価します。</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>現在の環境の下で式を評価し、</p>
+</li>
+<li>
+<p>変数の名前と評価した値の対応を環境へ登録し、</p>
+</li>
+<li>
+<p>次回の評価では登録された新しい環境を参照します。</p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>umu:1&gt; val x = 3        # 変数 x を宣言
+val x : Int = 3
+umu:2&gt; val y = 4        # 変数 x を宣言
+val y : Int = 4
+umu:3&gt; val z = x + y    # 式 x + y を評価し、変数 z を宣言
+val z : Int = 7
+umu:4&gt;</code></pre>
+</div>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="eval-decl.png" alt="eval decl">
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_作用と副作用">1.5. 作用と副作用</h3>
+<div class="paragraph">
+<p>文を評価した時、作用(effect)だけでなく別の結果が生じることがあります。
+この副次的に発生する結果を副作用(side effect)と呼びます。</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="side-effect.png" alt="side effect">
+</div>
+</div>
+<div class="paragraph">
+<p>副作用は以下の三つに分類されます。</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>乱数発生</p>
+</li>
+<li>
+<p>入出力</p>
+</li>
+<li>
+<p>破壊的代入</p>
+<div class="ulist">
+<ul>
+<li>
+<p>リファレンス</p>
+</li>
+<li>
+<p>S-式</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_関数とメッセージ_empty">1.6. 関数とメッセージ (empty)</h3>
 
 </div>
 <div class="sect2">
-<h3 id="_宣言と環境">1.2. 宣言と環境</h3>
-
-</div>
-<div class="sect2">
-<h3 id="_関数とメッセージ">1.3. 関数とメッセージ</h3>
-
-</div>
-<div class="sect2">
-<h3 id="_型とクラス">1.4. 型とクラス</h3>
+<h3 id="_型とクラス_empty">1.7. 型とクラス (empty)</h3>
 
 </div>
 </div>
@@ -1477,7 +1730,7 @@ umu:4&gt;</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2025-02-25 00:36:28 +0900
+Last updated 2025-02-26 02:17:41 +0900
 </div>
 </div>
 </body>

@@ -1,0 +1,15 @@
+.PS
+box width 1.0 "declaration"
+arrow
+ellipse "evaluate"
+move to last ellipse .s + (0.0, -0.25)
+down
+box width 1.0 "environment"
+
+move to last ellipse .sw
+spline left 0.45 down 0.1 then down 0.4 to last box .w <-
+
+move to last ellipse .se
+spline right 0.45 down 0.1 then down 0.4 to last box .e ->
+.PE
+
