@@ -7,7 +7,8 @@ Opr1:   box invis "(+)    " ht 0.4 wid 0.4
 
 Opr2:   box invis "#<+>   " ht 0.4 wid 0.4
         arrow right from last box.e
-        box "7" ht 0.2 wid 0.3
+
+Result: box "7" ht 0.2 wid 0.3
 
 Fun:    box rad 0.1 ht 1.4 wid 0.9 at 1/2 <Opr1.c, Opr2.c>
 
@@ -17,7 +18,8 @@ Opnd2:  box "4" ht 0.2 wid 0.3 at (Opnd1.x, Opr2.y)
 line from Opr1.nw to Opr1.sw to Opr1.e to Opr1.nw
 line from Opr2.nw to Opr2.sw to Opr2.e to Opr2.nw
 
-box invis "function" at (Fun.n.x,   Fun.n.y + 0.1)
-box invis "value"    at (Opnd1.n.x, last box.y)
+box invis "function" at (Fun.n.x,  Fun.n.y + 0.1)
+box invis "value"    at (Opnd1.x,  last box.y)
+box invis "value"    at (Result.x, last box.y)
 .PE
 
