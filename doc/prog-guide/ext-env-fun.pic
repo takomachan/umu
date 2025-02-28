@@ -1,0 +1,21 @@
+.PS
+down
+Env1:   ellipse "x => 3" "y => 4" "z => 7" wid 1.25 ht 0.6
+        line 0.1
+        box "\fBfun add = x y -> x + y\fP" ht 0.2 wid 1.4
+        arrow 0.15
+
+Env2:   ellipse "x => 3" "y => 4" "z => 7" "add => #<add>" wid 1.5 ht 0.8
+        line 0.1
+        box "\fBval z = add 30 40\fP" ht 0.2 wid 1.1
+        arrow 0.3
+
+Env3a:  ellipse "x => 3" "y => 4" "add => #<add>" "z => 70" wid 1.5 ht 0.8
+
+Env3b:  ellipse "z => 7" "add => #<add>" "x => 30" "y => 40" \
+        wid 1.5 ht 0.8 at last ellipse.c + (2, 0)
+
+line from 3/4 <last box.sw, last box.se> down 0.15 \
+        then right 1.5 "apply" "" to Env3b.n ->
+.PE
+

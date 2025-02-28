@@ -11,8 +11,11 @@ FILE_NAMES = [
     'eval-const',
     'eval-var',
     'eval-decl',
+    'ext-env-val',
+    'ext-env-fun',
     'fun-plus',
     'fun-add',
+    'fun-curry',
     'side-effect'
 ]
 
