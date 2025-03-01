@@ -13,9 +13,12 @@ FILE_NAMES = [
     'eval-decl',
     'ext-env-val',
     'ext-env-fun',
+    'ext-env-tree',
     'fun-plus',
     'fun-add',
     'fun-curry',
+    'send-add',
+    'send-add-apply',
     'side-effect'
 ]
 

@@ -1,0 +1,22 @@
+.PS
+        left
+
+Param:  box "\fB4\fP" ht 0.2 wid 0.3
+        line 0.1
+
+Mess:   ellipse "\fB+\fP" ht 0.2 wid 0.3
+        arrow "\fIsend\fP" ""
+
+Recv:   box "\fB3\fP" ht 0.2 wid 0.3
+        arrow
+
+Result: box "\fB7\fP" ht 0.2 wid 0.3
+
+
+box invis "object"       "(result)" \
+                                at Result.n              + (0, 0.3)
+box invis "object"       "(receiver)" \
+                                at Recv.n                + (0, 0.3)
+box invis "message with" "object (param)" \
+                                at 1/2 <Mess.n, Param.n> + (0, 0.3)
+.PE

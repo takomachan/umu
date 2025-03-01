@@ -1,22 +1,26 @@
 .PS
-Opnd1:  box "3" ht 0.2 wid 0.3
-        arrow "apply  " ""
+Opnd1:  box "\fB3\fP" ht 0.2 wid 0.3
+        left
+        line invis 0.75
 
-Opr1:   box invis "(+)    " ht 0.4 wid 0.4
+Opr1:   box invis "    \fB(+)\fP" ht 0.4 wid 0.4
+        left
         line 0.2 then down ; arrow 0.1
 
-Opr2:   box invis "#<+>   " ht 0.4 wid 0.4
-        arrow right from last box.e
-
-Result: box "7" ht 0.2 wid 0.3
+Opr2:   box invis "   \fB#<+>\fP" ht 0.4 wid 0.4
 
 Fun:    box rad 0.1 ht 1.4 wid 0.9 at 1/2 <Opr1.c, Opr2.c>
 
-Opnd2:  box "4" ht 0.2 wid 0.3 at (Opnd1.x, Opr2.y)
-        arrow "apply            " "" from Opnd2.e to Opr2.w
+Opnd2:  box "\fB4\fP" ht 0.2 wid 0.3 at (Opnd1.x, Opr2.y)
 
-line from Opr1.nw to Opr1.sw to Opr1.e to Opr1.nw
-line from Opr2.nw to Opr2.sw to Opr2.e to Opr2.nw
+Result: box "\fB7\fP" ht 0.2 wid 0.3 at Opr2 - (0.75, 0)
+        arrow from Opr2.w to Result.e
+
+arrow "  \fIapply\fP" ""           from Opnd1.w to Opr1.e
+arrow "            \fIapply\fP" "" from Opnd2.w to Opr2.e
+
+line from Opr1.ne to Opr1.se to Opr1.w to Opr1.ne
+line from Opr2.ne to Opr2.se to Opr2.w to Opr2.ne
 
 box invis "function" at (Fun.n.x,  Fun.n.y + 0.1)
 box invis "value"    at (Opnd1.x,  last box.y)

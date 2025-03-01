@@ -1,0 +1,47 @@
+.PS
+down
+Env1:   ellipse wid 0.4 ht 0.2
+        line 0.1
+        box ht 0.1 wid 0.4
+        arrow 0.2
+
+Env2:   ellipse wid 0.4 ht 0.2
+        line 0.1
+
+Dcl2:   box ht 0.1 wid 0.4
+        arrow 0.2
+
+Env3:   ellipse wid 0.4 ht 0.2
+        line 0.1
+        box ht 0.1 wid 0.4
+        arrow 0.2
+
+Env4:   ellipse wid 0.4 ht 0.2
+        line 0.1
+        box ht 0.1 wid 0.4
+        arrow 0.2
+
+Env5:   ellipse wid 0.4 ht 0.2
+
+
+Env31:  ellipse wid 0.4 ht 0.2 at Env3.c + (1.0, 0)
+        line 0.1
+        box ht 0.1 wid 0.4
+        arrow 0.2
+
+Env32:  ellipse wid 0.4 ht 0.2
+        line 0.1
+Dcl32:  box ht 0.1 wid 0.4
+        arrow 0.2
+
+Env33:  ellipse wid 0.4 ht 0.2
+
+Env331: ellipse wid 0.4 ht 0.2 at Env33.c + (1.0, 0)
+
+
+line from 3/4 <Dcl2.sw,  Dcl2.se>  down 0.05 \
+                                            then right 0.8 to Env31.n ->
+line from 3/4 <Dcl32.sw, Dcl32.se> down 0.05 \
+                                            then right 0.8 to Env331.n ->
+.PE
+

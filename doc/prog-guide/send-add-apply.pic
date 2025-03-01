@@ -1,0 +1,30 @@
+.PS
+        left
+
+Mess:   ellipse "\fB+\fP" ht 0.2 wid 0.3
+        arrow "    \fIsend\fP" ""
+
+Recv:   box "\fB3\fP" ht 0.2 wid 0.3
+        line 0.1
+        down
+        arrow 0.5
+
+Lamb:   box invis "    \fB#<..>\fP" ht 0.4 wid 0.45
+        move to last box.w
+        left
+        arrow 0.5
+
+Result: box "\fB7\fP" ht 0.2 wid 0.3
+
+Fun:    box rad 0.1 ht 1.4 wid 0.8 at 1/2 <Recv.c, Lamb.c>
+
+Param:  box "\fB4\fP" ht 0.2 wid 0.3 at (Mess.x, Lamb.y)
+        arrow "        \fIapply\fP" "" to Lamb.e
+
+line from Lamb.ne to Lamb.se to Lamb.w to Lamb.ne
+
+box invis "object"  "(receiver)"  at Fun.n    + (0, 0.2)
+box invis "object"  "(result)"    at Result.n + (0, 0.2)
+box invis "message"               at Mess.n   + (0, 0.2)
+box invis "object"  "(param)"     at Param.n  + (0, 0.2)
+.PE

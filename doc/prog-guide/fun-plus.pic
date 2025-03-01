@@ -1,19 +1,20 @@
 .PS
 Start:  box invis ht 0.5 wid 0.3
-        arrow invis "operate"
+        left
+        arrow 0.75 invis "\fIoperate\fP"
 
-Opr:    box invis "+    " ht 0.4 wid 0.4
-        arrow
-        box "7" ht 0.2 wid 0.3
+Opr:    box invis "    \fB+\fP" ht 0.4 wid 0.4
+        arrow 0.5
+        box "\fB7\fP" ht 0.2 wid 0.3
 
-Opnd1:  box "3" ht 0.2 wid 0.3 at Start.n
-Opnd2:  box "4" ht 0.2 wid 0.3 at Start.s
+Opnd1:  box "\fB3\fP" ht 0.2 wid 0.3 at Start.n
+Opnd2:  box "\fB4\fP" ht 0.2 wid 0.3 at Start.s
 box invis "oprand" at Opnd1.n + (0, 0.2)
 
-line from Opr.nw to Opr.sw to Opr.e to Opr.nw
+line from Opr.ne to Opr.se to Opr.w to Opr.ne
 box invis "oprator" at (Opr.n.x, last box.y)
 
-arrow from Opnd1.e to 1/3 <Opr.nw, Opr.sw>
-arrow from Opnd2.e to 2/3 <Opr.nw, Opr.sw>
+arrow from Opnd1.w to 1/3 <Opr.ne, Opr.se>
+arrow from Opnd2.w to 2/3 <Opr.ne, Opr.se>
 .PE
 
