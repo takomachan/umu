@@ -1,0 +1,29 @@
+.PS
+Expr:   box "\fB3 + 4\fP" "#Expression<3 + 4>" ht 0.4 wid 1.5
+        left
+        move to last box.w
+        arrow
+        box "\fB7\fP" "#Value<7>" ht 0.4 wid 0.9
+
+        move to Expr.e
+        right
+        arrow "\fIsend\fP" "" <-
+        ellipse "\fBevaluate\fP" ht 0.2 wid 0.7
+        line 0.1
+        box "\fBenv\fP" "#Environment<..>" ht 0.4 wid 1.2
+
+
+Decl:   box "\fBval x = 3\fP" "#Declaration<val x = 3>" \
+            ht 0.4 wid 1.5 at Expr.c - (0, 0.75)
+        left
+        move to last box.w
+        arrow
+        box "\fBenv'\fP" "#Environment<x => 3, ..>" ht 0.4 wid 1.6
+
+        move to Decl.e
+        right
+        arrow "\fIsend\fP" "" <-
+        ellipse "\fBevaluate\fP" ht 0.2 wid 0.7
+        line 0.1
+        box "\fBenv\fP" "#Environment<..>" ht 0.4 wid 1.2
+.PE

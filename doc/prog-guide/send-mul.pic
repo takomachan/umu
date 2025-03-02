@@ -1,0 +1,54 @@
+.PS
+Mul:    box "\fB3\fP" ht 0.2 wid 0.3
+        left
+        move to last box.w
+        arrow
+        box "\fB12\fP" ht 0.2 wid 0.3
+
+        move to Mul.e
+        right
+        arrow "\fIsend\fP" "" <-
+        ellipse "\fB*\fP" ht 0.2 wid 0.3
+        line 0.1
+        box "\fB4\fP" ht 0.2 wid 0.3
+
+
+Odd:    box "\fB3\fP" ht 0.2 wid 0.3 at Mul.c - (0, 0.5)
+        left
+        move to last box.w
+        arrow
+        box "\fBTRUE\fP" ht 0.2 wid 0.5
+
+        move to Odd.e
+        right
+        arrow "\fIsend\fP" "" <-
+        ellipse "\fBodd?\fP" ht 0.2 wid 0.4
+
+
+Show:   box "\fB3\fP" ht 0.2 wid 0.3 at Odd.c - (0, 0.5)
+        left
+        move to last box.w
+        arrow
+        box "\fB\"3\"\fP" ht 0.2 wid 0.4
+
+        move to Show.e
+        right
+        arrow "\fIsend\fP" "" <-
+        ellipse "\fBshow\fP" ht 0.2 wid 0.4
+
+
+Apply:  box "\fB(+)\fP" ht 0.2 wid 0.3 at Show.c - (0, 0.5)
+        left
+        move to last box.w
+        arrow
+        box "\fB7\fP" ht 0.2 wid 0.3
+
+        move to Apply.e
+        right
+        arrow "\fIsend\fP" "" <-
+        ellipse "\fBapply-binary\fP" ht 0.2 wid 0.9
+        line 0.1
+        box "\fB3\fP" ht 0.2 wid 0.3
+        line 0.1
+        box "\fB4\fP" ht 0.2 wid 0.3
+.PE

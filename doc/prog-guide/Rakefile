@@ -18,6 +18,9 @@ FILE_NAMES = [
     'fun-add',
     'fun-curry',
     'send-add',
+    'send-mul',
+    'send-to-expr',
+    'send-to-env',
     'send-add-apply',
     'side-effect'
 ]
