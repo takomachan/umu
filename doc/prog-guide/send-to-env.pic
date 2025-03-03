@@ -8,7 +8,7 @@ Env1:   box "\fBenv\fP" "#Environment<..>" ht 0.4 wid 1.1
         move to Env1.e
         right
         arrow "\fIsend\fP" "" <-
-        ellipse "\fBextend\fP" ht 0.2 wid 0.7
+        ellipse "\fB.extend\fP" ht 0.2 wid 0.7
         line 0.1
         box "\fB@x\fP" "#Symbol<@x>" ht 0.4 wid 0.9
         line 0.1
@@ -25,7 +25,7 @@ Env2ok: box "\fBenv'\fP" "#Environment<x => 3, ..>" ht 0.4 wid 1.5 \
         move to Env2ok.e
         right
         arrow "\fIsend\fP" "" <-
-Lookup: ellipse "\fBlookup\fP" ht 0.2 wid 0.7
+Lookup: ellipse "\fB.lookup\fP" ht 0.2 wid 0.7
         line 0.1
         box "\fB@x\fP" "#Symbol<@x>" ht 0.4 wid 0.9
 
@@ -38,7 +38,7 @@ Env2Err:box "\fBenv\fP" "#Environment<..>" ht 0.4 wid 1.1 \
         box "\fB[NameError] ..\fP" "#NameError<\"..\">" ht 0.4 wid 1.2
 
 
-        ellipse "\fBlookup\fP" ht 0.2 wid 0.7 at (Lookup.x, Env2Err.y)
+        ellipse "\fB.lookup\fP" ht 0.2 wid 0.7 at (Lookup.x, Env2Err.y)
         right
         move to last ellipse.e
         line 0.1

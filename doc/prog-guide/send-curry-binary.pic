@@ -1,0 +1,41 @@
+.PS
+        left
+
+Param:  box "\fB4\fP" ht 0.2 wid 0.3
+        line 0.1
+
+Mess:   ellipse "\fB.+\fP" ht 0.2 wid 0.3
+        arrow "\fIsend\fP" ""
+
+Recv:   box "\fB3\fP" ht 0.2 wid 0.3
+        arrow 0.75
+
+Res:    box "\fB7\fP" ht 0.2 wid 0.3
+
+Text:   box invis "Binary" "        messaging:" at Res.w - (0.7, 0)
+
+
+        move to last ellipse.e - (0, 1.0)
+MessC:  ellipse "\fB.+\fP" ht 0.2 wid 0.3
+        arrow "    \fIsend\fP" ""
+
+Recv:   box "\fB3\fP" ht 0.2 wid 0.3
+        line 0.1
+        down
+        arrow 0.5
+
+Lamb:   box invis "    \fB#<..>\fP" ht 0.4 wid 0.45
+        line from Lamb.ne to Lamb.se to Lamb.w to Lamb.ne
+        move to last box.w
+        left
+
+Fun:    box rad 0.1 ht 1.25 wid 0.8 at 1/2 <Recv.c, Lamb.c>
+
+ResC:   box "\fB7\fP" ht 0.2 wid 0.3 at (Res.x, Lamb.y)
+        arrow from Lamb.w to ResC.e
+
+Param:  box "\fB4\fP" ht 0.2 wid 0.3 at (Mess.x, Lamb.y)
+        arrow "        \fIapply\fP" "" to Lamb.e
+
+TextC:  box invis "Curryed" "        messaging:" at (ResC.w.x - 0.7, Recv.y)
+.PE

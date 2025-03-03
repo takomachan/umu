@@ -1,0 +1,60 @@
+.PS
+        left
+
+Param:  box "\fB4\fP" ht 0.2 wid 0.3
+        line 0.1
+        box "\fB3\fP" ht 0.2 wid 0.3
+        line 0.1
+
+Mess:   ellipse "\fB.apply-binary\fP" ht 0.2 wid 0.9
+        arrow "\fIsend\fP" ""
+
+Recv:   box invis "    \fB(+)\fP" ht 0.4 wid 0.4
+        arrow 1.0
+
+Res:    box "\fB7\fP" ht 0.2 wid 0.3
+
+Text:   box invis "Nary" "            messaging:" at Res.w - (0.7, 0)
+
+        line from Recv.ne to Recv.se to Recv.w to Recv.ne
+
+
+        move to last ellipse.e - (0, 1.0)
+MessC:  ellipse "\fB.apply-binary\fP" ht 0.2 wid 0.9
+        arrow "    \fIsend\fP" ""
+
+Recv:   box invis "    \fB(+)\fP" ht 0.4 wid 0.4
+        line 0.1
+        down
+        arrow 0.5
+
+Lamb1:  box invis "    \fB#<..>\fP" ht 0.4 wid 0.45
+        line from Lamb1.ne to Lamb1.se to Lamb1.w to Lamb1.ne
+        move to last box.w
+        left
+        line 0.1
+        down
+        arrow 0.5
+
+Lamb2:  box invis "    \fB#<..>\fP" ht 0.4 wid 0.45
+        line from Lamb2.ne to Lamb2.se to Lamb2.w to Lamb2.ne
+        move to last box.w
+        left
+        line 0.1
+        down
+
+        line from Recv.ne to Recv.se to Recv.w to Recv.ne
+
+Fun:    box rad 0.1 ht 2.0 wid 1.2 at 1/2 <Recv.c, Lamb2.c>
+
+ResC:   box "\fB7\fP" ht 0.2 wid 0.3 at (Res.x, Lamb2.y)
+        arrow from Lamb2.w to ResC.e
+
+Param1: box "\fB3\fP" ht 0.2 wid 0.3 at (Mess.x, Lamb1.y)
+        arrow "    \fIapply\fP" "" from last box.w to Lamb1.e
+
+Param2: box "\fB4\fP" ht 0.2 wid 0.3 at (Mess.x, Lamb2.y)
+        arrow "              \fIapply\fP" "" from last box.w to Lamb2.e
+
+TextC:  box invis "Curryed" "        messaging:" at (ResC.w.x - 0.7, Recv.y)
+.PE

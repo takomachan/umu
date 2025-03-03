@@ -21,7 +21,8 @@ FILE_NAMES = [
     'send-mul',
     'send-to-expr',
     'send-to-env',
-    'send-add-apply',
+    'send-curry-binary',
+    'send-curry-nary',
     'side-effect'
 ]
 
