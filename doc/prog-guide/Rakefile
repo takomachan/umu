@@ -23,6 +23,8 @@ FILE_NAMES = [
     'send-to-env',
     'send-curry-binary',
     'send-curry-nary',
+    'object-as-set',
+    'superset-subset',
     'side-effect'
 ]
 
