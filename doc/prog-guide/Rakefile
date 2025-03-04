@@ -25,6 +25,7 @@ FILE_NAMES = [
     'send-curry-nary',
     'object-as-set',
     'superset-subset',
+    'nestedset-as-tree',
     'side-effect'
 ]
 

@@ -1,23 +1,26 @@
 .PS
-Int:    ellipse "3, 4, ...etc"
+Unit:   ellipse "()"
+        box invis "Unit" fill 0.0 wid 0.3 ht 0.2 at last ellipse.n
+
+Int:    ellipse "3, 4, ...etc" at last ellipse.c + (1.1, 0)
         box invis "Int" fill 0.0 wid 0.3 ht 0.2 at last ellipse.n
 
 Float:  ellipse "3.14, 2.17," "    ...etc" at last ellipse.c + (0.9, 0)
         box invis "Float" fill 0.0 wid 0.4 ht 0.2 at last ellipse.n
 
-Bool:   ellipse "TRUE," "  FALSE"at last ellipse.c + (1.0, 0)
+Bool:   ellipse "TRUE," "  FALSE" at last ellipse.c + (1.0, 0)
         box invis "Bool" fill 0.0 wid 0.3 ht 0.2 at last ellipse.n
 
 Fun:    ellipse "(+)," "#<..>, ...etc"at last ellipse.c + (1.1, 0)
         box invis "Fun" fill 0.0 wid 0.3 ht 0.2 at last ellipse.n
 
-box rad 0.05 wid 1.9 ht 0.9 at 1/2 <Int.c, Float.c>
+box wid 1.9 ht 0.9 at 1/2 <Int.c, Float.c>
 box invis "\fINumber\fP" fill 0.0 wid 0.5 ht 0.2 at last box.n
 
-box rad 0.05 wid 3.1 ht 1.2 at 1/2 <Int.c, Bool.c>
-box invis "\fIAtom\fP" fill 0.0 wid 0.5 ht 0.2 at last box.n
+box wid 3.1 ht 1.2 at 1/2 <Int.c, Bool.c>
+box invis "\fIAtom\fP" fill 0.0 wid 0.4 ht 0.2 at last box.n
 
-box wid 4.4 ht 1.5 at 1/2 <Int.c, Fun.c>
+box wid 5.1 ht 1.5 at 1/2 <Unit.c, Fun.c>
 box invis "\fITop\fP" fill 0.0 wid 0.3 ht 0.2 at last box.n
 .PE
 

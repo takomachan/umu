@@ -1,0 +1,39 @@
+.PS
+right
+
+Top:    box "\fITop\fP" color "brown" outlined "black" \
+            wid 0.4 ht 0.2
+
+Unit:   ellipse "Unit" color "green" outlined "black" \
+            wid 0.4 ht 0.2 at Top.n + (-0.7, 0.4)
+
+Atom:   box "\fIAtom\fP" color "brown" outlined "black" \
+            wid 0.4 ht 0.2 at Top.n + (0.0,  0.4)
+
+Fun:    ellipse "Fun" color "green" outlined "black" \
+            wid 0.4 ht 0.2 at Top.n + (0.7,  0.4)
+
+        line from Top.n to Unit.s
+        line from Top.n to Atom.s
+        line from Top.n to Fun.s
+
+
+Number: box "\fINumber\fP" color "brown" outlined "black" \
+            wid 0.5 ht 0.2 at Atom.n + (-0.4, 0.4)
+
+Bool:   ellipse "Bool" color "green" outlined "black" \
+            wid 0.4 ht 0.2 at Atom.n + (0.4,  0.4)
+
+        line from Atom.n to Number.s
+        line from Atom.n to Bool.s
+
+
+Int:    ellipse "Int" color "green" outlined "black" \
+            wid 0.4 ht 0.2 at Number.n + (-0.4, 0.4)
+
+Float:  ellipse "Float" color "green" outlined "black" \
+            wid 0.4 ht 0.2 at Number.n + (0.4,  0.4)
+
+        line from Number.n to Int.s
+        line from Number.n to Float.s
+.PE

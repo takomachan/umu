@@ -606,7 +606,7 @@ image::send-curry-nary.png[align="center"]
 .... 未知のメッセージには応答できない旨のエラーとして扱う。
 
 
-==== クラスとオブジェクト
+==== クラスとインスタンス
 
 オブジェクト `3` はメッセージ `.+ 4` に対して `7` を返し、
 同様にオブジェクト `4` はメッセージ `.+ 4` に対して `8` を返します。
@@ -624,33 +624,114 @@ image::send-curry-nary.png[align="center"]
 image::object-as-set.png[align="center"]
 
 
-==== クラスと継承
+==== 抽象クラスと具象クラス
 
 オブジェクトには整数 `3` や `4` だけでなく、
-`3.14` や `2.17` といった小数も存在し、小数クラス `Float` と呼ばれます。
+`3.14` や `2.17` といった小数も存在し、小数クラス `Float` に所属します。
 小数クラスのオブジェクトは整数クラスのオブジェクトと同様、
 メッセージ `.+` や `.*` などに対して適切に振る舞うことが可能です。
-こうした振る舞いの類似したクラスの集まりをスーパークラス(superclass)と呼び、
+この振る舞いの類似したクラスの集まりをスーパークラス(superclass)と呼び、
 下位のクラスをサブクラス(subclass)と呼びます。
+また一般的に、こうした下位の概念から上位の概念を導く事は
+抽象化(abstraction)と呼ばれています。
 
-集合論であれば、
+集合論であれば、たとえば
 
-* 整数クラス `Int` や小数クラス `Float` は部分集合(subset)であり、
-* 数クラス `Number` は親集合(superset)であり、
+* 整数クラス `Int` や小数クラス `Float` はサブクラス、
+    すなわち部分集合(subset)であり、そして
+* 数クラス `Number` はスーパークラス、
+    すなわち親集合(superset)であり、
 * これらのクラスは入れ子集合(nested set)を形成します。
 
-以下に、この入れ子集合の構造をベン図で示します。
+以下に入れ子集合の一例について、その構造をベン図で示します。
 
 image::superset-subset.png[align="center"]
 
-ここで、クラスを以下の二つに分類します。
+またサブクラスの集まりからスーパークラスを導くボトムアップな視点とは逆に、
+あるクラスに着目し更に分類を細分化していくつかのサブクラスを導くという
+トップダウンな視点もあります。このケースを継承(inheritance)と呼びます。
+
+ここで責務に着目すると、クラスは以下の二つに分類されます。
 
 * 抽象クラス(abstract class)
-** サブクラスを持つ、すなわち部分集合(subset)を持つ
+** [責務] クラス継承により生ずる抽象化
+** [特徴]
+*** サブクラスを持つ、すなわち部分集合(subset)を持つ
+*** 直下にインスタンス、すなわち要素(element)は持たない
 ** [例] Top, Atom, Number
 * 具象クラス(concrete class)
-** インスタンスを持つ、すなわち要素(element)を持つ
+** [責務] クラスの具体化、いわゆるインスタンスの生成
+** [特徴]
+*** インスタンスを持つ、すなわち要素(element)を持つ
+*** サブクラス、すなわち部分集合(subset)は持たない
 ** [例] Int, Float, Bool, Fun
+
+入れ子集合を樹(ツリー)に見立てれば、
+
+* 幹や枝が抽象クラス
+* 末端の葉っぱが具象クラス
+
+になります。
+
+image::nestedset-as-tree.png[align="center"]
+
+実際のクラス階層を以下に示します。
+クラス名の末尾が文字 `/` であれば抽象クラス、さもなければ具象クラスです。
+
+```
+umu:1> :class
+Top/
+    Class
+    Device
+    Object/
+        Atom/
+            Bool
+            Number/
+                Float
+                Int
+            String
+            Symbol
+        Dir
+        Fun
+        IO/
+            Input
+            Output
+        Morph/
+            Enum
+            Interval
+            List/
+                Cons
+                Nil
+        Product/
+            Named
+            Tuple
+        Ref
+        SExpr/
+            SExprCons
+            SExprNil
+            SExprValue
+        Stream/
+            CellStream
+            ExprStream
+            MemoStream
+            SuspStream
+        Susp
+        Union/
+            Datum
+            Option/
+                None
+                Some
+            Result/
+                Err
+                Ok
+        Unit
+    Opaque
+    StreamCell/
+        StreamCons
+        StreamNil
+    Struct
+umu:2>
+```
 
 
 === 作用と副作用
