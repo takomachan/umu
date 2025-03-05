@@ -40,7 +40,7 @@ end
                                     args, E::INITIAL_PREFERENCE
                                 )
 
-            init_env = if pref.no_prelude?
+            setup_env = if pref.no_prelude?
                             E.setup pref
                         else
                             Commander.process_source(
@@ -53,18 +53,18 @@ end
 
             if pref.interactive_mode?
                 env = unless file_names.empty?
-                            Commander.process_files file_names, init_env
+                            Commander.process_files file_names, setup_env
                         else
-                            init_env
+                            setup_env
                         end
 
-                Commander.interact env
+                Commander.interact env, setup_env
             else
                 if file_names.empty?
                     raise X::CommandError.new('No input files')
                 end
 
-                Commander.process_files file_names, init_env
+                Commander.process_files file_names, setup_env
             end
 
             0
@@ -92,8 +92,9 @@ end
     end
 
 
-    def interact(init_env)
-        ASSERT.kind_of init_env, E::Entry
+    def interact(init_env, setup_env)
+        ASSERT.kind_of init_env,    E::Entry
+        ASSERT.kind_of setup_env,   E::Entry
 
         init_tokens = []
         init_lexer  = LL.make_initial_lexer STDIN_FILE_NAME, 0
@@ -127,7 +128,7 @@ end
                     [
                         [],
                         lexer.next_line_num,
-                        Subcommand.execute(line, line_num, env)
+                        Subcommand.execute(line, line_num, env, setup_env)
                     ]
                 else
                     Commander.process_line(

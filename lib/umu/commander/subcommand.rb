@@ -9,10 +9,11 @@ module Subcommand
 
 module_function
 
-    def execute(line, line_num, env)
+    def execute(line, line_num, env, setup_env)
         ASSERT.kind_of line,        ::String
         ASSERT.kind_of line_num,    ::Integer
         ASSERT.kind_of env,         E::Entry
+        ASSERT.kind_of setup_env,   E::Entry
 
         name, *args = line.split
 
@@ -42,6 +43,33 @@ module_function
                 Subcommand.print_class_signat class_signat, env
             else
                 raise X::CommandError.new "Syntax error"
+            end
+
+            env
+        when ':env'
+            setup_bindings = setup_env.va_get_bindings
+
+            Subcommand.get_binding_lines(env){ |sym, value|
+                opt_setup_value = setup_bindings[sym]
+                if opt_setup_value
+                    if opt_setup_value == value
+                        false
+                    else
+                        true
+                    end
+                else
+                    true
+                end
+            }.each do |_sym, line|
+                STDERR.puts line
+            end
+
+            env
+        when ':envall'
+            Subcommand.get_binding_lines(env).sort { |a, b|
+                a[0] <=> b[0]
+            }.each do |_sym, line|
+                STDERR.puts line
             end
 
             env
@@ -145,6 +173,50 @@ module_function
                 )
             end
         end
+    end
+
+
+    def get_binding_lines(env, &_block)
+        ASSERT.kind_of env, E::Entry
+
+        lines = env.va_context.reverse_each.inject({}) { |lines, context|
+                ASSERT.kind_of lines,   ::Hash
+                ASSERT.kind_of context, ECV::Entry
+
+                lines.merge(
+                    context.get_bindings.select { |sym, value|
+                        if /^%/ =~ sym.to_s
+                            false
+                        else
+                            if block_given?
+                                yield sym, value
+                            else
+                                true
+                            end
+                        end
+                    }.inject({}) { |hash, (sym, value)|
+                        line = case value
+                                when VC::Fun
+                                    format "fun %s", sym.to_s
+                                when VC::Struct::Entry
+                                    format "structure %s", sym.to_s
+                                else
+                                    format("val %s : %s",
+                                                 sym.to_s,
+                                                 value.type_sym.to_s
+                                            )
+                                end
+
+                        hash.merge(sym => line) {
+                            ASSERT.abort "No case: %s", sym
+                        }
+                    }
+                ) { |_sym, newer_line, _older_line|
+                    newer_line
+                }
+            }
+
+        ASSERT.kind_of lines, ::Hash
     end
 
 end # Umu::Commander::Subcommand

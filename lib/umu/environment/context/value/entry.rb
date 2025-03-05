@@ -33,7 +33,7 @@ class Entry < Abstract
 
 
     def get_bindings_difference_with(prev_ctx)
-        ASSERT.kind_of prev_ctx, ECV::Entry
+        ASSERT.kind_of prev_ctx, ECV::Abstract
 
         prev_bindings = prev_ctx.get_bindings
 

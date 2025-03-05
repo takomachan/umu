@@ -11,7 +11,7 @@ module Core
 
 module Morph
 
-class Enum < Morph::Abstract
+class Enum < Abstract
     def self.make(xs)
         ASSERT.kind_of xs, ::Array
 

@@ -1,7 +1,14 @@
 = Umu Users Guide
 
+This document explains how to use the Umu interpreter.
+
 
 == First Step
+
+To start the interpreter in
+an interactive environment called REPL (Read-Evaluate-Print Loop) ,
+run the `umu` command with the `-i` option.
+
 ```
 $ umu/exe/umu -i
 umu:1> print "Hello world\n"
@@ -12,28 +19,33 @@ umu:2>                  # Enter [Ctrl]+[d]
 $
 ```
 
-== Play REPL with Script
+If you specify a file containing a script after the `-i` option,
+the REPL will read that file and then start the REPL.
+
 ```
-$ cat umu/example/factorial.umu 
-fun rec factorial = x -> (
-    if x <= 1 then
-        1
-    else
-        x * factorial (x - 1)
-)
 $ umu/exe/umu -i umu/example/factorial.umu 
 umu:1> factorial 3
 val it : Int = 6
 umu:2>
 ```
 
+
 == REPL's Subcommand
+
+The following subcommands can be used in REPL:
+
+:class::                Display information about classes.
+:env and :envall::      Display information about environment.
+:dump and :nodump::     Controls dump display at runtime.
+:trace and :notrace::   Controls trace display at runtime.
+
 
 === :class
 
 ==== Summary
 
-Displays inheritance relationships between classes hierarchically.
+If only the subcommand `:class` is specified,
+inheritance relationships between classes will be displayed hierarchically.
 
 ```
 umu:1> :class
@@ -55,8 +67,8 @@ umu:2>
 
 ==== Detail
 
-Displays information about the specified class and
-a list of messages to which the class can respond.
+The subcommand :class followed by a class name displays information about
+the specified class and a list of messages to which it can respond.
 
 ```
 umu:1> :class Bool
@@ -76,6 +88,70 @@ INSTANCE MESSAGES:
 umu:2>
 ```
 
+
+=== :env and :envall
+
+Names such as variable names, function names, and module names are
+registered in a dictionary called the environment.
+
+The subcommand `:env` extracts user-declared names from the environment
+and displays them.
+
+```
+$ umu/exe/umu -i
+umu:1> val x = 3    # Declare variable 'x'
+val x : Int = 3
+umu:2> :env         # Check the environment ==> x
+structure Umu
+val x : Int
+umu:3> val y = 4    # Declare variable 'x'
+val y : Int = 4
+umu:4> :env         # Check the environment ==> x, y
+structure Umu
+val x : Int
+val y : Int
+umu:5> x + y        # Evaluate expression
+val it : Int = 7
+umu:6> :env         # Check the environment ==> x, y, it
+structure Umu
+val x : Int
+val y : Int
+val it : Int
+umu:7>
+
+```
+
+If a script is specified as a command argument,
+the name declared within the script will also be displayed.
+
+```
+$ umu/exe/umu -i umu/example/factorial.umu
+umu:1> :env
+structure Umu
+fun factorial
+umu:2>
+```
+
+The subcommand `:envall` displays all names registered in
+the current environment.
+
+```
+umu:1> :envall
+fun !!
+fun *
+fun +
+fun :=
+  :
+  :
+  :
+fun zero
+fun zero?
+fun zip
+fun |
+umu:2>
+```
+
+
 === :dump and :nodump
 
 
@@ -90,11 +166,16 @@ The interpreter processes the input script as follows.
 /Result(environment and value)/
 ```
 
-Displays the intermediate objects generated in this process as follows.
+The dump function displays the following intermediate objects
+that are generated during this process.
 
-- Tokens
-- Concrete syntax tree
-- Abstract syntax tree
+* Tokens
+* Concrete syntax tree
+* Abstract syntax tree
+
+Use the subcommand `:dump` to enable the dump function,
+and use `:nodump` to disable it.
+
 
 ```
 umu:1> :dump
@@ -118,8 +199,11 @@ umu:4>
 
 === :trace and :notrace
 
-The process of desugaring and evaluation inside the interpreter is
-displayed in a hierarchical trace.
+The trace function displays the desugaring process and
+evaluation processes inside the interpreter in a hierarchical manner.
+
+Use the subcommand `:trace` to enable the trace function,
+and use `:notrace` to disable it.
 
 
 ```

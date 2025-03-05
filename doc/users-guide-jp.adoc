@@ -4,6 +4,10 @@
 
 
 == 最初の一歩
+
+インタプリタを REPL(Read-Evaluate-Print Loop) と呼ばれる対話環境で
+起動するには、オプション `-i` を付けてコマンド `umu` を実行してください。
+
 ```
 $ umu/exe/umu -i
 umu:1> print "Hello world"
@@ -13,27 +17,32 @@ umu:2>                  # [Ctrl]+[d]を入力
 $
 ```
 
-== スクリプトを付けてREPLを起動
+オプション `-i` に続いてスクリプトが書かれたファイルを指定すると、
+そのファイルを読み込んでからREPLを起動します。
+
 ```
-$ cat umu/example/factorial.umu 
-fun rec factorial = x -> (
-    if x <= 1 then
-        1
-    else
-        x * factorial (x - 1)
-)
 $ umu/exe/umu -i umu/example/factorial.umu 
 umu:1> factorial 3
 val it : Int = 6
 umu:2>
 ```
 
+
 == REPLのサブコマンド
+
+REPLでは以下のサブコマンドが使えます。
+
+:class::                クラスに関する情報を表示します。
+:env と :envall::       環境に関する情報を表示します。
+:dump と :nodump::      実行時のダンプ表示を制御します。
+:trace と :notrace::    実行時のトレース表示を制御します。
+
 
 === :class
 
 ==== 概要
 
+サブコマンド `:class` だけを指定すると、
 クラス間の継承(インヘリタンス)関係を階層的に表示します。
 
 ```
@@ -55,6 +64,7 @@ umu:2>
 ```
 ==== 詳細
 
+サブコマンド `:class` の後にクラス名を指定すると、
 指定されたクラスの情報とそのクラスが応答できるメッセージの一覧を表示します。
 
 ```
@@ -75,6 +85,69 @@ INSTANCE MESSAGES:
 umu:2>
 ```
 
+
+=== :env と :envall
+
+変数名、定数名、関数名、モジュール名といった名前は、
+環境(environment)と呼ばれる辞書に登録されています。
+
+サブコマンド `:env` は、環境から利用者が宣言した名前を抽出して表示します。
+
+```
+$ umu/exe/umu -i
+umu:1> val x = 3    # 変数 x を宣言
+val x : Int = 3
+umu:2> :env         # 環境を確認 ==> x
+structure Umu
+val x : Int
+umu:3> val y = 4    # 変数 y を宣言
+val y : Int = 4
+umu:4> :env         # 環境を確認 ==> x, y
+structure Umu
+val x : Int
+val y : Int
+umu:5> x + y        # 式を評価
+val it : Int = 7
+umu:6> :env         # 環境を確認 ==> x, y, it
+structure Umu
+val x : Int
+val y : Int
+val it : Int
+umu:7>
+
+```
+
+もしコマンド引数でスクリプトを指定していれば、
+そのスクリプト内で宣言された名前も表示します。
+
+```
+$ umu/exe/umu -i umu/example/factorial.umu
+umu:1> :env
+structure Umu
+fun factorial
+umu:2>
+```
+
+サブコマンド `:envall` は、
+現在の環境に登録されているすべての名前を表示します。
+
+```
+umu:1> :envall
+fun !!
+fun *
+fun +
+fun :=
+  :
+  :
+  :
+fun zero
+fun zero?
+fun zip
+fun |
+umu:2>
+```
+
+
 === :dump と :nodump
 
 インタプリタは入力されたスクリプトを以下の流れで処理します。
@@ -88,13 +161,14 @@ umu:2>
 /結果(環境と値)/
 ```
 
-この処理の過程で生成される中間オブジェクトである：
+ダンプ機能は、この処理の過程で生成される以下の中間オブジェクトを表示します。
 
 * トークンの並び(tokens)
 * 具象構文木(concrete syntax tree)
 * 抽象構文木(abstract syntax tree)
 
-を表示します。
+ダンプ機能を有効とするにはサブコマンド `:dump` を使用し、
+無効とするには `:nodump` を使用してください。
 
 ```
 umu:1> :dump
@@ -119,8 +193,12 @@ umu:4>
 
 === :trace と :notrace
 
+トレース機能は、
 インタプリタ内部の脱糖化(desugaring)処理と評価(evaluation)処理について、
 その過程を階層的な軌跡(trace)で表示します。
+
+トレース機能を有効とするにはサブコマンド `:trace` を使用し、
+無効とするには `:notrace` を使用してください。
 
 ```
 umu:1> :trace
