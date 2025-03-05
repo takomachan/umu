@@ -346,32 +346,9 @@ end
                 next_env = result.env
 
                 if block_given?
-                    prev_bindings = env.va_get_bindings
-                    next_bindings = next_env.va_get_bindings
-                    diff_bindings = next_bindings.select {
-                        |sym, next_value|
+                    next_env.va_get_bindings_difference_with(env).each do
+                        |sym, value|
 
-                        opt_prev_value = prev_bindings[sym]
-
-                        if opt_prev_value
-                            if opt_prev_value == next_value
-                                false
-                            else
-                                true
-                            end
-                        else
-                            true
-                        end
-                    }
-=begin
-                    pp({
-                        PREV: prev_bindings,
-                        NEXT: next_bindings,
-                        DIFF: diff_bindings
-                    })
-=end
-
-                    diff_bindings.each do |sym, value|
                         yield sym, value
                     end
                 end

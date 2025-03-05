@@ -90,6 +90,13 @@ class Entry < Abstraction::Record
     end
 
 
+    def va_get_bindings_difference_with(other)
+        ASSERT.kind_of other, E::Entry
+
+        self.va_context.get_bindings_difference_with other.va_context
+    end
+
+
     def va_extend_value(sym, value)
         ASSERT.kind_of sym,     ::Symbol
         ASSERT.kind_of value,   VC::Top

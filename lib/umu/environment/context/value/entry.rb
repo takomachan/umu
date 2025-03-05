@@ -32,6 +32,31 @@ class Entry < Abstract
     end
 
 
+    def get_bindings_difference_with(prev_ctx)
+        ASSERT.kind_of prev_ctx, ECV::Entry
+
+        prev_bindings = prev_ctx.get_bindings
+
+        diff_bindings = self.get_bindings.select {
+            |sym, value|
+
+            opt_prev_value = prev_bindings[sym]
+
+            if opt_prev_value
+                if opt_prev_value == value
+                    false
+                else
+                    true
+                end
+            else
+                true
+            end
+        }
+
+        ASSERT.kind_of diff_bindings, ::Hash
+    end
+
+
 private
 
     def __extend__(sym, target)
