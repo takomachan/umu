@@ -46,6 +46,7 @@ class Base < Abstract
     attr_reader :instance_method_info_of_mess_sym
 
     alias to_sym symbol
+    alias type_sym symbol
 
 
     def initialize(

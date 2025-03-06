@@ -76,15 +76,18 @@ ABSTRACT CLASS?: No, this is a concrete class
 SUPERCLASS: Atom
 ANCESTORS: Atom, Object, Top
 CLASS MESSAGES:
-    &Bool.false : Bool
     &Bool.true : Bool
+    &Bool.false : Bool
+INHERITED INSTANCE MESSAGES:
+  INHERIT FROM: Object
+    &Object.show : String
+    &Object.to-s : String
+    &Object.contents : Top
+    &Object.== : Object -> Bool
+    &Object.force : Top
 INSTANCE MESSAGES:
-    Bool#< : Bool -> Bool
-    Bool#== : Object -> Bool
-    Bool#contents : Top
-    Bool#not : Bool
-    Bool#show : String
-    Bool#to-s : String
+    &Bool.< : Bool -> Bool
+    &Bool.not : Bool
 umu:2>
 ```
 

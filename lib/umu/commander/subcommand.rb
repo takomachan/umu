@@ -146,33 +146,162 @@ module_function
             )
         end
 
-        unless class_signat.num_of_class_messages == 0
+        class_message_infos_of_class_sym,
+        instance_message_infos_of_class_sym =
+            Subcommand.get_message_infos_of_class class_signat.klass, env
+
+        self_cmess_infos_of_sym, *super_cmess_infos_of_sym =
+            class_message_infos_of_class_sym.to_a
+        class_sym_of_self_cmess, self_cmess_infos =
+             self_cmess_infos_of_sym
+
+        self_imess_infos_of_sym, *super_imess_infos_of_sym =
+            instance_message_infos_of_class_sym.to_a
+        class_sym_of_self_imess, self_imess_infos =
+            self_imess_infos_of_sym
+
+        if super_cmess_infos_of_sym.any? { |_sym, infos|
+            ! infos.empty?
+        }
+            printf "%sINHERITED CLASS MESSAGES:\n", indent_0
+
+            super_cmess_infos_of_sym.reverse_each do
+                |class_sym, infos|
+
+                unless infos.empty?
+                    printf("%s  INHERIT FROM: %s\n",
+                            indent_0, class_sym,to_s
+                    )
+
+                    infos.each do |info|
+                        printf("%s&%s.%s\n",
+                            indent_1,
+                            class_sym.to_s,
+                            info.to_s
+                        )
+                    end
+                end
+            end
+        end
+
+        if self_cmess_infos && ! self_cmess_infos.empty?
             printf "%sCLASS MESSAGES:\n", indent_0
 
-            class_signat.each_class_method(env).sort.each do
-                |meth_signat|
-
+            self_cmess_infos.each do |info|
                 printf("%s&%s.%s\n",
                     indent_1,
-                    class_signat.symbol.to_s,
-                    meth_signat.to_s
+                    class_sym_of_self_cmess.to_s,
+                    info.to_s
                 )
             end
         end
 
-        unless class_signat.num_of_instance_messages == 0
+        if super_imess_infos_of_sym.any? { |_sym, infos|
+            ! infos.empty?
+        }
+            printf "%sINHERITED INSTANCE MESSAGES:\n", indent_0
+
+            super_imess_infos_of_sym.reverse_each do
+                |class_sym, infos|
+
+                unless infos.empty?
+                    printf("%s  INHERIT FROM: %s\n",
+                            indent_0, class_sym,to_s
+                    )
+
+                    infos.each do |info|
+                        printf("%s&%s.%s\n",
+                            indent_1,
+                            class_sym.to_s,
+                            info.to_s
+                        )
+                    end
+                end
+            end
+        end
+
+        if self_imess_infos && ! self_imess_infos.empty?
             printf "%sINSTANCE MESSAGES:\n", indent_0
 
-            class_signat.each_instance_method(env).sort.each do
-                |meth_signat|
-
-                printf("%s%s#%s\n",
+            self_imess_infos.each do |info|
+                printf("%s&%s.%s\n",
                     indent_1,
-                    class_signat.symbol.to_s,
-                    meth_signat.to_s
+                    class_sym_of_self_imess.to_s,
+                    info.to_s
                 )
             end
         end
+    end
+
+
+    def get_message_infos_of_class(klass, env)
+        ASSERT.subclass_of klass,   VC::Top
+        ASSERT.kind_of     env,     E::Entry
+
+        pair = if klass <= VC::Class
+            [{}, {}]
+        else
+            loop.inject(
+                 [
+                    {},
+                    {},
+                    klass,
+                    {},
+                    {}
+                ]
+            ) {
+                |
+                    (
+                        cmess_infos_of_sym,
+                        imess_infos_of_sym,
+                        k,
+                        set_of_cmess,
+                        set_of_imess
+                    ),
+
+                    _
+                |
+
+                unless k <= VC::Top
+                    break [cmess_infos_of_sym, imess_infos_of_sym]
+                end
+
+                cmess_infos = k.class_method_infos.reject { |info|
+                                    set_of_cmess[info.mess_sym]
+                                }
+
+                imess_infos = k.instance_method_infos.reject { |info|
+                                    set_of_imess[info.mess_sym]
+                                }
+
+                [
+                    cmess_infos_of_sym.merge(k.type_sym => cmess_infos),
+
+                    imess_infos_of_sym.merge(k.type_sym => imess_infos),
+
+                    k.superclass,
+
+                    cmess_infos.inject(set_of_cmess) { |set, info|
+                        set.merge(info.mess_sym => true)
+                    },
+
+                    imess_infos.inject(set_of_imess) { |set, info|
+                        set.merge(info.mess_sym => true)
+                    }
+                ]
+            }
+        end
+
+        ASSERT.tuple_of pair, [::Hash, ::Hash]
+    end
+
+
+    def update_message_infos_of_class_sym(infos_of_symbol, infos, klass)
+        ASSERT.kind_of      infos_of_symbol,    ::Hash
+        ASSERT.kind_of      infos,              ::Array
+        ASSERT.subclass_of  klass,              VC::Top
+
+        infos_of_symbol.merge(klass.to_sym => infos)
     end
 
 

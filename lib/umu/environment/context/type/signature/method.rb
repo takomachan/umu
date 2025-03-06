@@ -53,10 +53,10 @@ class Abstract
         if __keyword_method__?
             format("(%s) -> %s",
                 __extract_keywords__.map { |lab, typ|
-                    format "%s:%s", lab, typ.to_sym.to_s
+                    format "%s:%s", lab, typ.type_sym.to_s
                 }.join(' '),
 
-                self.ret_class.to_sym.to_s
+                self.ret_class.type_sym.to_s
             )
         else
             format("%s : %s",
@@ -64,7 +64,9 @@ class Abstract
 
                 (
                     self.param_classes + [self.ret_class]
-                ).map(&:to_s).join(' -> ')
+                ).map { |typ|
+                    typ.type_sym.to_s
+                }.join(' -> ')
             )
         end
     end
