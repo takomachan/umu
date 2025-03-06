@@ -1,4 +1,4 @@
-# Umu - Functional Scripting Language
+# Umu (Preliminary) - Functional Scripting Language
 
 ## Features
 

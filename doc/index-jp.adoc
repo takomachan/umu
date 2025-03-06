@@ -1,6 +1,10 @@
-= Umu - 関数型スクリプト言語
+= Umu (暫定) - 関数型スクリプト言語
 
+[
 link:index.html[English]
+|
+link:https://github.com/takomachan/umu[GitHub.com]
+]
 
 * link:users-guide-jp.html[ユーザーガイド]
 +

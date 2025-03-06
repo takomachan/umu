@@ -1,6 +1,10 @@
-= Umu - Functional Scripting Language
+= Umu (Preliminary) - Functional Scripting Language
 
+[
 link:index-jp.html[Japanease]
+|
+link:https://github.com/takomachan/umu[GitHub.com]
+]
 
 * link:users-guide.html[Users Guide]
 +
