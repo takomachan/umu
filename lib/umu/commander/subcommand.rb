@@ -150,24 +150,22 @@ module_function
         instance_message_infos_of_class_sym =
             Subcommand.get_message_infos_of_class class_signat.klass, env
 
-        self_cmess_infos_of_sym, *super_cmess_infos_of_sym =
+        sub_cmess_infos_of_sym, *super_cmess_infos_of_sym =
             class_message_infos_of_class_sym.to_a
-        class_sym_of_self_cmess, self_cmess_infos =
-             self_cmess_infos_of_sym
+        class_sym_of_sub_cmess, sub_cmess_infos =
+             sub_cmess_infos_of_sym
 
-        self_imess_infos_of_sym, *super_imess_infos_of_sym =
+        sub_imess_infos_of_sym, *super_imess_infos_of_sym =
             instance_message_infos_of_class_sym.to_a
-        class_sym_of_self_imess, self_imess_infos =
-            self_imess_infos_of_sym
+        class_sym_of_sub_imess, sub_imess_infos =
+            sub_imess_infos_of_sym
 
         if super_cmess_infos_of_sym.any? { |_sym, infos|
             ! infos.empty?
         }
             printf "%sINHERITED CLASS MESSAGES:\n", indent_0
 
-            super_cmess_infos_of_sym.reverse_each do
-                |class_sym, infos|
-
+            super_cmess_infos_of_sym.reverse_each do |class_sym, infos|
                 unless infos.empty?
                     printf("%s  INHERIT FROM: %s\n",
                             indent_0, class_sym,to_s
@@ -184,13 +182,13 @@ module_function
             end
         end
 
-        if self_cmess_infos && ! self_cmess_infos.empty?
+        if sub_cmess_infos && ! sub_cmess_infos.empty?
             printf "%sCLASS MESSAGES:\n", indent_0
 
-            self_cmess_infos.each do |info|
+            sub_cmess_infos.each do |info|
                 printf("%s&%s.%s\n",
                     indent_1,
-                    class_sym_of_self_cmess.to_s,
+                    class_sym_of_sub_cmess.to_s,
                     info.to_s
                 )
             end
@@ -201,16 +199,14 @@ module_function
         }
             printf "%sINHERITED INSTANCE MESSAGES:\n", indent_0
 
-            super_imess_infos_of_sym.reverse_each do
-                |class_sym, infos|
-
+            super_imess_infos_of_sym.reverse_each do |class_sym, infos|
                 unless infos.empty?
                     printf("%s  INHERIT FROM: %s\n",
                             indent_0, class_sym,to_s
                     )
 
                     infos.each do |info|
-                        printf("%s&%s.%s\n",
+                        printf("%s%s#%s\n",
                             indent_1,
                             class_sym.to_s,
                             info.to_s
@@ -220,13 +216,13 @@ module_function
             end
         end
 
-        if self_imess_infos && ! self_imess_infos.empty?
+        if sub_imess_infos && ! sub_imess_infos.empty?
             printf "%sINSTANCE MESSAGES:\n", indent_0
 
-            self_imess_infos.each do |info|
-                printf("%s&%s.%s\n",
+            sub_imess_infos.each do |info|
+                printf("%s%s#%s\n",
                     indent_1,
-                    class_sym_of_self_imess.to_s,
+                    class_sym_of_sub_imess.to_s,
                     info.to_s
                 )
             end
@@ -293,15 +289,6 @@ module_function
         end
 
         ASSERT.tuple_of pair, [::Hash, ::Hash]
-    end
-
-
-    def update_message_infos_of_class_sym(infos_of_symbol, infos, klass)
-        ASSERT.kind_of      infos_of_symbol,    ::Hash
-        ASSERT.kind_of      infos,              ::Array
-        ASSERT.subclass_of  klass,              VC::Top
-
-        infos_of_symbol.merge(klass.to_sym => infos)
     end
 
 
