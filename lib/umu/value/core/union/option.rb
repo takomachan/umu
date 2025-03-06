@@ -26,7 +26,7 @@ class Abstract < Union::Abstract
 
     define_instance_method(
         :meth_is_none,
-        :none?, [],
+        :None?, [],
         [], VCA::Bool
     )
     def meth_is_none(_loc, _env, event)
@@ -36,7 +36,7 @@ class Abstract < Union::Abstract
 
     define_instance_method(
         :meth_is_some,
-        :some?, [],
+        :Some?, [],
         [], VCA::Bool
     )
     def meth_is_some(_loc, _env, event)

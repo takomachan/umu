@@ -42,10 +42,10 @@ structure Umu = struct {
         #### Classifier ####
 
         # Some? : Option 'a -> Bool
-        val Some? = &(Option.some?)
+        val Some? = &(Option.Some?)
 
         # None? : Option 'a -> Bool
-        val None? = &(Option.none?)
+        val None? = &(Option.None?)
     }
 
 
@@ -65,10 +65,10 @@ structure Umu = struct {
         #### Classifier ####
 
         # Ok? : Result 'a -> Bool
-        val Ok? = &(Result.ok?)
+        val Ok? = &(Result.Ok?)
 
         # Err? : Result 'a -> Bool
-        val Err? = &(Result.err?)
+        val Err? = &(Result.Err?)
     }
 
 

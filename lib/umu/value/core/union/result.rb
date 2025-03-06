@@ -28,7 +28,7 @@ class Abstract < Union::Abstract
 
     define_instance_method(
         :meth_is_ok,
-        :ok?, [],
+        :Ok?, [],
         [], VCA::Bool
     )
     def meth_is_ok(_loc, _env, event)
@@ -38,7 +38,7 @@ class Abstract < Union::Abstract
 
     define_instance_method(
         :meth_is_err,
-        :err?, [],
+        :Err?, [],
         [], VCA::Bool
     )
     def meth_is_err(_loc, _env, event)
