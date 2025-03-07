@@ -80,14 +80,14 @@ CLASS MESSAGES:
     &Bool.false : Bool
 INHERITED INSTANCE MESSAGES:
   INHERIT FROM: Object
-    &Object.show : String
-    &Object.to-s : String
-    &Object.contents : Top
-    &Object.== : Object -> Bool
-    &Object.force : Top
+    Object#show : String
+    Object#to-s : String
+    Object#contents : Top
+    Object#== : Object -> Bool
+    Object#force : Top
 INSTANCE MESSAGES:
-    &Bool.< : Bool -> Bool
-    &Bool.not : Bool
+    Bool#< : Bool -> Bool
+    Bool#not : Bool
 umu:2>
 ```
 
