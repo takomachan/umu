@@ -43,6 +43,26 @@ class Abstract < Morph::Abstract
     end
 
 
+    include Enumerable
+
+    def each
+        return self.to_enum unless block_given?
+
+        xs = self
+        loop do
+            t = xs.dest!
+            ASSERT.kind_of t, VCP::Tuple
+            x, xs1 = t.values
+
+            yield x
+
+            xs = xs1
+        end
+
+        nil
+    end
+
+
     def to_s
         format "[%s]", self.map(&:to_s).join(', ')
     end
