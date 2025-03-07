@@ -61,18 +61,29 @@ class Input  < Abstract
     end
 
 
-    FN_IS_EMPTY = lambda { |input| input.io.eof? }
-
     FN_DEST = lambda { |input|
-                         s = input.io.gets
-                         unless s
-                            raise ::StopIteration
-                         end
+            result = (
+                if input.io.eof?
+                    VC.make_none
+                else
+                    s = input.io.gets
+                    if s
+                        str_val = VC.make_string s.chomp
 
-                         str_val = VC.make_string s.chomp
+                        VC.make_some(
+                            VC.make_tuple(
+                                str_val,
+                                VC.make_enumerator(input, FN_DEST)
+                            )
+                        )
+                    else
+                       VC.make_none
+                    end
+                end
+            )
 
-                         VC.make_tuple str_val, input
-                     }
+            ASSERT.kind_of result, VCU::Option::Abstract
+        }
 
     define_instance_method(
         :meth_each_line,
@@ -80,7 +91,7 @@ class Input  < Abstract
         [], VCM::Enum
     )
     def meth_each_line(_loc, _env, _event)
-        VC.make_enumerator self, FN_IS_EMPTY, FN_DEST
+        VC.make_enumerator self, FN_DEST
     end
 end
 Input.freeze

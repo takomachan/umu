@@ -301,15 +301,15 @@ class Abstract < Object
 
         mut_y  = init.dup
         mut_xs = self.dup
-        result = loop {
-            if mut_xs.meth_is_empty(loc, env, event).true?
-                break mut_y
-            end
+        loop do
+            val_opt = mut_xs.meth_dest loc, env, event
+            break if val_opt.none?
 
-            pair      = mut_xs.dest!
+            pair      = val_opt.contents
             x, mut_xs = VC.validate_pair pair, "foldl", loc, env
+
             mut_y = yield loc, env, x, mut_y
-        }
+        end
 
         ASSERT.kind_of mut_y, VC::Top
     end

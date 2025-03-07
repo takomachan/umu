@@ -49,18 +49,21 @@ class Dir < Object
     end
 
 
-    FN_IS_EMPTY = lambda { |_dir| VC.make_false }
-
     FN_DEST = lambda { |dir|
-                         s = dir.obj.read
-                         unless s
-                            raise ::StopIteration
-                         end
+            s = dir.obj.read
+            unless s
+               raise ::StopIteration
+            end
 
-                         str_val = VC.make_string s
+            str_val = VC.make_string s.chomp
 
-                         VC.make_tuple str_val, dir
-                     }
+            VC.make_some(
+                VC.make_tuple(
+                    str_val,
+                    VC.make_enumerator(dir, FN_DEST)
+                )
+            )
+        }
 
     define_instance_method(
         :meth_each,
@@ -68,7 +71,7 @@ class Dir < Object
         [], VCM::Enum
     )
     def meth_each(_loc, _env, _event)
-        VC.make_enumerator self, FN_IS_EMPTY, FN_DEST
+        VC.make_enumerator self, FN_DEST
     end
 end
 Dir.freeze

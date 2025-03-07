@@ -31,24 +31,19 @@ class Enum < Abstract
 
     attr_reader :source
 
-    def initialize(source, fn_is_empty, fn_dest)
-        ASSERT.kind_of source,      VC::Top
-        ASSERT.kind_of fn_is_empty, ::Proc
-        ASSERT.kind_of fn_dest,     ::Proc
+    def initialize(source, fn_dest)
+        ASSERT.kind_of source,  VC::Top
+        ASSERT.kind_of fn_dest, ::Proc
 
-        @source      = source
-        @fn_is_empty = fn_is_empty
-        @fn_dest     = fn_dest
+        @source     = source
+        @fn_dest    = fn_dest
     end
 
 
-    def fn_empty?
-        @fn_is_empty.call(self.source)
-    end
+    def fn_dest
+        val_opt = @fn_dest.call self.source
 
-
-    def fn_dest!
-        @fn_dest.call self.source
+        ASSERT.kind_of val_opt, VCU::Option::Abstract
     end
 
 
@@ -73,20 +68,34 @@ class Enum < Abstract
     end
 
 
+    def meth_dest(_loc, _env, _event)
+        self.fn_dest
+    end
+
+
     def meth_is_empty(_loc, _env, _event)
-        VC.make_bool self.fn_empty?
+        VC.make_bool self.fn_dest.kind_of?(VCU::Option::None)
     end
 
 
     def dest!
-        tuple = self.fn_dest!
-        ASSERT.kind_of tuple, VCP::Tuple
-        x, xs = tuple.values
+        val_opt = self.fn_dest
+        case val_opt
+        when VCU::Option::Some
+            pair = val_opt.contents
+            ASSERT.kind_of pair, VCP::Tuple
 
-        VC.make_tuple(
-            x,
-            VC.make_enumerator(xs, @fn_is_empty, @fn_dest)
-        )
+            x, xs = pair.values
+
+            VC.make_tuple(
+                x,
+                VC.make_enumerator(xs, @fn_dest)
+            )
+        when VCU::Option::None
+            raise ::StopIteration
+        else
+            ASSERT.abort "No case: '%s'", val_opt.inspect
+        end
     end
 end
 Enum.freeze
@@ -97,12 +106,11 @@ end # Umu::Value::Core::Morph
 
 module_function
 
-    def make_enumerator(source, fn_is_empty, fn_dest)
-        ASSERT.kind_of source,      VC::Top
-        ASSERT.kind_of fn_is_empty, ::Proc
-        ASSERT.kind_of fn_dest,     ::Proc
+    def make_enumerator(source, fn_dest)
+        ASSERT.kind_of source,  VC::Top
+        ASSERT.kind_of fn_dest, ::Proc
 
-        Morph::Enum.new(source, fn_is_empty, fn_dest).freeze
+        Morph::Enum.new(source, fn_dest).freeze
     end
 
 end # Umu::Value::Core
