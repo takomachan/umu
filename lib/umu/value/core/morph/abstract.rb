@@ -190,6 +190,20 @@ class Abstract < Object
     end
 
 
+    define_instance_method(
+        :meth_is_exists,
+        :exists?, [],
+        [], VCA::Bool
+    )
+    def meth_is_exists(loc, env, event)
+        self.meth_is_empty(
+            loc, env, event
+        ).meth_not(
+            loc, env, event
+        )
+    end
+
+
     def dest!
         raise X::InternalSubclassResponsibility
     end

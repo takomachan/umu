@@ -284,6 +284,10 @@ structure Umu = struct {
         val empty? = &(Morph.empty?)
 
 
+        # exists? : %['a] -> Bool
+        val exists? = &(Morph.exists?)
+
+
         # dest : %['a] -> Option ('a, %['a])
         val dest = &(Morph.dest)
 
@@ -866,6 +870,9 @@ structure Umu = struct {
 
         # empty?    : %['a] -> Bool
         val empty? = Morph::empty?
+
+        # exists?   : %['a] -> Bool
+        val exists? = Morph::exists?
 
         # head      : %['a] -> 'a
         val head = Morph::head

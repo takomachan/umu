@@ -6,7 +6,6 @@
 
 structure UAS = Umu::Assert
 
-val exists?     : Fun = not << empty?
 val not-exists? : Fun = empty?
 
 
