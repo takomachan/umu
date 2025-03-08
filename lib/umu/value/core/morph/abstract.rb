@@ -322,6 +322,7 @@ class Abstract < Object
 
             pair      = val_opt.contents
             x, mut_xs = VC.validate_pair pair, "foldl", loc, env
+            VC.validate_morph mut_xs, 'foldl', loc, env
 
             mut_y = yield loc, env, x, mut_y
         end
