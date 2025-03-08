@@ -108,6 +108,20 @@ class Entry < Abstraction::Record
     end
 
 
+    def va_extend_values(value_by_sym)
+        ASSERT.kind_of value_by_sym, ::Hash
+
+        self.update_va_context(
+            value_by_sym.inject(self.va_context) { |ctx, (sym, value)|
+                ASSERT.kind_of sym,     ::Symbol
+                ASSERT.kind_of value,   VC::Top
+
+                ctx.extend(sym, ECV.make_value_target(value))
+            }
+        )
+    end
+
+
     def va_extend_recursive(sym, lam_expr)
         ASSERT.kind_of sym,         ::Symbol
         ASSERT.kind_of lam_expr,    ASCEN::Lambda::Entry

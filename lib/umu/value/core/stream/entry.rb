@@ -132,6 +132,361 @@ class Abstract < Object
 
 
     define_instance_method(
+        :meth_map,
+        :map, [],
+        [VC::Fun], self
+    )
+    def meth_map(loc, env, _event, func)
+        ASSERT.kind_of func, VC::Fun
+
+        sym_f    = :'%f'
+        sym_self = :'self'
+
+        new_env = env.va_extend_values(
+            sym_f    => func,
+            sym_self => self
+        )
+
+        expr = ASCE.make_send(
+                loc,
+
+                ASCE.make_identifier(loc, sym_self),
+
+                ASCE.make_message(
+                    loc,
+                    :'%map',
+                    [ASCE.make_identifier(loc, sym_f)]
+                )
+            )
+
+
+        VC.make_suspended_stream(expr, new_env.va_context)
+    end
+
+
+    define_instance_method(
+        :meth_map_,
+        :'%map', [],
+        [VC::Fun], self
+    )
+    def meth_map_(loc, env, event, func)
+        ASSERT.kind_of func, VC::Fun
+
+        val_opt = self.meth_force loc, env, event
+
+        VC.validate_option val_opt, 'map', loc, env
+
+        result = (
+            if val_opt.none?
+                VC.make_cell_stream_nil env.va_context
+            else
+                sym_x   = :'%x'
+                sym_xs  = :'%xs'
+                sym_f   = :'%f'
+
+                x, xs = VC.validate_pair val_opt.contents, "map", loc, env
+
+                VC.validate_stream xs, 'map', loc, env
+                new_env = env.va_extend_values(
+                                    sym_x   => x,
+                                    sym_xs  => xs,
+                                    sym_f   => func
+                                )
+
+                head_expr = ASCE.make_apply(
+                        loc,
+                        ASCE.make_identifier(loc, sym_f),
+                        ASCE.make_identifier(loc, sym_x)
+                    )
+
+                tail_stream = VC.make_expr_stream_entry(
+                         ASCE.make_send(
+                            loc,
+
+                            ASCE.make_identifier(loc, sym_xs),
+
+                            ASCE.make_message(
+                                loc,
+                                :map,
+                                [ASCE.make_identifier(loc, sym_f)]
+                            )
+                        ),
+
+                        new_env.va_context
+                    )
+
+                VC.make_cell_stream_cons(
+                    head_expr, tail_stream, new_env.va_context
+                )
+            end
+        )
+
+        ASSERT.kind_of result, VC::Stream::Entry::Abstract
+    end
+
+
+    define_instance_method(
+        :meth_select,
+        :select, [],
+        [VC::Fun], self
+    )
+    def meth_select(loc, env, _event, func)
+        ASSERT.kind_of func, VC::Fun
+
+        sym_f    = :'%f'
+        sym_self = :'self'
+
+        new_env = env.va_extend_values(
+            sym_f    => func,
+            sym_self => self
+        )
+
+        expr = ASCE.make_send(
+                loc,
+
+                ASCE.make_identifier(loc, sym_self),
+
+                ASCE.make_message(
+                    loc,
+                    :'%select',
+                    [ASCE.make_identifier(loc, sym_f)]
+                )
+            )
+
+
+        VC.make_suspended_stream(expr, new_env.va_context)
+    end
+
+
+    define_instance_method(
+        :meth_select_,
+        :'%select', [],
+        [VC::Fun], self
+    )
+    def meth_select_(loc, env, event, func)
+        ASSERT.kind_of func, VC::Fun
+
+        val_opt = self.meth_force loc, env, event
+
+        VC.validate_option val_opt, 'select', loc, env
+
+        result = (
+            if val_opt.none?
+                VC.make_cell_stream_nil env.va_context
+            else
+                sym_x   = :'%x'
+                sym_xs  = :'%xs'
+                sym_f   = :'%f'
+
+                x, xs = VC.validate_pair(
+                            val_opt.contents, "select", loc, env
+                        )
+
+                VC.validate_stream xs, 'select', loc, env
+
+                val_bool = func.apply x, [], loc, env.enter(event)
+                ASSERT.kind_of val_bool, VC::Top
+
+                VC.validate_bool val_bool, 'select', loc, env
+                if val_bool.true?
+                    send_expr = ASCE.make_send(
+                            loc,
+
+                            ASCE.make_identifier(loc, sym_xs),
+
+                            ASCE.make_message(
+                                loc,
+                                :select,
+                                [ASCE.make_identifier(loc, sym_f)]
+                            )
+                        )
+
+                    new_env = env.va_extend_values(
+                                        sym_x   => x,
+                                        sym_xs  => xs,
+                                        sym_f   => func
+                                    )
+
+                    VC.make_cell_stream_cons(
+                        ASCE.make_identifier(loc, sym_x),
+
+                        VC.make_expr_stream_entry(
+                            send_expr,
+                            new_env.va_context
+                        ),
+
+                        new_env.va_context
+                    )
+                else
+                    xs.meth_select loc, env, event, func
+                end
+            end
+        )
+
+        ASSERT.kind_of result, VC::Stream::Entry::Abstract
+    end
+
+
+    define_instance_method(
+        :meth_append,
+        :append, [],
+        [VC::Stream::Entry::Abstract], self
+    )
+    def meth_append(loc, env, event, ys)
+        ASSERT.kind_of ys, VC::Stream::Entry::Abstract
+
+        sym_ys   = :'%ys'
+        sym_self = :'self'
+
+        new_env = env.va_extend_values(
+            sym_ys   => ys,
+            sym_self => self
+        )
+
+        expr = ASCE.make_send(
+                loc,
+
+                ASCE.make_identifier(loc, sym_self),
+
+                ASCE.make_message(
+                    loc,
+                    :'%append',
+                    [ASCE.make_identifier(loc, sym_ys)]
+                )
+            )
+
+
+        VC.make_suspended_stream(expr, new_env.va_context)
+    end
+
+
+    define_instance_method(
+        :meth_append_,
+        :'%append', [],
+        [VC::Stream::Entry::Abstract], self
+    )
+    def meth_append_(loc, env, event, ys)
+        ASSERT.kind_of ys, VC::Stream::Entry::Abstract
+
+        val_opt = self.meth_force loc, env, event
+
+        VC.validate_option val_opt, 'append', loc, env
+
+        result = (
+            if val_opt.none?
+                ys
+            else
+                sym_x   = :'%x'
+                sym_xs  = :'%xs'
+                sym_ys  = :'%ys'
+
+                x, xs = VC.validate_pair(
+                            val_opt.contents, "append", loc, env
+                        )
+
+                VC.validate_stream xs, 'append', loc, env
+                new_env = env.va_extend_values(
+                                    sym_x   => x,
+                                    sym_xs  => xs,
+                                    sym_ys  => ys
+                                )
+
+                tail_stream = VC.make_expr_stream_entry(
+                         ASCE.make_send(
+                            loc,
+
+                            ASCE.make_identifier(loc, sym_xs),
+
+                            ASCE.make_message(
+                                loc,
+                                :append,
+                                [ASCE.make_identifier(loc, sym_ys)]
+                            )
+                        ),
+
+                        new_env.va_context
+                    )
+
+                VC.make_cell_stream_cons(
+                    ASCE.make_identifier(loc, sym_x),
+                    tail_stream,
+                    new_env.va_context
+                )
+            end
+        )
+
+        ASSERT.kind_of result, VC::Stream::Entry::Abstract
+    end
+
+
+    define_instance_method(
+        :meth_concat_map,
+        :'concat-map', [],
+        [VC::Fun], self
+    )
+    def meth_concat_map(loc, env, _event, func)
+        ASSERT.kind_of func, VC::Fun
+
+        sym_f    = :'%f'
+        sym_self = :'self'
+
+        new_env = env.va_extend_values(
+            sym_f    => func,
+            sym_self => self
+        )
+
+        expr = ASCE.make_send(
+                loc,
+
+                ASCE.make_identifier(loc, sym_self),
+
+                ASCE.make_message(
+                    loc,
+                    :'%concat-map',
+                    [ASCE.make_identifier(loc, sym_f)]
+                )
+            )
+
+
+        VC.make_suspended_stream(expr, new_env.va_context)
+    end
+
+
+    define_instance_method(
+        :meth_concat_map_,
+        :'%concat-map', [],
+        [VC::Fun], self
+    )
+    def meth_concat_map_(loc, env, event, func)
+        ASSERT.kind_of func, VC::Fun
+
+        val_opt = self.meth_force loc, env, event
+
+        VC.validate_option val_opt, 'concat-map', loc, env
+
+        result = (
+            if val_opt.none?
+                VC.make_cell_stream_nil env.va_context
+            else
+                x, xs = VC.validate_pair(
+                            val_opt.contents, 'concat-map', loc, env
+                        )
+                VC.validate_stream xs, 'concat-map', loc, env
+
+                ys = func.apply x, [], loc, env.enter(event)
+                VC.validate_stream ys, 'concat-map', loc, env
+
+                xs1 = xs.meth_concat_map loc, env, event, func
+
+                ys.meth_append loc, env, event, xs1
+            end
+        )
+
+        ASSERT.kind_of result, VC::Stream::Entry::Abstract
+    end
+
+
+    define_instance_method(
         :meth_take,
         :take, [],
         [VCAN::Int], VCM::List::Abstract

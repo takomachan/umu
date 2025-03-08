@@ -100,6 +100,20 @@ module_function
     end
 
 
+    # Stream type
+
+    def validate_stream(value, meth_name, loc, env)
+        ASSERT.kind_of value,     VC::Top
+        ASSERT.kind_of meth_name, ::String
+
+        VC.validate_type(
+            value, VC::Stream::Entry::Abstract, meth_name, loc, env
+        )
+
+        nil
+    end
+
+
     # S-Expression type
 
     def validate_s_expr(value, meth_name, loc, env)
