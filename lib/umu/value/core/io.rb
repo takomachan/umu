@@ -88,7 +88,7 @@ class Input  < Abstract
     define_instance_method(
         :meth_each_line,
         :'each-line', [],
-        [], VCM::Enum
+        [], VCM::Enum::Abstract
     )
     def meth_each_line(_loc, _env, _event)
         VC.make_enumerator self, FN_DEST

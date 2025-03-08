@@ -68,7 +68,7 @@ class Dir < Object
     define_instance_method(
         :meth_each,
         :'each', [],
-        [], VCM::Enum
+        [], VCM::Enum::Abstract
     )
     def meth_each(_loc, _env, _event)
         VC.make_enumerator self, FN_DEST
