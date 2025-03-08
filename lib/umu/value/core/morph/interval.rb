@@ -67,6 +67,18 @@ class Interval < Abstract
     end
 
 
+    def to_s
+        step = self.step_value.val
+
+        format("[%s .. %s (%s%s)]",
+            self.current_value.to_s,
+            self.stop_value.to_s,
+            step.positive? ? '+' : '',
+            step.to_s
+        )
+    end
+
+
     INDEX_BY_LABELS = {current: 0, stop: 1, step: 2}
 
     define_instance_method(
@@ -97,45 +109,27 @@ class Interval < Abstract
     end
 
 
-    def meth_is_empty(_loc, _env, _event)
-        VC.make_bool __empty__?
-    end
-
-
-    def dest!
-        raise ::StopIteration if __empty__?
-
-        VC.make_tuple(
-            self.current_value,
-
-            VC.make_interval(
-                self.current_value + self.step_value,
-                self.stop_value,
-                self.step_value
-            )
+    def meth_dest(_loc, _env, _event)
+        if (
+            if self.step_value.val.positive?
+                self.current_value.val > self.stop_value.val
+            else
+                self.current_value.val < self.stop_value.val
+            end
         )
-    end
-
-
-    def to_s
-        step = self.step_value.val
-
-        format("[%s .. %s (%s%s)]",
-            self.current_value.to_s,
-            self.stop_value.to_s,
-            step.positive? ? '+' : '',
-            step.to_s
-        )
-    end
-
-
-private
-
-    def __empty__?
-        if self.step_value.val.positive?
-            self.current_value.val > self.stop_value.val
+            VC.make_none
         else
-            self.current_value.val < self.stop_value.val
+            VC.make_some(
+                VC.make_tuple(
+                    self.current_value,
+
+                    VC.make_interval(
+                        self.current_value + self.step_value,
+                        self.stop_value,
+                        self.step_value
+                    )
+                )
+            )
         end
     end
 end

@@ -31,32 +31,16 @@ class Abstract < Morph::Abstract
     end
 
 
-    define_instance_method(
-        :meth_cons,
-        :cons, [],
-        [VC::Top], self
-    )
-    def meth_cons(_loc, _env, _event, value)
-        ASSERT.kind_of value, VC::Top
-
-        VC.make_cons value, self
-    end
-
-
     include Enumerable
 
     def each
         return self.to_enum unless block_given?
 
         xs = self
-        loop do
-            t = xs.dest!
-            ASSERT.kind_of t, VCP::Tuple
-            x, xs1 = t.values
+        while xs.kind_of? Cons
+            yield xs.head
 
-            yield x
-
-            xs = xs1
+            xs = xs.tail
         end
 
         nil
@@ -70,6 +54,18 @@ class Abstract < Morph::Abstract
 
     def pretty_print(q)
         PRT.group_for_enum q, self, bb:'[', eb:']', join:', '
+    end
+
+
+    define_instance_method(
+        :meth_cons,
+        :cons, [],
+        [VC::Top], self
+    )
+    def meth_cons(_loc, _env, _event, value)
+        ASSERT.kind_of value, VC::Top
+
+        VC.make_cons value, self
     end
 
 
@@ -93,13 +89,28 @@ Abstract.freeze
 
 
 class Nil < Abstract
+    def meth_head(_loc, _env, _event)
+        raise X::EmptyError.new loc, env, "head: Empty morph"
+    end
+
+
+    def meth_tail(_loc, _env, _event)
+        raise X::EmptyError.new loc, env, "rail: Empty morph"
+    end
+
+
     def meth_is_empty(_loc, _env, _event)
         VC.make_true
     end
 
 
-    def dest!
-        raise ::StopIteration
+    def meth_dest(_loc, _env, _event)
+        VC.make_none
+    end
+
+
+    def meth_dest!(_loc, _env, _event)
+        raise X::EmptyError.new loc, env, "dest!: Empty morph"
     end
 end
 Nil.freeze
@@ -138,10 +149,14 @@ class Cons < Abstract
     end
 
 
-    def dest!
+    def meth_dest(_loc, _env, _event)
+        VC.make_some self.contents
+    end
+
+
+    def contents
         VC.make_tuple self.head, self.tail
     end
-    alias contents dest!
 
 
     define_instance_method(

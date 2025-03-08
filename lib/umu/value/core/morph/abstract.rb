@@ -17,8 +17,7 @@ class Abstract < Object
     * .make(xs : ::Array) -> Morph::Abstract
     * .meth_make_empty(loc, env, event) -> Morph::Abstract
     * #meth_cons(loc, env, event, value : VC::Top) -> Morph::Abstract
-    * #meth_is_empty(loc, env, event) -> VCA::Bool
-    * #dest! -> [VC::Top, Morph::Abstract] or ::StopIteration
+    * #meth_dest(loc, env, event) -> VCU::Option::Abstract
 =end
 
 
@@ -166,7 +165,11 @@ class Abstract < Object
         [], VCA::Bool
     )
     def meth_is_empty(_loc, _env, _event)
-        raise X::InternalSubclassResponsibility
+        val_opt = self.meth_dest loc, env, event
+
+        VC.validate_option val_opt, 'empty?', loc, env
+
+        VC.make_bool val_opt.none?
     end
 
 
@@ -176,16 +179,11 @@ class Abstract < Object
         [], VCA::Bool
     )
     def meth_is_exists(loc, env, event)
-        self.meth_is_empty(
-            loc, env, event
-        ).meth_not(
-            loc, env, event
-        )
-    end
+        val_opt = self.meth_dest loc, env, event
 
+        VC.validate_option val_opt, 'exists?', loc, env
 
-    def dest!
-        raise X::InternalSubclassResponsibility
+        VC.make_bool val_opt.some?
     end
 
 
@@ -194,16 +192,19 @@ class Abstract < Object
         :dest!, [],
         [], VCP::Tuple
     )
-    def meth_dest!(loc, env, _event)
-        begin
-            self.dest!
-        rescue ::StopIteration
-            raise X::EmptyError.new(
-                        loc,
-                        env,
-                        "dest!: Empty morph cannot be destructible"
-                    )
+    def meth_dest!(loc, env, event)
+        val_opt = self.meth_dest loc, env, event
+
+        VC.validate_option val_opt, 'dest!', loc, env
+
+        unless val_opt.some?
+            raise X::EmptyError.new loc, env, "dest!: Empty morph"
         end
+
+        pair = val_opt.contents
+        VC.validate_pair pair, "dest!", loc, env
+
+        ASSERT.kind_of pair,  VCP::Tuple
     end
 
 
@@ -213,11 +214,7 @@ class Abstract < Object
         [], VCU::Option::Abstract
     )
     def meth_dest(loc, env, event)
-        if self.meth_is_empty(loc, env, event).true?
-            VC.make_none
-        else
-            VC.make_some self.dest!
-        end
+        raise X::InternalSubclassResponsibility
     end
 
 
@@ -227,7 +224,16 @@ class Abstract < Object
         [], VC::Top
     )
     def meth_head(loc, env, event)
-        self.meth_dest!(loc, env, event).select_by_number(1, loc, env)
+        val_opt = self.meth_dest loc, env, event
+
+        VC.validate_option val_opt, 'head', loc, env
+        unless val_opt.some?
+            raise X::EmptyError.new loc, env, "head: Empty morph"
+        end
+
+        result, _ = VC.validate_pair val_opt.contents, "head", loc, env
+
+        result
     end
 
 
@@ -237,7 +243,16 @@ class Abstract < Object
         [], self
     )
     def meth_tail(loc, env, event)
-        self.meth_dest!(loc, env, event).select_by_number(2, loc, env)
+        val_opt = self.meth_dest loc, env, event
+
+        VC.validate_option val_opt, 'tail', loc, env
+        unless val_opt.some?
+            raise X::EmptyError.new loc, env, "tail: Empty morph"
+        end
+
+        _, result = VC.validate_pair val_opt.contents, "tail", loc, env
+
+        result
     end
 
 
@@ -448,11 +463,14 @@ class Abstract < Object
         [], VCAN::Abstract
     )
     def meth_sum(loc, env, event)
-        if self.meth_is_empty(loc, env, event).true?
+        val_opt = self.meth_dest loc, env, event
+
+        VC.validate_option val_opt, 'sum', loc, env
+        unless val_opt.some?
             raise X::EmptyError.new loc, env, "sum: Empty morph"
         end
 
-        head = self.meth_head loc, env, event
+        head, _ = VC.validate_pair val_opt.contents, 'sum', loc, env
         VC.validate_number head, 'sum', loc, env
 
         zero = head.meth_zero loc, env, event
@@ -486,11 +504,14 @@ class Abstract < Object
         [], VCAN::Abstract
     )
     def meth_avg(loc, env, event)
-        if self.meth_is_empty(loc, env, event).true?
+        val_opt = self.meth_dest loc, env, event
+
+        VC.validate_option val_opt, 'avg', loc, env
+        unless val_opt.some?
             raise X::EmptyError.new loc, env, "avg: Empty morph"
         end
 
-        head = self.meth_head loc, env, event
+        head, _ = VC.validate_pair val_opt.contents, 'avg', loc, env
         VC.validate_number head, 'avg', loc, env
 
         zero = head.meth_zero loc, env, event
@@ -533,11 +554,14 @@ class Abstract < Object
         [], VCAN::Abstract
     )
     def meth_max(loc, env, event)
-        if self.meth_is_empty(loc, env, event).true?
+        val_opt = self.meth_dest loc, env, event
+
+        VC.validate_option val_opt, 'max', loc, env
+        unless val_opt.some?
             raise X::EmptyError.new loc, env, "max: Empty morph"
         end
 
-        head = self.meth_head loc, env, event
+        head, _ = VC.validate_pair val_opt.contents, 'max', loc, env
         VC.validate_number head, 'max', loc, env
 
         head_class_signat = env.ty_class_signat_of head
@@ -572,11 +596,14 @@ class Abstract < Object
         [], VCAN::Abstract
     )
     def meth_min(loc, env, event)
-        if self.meth_is_empty(loc, env, event).true?
-            raise X::EmptyError.new loc, env, "min: Empty morph"
+        val_opt = self.meth_dest loc, env, event
+
+        VC.validate_option val_opt, 'max', loc, env
+        unless val_opt.some?
+            raise X::EmptyError.new loc, env, "max: Empty morph"
         end
 
-        head = self.meth_head loc, env, event
+        head, _ = VC.validate_pair val_opt.contents, 'max', loc, env
         VC.validate_number head, 'min', loc, env
 
         head_class_signat = env.ty_class_signat_of head
@@ -778,16 +805,12 @@ class Abstract < Object
     def meth_append(loc, env, event, ys)
         ASSERT.kind_of ys, Abstract
 
-        result = if ys.meth_is_empty(loc, env, event).true?
-                        self
-                    else
-                        self.foldr(
-                             loc,     env,     event, ys
-                        ) { |new_loc, new_env, x,     ys1|
+        result = self.foldr(
+                         loc,     env,     event, ys
+                    ) { |new_loc, new_env, x,     ys1|
 
-                            ys1.meth_cons new_loc, new_env, event, x
-                        }
-                    end
+                        ys1.meth_cons new_loc, new_env, event, x
+                    }
 
         ASSERT.kind_of result, VCM::Abstract
     end
@@ -884,16 +907,16 @@ class Abstract < Object
              [self, ys,  self.meth_make_empty(loc, env, event)]
         ) { |(xs1,  ys1, zs1        ), _|
 
-            if (
-                xs1.meth_is_empty(loc, env, event).true? ||
-                ys1.meth_is_empty(loc, env, event).true?
-            )
+            xs_opt = xs1.meth_dest loc, env, event
+            ys_opt = ys1.meth_dest loc, env, event
+
+            if xs_opt.none? || ys_opt.none?
                 break [xs1, ys1, zs1]
             else
-                xs_pair = xs1.dest!
+                xs_pair = xs_opt.contents
                 x, xs2 = VC.validate_pair xs_pair, "zip", loc, env
 
-                ys_pair = ys1.dest!
+                ys_pair = ys_opt.contents
                 y, ys2 = VC.validate_pair ys_pair, "zip", loc, env
 
                 [
@@ -946,16 +969,20 @@ class Abstract < Object
         [], self
     )
     def meth_uniq(loc, env, event)
-        if self.meth_is_empty(loc, env, event).true?
+        val_opt  = self.meth_dest loc, env, event
+        VC.validate_option val_opt, 'uniq', loc, env
+
+        if val_opt.none?
             self
         else
-            pair  = self.dest!
-            x, xs = VC.validate_pair pair, "uniq", loc, env
+            x, xs = VC.validate_pair val_opt.contents, "uniq", loc, env
 
-            if xs.meth_is_empty(loc, env, event).true?
+            xs_opt  = xs.meth_dest loc, env, event
+            VC.validate_option xs_opt, 'uniq', loc, env
+
+            if xs_opt.none?
                 self
             else
-
                 result_opaque = xs.foldl(
                      loc,     env,     event,
                      VC.make_opaque([x, VC.make_list([x])])
@@ -1036,12 +1063,14 @@ class Abstract < Object
     def meth_sort(loc, env, event, opt_func = nil)
         ASSERT.opt_kind_of opt_func, VC::Fun
 
-        if self.meth_is_empty(loc, env, event).true?
+        val_opt = self.meth_dest loc, env, event
+
+        VC.validate_option val_opt, 'head', loc, env
+        unless val_opt.none?
             return self
         end
 
-        pair      = self.dest!
-        pivot, xs = VC.validate_pair pair, "sort", loc, env
+        pivot, xs = VC.validate_pair val_opt.contents, "sort", loc, env
 
         init_opaque = VC.make_opaque [
                                 self.meth_make_empty(loc, env, event),

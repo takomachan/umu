@@ -42,8 +42,10 @@ class Enum < Abstract
 
     def fn_dest
         val_opt = @fn_dest.call self.source
+        ASSERT.kind_of  val_opt,            VCU::Option::Abstract
+        ASSERT.tuple_of val_opt.contents,   [VC::Top, VC::Top]
 
-        ASSERT.kind_of val_opt, VCU::Option::Abstract
+        val_opt
     end
 
 
@@ -70,32 +72,6 @@ class Enum < Abstract
 
     def meth_dest(_loc, _env, _event)
         self.fn_dest
-    end
-
-
-    def meth_is_empty(_loc, _env, _event)
-        VC.make_bool self.fn_dest.kind_of?(VCU::Option::None)
-    end
-
-
-    def dest!
-        val_opt = self.fn_dest
-        case val_opt
-        when VCU::Option::Some
-            pair = val_opt.contents
-            ASSERT.kind_of pair, VCP::Tuple
-
-            x, xs = pair.values
-
-            VC.make_tuple(
-                x,
-                VC.make_enumerator(xs, @fn_dest)
-            )
-        when VCU::Option::None
-            raise ::StopIteration
-        else
-            ASSERT.abort "No case: '%s'", val_opt.inspect
-        end
     end
 end
 Enum.freeze
