@@ -262,12 +262,25 @@ class Abstract < Object
         [], VCM::List::Abstract
     )
     def meth_to_list(loc, env, event)
-        result = self.foldr(
-             loc,     env,     event, VC.make_nil
-        ) { |new_loc, new_env, x ,    xs|
+        zs = loop.inject(
+             [VC.make_nil, self]
+        ) { |(ys,          xs), _|
+            val_of_opt = xs.meth_dest(loc, env, event)
+            case val_of_opt
+            when VCU::Option::None
+                break ys
+            when VCU::Option::Some
+                pair = val_of_opt.contents
+                ASSERT.kind_of pair, VCP::Tuple
+                x, xs1 = pair.values
 
-             VC.make_cons x, xs
+                [ys.meth_cons(loc, env, event, x), xs1]
+            else
+                ASSERT.abort "No case: ", val_of_opt.inspect
+            end
         }
+
+        result = zs.meth_reverse(loc, env, event)
 
         ASSERT.kind_of result, VCM::List::Abstract
     end

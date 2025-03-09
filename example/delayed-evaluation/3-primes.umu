@@ -9,7 +9,7 @@ See: 新世代プログラミング, 淵一博＋黒川利明 編著, 1986年
 
 
 
-import Umu::Stream { fun take }
+import Umu::Stream { fun take = take-to-list }
 
 
 

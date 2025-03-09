@@ -9,6 +9,8 @@ module Value
 
 module Core
 
+module Morph
+
 module Stream
 
 module Cell
@@ -132,11 +134,13 @@ module_function
         Cons.new(head_expr, tail_stream).freeze
     end
 
-end # Umu::Value::Core::Stream::Cell
+end # Umu::Value::Morph::Core::Stream::Cell
 
-end # Umu::Value::Core::Stream
+end # Umu::Value::Morph::Core::Stream
 
-end # Umu::Value::Core
+end # Umu::Value::Morph::Core
+
+end # Umu::Value::Morph
 
 end # Umu::Value
 

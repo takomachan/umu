@@ -71,11 +71,16 @@ module Umu
             module Morph
                 class Abstract < Object; end
                 class Interval < Abstract; end
-                module Ebum
+                module Enum
                     class Abstract < Morph::Abstract; end
                 end
                 module List
                     class Abstract < Morph::Abstract; end
+                end
+                module Stream
+                    module Entry
+                        class Abstract < Morph::Abstract; end
+                    end
                 end
             end
             module SExpr

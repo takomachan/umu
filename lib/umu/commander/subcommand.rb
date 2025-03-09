@@ -263,11 +263,13 @@ module_function
                 end
 
                 cmess_infos = k.class_method_infos.reject { |info|
-                                    set_of_cmess[info.mess_sym]
+                                    set_of_cmess[info.mess_sym] ||
+                                    /^%/ =~ info.mess_sym.to_s
                                 }
 
                 imess_infos = k.instance_method_infos.reject { |info|
-                                    set_of_imess[info.mess_sym]
+                                    set_of_imess[info.mess_sym] ||
+                                    /^%/ =~ info.mess_sym.to_s
                                 }
 
                 [

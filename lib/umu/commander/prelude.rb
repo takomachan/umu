@@ -502,8 +502,28 @@ structure Umu = struct {
     ######## Stream ########
 
     structure Stream = struct {
-        # take : Int -> <Stream> 'a -> ['s]
-        fun take = (n : Int) (xs : Stream) -> xs.take n
+        # map : ('a -> 'b) -> <Stream> 'a -> <Stream> 'b
+        fun map = (f : Fun) (xs : Stream) -> xs.map f
+
+
+        # filter : ('a -> Bool) -> <Stream> 'a -> <Stream> 'a
+        fun filter = (f : Fun) (xs : Stream) -> xs.select f
+
+
+        # append : <Stream> 'a -> <Stream> 'a -> <Stream> 'a
+        fun append = (xs : Stream) (ys : Stream) -> xs.++ ys
+
+
+        # concat-map : ('a -> <Stream> 'b) -> <Stream> 'a -> <Stream> 'b
+        fun concat-map = (f : Fun) (xs : Stream) -> xs.concat-map f
+
+
+        # take-to-list : Int -> <Stream> 'a -> ['a]
+        fun take-to-list = (n : Int) (xs : Stream) -> xs.take-to-list n
+
+
+        # to-list : <Stream> 'a -> ['a]
+        fun to-list = xs : Stream -> xs.to-list
     }
 
 

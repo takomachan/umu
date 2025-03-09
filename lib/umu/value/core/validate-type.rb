@@ -107,7 +107,7 @@ module_function
         ASSERT.kind_of meth_name, ::String
 
         VC.validate_type(
-            value, VC::Stream::Entry::Abstract, meth_name, loc, env
+            value, VCM::Stream::Entry::Abstract, meth_name, loc, env
         )
 
         nil

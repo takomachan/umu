@@ -117,7 +117,7 @@ private
             end
         )
 
-        ASSERT.kind_of result, VC::Stream::Entry::Abstract
+        ASSERT.kind_of result, VCM::Stream::Entry::Abstract
     end
 end
 

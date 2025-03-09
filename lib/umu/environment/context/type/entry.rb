@@ -57,7 +57,8 @@ def update_method_info_of_mess_sym(info_of_symbol, infos, klass)
                     {
                         klass:klass,
                         mess:mess_sym,
-                        meth:sub_info.meth_sym
+                        sup_meth:sup_info.meth_sym,
+                        sub_meth:sub_info.meth_sym
                     }.inspect
                 )
 

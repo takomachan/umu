@@ -65,7 +65,6 @@ structure Stream = struct {
 
     ####  2. Processor
 
-(#
     fun rec filter = (f : Fun) (xs : Stream) -> &{
         case xs of {
           | %[]      -> &[]
@@ -73,20 +72,14 @@ structure Stream = struct {
                                else filter f xs'
         }
     }
-#)
-    fun filter = (f : Fun) (xs : Stream) -> xs.select f
 
-(#
     fun rec map = (f : Fun) (xs : Stream) -> &{
         case xs of {
           | %[]      -> &[]
           | %[x|xs'] -> &[ f x | map f xs' ]
         }
     }
-#)
-    fun map = (f : Fun) (xs : Stream) -> xs.map f
 
-(#
                                           # The xs must be finite stream
     fun rec append = (xs : Stream) (ys : Stream) -> &{
         case xs of {
@@ -94,10 +87,7 @@ structure Stream = struct {
           | %[x|xs'] -> &[ x | append xs' ys ]
         }
     }
-#)
-    fun append = (xs : Stream) (ys : Stream) -> xs.append ys
 
-(#
                                         # The f must return finite stream
     fun rec concat-map = (f : Fun) (xs : Stream) -> &{
         case xs of {
@@ -105,8 +95,6 @@ structure Stream = struct {
           | %[x|xs'] -> append (f x) (concat-map f xs')
         }
     }
-#)
-    fun concat-map = (f : Fun) (xs : Stream) -> xs.concat-map f
 
     fun rec take = (n : Int) (xs : Stream) -> &{
         if n <= 0 then
@@ -139,7 +127,6 @@ structure Stream = struct {
 
     # 3.2 To list
 
-(#
     fun rec take-to-list = (n : Int) (xs : Stream) ->
         if n <= 0 then
             []
@@ -148,10 +135,9 @@ structure Stream = struct {
               | %[]      -> []
               | %[x|xs'] -> [ x | take-to-list (n - 1) xs' ]
             }
-#)
-    fun take-to-list = (n : Int) (xs : Stream) -> xs.take n
 
-    fun to-list = xs : Stream -> foldr [] (|) xs    # Only finite stream
+                                                    # Only finite stream
+    fun to-list = xs : Stream -> foldr [] (|) xs
 
 
     # 3.3 To number (only finite stream)

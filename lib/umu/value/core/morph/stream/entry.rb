@@ -9,11 +9,13 @@ module Value
 
 module Core
 
+module Morph
+
 module Stream
 
 module Entry
 
-class Abstract < Object
+class Abstract < Morph::Abstract
     TYPE_SYM = :Stream
 
 
@@ -55,34 +57,11 @@ class Abstract < Object
     end
 
 
-    define_instance_method(
-        :meth_force,
-        :force, [:dest],
-        [], VCU::Option::Abstract
-    )
-    def meth_force(loc, env, event)
-        new_env = env.update_va_context(self.va_context)
-                     .enter(event)
-
-        value = E::Tracer.trace(
-                            new_env.pref,
-                            new_env.trace_stack.count,
-                            'Force',
-                            self.class,
-                            loc,
-                            self.to_s,
-        ) { |new_event|
-            __meth_force__ loc, new_env, new_event
-        }
-        ASSERT.kind_of value, VCU::Option::Abstract
+    def meth_dest(loc, env, event)
+        self.meth_force loc, env, event
     end
 
 
-    define_instance_method(
-        :meth_is_empty,
-        :empty?, [],
-        [], VCA::Bool
-    )
     def meth_is_empty(loc, env, event)
         val_of_opt = self.meth_force loc, env, event
         ASSERT.kind_of val_of_opt, VCU::Option::Abstract
@@ -93,11 +72,6 @@ class Abstract < Object
     end
 
 
-    define_instance_method(
-        :meth_dest!,
-        :dest!, [],
-        [], VCP::Tuple
-    )
     def meth_dest!(loc, env, event)
         val_of_opt = self.meth_force loc, env, event
         ASSERT.kind_of val_of_opt, VCU::Option::Abstract
@@ -115,19 +89,40 @@ class Abstract < Object
     end
 
 
-    define_instance_method(
-        :meth_cons,
-        :cons, [],
-        [VC::Top], self
-    )
     def meth_cons(loc, env, _event, value)
         ASSERT.kind_of value, VC::Top
 
-        raise X::NotImplemented.new(
-                    loc,
-                    env,
-                    "cons: Stream morph is not be constructible"
-                )
+        sym_x   = :'%x'
+        new_env = env.va_extend_value sym_x, value
+
+        VC.make_cell_stream_cons(
+            ASCE.make_identifier(loc, sym_x),
+            self,
+            new_env.va_context
+        )
+    end
+
+
+    define_instance_method(
+        :meth_force,
+        :force, [],
+        [], VCU::Option::Abstract
+    )
+    def meth_force(loc, env, event)
+        new_env = env.update_va_context(self.va_context)
+                     .enter(event)
+
+        value = E::Tracer.trace(
+                            new_env.pref,
+                            new_env.trace_stack.count,
+                            'Force',
+                            self.class,
+                            loc,
+                            self.to_s,
+        ) { |new_event|
+            __meth_force__ loc, new_env, new_event
+        }
+        ASSERT.kind_of value, VCU::Option::Abstract
     end
 
 
@@ -221,7 +216,7 @@ class Abstract < Object
             end
         )
 
-        ASSERT.kind_of result, VC::Stream::Entry::Abstract
+        ASSERT.kind_of result, VCM::Stream::Entry::Abstract
     end
 
 
@@ -323,17 +318,17 @@ class Abstract < Object
             end
         )
 
-        ASSERT.kind_of result, VC::Stream::Entry::Abstract
+        ASSERT.kind_of result, VCM::Stream::Entry::Abstract
     end
 
 
     define_instance_method(
         :meth_append,
-        :append, [],
-        [VC::Stream::Entry::Abstract], self
+        :'++', [],
+        [self], self
     )
     def meth_append(loc, env, event, ys)
-        ASSERT.kind_of ys, VC::Stream::Entry::Abstract
+        ASSERT.kind_of ys, VCM::Stream::Entry::Abstract
 
         sym_ys   = :'%ys'
         sym_self = :'self'
@@ -350,7 +345,7 @@ class Abstract < Object
 
                 ASCE.make_message(
                     loc,
-                    :'%append',
+                    :'%++',
                     [ASCE.make_identifier(loc, sym_ys)]
                 )
             )
@@ -362,15 +357,15 @@ class Abstract < Object
 
     define_instance_method(
         :meth_append_,
-        :'%append', [],
-        [VC::Stream::Entry::Abstract], self
+        :'%++', [],
+        [self], self
     )
     def meth_append_(loc, env, event, ys)
-        ASSERT.kind_of ys, VC::Stream::Entry::Abstract
+        ASSERT.kind_of ys, VCM::Stream::Entry::Abstract
 
         val_opt = self.meth_force loc, env, event
 
-        VC.validate_option val_opt, 'append', loc, env
+        VC.validate_option val_opt, '++', loc, env
 
         result = (
             if val_opt.none?
@@ -381,10 +376,10 @@ class Abstract < Object
                 sym_ys  = :'%ys'
 
                 x, xs = VC.validate_pair(
-                            val_opt.contents, "append", loc, env
+                            val_opt.contents, "++", loc, env
                         )
 
-                VC.validate_stream xs, 'append', loc, env
+                VC.validate_stream xs, '++', loc, env
                 new_env = env.va_extend_values(
                                     sym_x   => x,
                                     sym_xs  => xs,
@@ -399,7 +394,7 @@ class Abstract < Object
 
                             ASCE.make_message(
                                 loc,
-                                :append,
+                                :'++',
                                 [ASCE.make_identifier(loc, sym_ys)]
                             )
                         ),
@@ -415,7 +410,7 @@ class Abstract < Object
             end
         )
 
-        ASSERT.kind_of result, VC::Stream::Entry::Abstract
+        ASSERT.kind_of result, VCM::Stream::Entry::Abstract
     end
 
 
@@ -482,29 +477,29 @@ class Abstract < Object
             end
         )
 
-        ASSERT.kind_of result, VC::Stream::Entry::Abstract
+        ASSERT.kind_of result, VCM::Stream::Entry::Abstract
     end
 
 
     define_instance_method(
-        :meth_take,
-        :take, [],
+        :meth_take_to_list,
+        :'take-to-list', [],
         [VCAN::Int], VCM::List::Abstract
     )
-    def meth_take(loc, env, event, value)
+    def meth_take_to_list(loc, env, event, value)
         ASSERT.kind_of value, VCAN::Int
 
-        zs, _, _ = loop.inject(
+        zs = loop.inject(
              [VC.make_nil, self, value.val]
         ) { |(ys,          xs,   n), _|
             if n <= 0
-                break [ys, xs, n]
+                break ys
             end
 
             val_of_opt = xs.meth_force(loc, env, event)
             case val_of_opt
             when VCU::Option::None
-                break [ys, xs, n]
+                break ys
             when VCU::Option::Some
                 pair = val_of_opt.contents
                 ASSERT.kind_of pair, VCP::Tuple
@@ -560,7 +555,9 @@ class Cell < Abstract
 
 
     def step(env)
-        self.cell.step env
+        new_env = env.update_va_context(self.va_context)
+
+        self.cell.step new_env
     end
 
 
@@ -595,7 +592,9 @@ class Expression < Abstract
 private
 
     def __meth_force__(loc, env, event)
-        self.expr.evaluate(env).value
+        new_env = env.enter event
+
+        self.expr.evaluate(new_env).value
     end
 end
 
@@ -727,9 +726,11 @@ private
     end
 end
 
-end # Umu::Value::Core::Stream::Entry
+end # Umu::Value::Core::Morph::Stream::Entry
 
-end # Umu::Value::Core::Stream
+end # Umu::Value::Core::Morph::Stream
+
+end # Umu::Value::Core::Morph
 
 
 
@@ -741,7 +742,7 @@ module_function
         ASSERT.kind_of va_context,  ECV::Abstract
 
         VC.make_cell_stream_entry(
-            Stream::Cell.make_nil,
+            Morph::Stream::Cell.make_nil,
             va_context
         )
     end
@@ -749,21 +750,21 @@ module_function
 
     def make_cell_stream_cons(head_expr, tail_stream, va_context)
         ASSERT.kind_of head_expr,   ASCE::Abstract
-        ASSERT.kind_of tail_stream, Stream::Entry::Abstract
+        ASSERT.kind_of tail_stream, Morph::Stream::Entry::Abstract
         ASSERT.kind_of va_context,  ECV::Abstract
 
         VC.make_cell_stream_entry(
-            Stream::Cell.make_cons(head_expr, tail_stream),
+            Morph::Stream::Cell.make_cons(head_expr, tail_stream),
             va_context
         )
     end
 
 
     def make_cell_stream_entry(cell, va_context)
-        ASSERT.kind_of cell,        Stream::Cell::Abstract
+        ASSERT.kind_of cell,        Morph::Stream::Cell::Abstract
         ASSERT.kind_of va_context,  ECV::Abstract
 
-        Stream::Entry::Cell.new(cell, va_context).freeze
+        Morph::Stream::Entry::Cell.new(cell, va_context).freeze
     end
 
 
@@ -771,7 +772,7 @@ module_function
         ASSERT.kind_of expr,        ASCE::Abstract
         ASSERT.kind_of va_context,  ECV::Abstract
 
-        Stream::Entry::Expression.new(expr, va_context).freeze
+        Morph::Stream::Entry::Expression.new(expr, va_context).freeze
     end
 
 
@@ -792,7 +793,7 @@ module_function
         ASSERT.kind_of stream_expr, ASCE::MemoStream::Abstract
         ASSERT.kind_of va_context,  ECV::Abstract
                                                     # Does NOT freeze!!
-        Stream::Entry::Memorization.new(stream_expr, va_context)
+        Morph::Stream::Entry::Memorization.new(stream_expr, va_context)
     end
 
 
@@ -802,7 +803,7 @@ module_function
         ASSERT.kind_of expr,        ASCE::Abstract
         ASSERT.kind_of va_context,  ECV::Abstract
 
-        Stream::Entry::Suspended.new(expr, va_context)
+        Morph::Stream::Entry::Suspended.new(expr, va_context)
     end
 
 end # Umu::Value::Core

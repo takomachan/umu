@@ -194,7 +194,13 @@ private
             hd_qualifier, *tl_qualifiers = qualifiers
             ASSERT.kind_of hd_qualifier, Qualifier::Abstract
 
-            hd_qualifier.desugar(self.expr, tl_qualifiers, new_env)
+            ASCE.make_send(
+                self.loc,
+
+                hd_qualifier.desugar(self.expr, tl_qualifiers, new_env),
+
+                ASCE.make_message(self.loc, :'to-list')
+            )
         end
     end
 end
