@@ -150,11 +150,21 @@ class Nil < Abstract
     end
 
 
+    define_instance_method(
+        :meth_is_nil,
+        :nil?, [],
+        [], VCA::Bool
+    )
     def meth_is_nil(_loc, _env, _event)
         VC.make_true
     end
 
 
+    define_instance_method(
+        :meth_is_equal,
+        :'==', [],
+        [VC::Top], VCA::Bool
+    )
     def meth_is_equal(_loc, _env, _event, other)
         ASSERT.kind_of other, VC::Top
 
@@ -194,6 +204,11 @@ class Value < Abstract
     end
 
 
+    define_instance_method(
+        :meth_is_value,
+        :value?, [],
+        [], VCA::Bool
+    )
     def meth_is_value(_loc, _env, _event)
         VC.make_true
     end
@@ -214,6 +229,11 @@ class Value < Abstract
     end
 
 
+    define_instance_method(
+        :meth_is_equal,
+        :'==', [],
+        [VC::Top], VCA::Bool
+    )
     def meth_is_equal(loc, env, event, other)
         ASSERT.kind_of other, VC::Top
 
@@ -305,6 +325,11 @@ class Cons < Abstract
     end
 
 
+    define_instance_method(
+        :meth_is_cons,
+        :cons?, [],
+        [], VCA::Bool
+    )
     def meth_is_cons(_loc, _env, _event)
         VC.make_true
     end
@@ -348,6 +373,11 @@ class Cons < Abstract
     end
 
 
+    define_instance_method(
+        :meth_is_equal,
+        :'==', [],
+        [VC::Top], VCA::Bool
+    )
     def meth_is_equal(loc, env, event, other)
         ASSERT.kind_of other, VC::Top
 

@@ -52,20 +52,6 @@ class Int < Abstract
 
 
     define_instance_method(
-        :meth_negate,
-        :negate, [],
-        [], self
-    )
-
-
-    define_instance_method(
-        :meth_absolute,
-        :abs, [],
-        [], self
-    )
-
-
-    define_instance_method(
         :meth_succ,
         :succ, [],
         [], self
@@ -85,58 +71,14 @@ class Int < Abstract
     end
 
 
+    define_instance_method(
+        :meth_to_int,
+        :'to-i', [],
+        [], VCAN::Int
+    )
     def meth_to_int(_loc, _env, _event)
         self
     end
-
-
-    define_instance_method(
-        :meth_is_less_than,
-        :'<', [],
-        [self], VCA::Bool
-    )
-
-
-    define_instance_method(
-        :meth_add,
-        :'+', [],
-        [self], self
-    )
-
-
-    define_instance_method(
-        :meth_sub,
-        :'-', [],
-        [self], self
-    )
-
-
-    define_instance_method(
-        :meth_multiply,
-        :'*', [],
-        [self], self
-    )
-
-
-    define_instance_method(
-        :meth_divide,
-        :'/', [],
-        [self], self
-    )
-
-
-    define_instance_method(
-        :meth_modulo,
-        :mod, [],
-        [self], self
-    )
-
-
-    define_instance_method(
-        :meth_power,
-        :pow, [],
-        [self], self
-    )
 
 
     define_instance_method(
@@ -184,13 +126,6 @@ class Int < Abstract
 
         VC.make_interval self, stop_value, step_value
     end
-
-
-    define_instance_method(
-        :meth_random,
-        :random, [],
-        [], self
-    )
 end
 Int.freeze
 

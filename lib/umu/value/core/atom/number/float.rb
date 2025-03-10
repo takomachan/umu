@@ -302,29 +302,10 @@ class Float < Abstract
 
 
     define_instance_method(
-        :meth_zero,
-        :zero, [],
-        [], self
+        :meth_to_float,
+        :'to-f', [],
+        [], VCAN::Float
     )
-    def meth_zero(_loc, _env, _event)
-        VC.make_float 0.0
-    end
-
-
-    define_instance_method(
-        :meth_absolute,
-        :abs, [],
-        [], self
-    )
-
-
-    define_instance_method(
-        :meth_negate,
-        :negate, [],
-        [], self
-    )
-
-
     def meth_to_float(_loc, _env, _event)
         self
     end
@@ -348,55 +329,6 @@ class Float < Abstract
     def meth_pred(_loc, _env, _event)
         VC.make_float(self.val - 1.0)
     end
-
-
-    define_instance_method(
-        :meth_is_less_than,
-        :'<', [],
-        [self], VCA::Bool
-    )
-
-
-    define_instance_method(
-        :meth_add,
-        :'+', [],
-        [self], self
-    )
-
-
-    define_instance_method(
-        :meth_sub,
-        :'-', [],
-        [self], self
-    )
-
-
-    define_instance_method(
-        :meth_multiply,
-        :'*', [],
-        [self], self
-    )
-
-
-    define_instance_method(
-        :meth_divide,
-        :'/', [],
-        [self], self
-    )
-
-
-    define_instance_method(
-        :meth_modulo,
-        :mod, [],
-        [self], self
-    )
-
-
-    define_instance_method(
-        :meth_power,
-        :pow, [],
-        [self], self
-    )
 
 
     define_instance_method(
@@ -441,7 +373,7 @@ class Float < Abstract
             raise X::ArgumentError.new(
                 loc,
                 env,
-                "truncate: expected zero or positive for digits number: %d",
+                "truncate: Expected zero or positive number, but: %d",
                 ndigits.val.to_i
             )
         end
@@ -490,13 +422,6 @@ class Float < Abstract
 
         VC.make_float self.val.floor(ndigits.val).to_f
     end
-
-
-    define_instance_method(
-        :meth_random,
-        :random, [],
-        [], self
-    )
 end
 Float.freeze
 

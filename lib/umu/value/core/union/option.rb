@@ -63,6 +63,11 @@ class None < Abstract
     end
 
 
+    define_instance_method(
+        :meth_is_none,
+        :None?, [],
+        [], VCA::Bool
+    )
     def meth_is_none(_loc, _env, _event)
         VC.make_true
     end
@@ -103,6 +108,11 @@ class Some < Abstract
     end
 
 
+    define_instance_method(
+        :meth_is_some,
+        :Some?, [],
+        [], VCA::Bool
+    )
     def meth_is_some(_loc, _env, event)
         VC.make_true
     end

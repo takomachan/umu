@@ -62,6 +62,11 @@ class Ok < Abstract
     end
 
 
+    define_instance_method(
+        :meth_is_ok,
+        :Ok?, [],
+        [], VCA::Bool
+    )
     def meth_is_ok(_loc, _env, _event)
         VC.make_true
     end
@@ -83,6 +88,11 @@ class Err < Abstract
     end
 
 
+    define_instance_method(
+        :meth_is_err,
+        :Err?, [],
+        [], VCA::Bool
+    )
     def meth_is_err(_loc, _env, event)
         VC.make_true
     end

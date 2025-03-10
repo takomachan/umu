@@ -15,6 +15,11 @@ class Unit < Object
     end
 
 
+    define_instance_method(
+        :meth_is_equal,
+        :'==', [],
+        [VC::Top], VCA::Bool
+    )
     def meth_is_equal(_loc, _env, _event, other)
         ASSERT.kind_of other, VC::Top
 

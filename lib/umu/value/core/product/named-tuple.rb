@@ -104,11 +104,21 @@ class Named < Abstract
     end
 
 
+    define_instance_method(
+        :meth_to_string,
+        :'to-s', [],
+        [], VCA::String
+    )
     def meth_to_string(loc, env, event)
         VC.make_string self.to_s
     end
 
 
+    define_instance_method(
+        :meth_is_equal,
+        :'==', [],
+        [VC::Top], VCA::Bool
+    )
     def meth_is_equal(loc, env, event, other)
         ASSERT.kind_of other, VC::Top
 

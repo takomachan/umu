@@ -23,6 +23,11 @@ class Abstract < Object
     end
 
 
+    define_instance_method(
+        :meth_to_string,
+        :'to-s', [],
+        [], VCA::String
+    )
     def meth_to_string(loc, env, event)
         VC.make_string(
             format("&%s %s",
