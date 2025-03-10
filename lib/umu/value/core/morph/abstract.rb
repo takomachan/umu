@@ -14,16 +14,10 @@ module Morph
 class Abstract < Object
 =begin
     The subclasses of this class must be implemented the following methods:
-    * .make(xs : ::Array) -> Morph::Abstract
     * .meth_make_empty(loc, env, event) -> Morph::Abstract
     * #meth_cons(loc, env, event, value : VC::Top) -> Morph::Abstract
     * #meth_dest(loc, env, event) -> VCU::Option::Abstract
 =end
-
-
-    def self.make(xs)
-        raise X::InternalSubclassResponsibility
-    end
 
 
     define_class_method(
