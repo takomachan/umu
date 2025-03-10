@@ -70,9 +70,9 @@ class Provider < Abstract
 
     attr_reader :dest
 
-    def initialize(source, fn_dest)
+    def initialize(source, dest)
         ASSERT.kind_of source,  VC::Top
-        ASSERT.kind_of fn_dest, ::Proc
+        ASSERT.kind_of dest,    ::Proc
 
         super(source)
 
