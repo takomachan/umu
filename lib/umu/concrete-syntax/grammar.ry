@@ -872,6 +872,13 @@ atom_expr:
 
     result = CSCE.make_stream bb.loc, [expr] + exprs, opt_expr
 }
+| '&[' expr opt_com_expr '..' opt_expr ']' {
+    bb, fst_expr, opt_snd_expr, _, opt_lst_expr, _ = val
+
+    result = CSCE.make_interval_stream(
+                    bb.loc, fst_expr, opt_snd_expr, opt_lst_expr
+                )
+}
 
 # Braket: { ... }
 | '{' pat pats '->' expr inner_where_decls '}' {

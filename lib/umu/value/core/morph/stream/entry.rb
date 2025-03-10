@@ -730,6 +730,204 @@ private
     end
 end
 
+
+
+class Interval < Abstract
+    TYPE_SYM = :IntervalStream
+
+
+    define_class_method(
+        :meth_make,
+        :'make', [:'from:'],
+        [VCAN::Int], self
+    )
+    def self.meth_make(
+        loc, env, _event, current_value
+    )
+        ASSERT.kind_of current_value, VCAN::Int
+
+        VC.make_interval_stream(
+            current_value, nil, VC.make_integer_one, env.va_context
+        )
+    end
+
+
+    define_class_method(
+        :meth_make_by,
+        :'make-by', [:'from:by:'],
+        [VCAN::Int, VCAN::Int], self
+    )
+    def self.meth_make_by(
+        loc, env, _event, current_value, step_value
+    )
+        ASSERT.kind_of current_value,   VCAN::Int
+        ASSERT.kind_of step_value,      VCAN::Int
+
+        VC.make_interval_stream(
+            current_value, nil, step_value, env.va_context
+        )
+    end
+
+
+    define_class_method(
+        :meth_make_to_by,
+        :'make-to-by', [:'from:to:by:'],
+        [VCAN::Int, VCAN::Int, VCAN::Int], self
+    )
+    def self.meth_make_to_by(
+        loc, env, _event, current_value, stop_value, step_value
+    )
+        ASSERT.kind_of current_value,   VCAN::Int
+        #ASSERT.kind_of stop_value,      VCAN;;Int
+        ASSERT.kind_of step_value,      VCAN::Int
+
+        VC.make_interval_stream(
+            current_value, stop_value, step_value, env.va_context
+        )
+    end
+
+
+    alias       current_value obj
+    attr_reader :opt_stop_value, :step_value
+
+    def initialize(current_value, opt_stop_value, step_value, va_context)
+        ASSERT.kind_of     current_value,   VCAN::Int
+        ASSERT.opt_kind_of opt_stop_value,  VCAN::Int
+        ASSERT.kind_of     step_value,      VCAN::Int
+        ASSERT.kind_of     va_context,      ECV::Abstract
+
+        super(current_value, va_context)
+
+        @opt_stop_value = opt_stop_value
+        @step_value     = step_value
+    end
+
+
+    def to_s
+        format("&[%s ..%s (%s%s)]",
+                self.current_value.to_s,
+
+                if self.opt_stop_value
+                    format " %s", self.opt_stop_value.to_s
+                else
+                    ''
+                end,
+
+                self.step_value.val.positive? ? '+' : '',
+
+                self.step_value.to_s
+        )
+    end
+
+
+    def pretty_print(q)
+        PRT.group q, bb:'&[', eb:']' do
+            q.pp self.current_value
+
+            q.text ' ..'
+
+            if self.opt_stop_value
+                q.text format(" %s", self.opt_stop_value.to_s)
+            end
+
+            q.text format(" (%s%s)",
+                            self.step_value.val.positive? ? '+' : '',
+                            self.step_value.to_s
+                    )
+        end
+    end
+
+
+    def step(env)
+        self
+    end
+
+
+private
+
+    def __meth_force__(loc, env, event)
+        new_env = env.enter event
+
+        end_of_interval = (
+            if self.opt_stop_value
+                stop_value = self.opt_stop_value
+
+                if self.step_value.val.positive?
+                    self.current_value.val > stop_value.val
+                else
+                    self.current_value.val < stop_value.val
+                end
+            else
+                false
+            end
+        )
+
+        if end_of_interval
+            VC.make_none
+        else
+            sym_next = :'%next'
+            sym_stop = :'%stop'
+            sym_step = :'%step'
+
+            next_value = self.current_value + self.step_value
+
+            new_env, message = (
+                if self.opt_stop_value
+                    [
+                        env.va_extend_values(
+                            sym_next => next_value,
+                            sym_stop => self.opt_stop_value,
+                            sym_step => self.step_value
+                        ),
+
+                        ASCE.make_message(
+                            loc,
+                            :'make-to-by',
+                            [
+                                ASCE.make_identifier(loc, sym_next),
+                                ASCE.make_identifier(loc, sym_stop),
+                                ASCE.make_identifier(loc, sym_step)
+                            ]
+                        )
+                    ]
+                else
+                    [
+                        env.va_extend_values(
+                            sym_next => next_value,
+                            sym_step => self.step_value
+                        ),
+
+                        ASCE.make_message(
+                            loc,
+                            :'make-by',
+                            [
+                                ASCE.make_identifier(loc, sym_next),
+                                ASCE.make_identifier(loc, sym_step)
+                            ]
+                        )
+                    ]
+                end
+            )
+
+            VC.make_some(
+                VC.make_tuple(
+                    self.current_value,
+
+                    VC.make_suspended_stream(
+                         ASCE.make_send(
+                            loc,
+                            ASCE.make_class(loc, TYPE_SYM),
+                            message
+                        ),
+
+                        new_env.va_context
+                    )
+                )
+            )
+        end
+    end
+end
+
 end # Umu::Value::Core::Morph::Stream::Entry
 
 end # Umu::Value::Core::Morph::Stream
@@ -801,13 +999,29 @@ module_function
     end
 
 
-    # For Look Ahead Stream
+    # For Suspended Stream
 
     def make_suspended_stream(expr, va_context)
         ASSERT.kind_of expr,        ASCE::Abstract
         ASSERT.kind_of va_context,  ECV::Abstract
 
         Morph::Stream::Entry::Suspended.new(expr, va_context)
+    end
+
+
+    # For Interval Stream
+
+    def make_interval_stream(
+        current_value, opt_stop_value, step_value, va_context
+    )
+        ASSERT.kind_of     current_value,   VCAN::Int
+        ASSERT.opt_kind_of opt_stop_value,  VCAN::Int
+        ASSERT.kind_of     step_value,      VCAN::Int
+        ASSERT.kind_of     va_context,      ECV::Abstract
+
+        Morph::Stream::Entry::Interval.new(
+            current_value, opt_stop_value, step_value, va_context
+        ).freeze
     end
 
 end # Umu::Value::Core

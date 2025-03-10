@@ -13,39 +13,52 @@ module Expression
 
 module Nary
 
-class Interval < Expression::Abstract
-    attr_reader :fst_expr, :opt_snd_expr, :lst_expr
+module Interval
+
+class Abstract < Expression::Abstract
+    attr_reader :fst_expr, :opt_snd_expr, :opt_lst_expr
 
 
-    def initialize(loc, fst_expr, opt_snd_expr, lst_expr)
+    def initialize(loc, fst_expr, opt_snd_expr, opt_lst_expr)
         ASSERT.kind_of     fst_expr,        ASCE::Abstract
         ASSERT.opt_kind_of opt_snd_expr,    ASCE::Abstract
-        ASSERT.kind_of     lst_expr,        ASCE::Abstract
+        ASSERT.opt_kind_of opt_lst_expr,    ASCE::Abstract
 
         super(loc)
 
         @fst_expr     = fst_expr
         @opt_snd_expr = opt_snd_expr
-        @lst_expr     = lst_expr
+        @opt_lst_expr = opt_lst_expr
     end
 
 
     def to_s
-        format("[%s%s .. %s]",
-                 self.fst_expr.to_s,
+        format("%s%s%s ..%s]",
+            __bb__,
 
-                 if self.opt_snd_expr
-                     format ", %s", self.opt_snd_expr.to_s
-                 else
-                     ''
-                 end,
+            self.fst_expr.to_s,
 
-                 self.lst_expr.to_s
+            if self.opt_snd_expr
+                format ", %s", self.opt_snd_expr.to_s
+            else
+                ''
+            end,
+
+            if self.opt_lst_expr
+                format " %s", self.opt_lst_expr.to_s
+            else
+                ''
+            end
         )
     end
 
 
 private
+
+    def __bb__
+        raise X::InternalSubclassResponsibility
+    end
+
 
     def __evaluate__(env, event)
         ASSERT.kind_of env,     E::Entry
@@ -68,7 +81,7 @@ private
             )
         end
 
-        opt_snd_value =
+        opt_snd_value = (
             if self.opt_snd_expr
                 snd_result = self.opt_snd_expr.evaluate new_env
                 ASSERT.kind_of snd_result, ASR::Value
@@ -89,67 +102,147 @@ private
             else
                 nil
             end
+        )
 
-        lst_result = self.lst_expr.evaluate new_env
-        ASSERT.kind_of lst_result, ASR::Value
-        lst_value = lst_result.value
-        ASSERT.kind_of lst_value, VC::Top
-        unless lst_value.kind_of? VCAN::Int
-            raise X::TypeError.new(
-                self.loc,
-                env,
-                "Type error in interval-expression, " +
-                        "expected a Int as last value, but %s : %s",
-                    lst_value.to_s,
-                    lst_value.type_sym.to_s
-            )
-        end
+        opt_lst_value = (
+            if self.opt_lst_expr
+                lst_result = self.opt_lst_expr.evaluate new_env
+                ASSERT.kind_of lst_result, ASR::Value
+
+                lst_val = lst_result.value
+                ASSERT.kind_of lst_val, VC::Top
+                unless lst_val.kind_of? VCAN::Int
+                    raise X::TypeError.new(
+                        self.loc,
+                        env,
+                        "Type error in interval-expression, " +
+                                "expected a Int as last value, but %s : %s",
+                            lst_val.to_s,
+                            lst_val.type_sym.to_s
+                    )
+                end
+
+                lst_val
+            else
+                nil
+            end
+        )
 
         step_value = VC.make_integer(
-            if fst_value.val <= lst_value.val
-                if opt_snd_value
-                    snd_value = opt_snd_value
-                    unless (fst_value.val <= snd_value.val &&
-                            snd_value.val <= lst_value.val)
-                        raise X::ValueError.new(
-                            self.loc,
-                            env,
-                            "The second value must be between " +
-                                "the first and last value, but %s : %s",
-                                snd_value.to_s,
-                                snd_value.type_sym.to_s
-                        )
-                    end
+            if opt_lst_value
+                lst_value = opt_lst_value
 
-                    snd_value.val - fst_value.val
+                if fst_value.val <= lst_value.val
+                    if opt_snd_value
+                        snd_value = opt_snd_value
+                        unless (fst_value.val <= snd_value.val &&
+                                snd_value.val <= lst_value.val)
+                            raise X::ValueError.new(
+                                self.loc,
+                                env,
+                                "The second value must be between " +
+                                    "the first and last value, but %s : %s",
+                                    snd_value.to_s,
+                                    snd_value.type_sym.to_s
+                            )
+                        end
+
+                        snd_value.val - fst_value.val
+                    else
+                        1
+                    end
                 else
-                    1
+                    if opt_snd_value
+                        snd_value = opt_snd_value
+                        unless (fst_value.val > snd_value.val &&
+                                snd_value.val > lst_value.val)
+                            raise X::ValueError.new(
+                                self.loc,
+                                env,
+                                "The second value must be between " +
+                                    "the first and last value, but %s : %s",
+                                    snd_value.to_s,
+                                    snd_value.type_sym.to_s
+                            )
+                        end
+
+                        snd_value.val - fst_value.val
+                    else
+                        -1
+                    end
                 end
             else
                 if opt_snd_value
                     snd_value = opt_snd_value
-                    unless (fst_value.val > snd_value.val &&
-                            snd_value.val > lst_value.val)
+
+                    if fst_value.val == snd_value.val
                         raise X::ValueError.new(
                             self.loc,
                             env,
-                            "The second value must be between " +
-                                "the first and last value, but %s : %s",
+                            "The first value and second value " +
+                                "must be not equal, but %s : %s",
                                 snd_value.to_s,
                                 snd_value.type_sym.to_s
                         )
+                    else
+                        snd_value.val - fst_value.val
                     end
-
-                    snd_value.val - fst_value.val
                 else
-                    -1
+                    1
                 end
             end
         )
 
+        __make__ fst_value, lst_value, step_value, env.va_context
+    end
+
+
+    def __make__(fst_value, lst_value, step_value, va_context)
+        raise X::InternalSubclassResponsibility
+    end
+end
+
+
+
+class Basic < Abstract
+    def initialize(loc, fst_expr, opt_snd_expr, lst_expr)
+        ASSERT.kind_of     fst_expr,        ASCE::Abstract
+        ASSERT.opt_kind_of opt_snd_expr,    ASCE::Abstract
+        ASSERT.kind_of     lst_expr,        ASCE::Abstract
+
+        super
+    end
+
+
+private
+
+    def __bb__
+        '['
+    end
+
+
+    def __make__(fst_value, lst_value, step_value, _va_context)
         VC.make_interval fst_value, lst_value, step_value
     end
 end
+
+
+
+class Stream < Abstract
+
+private
+
+    def __bb__
+        '&['
+    end
+
+
+    def __make__(fst_value, lst_value, step_value, va_context)
+        VC.make_interval_stream fst_value, lst_value, step_value, va_context
+    end
+end
+
+end # Umu::AbstractSyntax::Core::Expression::Nary::Interval
 
 end # Umu::AbstractSyntax::Core::Expression::Nary
 
@@ -162,7 +255,21 @@ module_function
         ASSERT.opt_kind_of opt_snd_expr,    ASCE::Abstract
         ASSERT.kind_of     lst_expr,        ASCE::Abstract
 
-        Nary::Interval.new(loc, fst_expr, opt_snd_expr, lst_expr).freeze
+        Nary::Interval::Basic.new(
+            loc, fst_expr, opt_snd_expr, lst_expr
+        ).freeze
+    end
+
+
+    def make_interval_stream(loc, fst_expr, opt_snd_expr, opt_lst_expr)
+        ASSERT.kind_of     loc,             LOC::Entry
+        ASSERT.kind_of     fst_expr,        ASCE::Abstract
+        ASSERT.opt_kind_of opt_snd_expr,    ASCE::Abstract
+        ASSERT.opt_kind_of opt_lst_expr,    ASCE::Abstract
+
+        Nary::Interval::Stream.new(
+            loc, fst_expr, opt_snd_expr, opt_lst_expr
+        ).freeze
     end
 
 end # Umu::AbstractSyntax::Core::Expression
