@@ -57,6 +57,11 @@ class Abstract < Morph::Abstract
     end
 
 
+    def meth_susp(loc, env, event)
+        self
+    end
+
+
     def meth_dest(loc, env, event)
         self.meth_force loc, env, event
     end
@@ -135,7 +140,7 @@ class Abstract < Morph::Abstract
         ASSERT.kind_of func, VC::Fun
 
         sym_f    = :'%f'
-        sym_self = :'self'
+        sym_self = :self
 
         new_env = env.va_extend_values(
             sym_f    => func,
@@ -153,7 +158,6 @@ class Abstract < Morph::Abstract
                     [ASCE.make_identifier(loc, sym_f)]
                 )
             )
-
 
         VC.make_suspended_stream(expr, new_env.va_context)
     end

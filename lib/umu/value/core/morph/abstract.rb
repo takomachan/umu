@@ -286,6 +286,102 @@ class Abstract < Object
     end
 
 
+=begin
+HOW TO USE Morph#susp
+
+    * If not exists 'susp', then ...
+
+        > STDIN.each-line.map { s -> "- " ^ s }.for-each print
+        aaa [Enter]
+        bbb [Enter]
+        ccc [Enter]
+        [Ctrl]+[d]
+        - aaa
+        - bbb
+        - ccc
+        val it : Unit = ()
+        >
+
+    * Use 'susp'
+
+        > STDIN.each-line.susp.map { s -> "- " ^ s }.for-each print
+        aaa [Enter]
+        - aaa
+        bbb [Enter]
+        - bbb
+        ccc [Enter]
+        - ccc
+        [Ctrl]+[d]
+        val it : Unit = ()
+        >
+=end
+    define_instance_method(
+        :meth_susp,
+        :susp, [],
+        [], VCM::Stream::Entry::Abstract
+    )
+    def meth_susp(loc, env, event)
+        sym_this = :this
+
+        new_env = env.va_extend_value sym_this, self
+
+        expr = ASCE.make_send(
+                loc,
+                ASCE.make_identifier(loc, sym_this),
+                ASCE.make_message(loc, :'%susp')
+            )
+
+        VC.make_suspended_stream(expr, new_env.va_context)
+    end
+
+
+    define_instance_method(
+        :meth_susp_,
+        :'%susp', [],
+        [], VCM::Stream::Entry::Abstract
+    )
+    def meth_susp_(loc, env, event)
+        val_opt = self.meth_dest loc, env, event
+
+        VC.validate_option val_opt, 'susp', loc, env
+
+        result = (
+            if val_opt.none?
+                VC.make_cell_stream_nil env.va_context
+            else
+                sym_x   = :'%x'
+                sym_xs  = :'%xs'
+
+                x, xs = VC.validate_pair val_opt.contents, 'susp', loc, env
+
+                VC.validate_morph xs, 'susp', loc, env
+                new_env = env.va_extend_values(
+                                    sym_x   => x,
+                                    sym_xs  => xs
+                                )
+
+                VC.make_cell_stream_cons(
+                    ASCE.make_identifier(loc, sym_x),
+
+                    VC.make_expr_stream_entry(
+                         ASCE.make_send(
+                            loc,
+                            ASCE.make_identifier(loc, sym_xs),
+                            ASCE.make_message(loc, :susp)
+                        ),
+
+                        new_env.va_context
+                    ),
+
+                    new_env.va_context
+                )
+            end
+        )
+
+        ASSERT.kind_of result, VCM::Stream::Entry::Abstract
+    end
+
+
     def foldr(loc, env, event, init, &block)
         ASSERT.kind_of init,  VC::Top
         ASSERT.kind_of block, ::Proc

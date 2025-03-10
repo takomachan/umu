@@ -200,6 +200,9 @@ structure Umu = struct {
         # fgets : Input -> Option String 
         fun fgets = io : Input -> io.gets
 
+        # each-line : Input -> Enum
+        fun each-line = io : Input -> io.each-line
+
         # puts : String -> ()
         fun puts = (s : String) -> STDOUT.puts s
 
@@ -302,6 +305,10 @@ structure Umu = struct {
 
         # to-list : %['a] -> ['a]
         fun to-list = xs : Morph -> xs.to-list
+
+
+        # susp : %['a] -> <Stream> 'a
+        fun susp = xs : Morph -> xs.susp
 
 
         # to-s-expr : %['a] -> %s('a)
@@ -785,6 +792,9 @@ structure Umu = struct {
         # fgets   : Input -> Option String 
         val fgets = IO::fgets
 
+        # each-line : Input -> Enum
+        val each-line = IO::each-line
+
         # puts    : String -> ()
         val puts = IO::puts
 
@@ -903,6 +913,9 @@ structure Umu = struct {
         # to-list : %['a] -> ['a]
         val to-list = Morph::to-list
 
+        # susp : %['a] -> <Stream> 'a
+        val susp = Morph::susp
+
         # to-s-expr : %['a] -> %s('a)
         val to-s-expr = Morph::to-s-expr
 
@@ -944,6 +957,9 @@ structure Umu = struct {
 
         # nth : Int -> %['a] -> 'a or IndexError
         val nth = Morph::nth
+
+        # for-each  : ('a -> 'b) -> %['a] -> ()
+        val for-each = Morph::for-each
 
         # map       : ('a -> 'b) -> %['a] -> %['b]
         val map = Morph::map
