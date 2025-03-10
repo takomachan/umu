@@ -675,7 +675,8 @@ image::superset-subset.png[align="center"]
 
 image::nestedset-as-tree.png[align="center"]
 
-実際のクラス階層を以下に示します。
+実際のクラス階層は REPL のサブコマンド `:class` で確認できます。
+実行例を以下に示します。
 クラス名の末尾が文字 `/` であれば抽象クラス、さもなければ具象クラスです。
 
 ```
@@ -696,40 +697,9 @@ Top/
         IO/
             Input
             Output
-        Morph/
-            Enum
-            Interval
-            List/
-                Cons
-                Nil
-        Product/
-            Named
-            Tuple
-        Ref
-        SExpr/
-            SExprCons
-            SExprNil
-            SExprValue
-        Stream/
-            CellStream
-            ExprStream
-            MemoStream
-            SuspStream
-        Susp
-        Union/
-            Datum
-            Option/
-                None
-                Some
-            Result/
-                Err
-                Ok
-        Unit
-    Opaque
-    StreamCell/
-        StreamCons
-        StreamNil
-    Struct
+  :
+  :
+  :
 umu:2>
 ```
 
