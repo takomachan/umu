@@ -105,11 +105,9 @@ fun rec integers-between' = (m : Int, n : Int) -> (
 )
 
 fun rec sum' = xs : Stream -> (
-    case xs.dest of {
-      | &None ->
-          0
-      | &Some (x : Int, xs' : Stream) ->
-          x + sum' xs'
+    case xs of {
+      | %[]                      -> 0
+      | %[x : Int| xs' : Stream] -> x + sum' xs'
     }
 )
 
@@ -145,11 +143,9 @@ fun rec first = (k : Int, xs : Stream) -> (
     if k <= 0 then
         []
     else
-        case xs.dest of {
-          | &None ->
-                []
-          | &Some (x : Int, xs' : Stream) ->
-                [ x | first (k - 1, xs') ]
+        case xs of {
+          | %[]                     -> []
+          | %[x : Int|xs' : Stream] -> [ x | first (k - 1, xs') ]
         }
 )
 
@@ -170,7 +166,7 @@ fun first-sums = k : Int -> (
     first (k, sums (0, integers-from 1))
 ) where {
     fun rec sums = (a : Int, xs : Stream) -> let {
-        val (x, xs') = xs.dest!
+        val %[x|xs'] = xs
     in
         &[ a + x | sums (a + x, xs') ]
     }

@@ -108,7 +108,7 @@ module_function
     def make_case_rule_memo_stream_nil(loc)
         ASSERT.kind_of loc, LOC::Entry
 
-        Nary::Branch::Rule::Case.make_case_rule_memo_nil(loc, :MemoStream)
+        Nary::Branch::Rule::Case.make_rule_mono_nil(loc, :MemoStream)
     end
 
 
