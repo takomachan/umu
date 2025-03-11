@@ -12,13 +12,6 @@ module Core
 module Morph
 
 class Interval < Abstract
-    def self.make(xs)
-        ASSERT.kind_of xs, ::Array
-
-        VC.make_list xs
-    end
-
-
     define_class_method(
         :meth_make_empty,
         :empty, [],
@@ -30,16 +23,16 @@ class Interval < Abstract
 
 
     define_class_method(
-        :meth_make,
-        :make, [:'from:to:'],
+        :meth_from_to_by,
+        :'from-to', [:'from:to:'],
         [VCAN::Int, VCAN::Int], self
     )
     define_class_method(
-        :meth_make,
-        :'make-by', [:'from:to:by:'],
+        :meth_from_to_by,
+        :'from-to-by', [:'from:to:by:'],
         [VCAN::Int, VCAN::Int, VCAN::Int], self
     )
-    def self.meth_make(
+    def self.meth_from_to_by(
         _loc, _env, _event,
         start_value,
         stop_value,

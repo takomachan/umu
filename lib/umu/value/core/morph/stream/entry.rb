@@ -737,52 +737,49 @@ class Interval < Abstract
 
 
     define_class_method(
-        :meth_make,
-        :'make', [:'from:'],
+        :meth_from,
+        :'from', [:'from:'],
         [VCAN::Int], self
     )
-    def self.meth_make(
-        loc, env, _event, current_value
+    define_class_method(
+        :meth_from_to,
+        :'from-to', [:'from:to:'],
+        [VCAN::Int, VCAN::Int], self
     )
-        ASSERT.kind_of current_value, VCAN::Int
+    define_class_method(
+        :meth_from_to_by,
+        :'from-to-by', [:'from:to:by:'],
+        [VCAN::Int, VCAN::Int, VCAN::Int], self
+    )
+    def self.meth_from_to_by(
+        _loc, env, _event,
+        current_value,
+        stop_value = nil,
+        step_value = VC.make_integer_one
+    )
+        ASSERT.kind_of current_value,   VCAN::Int
+        ASSERT.kind_of stop_value,      VCAN;;Int
+        ASSERT.kind_of step_value,      VCAN::Int
 
         VC.make_interval_stream(
-            current_value, nil, VC.make_integer_one, env.va_context
+            current_value, stop_value, step_value, env.va_context
         )
     end
 
 
     define_class_method(
-        :meth_make_by,
-        :'make-by', [:'from:by:'],
+        :meth_from_by,
+        :'from-by', [:'from:by:'],
         [VCAN::Int, VCAN::Int], self
     )
-    def self.meth_make_by(
-        loc, env, _event, current_value, step_value
+    def self.meth_from_by(
+        _loc, env, _event, current_value, step_value
     )
         ASSERT.kind_of current_value,   VCAN::Int
         ASSERT.kind_of step_value,      VCAN::Int
 
         VC.make_interval_stream(
             current_value, nil, step_value, env.va_context
-        )
-    end
-
-
-    define_class_method(
-        :meth_make_to_by,
-        :'make-to-by', [:'from:to:by:'],
-        [VCAN::Int, VCAN::Int, VCAN::Int], self
-    )
-    def self.meth_make_to_by(
-        loc, env, _event, current_value, stop_value, step_value
-    )
-        ASSERT.kind_of current_value,   VCAN::Int
-        #ASSERT.kind_of stop_value,      VCAN;;Int
-        ASSERT.kind_of step_value,      VCAN::Int
-
-        VC.make_interval_stream(
-            current_value, stop_value, step_value, env.va_context
         )
     end
 
@@ -882,7 +879,7 @@ private
 
                         ASCE.make_message(
                             loc,
-                            :'make-to-by',
+                            :'from-to-by',
                             [
                                 ASCE.make_identifier(loc, sym_next),
                                 ASCE.make_identifier(loc, sym_stop),
@@ -899,7 +896,7 @@ private
 
                         ASCE.make_message(
                             loc,
-                            :'make-by',
+                            :'from-by',
                             [
                                 ASCE.make_identifier(loc, sym_next),
                                 ASCE.make_identifier(loc, sym_step)
