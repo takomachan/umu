@@ -1,5 +1,6 @@
 FILES = [
     'version.rb',
+    'api.rb',
     'commander.rb',
     'commander/entry.rb',
     'commander/option.rb',
