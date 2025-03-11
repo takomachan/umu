@@ -754,15 +754,15 @@ class Interval < Abstract
     def self.meth_from_to_by(
         _loc, env, _event,
         current_value,
-        stop_value = nil,
-        step_value = VC.make_integer_one
+        opt_stop_value = nil,
+        step_value     = VC.make_integer_one
     )
-        ASSERT.kind_of current_value,   VCAN::Int
-        ASSERT.kind_of stop_value,      VCAN;;Int
-        ASSERT.kind_of step_value,      VCAN::Int
+        ASSERT.kind_of     current_value,   VCAN::Int
+        ASSERT.opt_kind_of opt_stop_value,  VCAN::Int
+        ASSERT.kind_of     step_value,      VCAN::Int
 
         VC.make_interval_stream(
-            current_value, stop_value, step_value, env.va_context
+            current_value, opt_stop_value, step_value, env.va_context
         )
     end
 
