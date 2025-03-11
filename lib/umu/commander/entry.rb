@@ -36,22 +36,9 @@ end
         ASSERT.kind_of args, ::Array
 
         exit_code = begin
-            pref, file_names = Commander.parse_option(
-                                    args, E::INITIAL_PREFERENCE
-                                )
+            setup_env, file_names = Commander.setup args
 
-            setup_env = if pref.no_prelude?
-                            E.setup pref
-                        else
-                            Commander.process_source(
-                                Prelude::SOURCE_TEXT,
-                                Prelude::FILE_NAME,
-                                E.setup(E::INITIAL_PREFERENCE),
-                                Prelude::START_LINE_NUM
-                            ).update_preference pref
-                        end
-
-            if pref.interactive_mode?
+            if setup_env.pref.interactive_mode?
                 env = unless file_names.empty?
                             Commander.process_files file_names, setup_env
                         else
@@ -89,6 +76,26 @@ end
         end
 
         ASSERT.kind_of exit_code, ::Integer
+    end
+
+
+    def setup(args)
+        pref, file_names = Commander.parse_option(
+                                args, E::INITIAL_PREFERENCE
+                            )
+
+        env = if pref.no_prelude?
+                    E.setup pref
+                else
+                    Commander.process_source(
+                        Prelude::SOURCE_TEXT,
+                        Prelude::FILE_NAME,
+                        E.setup(E::INITIAL_PREFERENCE),
+                        Prelude::START_LINE_NUM
+                    ).update_preference pref
+                end
+
+        [env, file_names]
     end
 
 
