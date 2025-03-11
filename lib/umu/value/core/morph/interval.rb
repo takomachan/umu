@@ -97,6 +97,21 @@ class Interval < Abstract
 
 
     define_instance_method(
+        :meth_susp,
+        :susp, [],
+        [], VCM::Stream::Entry::Interval
+    )
+    def meth_susp(_loc, env, _event)
+        VC.make_interval_stream(
+            self.current_value,
+            self.stop_value,
+            self.step_value,
+            env.va_context
+        )
+    end
+
+
+    define_instance_method(
         :meth_cons,
         :cons, [],
         [VC::Top], VCM::List::Abstract

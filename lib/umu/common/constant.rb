@@ -80,6 +80,7 @@ module Umu
                 module Stream
                     module Entry
                         class Abstract < Morph::Abstract; end
+                        class Interval < Abstract; end
                     end
                 end
             end
