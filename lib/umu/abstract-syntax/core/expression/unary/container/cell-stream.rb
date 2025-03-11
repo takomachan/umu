@@ -19,18 +19,18 @@ class CellStream < Abstraction::Expressions
     attr_reader :opt_last_expr
 
 
-    def initialize(loc, is_memorized, exprs, opt_last_expr = nil)
-        ASSERT.bool        is_memorized
+    def initialize(loc, exprs, opt_last_expr, is_memorized)
         ASSERT.kind_of     exprs,           ::Array
         ASSERT.opt_kind_of opt_last_expr,   ASCE::Abstract
+        ASSERT.bool        is_memorized
         ASSERT.assert (
             if exprs.empty? then opt_last_expr.nil? else true end
         )
 
         super(loc, exprs)
 
-        @is_memorized  = is_memorized
         @opt_last_expr = opt_last_expr
+        @is_memorized  = is_memorized
     end
 
 
@@ -128,14 +128,14 @@ end # Umu::AbstractSyntax::Core::Expression::Unary
 
 module_function
 
-    def make_stream(loc, is_memorized, exprs, opt_last_expr = nil)
-        ASSERT.bool        is_memorized
+    def make_stream(loc, exprs, opt_last_expr = nil, is_memorized = false)
         ASSERT.kind_of     loc,             LOC::Entry
         ASSERT.kind_of     exprs,           ::Array
         ASSERT.opt_kind_of opt_last_expr,   ASCE::Abstract
+        ASSERT.bool        is_memorized
 
         Unary::Container::CellStream.new(
-            loc, is_memorized, exprs.freeze, opt_last_expr
+            loc, exprs.freeze, opt_last_expr, is_memorized
         ).freeze
     end
 

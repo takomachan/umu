@@ -96,7 +96,7 @@ private
                             nil
                         end
 
-        ASCE.make_stream self.loc, self.memorized?, exprs, opt_last_expr
+        ASCE.make_stream self.loc, exprs, opt_last_expr, self.memorized?
     end
 end
 

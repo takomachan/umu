@@ -855,14 +855,14 @@ atom_expr:
                 CSCE.make_tuple bba.loc, [expr] + exprs
             end
 
-    result = CSCE.make_comprehension bbr.loc, expr, qual
+    result = CSCE.make_list_comprehension bbr.loc, expr, qual
 }
 | '[' '|' named_fld named_fld named_flds '|' qualifiers  ']' {
     bbr, bba, fld1, fld2, flds, _, qual, _ = val
 
     expr = CSCE.make_named_tuple bba.loc, [fld1, fld2] + flds
 
-    result = CSCE.make_comprehension bbr.loc, expr, qual
+    result = CSCE.make_list_comprehension bbr.loc, expr, qual
 }
 | '&[' ']' {
     result = CSCE.make_stream val[0].loc, []
@@ -878,6 +878,24 @@ atom_expr:
     result = CSCE.make_interval_stream(
                     bb.loc, fst_expr, opt_snd_expr, opt_lst_expr
                 )
+}
+| '&[' '|' expr com_exprs '|' qualifiers ']' {
+    bbr, bba, expr, exprs, _, qual, _ = val
+
+    expr = if exprs.empty?
+                expr
+            else
+                CSCE.make_tuple bba.loc, [expr] + exprs
+            end
+
+    result = CSCE.make_stream_comprehension bbr.loc, expr, qual
+}
+| '&[' '|' named_fld named_fld named_flds '|' qualifiers  ']' {
+    bbr, bba, fld1, fld2, flds, _, qual, _ = val
+
+    expr = CSCE.make_named_tuple bba.loc, [fld1, fld2] + flds
+
+    result = CSCE.make_stream_comprehension bbr.loc, expr, qual
 }
 
 # Braket: { ... }
