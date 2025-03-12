@@ -38,7 +38,7 @@ class Interpreter
         ASSERT.kind_of file_name,       ::String
         ASSERT.kind_of init_line_num,   ::Integer
 
-        tokens, lexed_env = __transform_source_to_tokens__(
+        tokens, lexed_env = __lex_source__(
                                 source, file_name, self.env, init_line_num
                             )
 
@@ -72,17 +72,22 @@ class Interpreter
         ASSERT.kind_of file_name,       ::String
         ASSERT.kind_of init_line_num,   ::Integer
 
-        tokens, lexed_env = __transform_source_to_tokens__(
+        tokens, lexed_env = __lex_source__(
                                 source, file_name, self.env, init_line_num
                             )
 
         csyn_stmts = self.parser.parse tokens
-        unless csyn_stmts.count == 1
-            raise X::CommandError.new(
-                "Unexpected multiple expressions: %s", csyn_stmts.to_s
-            )
-        end
-        csyn_stmt = csyn_stmts[0]
+        csyn_stmt = case csyn_stmts.count
+                    when 0
+                        raise X::CommandError.new "No input expression"
+                    when 1
+                        csyn_stmts[0]
+                    else
+                        raise X::CommandError.new(
+                            "Unexpected multiple statements: %s",
+                            csyn_stmts.map(&:to_s).join(' ')
+                        )
+                    end
         ASSERT.kind_of csyn_stmt, CS::Abstract
 
         result = Umu::Commander.execute(csyn_stmt, lexed_env)
@@ -93,7 +98,7 @@ class Interpreter
                     result.value
                 when ASR::Environment
                     raise X::CommandError.new(
-                        "Unexpected environment: %s", result.env.inspect
+                        "Unexpected declaration: %s", csyn_stmt.to_s
                     )
                 else
                     ASSERT.abort result.inspect
@@ -105,7 +110,7 @@ class Interpreter
 
 private
 
-    def __transform_source_to_tokens__(
+    def __lex_source__(
         source, file_name, env, init_line_num = 0
     )
         ASSERT.kind_of source,          ::String
