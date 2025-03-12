@@ -19,7 +19,7 @@ class Interpreter
             raise X::CommandError.new('Does not exists input files')
         end
 
-        Interpreter.new env
+        Interpreter.new(env).freeze
     end
 
 
@@ -63,7 +63,7 @@ class Interpreter
             end
         }
 
-        Api.make_interpreter final_env
+        Interpreter.new(final_env).freeze
     end
 
 
@@ -165,14 +165,7 @@ end
 
 module_function
 
-    def setup(opts = [])
-        ASSERT.kind_of opts, ::Array
-
-        Interpreter.setup opts
-    end
-
-
-    def make_interpreter(opts = [])
+    def setup_interpreter(*opts)
         ASSERT.kind_of opts, ::Array
 
         Interpreter.setup opts
