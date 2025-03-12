@@ -1150,7 +1150,7 @@ HOW TO USE Morph#susp
             end
         }
 
-        VC.make_tuple *(result_opaque.obj)
+        VC.make_tuple result_opaque.obj[0], result_opaque.obj[1]
     end
 
 

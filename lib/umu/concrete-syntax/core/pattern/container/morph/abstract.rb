@@ -123,7 +123,8 @@ private
 
         var_sym = __gen_sym__ seq_num
 
-        opt_result = if self.pats.empty?
+        opt_result = (
+            if self.pats.empty?
                 __desugar_lambda_nil__(self.loc)
             else
                 CSCP.make_result(
@@ -136,7 +137,8 @@ private
 
                     __opt_type_sym_of_cons__
                 )
-        end
+            end
+        )
 
         ASSERT.opt_kind_of opt_result, CSCP::Result
     end

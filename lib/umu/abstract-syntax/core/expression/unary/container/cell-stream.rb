@@ -94,7 +94,7 @@ private
         new_env = env.enter event
 
         result = (
-             if self.memorized?
+            if self.memorized?
                 VC.make_memo_stream_entry self, new_env.va_context
             else
                 init_stream =

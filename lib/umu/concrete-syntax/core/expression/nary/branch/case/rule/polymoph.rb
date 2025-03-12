@@ -164,7 +164,7 @@ private
         # C: Cons,      !C: not Cons
         # O: Otherwise, !O: not Otherwise
         # *: Don't care
-        then_rule, else_rule, has_cons = (
+        result = (
             if opt_nil_rule
                 nil_rule = opt_nil_rule
 
@@ -204,6 +204,15 @@ private
                 end
             end
         )
+
+        ASSERT.tuple_of result, [
+            Branch::Rule::Abstraction::Abstract,
+            Branch::Rule::Abstraction::Abstract,
+            ::Object
+        ]
+        ASSERT.bool result[2]
+
+        result
     end
 
 

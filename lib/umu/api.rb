@@ -13,12 +13,12 @@ class Interpreter
     def self.setup(opts)
         ASSERT.kind_of opts, ::Array
 
-        env, file_mames = Umu::Commander.setup opts
-=begin
+        env, file_names = Umu::Commander.setup opts
+
         unless file_names.empty?
-            raise X::CommandError.new('Do not exists input files')
+            raise X::CommandError.new('Does not exists input files')
         end
-=end
+
         Interpreter.new env
     end
 

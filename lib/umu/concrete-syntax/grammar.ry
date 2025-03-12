@@ -349,7 +349,7 @@ cond_rules:
   /* empty */       { result = [[],     nil] }
 | _cond_rules       { result = [val[0], nil] }
 | ELSE '->' expr {
-    _, _, expr, decls = val
+    _, _, expr = val
 
     result = [[],     expr]
 }

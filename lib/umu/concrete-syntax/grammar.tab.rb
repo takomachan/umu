@@ -2170,7 +2170,7 @@ module_eval(<<'.,.,', 'grammar.ry', 349)
 
 module_eval(<<'.,.,', 'grammar.ry', 351)
   def _reduce_68(val, _values, result)
-        _, _, expr, decls = val
+        _, _, expr = val
 
     result = [[],     expr]
 

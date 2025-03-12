@@ -107,8 +107,8 @@ private
     end
 
 
-    def __make__(*args)
-        ASCE.make_interval *args
+    def __make__(loc, fst_expr, opt_snd_expr, lst_expr)
+        ASCE.make_interval loc, fst_expr, opt_snd_expr, lst_expr
     end
 end
 
@@ -123,8 +123,8 @@ private
     end
 
 
-    def __make__(*args)
-        ASCE.make_interval_stream *args
+    def __make__(loc, fst_expr, opt_snd_expr, lst_expr)
+        ASCE.make_interval_stream loc, fst_expr, opt_snd_expr, lst_expr
     end
 end
 
