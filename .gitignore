@@ -15,3 +15,6 @@ doc/tmdoc/html/
 doc/html/
 doc/prog-guide/*.ps
 doc/prog-guide/*.eps
+test/tmdoc/LOG.txt
+test/tmdoc/dbook/
+test/tmdoc/html/

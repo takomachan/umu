@@ -22,6 +22,10 @@ Standard function library
 +
 Specification of Umg language
 
+* link:http://xtmlab.com/umu/test/html/[Test Suite(TmDoc)]
++
+Specification of Unit Test
+
 * Others
 ** Language design background
 ** link:http://xtmlab.com/umu/tmdoc/html/[Inside of Interpreter(TmDoc)]

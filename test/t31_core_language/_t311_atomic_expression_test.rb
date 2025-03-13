@@ -11,20 +11,18 @@ module T3Language
 
 module T31Core
 
-class T311AtomicExpressionTest < Minitest::Test
+module T311AtomicExpression
 =begin
 <atomic-expression> ::= 
-    <identifier>                    /* T3111 */
-  | <constant>                      /* T3112 */
-  | <round-braket-expression>       /* T3113 */
-  | <square-braket-expression>      /* T3114 */
-  | <lambda-expression>             /* T3115 */
-  | <cell-stream-expression>        /* T---- */
-  | <memo-stream-expression>        /* T---- */
-  | <interval-stream-expression>    /* T---- */
+    <identifier>                /* T3111 */
+  | <constant>                  /* T3112 */
+  | <round-braket-expression>   /* T3113 */
+  | <square-braket-expression>  /* T3114 */
+  | <lambda-expression>         /* T3115 */
+  | <stream-expression>         /* T3116 */
   ;
 =end
-end
+end # Umu::Test::T3Language::T31Core::T311AtomicExpression
 
 end # Umu::Test::T3Language::T31Core
 

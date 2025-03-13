@@ -7,9 +7,11 @@ module Umu
 
 module Test
 
-module T3Syntax
+module T3Language
 
-module T31CoreLang
+module T31Core
+
+module T311AtomicExpression
 
 class T3112ConstantTest < Minitest::Test
 =begin
@@ -69,9 +71,11 @@ class T3112ConstantTest < Minitest::Test
     end
 end
 
-end # Umu::Test::T3Syntax::T31CoreLang
+end # Umu::Test::T3Language::T31Core::T311AtomicExpression
 
-end # Umu::Test::T3Syntax
+end # Umu::Test::T3Language::T31Core
+
+end # Umu::Test::T3Language
 
 end # Umu::Test
 

@@ -1,0 +1,63 @@
+h1.title {
+	padding: 5px 5px 5px 0px;
+}
+
+h2.title {
+	padding: 5px 3px 3px 0px;
+	border-bottom: 1px solid black;
+	font-size: 24pt;
+}
+
+h3.title {
+	padding: 3px 3px 3px 10px;
+	border-left: 10px solid gray;
+	border-bottom: 1px solid gray;
+	font-size: 18pt;
+}
+
+h4.title {
+	padding: 10px 3px 3px 0px;
+	font-size: 12pt;
+}
+
+h5.title {
+	padding: 10px 3px 3px 0px;
+	font-size: 11pt;
+}
+
+pre.programlisting {
+	color: black;
+	background-color: white;
+	border-width: 1ex;
+	border-color: white;
+	border-style: solid;
+	border: 1px solid #a0a0a0;
+}
+
+pre.programlistingco {
+	color: black;
+	background-color: white;
+	border-width: 1ex;
+	border-color: white;
+	border-style: solid;
+	border: 1px solid #a0a0a0;
+}
+
+pre.screen {
+	color: white;
+	background-color: black;
+	border-width: 1ex;
+	border-color: white;
+	border-style: solid;
+	border: 1px solid #a0a0a0;
+}
+
+table, tbody, thead, tfoot, tr, td {
+	font-family: "Gill Sans", "Trebuchet MS", "Helvetica", "Arial", "sans serif";
+	font-size: 10pt;
+}
+
+body {
+	font-family: "Gill Sans", "Trebuchet MS", "Helvetica", "Arial", "sans serif";
+	font-size: 10pt;
+}

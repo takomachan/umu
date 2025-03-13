@@ -22,6 +22,10 @@ Umu言語によるプログラミングの方法
 +
 Umu言語の仕様
 
+* link:http://xtmlab.com/umu/test/html/[テスト仕様(tmdoc)]
++
+単体テストの仕様
+
 * その他
 ** link:design-background-jp.html[言語設計の背景]
 ** link:http://xtmlab.com/umu/tmdoc/html/[インタプリタ実装の内部(TmDoc)]
