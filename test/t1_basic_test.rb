@@ -5,6 +5,8 @@ require "test_helper"
 
 module Umu
 
+module Test
+
 class T1BasicTest < Minitest::Test
     def setup
         @interp = Api.setup_interpreter
@@ -83,5 +85,7 @@ class T1BasicTest < Minitest::Test
         assert_equal        24,        value.val
     end
 end
+
+end # Umu::Test
 
 end # Umu

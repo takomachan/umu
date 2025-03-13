@@ -5,7 +5,9 @@ require "test_helper"
 
 module Umu
 
-module Lexcical
+module Test
+
+module T2Lexcical
 
 class T2LexcicalTest < Minitest::Test
     def setup
@@ -147,6 +149,8 @@ class T2LexcicalTest < Minitest::Test
     end
 end
 
-end # Umu::Lexcical
+end # Umu::Test::T2Lexcical
+
+end # Umu::Test
 
 end # Umu
