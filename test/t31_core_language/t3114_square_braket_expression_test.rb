@@ -160,7 +160,7 @@ class T31143ListComprehension < Minitest::Test
 <generator> ::= VAL <pattern> "<-" <expression> :
 <guard>     ::= IF <expression> ;
 
-<named-field> ::= LABEL [ <expression> ] ;
+/* <named-field> ::= ... ;  See T31135 */
 =end
 
     def setup
