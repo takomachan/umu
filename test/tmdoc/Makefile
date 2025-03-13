@@ -5,6 +5,7 @@ FILES = \
     tmdoc/__dummy__.rb \
     basic_test.rb \
     lexcical_test.rb \
+    core_language/product_expression.rb \
     core_language/atomic_expression_test.rb \
     core_language/atomic_expression/identifier_test.rb \
     core_language/atomic_expression/constant_test.rb \
