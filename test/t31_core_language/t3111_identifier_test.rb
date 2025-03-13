@@ -5,19 +5,11 @@ require "test_helper"
 
 module Umu
 
-class T3SyntaxTest <  Minitest::Test; end
+module Test
 
-class T31CoreLangTest <  Minitest::Test; end
+module T3Syntax
 
-class T311AtomicExpressionTest < Minitest::Test
-=begin
-<atomic-expression> ::= 
-    <identifier>
-  | <constant>
-=end
-end
-
-
+module T31CoreLang
 
 class T3111IdentifierTest < Minitest::Test
 =begin
@@ -27,8 +19,9 @@ class T3111IdentifierTest < Minitest::Test
   | MODULE-DIR <module-path> ID
   | MODULE-DIR <module-path> "(" <infix-operator> ")"
   | "&" ID
+  ;
 
-<module-path> ::= /* empty */ | MODULE-DIR <module-path>
+<module-path> ::= /* empty */ | MODULE-DIR <module-path> ;
 =end
 
 
@@ -47,6 +40,10 @@ class T3111IdentifierTest < Minitest::Test
     def test_infix_operator
         value = Api.eval_expr @interp, "(+)"
         assert_instance_of  VC::Fun, value
+
+        value = Api.eval_expr @interp, "(+) 3 4"
+        assert_instance_of  VCAN::Int, value
+        assert_equal        7,         value.val
     end
 
 
@@ -60,6 +57,10 @@ class T3111IdentifierTest < Minitest::Test
     def test_long_infix_operator
         value = Api.eval_expr @interp, "Umu::Prelude::(+)"
         assert_instance_of  VC::Fun, value
+
+        value = Api.eval_expr @interp, "Umu::Prelude::(+) 3 4"
+        assert_instance_of  VCAN::Int, value
+        assert_equal        7,         value.val
     end
 
 
@@ -69,5 +70,11 @@ class T3111IdentifierTest < Minitest::Test
         #assert_instance_of  VC::Class, value
     end
 end
+
+end # Umu::Test::T3Syntax::T31CoreLang
+
+end # Umu::Test::T3Syntax
+
+end # Umu::Test
 
 end # Umu
