@@ -7,7 +7,7 @@ module Umu
 
 module Test
 
-class T1BasicTest < Minitest::Test
+class BasicTest < Minitest::Test
     def setup
         @interp = Api.setup_interpreter
     end

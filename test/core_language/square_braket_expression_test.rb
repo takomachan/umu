@@ -7,22 +7,22 @@ module Umu
 
 module Test
 
-module T3Language
+module Grammar
 
-module T31Core
+module CoreLanguage
 
-module T311AtomicExpression
+module AtomicExpression
 
-module T3114SquareBracketExpression
+module SquareBracketExpression
 =begin
 <square-braket-expression> ::= 
-    <list-expression>       /* T31141 */
-  | <list-interval>         /* T31142 */
-  | <list-comprehension>    /* T31143 */
+    <list-expression>
+  | <list-interval>
+  | <list-comprehension>
   ;
 =end
 
-class T31141ListExpressionTest < Minitest::Test
+class ListExpressionTest < Minitest::Test
 =begin
 <list-expression> ::=
     "[" "]"
@@ -86,7 +86,7 @@ end
 
 
 
-class T31142ListInterval < Minitest::Test
+class ListIntervalTest < Minitest::Test
 =begin
 <list-interval> ::=
   "[" <expression> { "," <expression> } ".." <expression> "]" ;
@@ -145,7 +145,7 @@ end
 
 
 
-class T31143ListComprehension < Minitest::Test
+class ListComprehensionTest < Minitest::Test
 =begin
 <list-comprehension> ::=
   | "[" "|" <expression> { "," <expression> } "|"
@@ -160,7 +160,7 @@ class T31143ListComprehension < Minitest::Test
 <generator> ::= VAL <pattern> "<-" <expression> :
 <guard>     ::= IF <expression> ;
 
-/* <named-field> ::= ... ;  See T31135 */
+/* <named-field> ::= ... ;  See NamedTupleExpressionTest */
 =end
 
     def setup
@@ -259,13 +259,13 @@ class T31143ListComprehension < Minitest::Test
     end
 end
 
-end # Umu::Test::T3Language::T31Core::T311AtomicExpression::T3114SquareBracketExpression
+end # Umu::Test::Grammar::CoreLanguage::AtomicExpression::SquareBracketExpression
 
-end # Umu::Test::T3Language::T31Core::T311AtomicExpression
+end # Umu::Test::Grammar::CoreLanguage::AtomicExpression
 
-end # Umu::Test::T3Language::T31Core
+end # Umu::Test::Grammar::CoreLanguage
 
-end # Umu::Test::T3Language
+end # Umu::Test::Grammar
 
 end # Umu::Test
 

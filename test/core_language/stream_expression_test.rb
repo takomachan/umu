@@ -7,23 +7,23 @@ module Umu
 
 module Test
 
-module T3Language
+module Grammar
 
-module T31Core
+module CoreLanguage
 
-module T311AtomicExpression
+module AtomicExpression
 
-module T3116StreamExpression
+module StreamExpression
 =begin
 <stream-expression> ::= 
-    <cell-stream-expression>        /* T31161 */
-  | <memo-stream-expression>        /* T31162 */
-  | <interval-stream-expression>    /* T31163 */
-  | <stream-comprehension>          /* T31164 */
+    <cell-stream-expression>
+  | <memo-stream-expression>
+  | <interval-stream-expression>
+  | <stream-comprehension>
   ;
 =end
 
-class T31161CellStreamExpressionTest < Minitest::Test
+class CellStreamExpressionTest < Minitest::Test
 =begin
 <cell-stream-expression> ::=
     "&[" "]"
@@ -177,7 +177,7 @@ end
 
 
 
-class T31162MemoStreamExpressionTest < Minitest::Test
+class MemoStreamExpressionTest < Minitest::Test
 =begin
 <memo-stream-expression> ::=
     "&{" "}"
@@ -276,7 +276,7 @@ end
 
 
 
-class T31163IntervalStream < Minitest::Test
+class IntervalStreamTest < Minitest::Test
 =begin
 <list-interval> ::=
   "[" <expression> { "," <expression> } ".." [ <expression> ] "]" ;
@@ -379,7 +379,7 @@ end
 
 
 
-class T31164StreamComprehension < Minitest::Test
+class StreamComprehensionTest < Minitest::Test
 =begin
 <stream-comprehension> ::=
   | "&[" "|" <expression> { "," <expression> } "|"
@@ -391,9 +391,9 @@ class T31164StreamComprehension < Minitest::Test
   ;
 
 
-/* <qualifier>   ::= ... ;  See T31143 */
+/* <qualifier>   ::= ... ;  See ListComprehensionTest */
 
-/* <named-field> ::= ... ;  See T31135 */
+/* <named-field> ::= ... ;  See NamedTupleExpressionTest */
 =end
 
     def setup
@@ -512,13 +512,13 @@ class T31164StreamComprehension < Minitest::Test
     end
 end
 
-end # Umu::Test::T3Language::T31Core::T311AtomicExpression::T3114SquareBracketExpression
+end # Umu::Test::Grammar::CoreLanguage::AtomicExpression::SquareBracketExpression
 
-end # Umu::Test::T3Language::T31Core::T311AtomicExpression
+end # Umu::Test::Grammar::CoreLanguage::AtomicExpression
 
-end # Umu::Test::T3Language::T31Core
+end # Umu::Test::Grammar::CoreLanguage
 
-end # Umu::Test::T3Language
+end # Umu::Test::Grammar
 
 end # Umu::Test
 

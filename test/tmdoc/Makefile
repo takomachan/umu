@@ -1,17 +1,17 @@
 FILE_DIR  = ..
-FILE_HOME = $(FILE_DIR)/t1_basic_test.rb
+FILE_HOME = $(FILE_DIR)/basic_test.rb
 
 FILES = \
     tmdoc/__dummy__.rb \
-    t1_basic_test.rb \
-    t2_lexcical_test.rb \
-    t31_core_language/_t311_atomic_expression_test.rb \
-    t31_core_language/t3111_identifier_test.rb \
-    t31_core_language/t3112_constant_test.rb \
-    t31_core_language/t3113_round_braket_expression_test.rb \
-    t31_core_language/t3114_square_braket_expression_test.rb \
-    t31_core_language/t3115_lambda_expression_test.rb \
-    t31_core_language/t3116_stream_expression_test.rb \
+    basic_test.rb \
+    lexcical_test.rb \
+    core_language/_atomic_expression_test.rb \
+    core_language/identifier_test.rb \
+    core_language/constant_test.rb \
+    core_language/round_braket_expression_test.rb \
+    core_language/square_braket_expression_test.rb \
+    core_language/lambda_expression_test.rb \
+    core_language/stream_expression_test.rb \
     test_helper.rb \
 
 TMDOCPROC		= tmdoc

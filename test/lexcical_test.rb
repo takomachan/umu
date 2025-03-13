@@ -7,9 +7,9 @@ module Umu
 
 module Test
 
-module T2Lexcical
+module Lexcical
 
-class T2LexcicalTest < Minitest::Test
+class LexcicalTest < Minitest::Test
     def setup
         @interp = Api.setup_interpreter
     end
@@ -149,7 +149,7 @@ class T2LexcicalTest < Minitest::Test
     end
 end
 
-end # Umu::Test::T2Lexcical
+end # Umu::Test::Lexcical
 
 end # Umu::Test
 

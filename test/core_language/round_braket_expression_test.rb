@@ -7,25 +7,25 @@ module Umu
 
 module Test
 
-module T3Language
+module Grammar
 
-module T31Core
+module CoreLanguage
 
-module T311AtomicExpression
+module AtomicExpression
 
-module T3113RoundBracketExpression
+module RoundBracketExpression
 =begin
 <round-braket-expression> ::= 
-    <unit-expression>                   /* T31131 */
-  | <expression-in-expression>          /* T31132 */
-  | <prefixed-operator-expression>      /* T31133 */
-  | <tuple-expression>                  /* T31134 */
-  | <named-tuple-expression>            /* T31135 */
-  | <functionalized-message-expression> /* T31136 */
+    <unit-expression>
+  | <expression-in-expression>
+  | <prefixed-operator-expression>
+  | <tuple-expression>
+  | <named-tuple-expression>
+  | <functionalized-message-expression>
   ;
 =end
 
-class T31131UnitExpressionTest < Minitest::Test
+class UnitExpressionTest < Minitest::Test
 =begin
 <unit-expression> ::= "(" ")" ;
 =end
@@ -43,7 +43,7 @@ end
 
 
 
-class T31132ExpressionInExpressionTest < Minitest::Test
+class ExpressionInExpressionTest < Minitest::Test
 =begin
 <expression-in-expression> ::= "(" <expression> ")"
 =end
@@ -66,7 +66,7 @@ end
 
 
 
-class T31133PrefixedOperatorExpressionTest < Minitest::Test
+class PrefixedOperatorExpressionTest < Minitest::Test
 =begin
 <prefixed-operator-expression> ::= "(" <infix-operator> <expression> ")" ;
 =end
@@ -88,7 +88,7 @@ end
 
 
 
-class T31134TupleExpressionTest < Minitest::Test
+class TupleExpressionTest < Minitest::Test
 =begin
 <tuple-expression> ::=
     "(" <expression> "," <expression> { "," <expression> } ")" ;
@@ -125,7 +125,7 @@ end
 
 
 
-class T31135NamedTupleExpressionTest < Minitest::Test
+class NamedTupleExpressionTest < Minitest::Test
 =begin
 <named-tuple-expression> ::=
     "(" <named-field> <named-field> { <named-field> } ")" ;
@@ -170,7 +170,7 @@ end
 
 
 
-class T31136FunctionalizedMessageExpressionTest < Minitest::Test
+class FunctionalizedMessageExpressionTest < Minitest::Test
 =begin
 <functionalized-message-expression> ::=
     "&(" ID ")"
@@ -203,13 +203,13 @@ class T31136FunctionalizedMessageExpressionTest < Minitest::Test
     end
 end
 
-end # Umu::Test::T3Language::T31Core::T311AtomicExpression::T3113RoundBracketExpression
+end # Umu::Test::Grammar::CoreLanguage::AtomicExpression::RoundBracketExpression
 
-end # Umu::Test::T3Language::T31Core::T311AtomicExpression
+end # Umu::Test::Grammar::CoreLanguage::AtomicExpression
 
-end # Umu::Test::T3Language::T31Core
+end # Umu::Test::Grammar::CoreLanguage
 
-end # Umu::Test::T3Language
+end # Umu::Test::Grammar
 
 end # Umu::Test
 

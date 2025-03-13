@@ -7,13 +7,13 @@ module Umu
 
 module Test
 
-module T3Language
+module Grammar
 
-module T31Core
+module CoreLanguage
 
-module T311AtomicExpression
+module AtomicExpression
 
-class T3115LambdaExpressionTest < Minitest::Test
+class LambdaExpressionTest < Minitest::Test
 =begin
 <lambda-expression> ::=
     "{" <pattern> { <pattern> } "->"
@@ -59,11 +59,11 @@ class T3115LambdaExpressionTest < Minitest::Test
     end
 end
 
-end # Umu::Test::T3Language::T31Core::T311AtomicExpression
+end # Umu::Test::Grammar::CoreLanguage::AtomicExpression
 
-end # Umu::Test::T3Language::T31Core
+end # Umu::Test::Grammar::CoreLanguage
 
-end # Umu::Test::T3Language
+end # Umu::Test::Grammar
 
 end # Umu::Test
 
