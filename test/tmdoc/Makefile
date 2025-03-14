@@ -5,17 +5,17 @@ FILES = \
     tmdoc/__dummy__.rb \
     basic_test.rb \
     lexcical_test.rb \
-    core_language/infix_expression.rb \
-    core_language/send_expression.rb \
-    core_language/apply_expression.rb \
-    core_language/product_expression.rb \
-    core_language/atomic_expression_test.rb \
-    core_language/atomic_expression/identifier_test.rb \
-    core_language/atomic_expression/constant_test.rb \
-    core_language/atomic_expression/round_braket_expression_test.rb \
-    core_language/atomic_expression/square_braket_expression_test.rb \
-    core_language/atomic_expression/lambda_expression_test.rb \
-    core_language/atomic_expression/stream_expression_test.rb \
+    core_language/expression/infix_test.rb \
+    core_language/expression/send_test.rb \
+    core_language/expression/apply_test.rb \
+    core_language/expression/product_test.rb \
+    core_language/expression/atomic_test.rb \
+    core_language/expression/atomic/identifier_test.rb \
+    core_language/expression/atomic/constant_test.rb \
+    core_language/expression/atomic/brackets_test.rb \
+    core_language/expression/atomic/lambda_expression_test.rb \
+    core_language/expression/atomic/list_test.rb \
+    core_language/expression/atomic/stream_test.rb \
     test_helper.rb \
 
 TMDOCPROC		= tmdoc

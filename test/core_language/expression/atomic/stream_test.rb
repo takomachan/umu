@@ -11,9 +11,11 @@ module Grammar
 
 module CoreLanguage
 
-module AtomicExpression
+module Expression
 
-module StreamExpression
+module Atomic
+
+module Stream
 =begin
 <stream-expression> ::= 
     <cell-stream-expression>
@@ -23,7 +25,7 @@ module StreamExpression
   ;
 =end
 
-class CellStreamExpressionTest < Minitest::Test
+class CellStreamTest < Minitest::Test
 =begin
 <cell-stream-expression> ::=
     "&[" "]"
@@ -177,7 +179,7 @@ end
 
 
 
-class MemoStreamExpressionTest < Minitest::Test
+class MemoStreamTest < Minitest::Test
 =begin
 <memo-stream-expression> ::=
     "&{" "}"
@@ -393,7 +395,7 @@ class StreamComprehensionTest < Minitest::Test
 
 /* <qualifier>   ::= ... ;  See ListComprehensionTest */
 
-/* <named-field> ::= ... ;  See NamedTupleExpressionTest */
+/* <named-field> ::= ... ;  See NamedTupleTest */
 =end
 
     def setup
@@ -512,9 +514,11 @@ class StreamComprehensionTest < Minitest::Test
     end
 end
 
-end # Umu::Test::Grammar::CoreLanguage::AtomicExpression::SquareBracketExpression
+end # Umu::Test::Grammar::CoreLanguage::Expression::Atomic::SquareBracket
 
-end # Umu::Test::Grammar::CoreLanguage::AtomicExpression
+end # Umu::Test::Grammar::CoreLanguage::Expression::Atomic
+
+end # Umu::Test::Grammar::CoreLanguage::Expression
 
 end # Umu::Test::Grammar::CoreLanguage
 

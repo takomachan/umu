@@ -11,9 +11,11 @@ module Grammar
 
 module CoreLanguage
 
-module AtomicExpression
+module Expression
 
-module RoundBracketExpression
+module Atomic
+
+module Brackets
 =begin
 <round-braket-expression> ::= 
     <unit-expression>
@@ -25,7 +27,7 @@ module RoundBracketExpression
   ;
 =end
 
-class UnitExpressionTest < Minitest::Test
+class UnitTest < Minitest::Test
 =begin
 <unit-expression> ::= "(" ")" ;
 =end
@@ -66,7 +68,7 @@ end
 
 
 
-class PrefixedOperatorExpressionTest < Minitest::Test
+class PrefixedOperatorTest < Minitest::Test
 =begin
 <prefixed-operator-expression> ::= "(" <infix-operator> <expression> ")" ;
 =end
@@ -88,7 +90,7 @@ end
 
 
 
-class TupleExpressionTest < Minitest::Test
+class TupleTest < Minitest::Test
 =begin
 <tuple-expression> ::=
     "(" <expression> "," <expression> { "," <expression> } ")" ;
@@ -125,7 +127,7 @@ end
 
 
 
-class NamedTupleExpressionTest < Minitest::Test
+class NamedTupleTest < Minitest::Test
 =begin
 <named-tuple-expression> ::=
     "(" <named-field> <named-field> { <named-field> } ")" ;
@@ -170,7 +172,7 @@ end
 
 
 
-class FunctionalizedMessageExpressionTest < Minitest::Test
+class FunctionalizedMessageTest < Minitest::Test
 =begin
 <functionalized-message-expression> ::=
     "&(" ID ")"
@@ -203,9 +205,11 @@ class FunctionalizedMessageExpressionTest < Minitest::Test
     end
 end
 
-end # Umu::Test::Grammar::CoreLanguage::AtomicExpression::RoundBracketExpression
+end # Umu::Test::Grammar::CoreLanguage::Expression::Atomic::Parentheses
 
-end # Umu::Test::Grammar::CoreLanguage::AtomicExpression
+end # Umu::Test::Grammar::CoreLanguage::Expression::Atomic
+
+end # Umu::Test::Grammar::CoreLanguage::Expression
 
 end # Umu::Test::Grammar::CoreLanguage
 

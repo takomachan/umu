@@ -11,7 +11,9 @@ module Grammar
 
 module CoreLanguage
 
-class ApplyExpressionTest < Minitest::Test
+module Expression
+
+class ApplyTest < Minitest::Test
 =begin
 <apply-expression> ::=
     <product-expression> { <product-expression> } ;
@@ -50,6 +52,8 @@ class ApplyExpressionTest < Minitest::Test
         assert_equal       800,       value.val
     end
 end
+
+end # Umu::Test::Grammar::CoreLanguage::Expression
 
 end # Umu::Test::Grammar::CoreLanguage
 

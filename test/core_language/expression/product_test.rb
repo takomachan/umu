@@ -11,7 +11,9 @@ module Grammar
 
 module CoreLanguage
 
-module ProductExpression
+module Expression
+
+module ProductOperator
 =begin
 <product-expression> ::=
     <atomic-expression> { <product-operation> } ;
@@ -124,7 +126,9 @@ class NamedTupleModifierTest < Minitest::Test
     end
 end
 
-end # Umu::Test::Grammar::CoreLanguage::ProductExpression
+end # Umu::Test::Grammar::CoreLanguage::Expression::ProductOperator
+
+end # Umu::Test::Grammar::CoreLanguage::Expression
 
 end # Umu::Test::Grammar::CoreLanguage
 

@@ -11,7 +11,9 @@ module Grammar
 
 module CoreLanguage
 
-module AtomicExpression
+module Expression
+
+module Atomic
 
 class LambdaExpressionTest < Minitest::Test
 =begin
@@ -59,7 +61,9 @@ class LambdaExpressionTest < Minitest::Test
     end
 end
 
-end # Umu::Test::Grammar::CoreLanguage::AtomicExpression
+end # Umu::Test::Grammar::CoreLanguage::Expression::Atomic
+
+end # Umu::Test::Grammar::CoreLanguage::Expression
 
 end # Umu::Test::Grammar::CoreLanguage
 

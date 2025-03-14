@@ -11,7 +11,9 @@ module Grammar
 
 module CoreLanguage
 
-module SendExpression
+module Expression
+
+module SendOperator
 =begin
 <send-expression> ::=
     <apply-expression> { <message> } ;
@@ -156,7 +158,9 @@ class KeywordMessageTest < Minitest::Test
     end
 end
 
-end # Umu::Test::Grammar::CoreLanguage::SendExpression
+end # Umu::Test::Grammar::CoreLanguage::Expression::SendOperator
+
+end # Umu::Test::Grammar::CoreLanguage::Expression
 
 end # Umu::Test::Grammar::CoreLanguage
 

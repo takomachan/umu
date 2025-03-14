@@ -11,7 +11,9 @@ module Grammar
 
 module CoreLanguage
 
-module AtomicExpression
+module Expression
+
+module Atomic
 
 class IdentifierTest < Minitest::Test
 =begin
@@ -73,7 +75,9 @@ class IdentifierTest < Minitest::Test
     end
 end
 
-end # Umu::Test::Grammar::CoreLanguage::AtomicExpression
+end # Umu::Test::Grammar::CoreLanguage::Expression::Atomic
+
+end # Umu::Test::Grammar::CoreLanguage::Expression
 
 end # Umu::Test::Grammar::CoreLanguage
 

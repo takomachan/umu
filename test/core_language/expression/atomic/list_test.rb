@@ -11,9 +11,11 @@ module Grammar
 
 module CoreLanguage
 
-module AtomicExpression
+module Expression
 
-module SquareBracketExpression
+module Atomic
+
+module List
 =begin
 <square-braket-expression> ::= 
     <list-expression>
@@ -22,7 +24,7 @@ module SquareBracketExpression
   ;
 =end
 
-class ListExpressionTest < Minitest::Test
+class ExpressionTest < Minitest::Test
 =begin
 <list-expression> ::=
     "[" "]"
@@ -86,7 +88,7 @@ end
 
 
 
-class ListIntervalTest < Minitest::Test
+class IntervalTest < Minitest::Test
 =begin
 <list-interval> ::=
   "[" <expression> { "," <expression> } ".." <expression> "]" ;
@@ -145,7 +147,7 @@ end
 
 
 
-class ListComprehensionTest < Minitest::Test
+class ComprehensionTest < Minitest::Test
 =begin
 <list-comprehension> ::=
   | "[" "|" <expression> { "," <expression> } "|"
@@ -160,7 +162,7 @@ class ListComprehensionTest < Minitest::Test
 <generator> ::= VAL <pattern> "<-" <expression> :
 <guard>     ::= IF <expression> ;
 
-/* <named-field> ::= ... ;  See NamedTupleExpressionTest */
+/* <named-field> ::= ... ;  See NamedTupleTest */
 =end
 
     def setup
@@ -259,9 +261,11 @@ class ListComprehensionTest < Minitest::Test
     end
 end
 
-end # Umu::Test::Grammar::CoreLanguage::AtomicExpression::SquareBracketExpression
+end # Umu::Test::Grammar::CoreLanguage::Expression::Atomic::SquareBracket
 
-end # Umu::Test::Grammar::CoreLanguage::AtomicExpression
+end # Umu::Test::Grammar::CoreLanguage::Expression::Atomic
+
+end # Umu::Test::Grammar::CoreLanguage::Expression
 
 end # Umu::Test::Grammar::CoreLanguage
 

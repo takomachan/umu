@@ -11,7 +11,9 @@ module Grammar
 
 module CoreLanguage
 
-module InfixExpression
+module Expression
+
+module InfixOperator
 =begin
 <infix-expression> ::=
     <send-expression>
@@ -24,7 +26,7 @@ module InfixExpression
 /* <send-expression> ::= ...  See SendExpression */
 =end
 
-class PipeOperatorExpressionTest < Minitest::Test
+class PipeTest < Minitest::Test
 =begin
 <pipe-operator-expression> ::=
     <composite-operator-expression> "|>"
@@ -72,7 +74,7 @@ end
 
 
 
-class CompositeOperatorExpressionTest < Minitest::Test
+class CompositeTest < Minitest::Test
 =begin
 <composite-operator-expression> ::=
     <shortcut-operator-expression> ">>"
@@ -116,7 +118,7 @@ end
 
 
 
-class ShortcutOperatorExpressionTest < Minitest::Test
+class ShortcutTest < Minitest::Test
 =begin
 <shortcut-operator-expression> ::=
     <redefinable-operator-expression> "&&" <redefinable-operator-expression>
@@ -168,7 +170,7 @@ end
 
 
 
-class RedefinableOperatorExpressionTest < Minitest::Test
+class RedefinableTest < Minitest::Test
 =begin
 <redefinable-operator-expression> ::=
     <send-expression> "+"   <send-expression>
@@ -313,7 +315,9 @@ class RedefinableOperatorExpressionTest < Minitest::Test
     end
 end
 
-end # Umu::Test::Grammar::CoreLanguage::InfixExpression
+end # Umu::Test::Grammar::CoreLanguage::Expression::InfixOperator
+
+end # Umu::Test::Grammar::CoreLanguage::Expression
 
 end # Umu::Test::Grammar::CoreLanguage
 
