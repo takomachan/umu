@@ -631,35 +631,35 @@ _messages:
 | message _messages { result = [val[0]] + val[1] }
 
 message:
-  '.(' ID atom_exprs ')' {
-    kw, msg, exprs, _ = val
-
-    result = CSCE.make_message kw.loc, msg.sym, exprs
-}
-| MSG atom_exprs {
+  MSG prod_exprs {
     msg, exprs = val
 
-    result = CSCE.make_message msg.loc, msg.sym, exprs
+    result = CSCE.make_message          msg.loc, msg.sym, exprs
 }
-| '.(' norm_infix_opr atom_exprs ')' {
-    kw, opr, exprs, _ = val
+| '.(' ID prod_exprs ')' {
+    kw, msg, exprs, _ = val
 
-    result = CSCE.make_message kw.loc, opr.sym, exprs
+    result = CSCE.make_message          kw.loc,  msg.sym, exprs
 }
-| '.' norm_infix_opr atom_exprs {
-    kw, opr, exprs = val
+| '.' norm_infix_opr prod_expr {
+    kw, opr, expr = val
 
-    result = CSCE.make_message kw.loc, opr.sym, exprs
+    result = CSCE.make_message          kw.loc,  opr.sym, [expr]
 }
-| '.(' named_fld named_flds ')' {
-    kw, fld, flds, _ = val
+| '.(' norm_infix_opr prod_expr ')' {
+    kw, opr, expr, _ = val
 
-    result = CSCE.make_keyword_message kw.loc, fld, flds
+    result = CSCE.make_message          kw.loc,  opr.sym, [expr]
 }
 | '.[' expr com_exprs ']' {
     kw, expr, exprs, _ = val
 
-    result = CSCE.make_apply_message kw.loc, expr, exprs
+    result = CSCE.make_apply_message    kw.loc,  expr,    exprs
+}
+| '.(' named_fld named_flds ')' {
+    kw, fld, flds, _ = val
+
+    result = CSCE.make_keyword_message  kw.loc,  fld,     flds
 }
 
 
@@ -719,10 +719,6 @@ prod_opr:
 
 
 # Atomic expression
-
-atom_exprs:
-  /* empty */           { result = [] }
-| atom_expr atom_exprs  { result = [val[0]] + val[1] }
 
 atom_expr:
 # Identifier
