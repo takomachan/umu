@@ -92,14 +92,34 @@ end
 
 
 
-class Selector < Abstraction::Symbol
+class LabelSelector < Abstraction::Symbol
     def to_s
-        format "SEL($%s)", self.sym
+        format "LSEL($%s)", self.sym
     end
 
 
     def to_racc_token
-        :SEL
+        :LSEL
+    end
+end
+
+
+
+class NumberSelector < Abstraction::Abstract
+    def initialize(loc, val)
+        ASSERT.kind_of val, ::Integer
+
+        super
+    end
+
+
+    def to_s
+        format "NSEL($%s)", self.val.to_s
+    end
+
+
+    def to_racc_token
+        :NSEL
     end
 end
 
@@ -228,11 +248,19 @@ module_function
     end
 
 
-    def make_selector(loc, val)
+    def make_label_selector(loc, val)
         ASSERT.kind_of loc, LOC::Entry
         ASSERT.kind_of val, ::String
 
-        Selector.new(loc, val.freeze).freeze
+        LabelSelector.new(loc, val.freeze).freeze
+    end
+
+
+    def make_number_selector(loc, val)
+        ASSERT.kind_of loc, LOC::Entry
+        ASSERT.kind_of val, ::Integer
+
+        NumberSelector.new(loc, val).freeze
     end
 
 

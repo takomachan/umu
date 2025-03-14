@@ -705,12 +705,10 @@ _prod_oprs:
 | prod_opr _prod_oprs { result = [val[0]] + val[1] }
 
 prod_opr:
-  '$' INT {
-    kw, int = val
-
-    result = CSCE.make_number_selector kw.loc, int.val
+  NSEL {
+    result = CSCE.make_number_selector val[0].loc, val[0].val
 }
-| SEL {
+| LSEL {
     result = CSCE.make_label_selector  val[0].loc, val[0].sym
 }
 | '$(' named_fld named_flds ')' {

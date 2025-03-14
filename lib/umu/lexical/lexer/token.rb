@@ -185,6 +185,18 @@ SYMBOL_PATTERNS = [
                 __make_separator__
             ]
 
+        # Number-Selector
+        when scanner.scan(/\$(\d+)/)
+            [
+                :NumberSelector,
+
+                scanner.matched,
+
+                [LT.make_number_selector(self.loc, scanner[1].to_i)],
+
+                __make_separator__
+            ]
+
         # Begin-String
         when scanner.scan(/(@)?"/)
             [
@@ -240,11 +252,11 @@ SYMBOL_PATTERNS = [
 
                         case head_matched
                         when '@'
-                            LT.make_symbol   self.loc, body_matched
+                            LT.make_symbol         self.loc, body_matched
                         when '$'
-                            LT.make_selector self.loc, body_matched
+                            LT.make_label_selector self.loc, body_matched
                         when '.'
-                            LT.make_message  self.loc, body_matched
+                            LT.make_message        self.loc, body_matched
                         else
                             ASSERT.abort head_matched
                         end
