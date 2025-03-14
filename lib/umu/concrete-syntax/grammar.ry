@@ -631,8 +631,8 @@ _messages:
 | message _messages { result = [val[0]] + val[1] }
 
 message:
-  '.' '(' ID atom_exprs ')' {
-    kw, _, msg, exprs, _ = val
+  '.(' ID atom_exprs ')' {
+    kw, msg, exprs, _ = val
 
     result = CSCE.make_message kw.loc, msg.sym, exprs
 }
@@ -641,8 +641,8 @@ message:
 
     result = CSCE.make_message msg.loc, msg.sym, exprs
 }
-| '.' '(' norm_infix_opr atom_exprs ')' {
-    kw, _, opr, exprs, _ = val
+| '.(' norm_infix_opr atom_exprs ')' {
+    kw, opr, exprs, _ = val
 
     result = CSCE.make_message kw.loc, opr.sym, exprs
 }
@@ -651,13 +651,13 @@ message:
 
     result = CSCE.make_message kw.loc, opr.sym, exprs
 }
-| '.' '(' named_fld named_flds ')' {
-    kw, _, fld, flds, _ = val
+| '.(' named_fld named_flds ')' {
+    kw, fld, flds, _ = val
 
     result = CSCE.make_keyword_message kw.loc, fld, flds
 }
-| '.' '[' expr com_exprs ']' {
-    kw, _, expr, exprs, _ = val
+| '.[' expr com_exprs ']' {
+    kw, expr, exprs, _ = val
 
     result = CSCE.make_apply_message kw.loc, expr, exprs
 }

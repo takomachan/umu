@@ -107,6 +107,8 @@ BRAKET_PAIRS = [
     ['(',   ')'],   # Tuple, etc
     ['[',   ']'],   # List
     ['{',   '}'],   # Lambda, etc
+    ['.(',  ')'],   # Message
+    ['.[',  ']'],   # Apply Message
     ['%[',  ']'],   # Polymorphic pattern
     ['%S(', ')'],   # S-Expression
     ['%{',  '}'],   # Embeded-expression in S-expression (and Map)
