@@ -14,6 +14,8 @@ FILES = \
     core_language/expression/entry/case_expression/class_test.rb \
     core_language/expression/entry/case_expression/poly_test.rb \
     core_language/expression/entry/case_expression/mono_test.rb \
+    core_language/expression/entry/let_expression_test.rb \
+    core_language/expression/entry/do_expression_test.rb \
     core_language/expression/infix_test.rb \
     core_language/expression/send_test.rb \
     core_language/expression/apply_test.rb \
