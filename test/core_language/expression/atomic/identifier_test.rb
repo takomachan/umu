@@ -69,9 +69,8 @@ class IdentifierTest < Minitest::Test
 
 
     def test_class_instance
-        value = Api.eval_expr @interp, "&(Int)"
-        # FIXME -- Never return from assert_instance_of
-        #assert_instance_of  VC::Class, value
+        value = Api.eval_expr @interp, "&Int"
+        assert_instance_of  VC::Class, value
     end
 end
 
