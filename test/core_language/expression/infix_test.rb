@@ -19,23 +19,29 @@ module InfixOperator
     <send-expression>
   | <pipe-operator-expression>
   | <composite-operator-expression>
-  | <shortcut-operator-expression>
+  | <reserved-operator-expression>
   | <redefinable-operator-expression>
   ;
 
 /* <send-expression> ::= ...  See SendExpression */
+
+<normal-infix-operator> ::=     /* Referenced by Atomic::IdentifierTest */
+  | <pipe-operator>
+  | <composite-operator>
+  | <reserved-operator>
+  | <redefinable-operator>
+  ; 
 =end
 
 class PipeTest < Minitest::Test
 =begin
 <pipe-operator-expression> ::=
-    <composite-operator-expression> "|>"
-        <composite-operator-expression>
-        { "|>" <composite-operator-expression> }
-  | <composite-operator-expression> "<|"
-        <composite-operator-expression>
-        { "<|" <composite-operator-expression> }
-  ;
+    <composite-operator-expression>
+    <pipe-operator>
+    <composite-operator-expression>
+    ;
+
+<pipe-operator> ::= "|>" | "<|" ;
 =end
     def setup
         @interp = Api.setup_interpreter
@@ -77,13 +83,12 @@ end
 class CompositeTest < Minitest::Test
 =begin
 <composite-operator-expression> ::=
-    <shortcut-operator-expression> ">>"
-        <shortcut-operator-expression>
-        { ">>" <shortcut-operator-expression> }
-  | <shortcut-operator-expression> "<<"
-        <shortcut-operator-expression>
-        { "<<" <shortcut-operator-expression> }
-  ;
+    <reserved-operator-expression>
+    <composite-operator>
+    <reserved-operator-expression>
+    ;
+
+<composite-operator> ::= ">>" | "<<" ;
 =end
     def setup
         @interp = Api.setup_interpreter
@@ -118,15 +123,34 @@ end
 
 
 
-class ShortcutTest < Minitest::Test
+class ReservedTest < Minitest::Test
 =begin
-<shortcut-operator-expression> ::=
-    <redefinable-operator-expression> "&&" <redefinable-operator-expression>
-  | <redefinable-operator-expression> "||" <redefinable-operator-expression>
+<reserved-operator-expression> ::=
+    <shortcut-operator-expression>
+  | <redefinable-operator-expression> KIND-OF ID
   ;
+
+<shortcut-operator-expression> ::=
+    <redefinable-operator-expression>
+    <shortcut-operator-expression>
+    <redefinable-operator-expression>
+    ;
+
+<shortcut-operator-expression> ::= "&&" | "||" ;
 =end
     def setup
         @interp = Api.setup_interpreter
+    end
+
+
+    def test_kind_of
+        value = Api.eval_expr @interp, "3 kind-of? Int"
+        assert_instance_of VCA::Bool, value
+        assert_equal       true,      value.val
+
+        value = Api.eval_expr @interp, "3 kind-of? String"
+        assert_instance_of VCA::Bool, value
+        assert_equal       false,     value.val
     end
 
 
@@ -173,22 +197,15 @@ end
 class RedefinableTest < Minitest::Test
 =begin
 <redefinable-operator-expression> ::=
-    <send-expression> "+"   <send-expression>
-  | <send-expression> "-"   <send-expression>
-  | <send-expression> "^"   <send-expression>
-  | <send-expression> "*"   <send-expression>
-  | <send-expression> "/"   <send-expression>
-  | <send-expression> MOD   <send-expression>
-  | <send-expression> POW   <send-expression>
-  | <send-expression> "=="  <send-expression>
-  | <send-expression> "<>"  <send-expression>
-  | <send-expression> "<"   <send-expression>
-  | <send-expression> ">"   <send-expression>
-  | <send-expression> "<="  <send-expression>
-  | <send-expression> ">="  <send-expression>
-  | <send-expression> "<=>" <send-expression>
-  | <send-expression> "++"  <send-expression>
-  | <send-expression> ":="  <send-expression>
+    <send-expression>
+    <redefinable-operator>
+    <send-expression>
+    ;
+
+<redefinable-operator> ::=
+    "+"  | "-"  | "^" | "*" | "/"  | MOD | POW
+  | "==" | "<>" | "<" | ">" | "<=" | ">="
+  | "++" | ":="
   ;
 =end
     def setup

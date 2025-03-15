@@ -26,6 +26,15 @@ class IdentifierTest < Minitest::Test
   ;
 
 <module-path> ::= /* empty */ | MODULE-DIR <module-path> ;
+
+<infix-operator> ::=
+    <normal-infix-operator>
+  | <special-infix-operator>
+  ;
+
+/* <normal-infix-operator> ::= ... ;  See InfixOperator */
+
+<special-infix-operator> ::= "," | "|" ;
 =end
 
 
@@ -41,13 +50,29 @@ class IdentifierTest < Minitest::Test
     end
 
 
-    def test_infix_operator
+    def test_normal_infix_operator
         value = Api.eval_expr @interp, "(+)"
         assert_instance_of  VC::Fun, value
 
         value = Api.eval_expr @interp, "(+) 3 4"
         assert_instance_of  VCAN::Int, value
         assert_equal        7,         value.val
+    end
+
+
+    def test_special_infix_operator
+        value = Api.eval_expr @interp, "(,) 3 4"
+        assert_instance_of  VCP::Tuple, value
+        assert_instance_of  VCAN::Int,  value.values[0]
+        assert_equal        3,          value.values[0].val
+        assert_instance_of  VCAN::Int,  value.values[1]
+        assert_equal        4,          value.values[1].val
+
+        value = Api.eval_expr @interp, "(|) 3 []"
+        assert_instance_of  VCM::List::Cons, value
+        assert_instance_of  VCAN::Int,      value.head
+        assert_equal        3,              value.head.val
+        assert_instance_of  VCM::List::Nil, value.tail
     end
 
 
