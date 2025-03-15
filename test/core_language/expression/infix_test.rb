@@ -49,7 +49,7 @@ class PipeTest < Minitest::Test
 
         value = Api.eval_expr @interp, "3 |> succ |> negate"
         assert_instance_of VCAN::Int, value
-        assert_equal       -4,        value.val
+        assert_equal(      -4,        value.val)
 
         value = Api.eval_expr @interp, "3 |> succ |> negate |> to-s"
         assert_instance_of VCA::String, value
@@ -64,7 +64,7 @@ class PipeTest < Minitest::Test
 
         value = Api.eval_expr @interp, "negate <| succ <| 3"
         assert_instance_of VCAN::Int, value
-        assert_equal       -4,        value.val
+        assert_equal(      -4,        value.val)
 
         value = Api.eval_expr @interp, "to-s <| negate <| succ <| 3"
         assert_instance_of VCA::String, value
@@ -94,7 +94,7 @@ class CompositeTest < Minitest::Test
         interp = Api.eval_decls @interp, "val f = succ >> negate"
         value  = Api.eval_expr  interp,  "f 3"
         assert_instance_of VCAN::Int, value
-        assert_equal       -4,        value.val
+        assert_equal(      -4,        value.val)
 
         interp = Api.eval_decls @interp, "val f = succ >> negate >> to-s"
         value  = Api.eval_expr  interp,  "f 3"
@@ -107,7 +107,7 @@ class CompositeTest < Minitest::Test
         interp = Api.eval_decls @interp, "val f = negate << succ"
         value  = Api.eval_expr  interp,  "f 3"
         assert_instance_of VCAN::Int, value
-        assert_equal       -4,        value.val
+        assert_equal(      -4,        value.val)
 
         interp = Api.eval_decls @interp, "val f = to-s << negate << succ"
         value  = Api.eval_expr  interp,  "f 3"
@@ -290,7 +290,7 @@ class RedefinableTest < Minitest::Test
     def test_compare
         value = Api.eval_expr @interp, "3 <=> 4"
         assert_instance_of VCAN::Int, value
-        assert_equal       -1,        value.val
+        assert_equal(      -1,        value.val)
     end
 
 

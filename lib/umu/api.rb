@@ -33,10 +33,11 @@ class Interpreter
     end
 
 
-    def eval_decls(source, file_name, init_line_num)
-        ASSERT.kind_of source,          ::String
-        ASSERT.kind_of file_name,       ::String
-        ASSERT.kind_of init_line_num,   ::Integer
+    def eval_decls(source, opts)
+        ASSERT.kind_of source, ::String
+        ASSERT.kind_of opts,   ::Hash
+
+        file_name, init_line_num, bindings = __parse_option__ opts
 
         tokens, lexed_env = __lex_source__(
                                 source, file_name, self.env, init_line_num
@@ -44,7 +45,9 @@ class Interpreter
 
         csyn_stmts = self.parser.parse tokens
 
-        final_env = csyn_stmts.inject(lexed_env) { |env, csyn_stmt|
+        new_env = lexed_env.va_extend_values bindings
+
+        final_env = csyn_stmts.inject(new_env) { |env, csyn_stmt|
             ASSERT.kind_of env,         E::Entry
             ASSERT.kind_of csyn_stmt,   CS::Abstract
 
@@ -67,10 +70,11 @@ class Interpreter
     end
 
 
-    def eval_expr(source, file_name, init_line_num)
-        ASSERT.kind_of source,          ::String
-        ASSERT.kind_of file_name,       ::String
-        ASSERT.kind_of init_line_num,   ::Integer
+    def eval_expr(source, opts)
+        ASSERT.kind_of source, ::String
+        ASSERT.kind_of opts,   ::Hash
+
+        file_name, init_line_num, bindings = __parse_option__ opts
 
         tokens, lexed_env = __lex_source__(
                                 source, file_name, self.env, init_line_num
@@ -90,7 +94,9 @@ class Interpreter
                     end
         ASSERT.kind_of csyn_stmt, CS::Abstract
 
-        result = Umu::Commander.execute(csyn_stmt, lexed_env)
+        new_env = lexed_env.va_extend_values bindings
+
+        result = Umu::Commander.execute(csyn_stmt, new_env)
         ASSERT.kind_of result, ASR::Abstract
 
         value = case result
@@ -109,6 +115,38 @@ class Interpreter
 
 
 private
+
+    def __parse_option__(opts)
+        ASSERT.kind_of opts, ::Hash
+
+        triple = opts.inject(
+                 ['<_>',  0,   {}]
+            ) { |(name,   num, bs), (key, val)|
+                ASSERT.kind_of key, ::Symbol
+
+                case key
+                when :_file_name
+                    ASSERT.kind_of val, ::String
+
+                    [val,  num, bs]
+                when :_line_num
+                    ASSERT.kind_of val, ::Integer
+
+                    [name, val, bs]
+                else
+                    ASSERT.kind_of val, VC::Top
+
+                    new_bs = bs.merge(key => val) {
+                        ASSERT.abort "Duplicated key: '%s'", key.to_s
+                    }
+
+                    [name, num, new_bs]
+                end
+            }
+
+        ASSERT.tuple_of triple, [::String, ::Integer, ::Hash]
+    end
+
 
     def __lex_source__(
         source, file_name, env, init_line_num = 0
@@ -177,23 +215,21 @@ module_function
     end
 
 
-    def eval_decls(interp, source, file_name = '<_>', init_line_num = 0)
-        ASSERT.kind_of interp,          Interpreter
-        ASSERT.kind_of source,          ::String
-        ASSERT.kind_of file_name,       ::String
-        ASSERT.kind_of init_line_num,   ::Integer
+    def eval_decls(interp, source, opts = {})
+        ASSERT.kind_of interp, Interpreter
+        ASSERT.kind_of source, ::String
+        ASSERT.kind_of opts,   ::Hash
 
-        interp.eval_decls source, file_name, init_line_num
+        interp.eval_decls source, opts
     end
 
 
-    def eval_expr(interp, source, file_name = '<_>', init_line_num = 0)
-        ASSERT.kind_of interp,          Interpreter
-        ASSERT.kind_of source,          ::String
-        ASSERT.kind_of file_name,       ::String
-        ASSERT.kind_of init_line_num,   ::Integer
+    def eval_expr(interp, source, opts = {})
+        ASSERT.kind_of interp, Interpreter
+        ASSERT.kind_of source, ::String
+        ASSERT.kind_of opts,   ::Hash
 
-        interp.eval_expr source, file_name, init_line_num
+        interp.eval_expr source, opts
     end
 
 end # Umu::Api

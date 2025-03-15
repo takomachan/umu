@@ -5,6 +5,9 @@ FILES = \
     tmdoc/__dummy__.rb \
     basic_test.rb \
     lexcical_test.rb \
+    core_language/expression/entry_test.rb \
+    core_language/expression/entry/if_expression_test.rb \
+    core_language/expression/entry/cond_expression_test.rb \
     core_language/expression/infix_test.rb \
     core_language/expression/send_test.rb \
     core_language/expression/apply_test.rb \
