@@ -58,6 +58,7 @@ class CellStreamTest < Minitest::Test
         interp_2 = Api.eval_decls interp_1, "val it = it.force"
         forced_value_1 = Api.eval_expr interp_2, "it"
         assert_instance_of VCU::Option::Some, forced_value_1
+        assert_instance_of VCP::Tuple,        forced_value_1.contents
 
         interp_3 = Api.eval_decls interp_2, "val (hd, tl) = it.contents"
         head_value = Api.eval_expr interp_3, "hd"
@@ -215,8 +216,8 @@ class MemoStreamTest < Minitest::Test
         head_value = Api.eval_expr interp_3, "hd"
         tail_value = Api.eval_expr interp_3, "tl"
 
-        assert_instance_of VCAN::Int, head_value
-        assert_equal       3,         head_value.val
+        assert_instance_of VCAN::Int,                        head_value
+        assert_equal       3,                                head_value.val
         assert_instance_of VCM::Stream::Entry::Memorization, tail_value
 
         forced_value_2 = Api.eval_expr interp_3, "tl.force"

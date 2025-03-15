@@ -44,6 +44,7 @@ class Abstract < Case::Abstract
         then_rule,
         else_rule,
         has_cons = __classify_pattern__(
+                self.loc,
                 opt_nil_rule,       opt_cons_rule,
                 opt_body_type_sym,  opt_head_type_sym ,
 
@@ -148,6 +149,7 @@ private
 
 
     def __classify_pattern__(
+        loc,
         opt_nil_rule,       opt_cons_rule,
         opt_head_type_sym , opt_body_type_sym,
         opt_otherwise_rule,
@@ -173,8 +175,7 @@ private
 
                     if opt_otherwise_rule   # 1. (N,  C,  O)
                         raise X::SyntaxError.new(
-                            rule.loc,
-                            "case: Never reached 'else' expression"
+                            loc, "case: Never reached 'else' expression"
                         )
                     else                    # 2. (N,  C,  !O)
                         [nil_rule,       cons_rule,      true]

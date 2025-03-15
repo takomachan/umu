@@ -215,6 +215,13 @@ module_function
     end
 
 
+    def va_context(interp)
+        ASSERT.kind_of interp, Interpreter
+
+        interp.env.va_context
+    end
+
+
     def eval_decls(interp, source, opts = {})
         ASSERT.kind_of interp, Interpreter
         ASSERT.kind_of source, ::String

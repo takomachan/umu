@@ -8,6 +8,12 @@ FILES = \
     core_language/expression/entry_test.rb \
     core_language/expression/entry/if_expression_test.rb \
     core_language/expression/entry/cond_expression_test.rb \
+    core_language/expression/entry/case_expression_test.rb \
+    core_language/expression/entry/case_expression/constant_test.rb \
+    core_language/expression/entry/case_expression/datum_test.rb \
+    core_language/expression/entry/case_expression/class_test.rb \
+    core_language/expression/entry/case_expression/poly_test.rb \
+    core_language/expression/entry/case_expression/mono_test.rb \
     core_language/expression/infix_test.rb \
     core_language/expression/send_test.rb \
     core_language/expression/apply_test.rb \
@@ -30,7 +36,7 @@ DBOOK_TO_HTML	= $(DOC_ROOT)/dbook-to-html.xsl
 DBOOK_TO_EPUB	= $(DOC_ROOT)/dbook-to-epub.xsl
 CSS				= docbook.css
 
-BOOK_TITLE		= "Umu Test Suite"
+BOOK_TITLE		= "Umu(Preliminary) Test Suite"
 
 DBOOK_DIR 		= $(DOC_ROOT)/dbook
 DBOOK_HOME		= $(DBOOK_DIR)/tmdoc.home.docbook
