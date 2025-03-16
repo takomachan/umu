@@ -25,7 +25,7 @@ class Abstract < Umu::Abstraction::Model
     end
 
 
-    def desugar_poly_rule(env)
+    def desugar_poly_rule(_env)
         raise X::InternalSubclassResponsibility
     end
 end

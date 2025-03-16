@@ -83,39 +83,42 @@ private
                     )
 
                 decl = ASCD.make_value(
-                        loc,
+                        pat.loc,
 
                         WILDCARD,
 
                         ASCE.make_if(
-                            loc,
+                            pat.loc,
 
                             [
                                 ASCE.make_rule(
-                                    loc,
+                                    pat.loc,
 
                                     ASCE.make_send(
-                                        loc,
+                                        pat.loc,
 
                                         ASCE.make_identifier(
-                                            loc,
+                                            pat.loc,
                                             ident_sym
                                         ),
 
-                                        ASCE.make_message(loc, :'empty?')
+                                        ASCE.make_message(
+                                            pat.loc,
+                                            :'empty?'
+                                        )
                                     ),
 
-                                    ASCE.make_unit(loc)
+                                    ASCE.make_unit(pat.loc)
                                 )
                             ],
 
                             ASCE.make_raise(
-                                loc,
+                                pat.loc,
 
                                 X::EmptyError,
 
                                 ASCE.make_string(
-                                    loc,
+                                    pat.loc,
                                     "Empty morph cannot be destructible"
                                 )
                             )

@@ -13,7 +13,7 @@ class Abstract < Abstraction::Model
     end
 
 
-    def evaluate(env)
+    def evaluate(_env)
         raise X::InternalSubclassResponsibility
     end
 end

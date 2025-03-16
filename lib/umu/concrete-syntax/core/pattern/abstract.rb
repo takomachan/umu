@@ -52,12 +52,12 @@ class Abstract < Abstraction::Model
 
 private
 
-    def __desugar_value__(expr, env, event)
+    def __desugar_value__(_expr, _env, _event)
         raise X::InternalSubclassResponsibility
     end
 
 
-    def __desugar_lambda__(seq_num, env, event)
+    def __desugar_lambda__(_seq_num, _env, _event)
         raise X::InternalSubclassResponsibility
     end
 end

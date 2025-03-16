@@ -83,7 +83,7 @@ private
     end
 
 
-    def __make__(loc, fst_expr, opt_snd_expr, lst_expr)
+    def __make__(_loc, _fst_expr, _opt_snd_expr, _lst_expr)
         raise X::InternalSubclassResponsibility
     end
 end

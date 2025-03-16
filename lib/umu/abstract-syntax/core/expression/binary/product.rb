@@ -20,7 +20,7 @@ module Operator
 module Abstraction
 
 class Abstract < Umu::Abstraction::Model
-    def apply(value, env, event)
+    def apply(_value, _env, _event)
         raise X::InternalSubclassResponsibility
     end
 end

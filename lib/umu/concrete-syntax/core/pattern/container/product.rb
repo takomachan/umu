@@ -90,7 +90,7 @@ private
     end
 
 
-    def __make_selector__(loc, index, epat)
+    def __make_selector__(_loc, _index, _epat)
         raise X::InternalSubclassResponsibility
     end
 end

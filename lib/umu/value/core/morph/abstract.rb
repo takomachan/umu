@@ -207,7 +207,7 @@ class Abstract < Object
         :dest, [],
         [], VCU::Option::Abstract
     )
-    def meth_dest(loc, env, event)
+    def meth_dest(_loc, _env, _event)
         raise X::InternalSubclassResponsibility
     end
 

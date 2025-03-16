@@ -68,7 +68,7 @@ class Separator < Abstract
         # Tab char
         when scanner.scan(/\t/)
             raise X::LexicalError.new(
-                loc,
+                self.loc,
                 "Hard tab '\\t' is prohibited",
             )
 

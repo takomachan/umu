@@ -89,12 +89,12 @@ Abstract.freeze
 
 
 class Nil < Abstract
-    def meth_head(_loc, _env, _event)
+    def meth_head(loc, env, _event)
         raise X::EmptyError.new loc, env, "head: Empty morph"
     end
 
 
-    def meth_tail(_loc, _env, _event)
+    def meth_tail(loc, env, _event)
         raise X::EmptyError.new loc, env, "rail: Empty morph"
     end
 
@@ -109,7 +109,7 @@ class Nil < Abstract
     end
 
 
-    def meth_dest!(_loc, _env, _event)
+    def meth_dest!(loc, env, _event)
         raise X::EmptyError.new loc, env, "dest!: Empty morph"
     end
 end

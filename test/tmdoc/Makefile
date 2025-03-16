@@ -32,6 +32,13 @@ FILES = \
     core_language/expression/atomic/lambda_expression_test.rb \
     core_language/expression/atomic/list_test.rb \
     core_language/expression/atomic/stream_test.rb \
+    core_language/pattern/pattern_test.rb \
+    core_language/pattern/variable_test.rb \
+    core_language/pattern/unit_test.rb \
+    core_language/pattern/tuple_test.rb \
+    core_language/pattern/named_tuple_test.rb \
+    core_language/pattern/list_test.rb \
+    core_language/pattern/poly_test.rb \
     test_helper.rb \
 
 TMDOCPROC		= tmdoc

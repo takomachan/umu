@@ -527,7 +527,7 @@ class Abstract < Morph::Abstract
 
 private
 
-    def __meth_force__(loc, env, event)
+    def __meth_force__(_loc, _env, _event)
         raise X::InternalSubclassResponsibility
     end
 end

@@ -32,7 +32,7 @@ class Abstract
     end
 
 
-    def lookup_instance_method(sym, loc, env)
+    def lookup_instance_method(_sym, _loc, _env)
         raise X::InternalSubclassResponsibility
     end
 end

@@ -107,7 +107,17 @@ private
 
 
     def __opt_type_sym_of_morph__
-        self.opt_type_sym
+        if self.opt_last_pat
+            last_pat = self.opt_last_pat
+
+            if last_pat.opt_type_sym
+                last_pat.opt_type_sym
+            else
+                nil
+            end
+        else
+            nil
+        end
     end
 
 

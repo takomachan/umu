@@ -197,7 +197,7 @@ private
     end
 
 
-    def __make__(fst_value, lst_value, step_value, va_context)
+    def __make__(_fst_value, _lst_value, _step_value, _va_context)
         raise X::InternalSubclassResponsibility
     end
 end

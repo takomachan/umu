@@ -62,7 +62,7 @@ class Abstract < Lexer::Abstract
         # New-line
         when scanner.skip(/\n/)
             raise X::LexicalError.new(
-                loc,
+                self.loc,
                 "Unexpected end-string: '\"%s'", self.buf
             )
 
@@ -71,7 +71,7 @@ class Abstract < Lexer::Abstract
             opt_esc = Escape.opt_escape scanner.matched
             unless opt_esc
                 raise X::LexicalError.new(
-                    loc,
+                    self.loc,
                     "Unknown escape-character: '%s' after '\"%s'",
                                                 scanner.matched, self.buf
                 )

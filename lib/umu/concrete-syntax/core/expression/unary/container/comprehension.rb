@@ -32,7 +32,7 @@ class Abstract < Umu::Abstraction::Model
     end
 
 
-    def pretty_print(q)
+    def pretty_print(_q)
         raise X::InternalSubclassResponsibility
     end
 end

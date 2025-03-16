@@ -32,7 +32,7 @@ class Abstract < Abstraction::Model
 
 private
 
-    def __desugar_value__(expr, env, event)
+    def __desugar_value__(_expr, _env, _event)
         raise X::InternalSubclassResponsibility
     end
 end
