@@ -5,6 +5,11 @@ FILES = \
     tmdoc/__dummy__.rb \
     basic_test.rb \
     lexcical_test.rb \
+    core_language/declaration/declaration_test.rb \
+    core_language/declaration/value_test.rb \
+    core_language/declaration/function_test.rb \
+    core_language/declaration/recursive_test.rb \
+    core_language/declaration/assert_test.rb \
     core_language/expression/entry_test.rb \
     core_language/expression/entry/if_expression_test.rb \
     core_language/expression/entry/cond_expression_test.rb \

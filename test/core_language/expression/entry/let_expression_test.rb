@@ -27,14 +27,97 @@ class LetExpressionTest < Minitest::Test
     end
 
 
-    def test_let_expression
+    def test_with_empty_declaration
         value = Api.eval_expr @interp, "let { in 1 }"
         assert_instance_of  VCAN::Int, value
         assert_equal        1,         value.val
+    end
 
+
+    def test_with_single_declaration
         value = Api.eval_expr @interp, "let { val x = 1 in x }"
         assert_instance_of  VCAN::Int, value
         assert_equal        1,         value.val
+    end
+
+
+    def test_with_some_declarations
+        value = Api.eval_expr @interp, <<-EOS
+            let {
+                val x = 3
+                val y = 4
+            in
+                x + y
+            }
+            EOS
+        assert_instance_of  VCAN::Int, value
+        assert_equal        7,         value.val
+    end
+
+
+    def test_shadowing
+        value = Api.eval_expr @interp, <<-EOS
+            let {
+                val x = 3
+                val x = 4
+            in
+                x
+            }
+            EOS
+        assert_instance_of  VCAN::Int, value
+        assert_equal        4,         value.val
+    end
+
+
+    def test_nesting
+        value = Api.eval_expr @interp, <<-EOS
+            let {
+                val x = 3
+            in
+                let {
+                    val y = 4
+                in
+                    x + y
+                }
+            }
+            EOS
+        assert_instance_of  VCAN::Int, value
+        assert_equal        7,         value.val
+    end
+
+
+    def test_nesting_and_shadowing_1
+        value = Api.eval_expr @interp, <<-EOS
+            let {
+                val x = 3
+            in
+                let {
+                    val x = 4
+                in
+                    x
+                }
+            }
+            EOS
+        assert_instance_of  VCAN::Int, value
+        assert_equal        4,         value.val
+    end
+
+
+    def test_nesting_and_shadowing_2
+        value = Api.eval_expr @interp, <<-EOS
+            let {
+                val x = 3
+            in
+                let {
+                    val y = x
+                    val x = 4
+                in
+                    x + y
+                }
+            }
+            EOS
+        assert_instance_of  VCAN::Int, value
+        assert_equal        7,         value.val
     end
 end
 

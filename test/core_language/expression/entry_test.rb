@@ -15,7 +15,7 @@ module Expression
 
 module Entry
 =begin
-<entry-expression> ::= 
+<expression> ::= 
     <infix-expression>  /* See InfixOperator */
   | <if-expression>
   | <cond-expression>

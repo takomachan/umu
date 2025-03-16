@@ -20,7 +20,7 @@ class LambdaExpressionTest < Minitest::Test
 <lambda-expression> ::=
     "{" <pattern> { <pattern> } "->"
         <expression> 
-        [ WHERE <declaration> { declaration> } ]
+        [ WHERE { declaration> } ]
     "}"
     ;
 =end
@@ -31,7 +31,7 @@ class LambdaExpressionTest < Minitest::Test
     end
 
 
-    def test_lambda_expression_with_single_argument
+    def test_with_single_argument
         value = Api.eval_expr @interp, "{ x -> x }"
         assert_instance_of  VC::Fun, value
 
@@ -41,23 +41,47 @@ class LambdaExpressionTest < Minitest::Test
     end
 
 
-    def test_lambda_expression_with_some_argument
-        value = Api.eval_expr @interp, "{ x y -> x.+ y }"
+    def test_with_some_argument
+        value = Api.eval_expr @interp, "{ x y -> x + y }"
         assert_instance_of  VC::Fun, value
 
-        value = Api.eval_expr @interp, "{ x y -> x.+ y } 3 4"
+        value = Api.eval_expr @interp, "{ x y -> x + y } 3 4"
         assert_instance_of  VCAN::Int, value
         assert_equal        7,         value.val
     end
 
 
-    def test_lambda_expression_with_declaration
-        value = Api.eval_expr @interp, "{ x -> x.+ y where val y=4 }"
+    def test_with_emptye_declaration
+        value = Api.eval_expr @interp, "{ x -> x + 4 where }"
         assert_instance_of  VC::Fun, value
 
-        value = Api.eval_expr @interp, "{ x -> x.+ y where val y=4 } 3"
+        value = Api.eval_expr @interp, "{ x -> x + 4 where } 3"
         assert_instance_of  VCAN::Int, value
         assert_equal        7,         value.val
+    end
+
+
+    def test_with_single_declaration
+        value = Api.eval_expr @interp, "{ x -> x + y where val y=4 }"
+        assert_instance_of  VC::Fun, value
+
+        value = Api.eval_expr @interp, "{ x -> x + y where val y=4 } 3"
+        assert_instance_of  VCAN::Int, value
+        assert_equal        7,         value.val
+    end
+
+
+    def test_with_some_declarations
+        value = Api.eval_expr @interp, <<-EOS
+            { x -> x + y + z where val y=4 val z=5 }
+            EOS
+        assert_instance_of  VC::Fun, value
+
+        value = Api.eval_expr @interp, <<-EOS
+            { x -> x + y + z where val y=4 val z=5 } 3
+            EOS
+        assert_instance_of  VCAN::Int, value
+        assert_equal        12,        value.val
     end
 end
 
