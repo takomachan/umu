@@ -101,7 +101,8 @@ $(EPUB): $(DBOOK_HOME)
 
 $(DBOOK_HOME): $(FILE_HOME) $(DBOOK_DIR)
 	$(TMDOCPROC) $(OPTS) \
-        --show-all \
+        --show-module-siblings \
+        --no-show-class-siblings \
         --title      $(BOOK_TITLE) \
         --log-file   $(TMDOC_LOG) \
 		--input-dir  $(FILE_DIR) \
