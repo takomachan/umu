@@ -5,6 +5,10 @@ FILES = \
     tmdoc/__dummy__.rb \
     basic_test.rb \
     lexcical_test.rb \
+    grammar_test.rb \
+    module_language/declaration/declaration_test.rb \
+    module_language/declaration/structure_test.rb \
+    module_language/declaration/import_test.rb \
     core_language/declaration/declaration_test.rb \
     core_language/declaration/value_test.rb \
     core_language/declaration/function_test.rb \

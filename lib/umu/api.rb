@@ -56,9 +56,7 @@ class Interpreter
 
             case result
             when ASR::Value
-                raise X::CommandError.new(
-                    "Unexpected expression: %s", csyn_stmt.to_s
-                )
+                env
             when ASR::Environment
                 result.env
             else
@@ -81,36 +79,30 @@ class Interpreter
                             )
 
         csyn_stmts = self.parser.parse tokens
-        csyn_stmt = case csyn_stmts.count
-                    when 0
-                        raise X::CommandError.new "No input expression"
-                    when 1
-                        csyn_stmts[0]
-                    else
-                        raise X::CommandError.new(
-                            "Unexpected multiple statements: %s",
-                            csyn_stmts.map(&:to_s).join(' ')
-                        )
-                    end
-        ASSERT.kind_of csyn_stmt, CS::Abstract
 
         new_env = lexed_env.va_extend_values bindings
 
-        result = Umu::Commander.execute(csyn_stmt, new_env)
-        ASSERT.kind_of result, ASR::Abstract
+        opt_value, _ = csyn_stmts.inject(
+                [nil,      new_env]
+            ) { |(opt_val, env    ), csyn_stmt|
+            ASSERT.opt_kind_of opt_val,     VC::Top
+            ASSERT.kind_of     env,         E::Entry
+            ASSERT.kind_of     csyn_stmt,   CS::Abstract
 
-        value = case result
-                when ASR::Value
-                    result.value
-                when ASR::Environment
-                    raise X::CommandError.new(
-                        "Unexpected declaration: %s", csyn_stmt.to_s
-                    )
-                else
-                    ASSERT.abort result.inspect
-                end
+            result = Umu::Commander.execute(csyn_stmt, env)
+            ASSERT.kind_of result, ASR::Abstract
 
-        ASSERT.kind_of value, VC::Top
+            case result
+            when ASR::Value
+                [result.value, env]
+            when ASR::Environment
+                [opt_val,      result.env]
+            else
+                ASSERT.abort result.inspect
+            end
+        }
+
+        ASSERT.opt_kind_of opt_value, VC::Top
     end
 
 
