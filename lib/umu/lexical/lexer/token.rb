@@ -42,23 +42,26 @@ RESERVED_WORDS = [
     'as',
 
     # For pragma
-    'pragma', 'use',
+    'export', 'pragma', 'use',
 
     # For module language
     'functor', 'signat', 'signature',
 
     # For data type declaration
-    'datum', 'type',
+    'data', 'datum', 'type',
 
-    # For object type (OOP)
+    # For class declaration
     'abstract', 'alias', 'class', 'def',
-    'is-a', 'protocol', 'self', 'super', 'with',
+    'has', 'is-a', 'protocol', 'self', 'super', 'with',
 
     # For infix operator declaration
-    'infix', 'infixr',
+    'infixl', 'infixr',
 
     # For continuation
     'callcc', 'throw',
+
+    # For exception
+    'begin', 'ensure', 'raise', 'rescue',
 
     # For lazy evaluation
     'lazy',
@@ -78,15 +81,19 @@ RESERVED_SYMBOLS = [
     '.',    ':',    ';',
     '..',   '::',   ';;',
     '->',   '<-',
+    '<<',   '>>',   '<|',   '|>',
 
     # Redefinable symbols
     '+',    '-',    '*',    '/',    '^',
     '==',   '<>',   '<',    '>',    '<=',   '>=',   '<=>',
-    '++',   '<<',   '>>',   '<|',   '|>',
+    '++',
     ':=',
 
     # Not used, but reserved for future
-    '...'   # Interval (exclude last value)
+    '?',    # Propagating errors in DO-expression
+    '...',  # Range (exclude last value)
+    ':/:',  # Junction for component oriented design
+    ']|['   # Guard separator for concurrency
 ].inject({}) { |hash, x|
     hash.merge(x => true) { |key, _, _|
         ASSERT.abort format("Duplicated reserved-symbol: '%s'", key)
@@ -123,10 +130,12 @@ BRAKET_PAIRS = [
     ['%q[', ']'],   # Queue
     ['%v[', ']'],   # Vector
     ['%a[', ']'],   # Array
+    ['%J[', ']'],   # JSON
+    ['%X[', ']'],   # XML
     ['%(',  ')'],   # Set
     ['@[',  ']'],   # Assoc -- Key-Value list
     ['@(',  ')'],   # Dict  -- Key-Value set
-    ['$[',  ']']    # Communication channel -- For concurrency
+    ['$[',  ']']    # Exchange -- Communication channel for concurrency
 ]
 
 
@@ -247,7 +256,7 @@ SYMBOL_PATTERNS = [
                         if tail_matched
                             raise X::LexicalError.new(
                                 self.loc,
-                                "Invalid character: ':' in Symbol: '%s'",
+                                "Invalid character: ':' in word: '%s'",
                                     scanner.matched
                             )
                         end
