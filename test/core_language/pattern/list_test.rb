@@ -37,7 +37,7 @@ class ListTest < Minitest::Test
     end
 
 
-    def test_value_empty_error
+    def test_should_not_be_matched_list_to_empty_pattern_in_declaration
         assert_raises(X::TypeError) do
             Api.eval_decls @interp, <<-EOS
                 val [] = [3]
@@ -103,16 +103,7 @@ class ListTest < Minitest::Test
     end
 
 
-    def test_value_with_last_empty_error
-        assert_raises(X::EmptyError) do
-            Api.eval_decls @interp, <<-EOS
-                val [x, y|xs] = [3]
-                EOS
-        end
-    end
-
-
-    def test_value_less_than_rhs
+    def test_should_not_be_matched_list_to_shorter_pattern_in_declaration
         assert_raises(X::TypeError) do
             Api.eval_decls @interp, <<-EOS
                 val [x] = [3, 4]
@@ -121,10 +112,19 @@ class ListTest < Minitest::Test
     end
 
 
-    def test_value_more_than_rhs
+    def test_should_not_be_matched_list_to_longer_pattern_in_declaration_1
         assert_raises(X::EmptyError) do
             Api.eval_decls @interp, <<-EOS
                 val [x, y, z] = [3, 4]
+                EOS
+        end
+    end
+
+
+    def test_should_not_be_matched_list_to_longer_pattern_in_declaration_2
+        assert_raises(X::EmptyError) do
+            Api.eval_decls @interp, <<-EOS
+                val [x, y|xs] = [3]
                 EOS
         end
     end
@@ -144,7 +144,7 @@ class ListTest < Minitest::Test
     end
 
 
-    def test_value_type_error
+    def test_should_be_kind_of_specified_type_in_declaration
         assert_raises(X::TypeError) do
             Api.eval_decls @interp, <<-EOS
                 val [x : String|xs] = [3, 4]
@@ -153,7 +153,7 @@ class ListTest < Minitest::Test
     end
 
 
-    def test_value_syntax_error
+    def test_should_not_specify_type_to_tail_pattern_in_declaration
         assert_raises(X::SyntaxError) do
             Api.eval_decls @interp, <<-EOS
                 val [x|xs : List] = [3, 4]
@@ -180,10 +180,10 @@ class ListTest < Minitest::Test
     end
 
 
-    def test_lambda_empty_error_nil
+    def test_should_not_be_matched_list_to_empty_pattern_in_lambda
         assert_raises(X::TypeError) do
             Api.eval_expr @interp, <<-EOS
-                { [] -> 3 } 4
+                { [] -> 4 } [3]
             EOS
         end
     end
@@ -231,16 +231,7 @@ class ListTest < Minitest::Test
     end
 
 
-    def test_lambda_empty_error_cons
-        assert_raises(X::EmptyError) do
-            Api.eval_expr @interp, <<-EOS
-                { [x, y|xs] -> (x, y, xs) } [3]
-            EOS
-        end
-    end
-
-
-    def test_lambda_less_than_rhs
+    def test_should_not_be_matched_list_to_shorter_pattern_in_lambda
         assert_raises(X::TypeError) do
             Api.eval_expr @interp, <<-EOS
                 { [x] -> x } [3, 4]
@@ -249,10 +240,19 @@ class ListTest < Minitest::Test
     end
 
 
-    def test_lambda_more_than_rhs
+    def test_should_not_be_matched_list_to_longer_pattern_in_lambda_1
         assert_raises(X::EmptyError) do
             Api.eval_expr @interp, <<-EOS
                 { [x, y, z] -> x } [3, 4]
+            EOS
+        end
+    end
+
+
+    def test_should_not_be_matched_list_to_longer_pattern_in_lambda_2
+        assert_raises(X::EmptyError) do
+            Api.eval_expr @interp, <<-EOS
+                { [x, y|xs] -> (x, y, xs) } [3]
             EOS
         end
     end
@@ -272,7 +272,7 @@ class ListTest < Minitest::Test
     end
 
 
-    def test_lambda_type_error
+    def test_should_be_kind_of_specified_type_in_lambda
         assert_raises(X::TypeError) do
             Api.eval_expr @interp, <<-EOS
                 { [x : String|xs] -> (x, xs) } [3, 4]
@@ -281,7 +281,7 @@ class ListTest < Minitest::Test
     end
 
 
-    def test_lambda_syntax_error
+    def test_should_not_specify_type_to_tail_pattern_in_lambda
         assert_raises(X::SyntaxError) do
             Api.eval_expr @interp, <<-EOS
                 { [x|xs : List] -> (x, xs) } [3, 4]

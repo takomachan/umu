@@ -65,8 +65,7 @@ private
                 raise X::TypeError.new(
                     self.loc,
                     env,
-                    "Type error in case-expression, " +
-                        "expected a %s, but %s : %s",
+                    "Expected a %s, but %s : %s",
                     self.opt_type_sym,
                     lhs_value,
                     lhs_value.type_sym

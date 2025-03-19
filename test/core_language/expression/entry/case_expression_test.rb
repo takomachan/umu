@@ -30,7 +30,7 @@ class CaseExpressionTest < Minitest::Test
 <cond-rule> ::= <case-rule-head> "->" <expression> ;
 
 <case-rule-head> ::=
-    <case-rule-head-constant>
+    <case-rule-head-atom>
   | <case-rule-head-datum>
   | <case-rule-head-class>
   | <case-rule-head-poly>

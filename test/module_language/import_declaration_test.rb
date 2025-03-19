@@ -90,6 +90,17 @@ class ImportTest < Minitest::Test
     end
 
 
+    def test_identifier_value_should_be_a_struct_type
+        assert_raises(X::TypeError) do
+            Api.eval_decls @interp, <<-EOS
+                val M = 1
+
+                import M
+                EOS
+        end
+    end
+
+
     def test_single_field
         interp = Api.eval_decls @interp, <<-EOS
             structure M = struct { val x = 3 }

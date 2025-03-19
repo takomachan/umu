@@ -69,6 +69,47 @@ class ClassTest < Minitest::Test
         assert_instance_of  VCA::String, value
         assert_equal        "NONE",      value.val
     end
+
+
+    def test_should_be_consistent_rule_category
+        script = <<-EOS
+            case x of {
+              | &Int  -> @I
+              | Float -> @F
+            }
+            EOS
+
+        assert_raises(X::SyntaxError) do
+            Api.eval_expr(
+                @interp, script, x:VC.make_integer(1)
+            )
+        end
+    end
+
+
+    def test_should_not_be_duplicated_rule
+        script = <<-EOS
+            case x of {
+              | &Int  -> @I
+              | &Int  -> @F
+            }
+            EOS
+
+=begin
+        assert_raises(X::SyntaxError) do
+            Api.eval_expr(
+                @interp, script, x:VC.make_integer(1)
+            )
+        end
+=end
+
+        # [FIXME] Should validate rule duplication!!
+        assert (
+            Api.eval_expr(
+                @interp, script, x:VC.make_integer(1)
+            )
+        )
+    end
 end
 
 end # Umu::Test::Grammar::CoreLanguage::Expression::Entry::CaseExpression

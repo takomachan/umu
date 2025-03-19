@@ -34,10 +34,10 @@ class Abstract < Container::Abstract
             ASSERT.kind_of vpat,    ElementOfContainer::Variable
             ASSERT.kind_of hash,    ::Hash
 
-            hash.merge(vpat.var_sym => true) { |key, _, _|
+            hash.merge(vpat.var_sym => true) {
                 raise X::SyntaxError.new(
-                    loc,
-                    "Duplicated pattern variable: '%s'", key.to_s
+                    vpat.loc,
+                    "Duplicated pattern variable: '%s'", vpat.to_s
                 )
             }
         end

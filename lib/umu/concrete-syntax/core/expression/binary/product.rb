@@ -132,8 +132,6 @@ private
 
             new_env = env.enter event
             hash.merge(label.desugar(new_env) => expr.desugar(new_env)) {
-                |lab, _, _|
-
                 raise X::SyntaxError.new(
                     label.loc,
                     format("In modifier of named tuple, " +

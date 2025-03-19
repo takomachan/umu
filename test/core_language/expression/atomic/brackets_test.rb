@@ -45,7 +45,7 @@ end
 
 
 
-class ExpressionInExpressionTest < Minitest::Test
+class NestedExpressionTest < Minitest::Test
 =begin
 <expression-in-expression> ::= "(" <expression> ")"
 =end
@@ -55,7 +55,7 @@ class ExpressionInExpressionTest < Minitest::Test
     end
 
 
-    def test_expression_in_expression
+    def test_nested_expression
         value = Api.eval_expr @interp, "(3)"
         assert_instance_of  VCAN::Int, value
         assert_equal        3,         value.val
@@ -78,7 +78,7 @@ class PrefixedOperatorTest < Minitest::Test
     end
 
 
-    def test_prefixed_operator_expression
+    def test_prefixed_operator
         value = Api.eval_expr @interp, "(- 3)"
         assert_instance_of  VC::Fun, value
 
@@ -140,7 +140,7 @@ class NamedTupleTest < Minitest::Test
     end
 
 
-    def test_named_pair
+    def test_pair
         value = Api.eval_expr(
                     @interp,
                     "(key:@apple price:100)"
@@ -154,7 +154,7 @@ class NamedTupleTest < Minitest::Test
     end
 
 
-    def test_named_triple
+    def test_triple
         value = Api.eval_expr(
                     @interp,
                     '(key:@apple price:100 name:"APPLE")'
@@ -167,6 +167,16 @@ class NamedTupleTest < Minitest::Test
         assert_equal        100,         value.values[1].val
         assert_instance_of  VCA::String, value.values[2]
         assert_equal        "APPLE",     value.values[2].val
+    end
+
+
+    def test_should_not_be_duplicated_labels
+        assert_raises(X::SyntaxError) do
+            Api.eval_expr(
+                @interp,
+                "(key:@apple key:@banana)"
+            )
+        end
     end
 end
 
@@ -185,7 +195,7 @@ class FunctionalizedMessageTest < Minitest::Test
     end
 
 
-    def test_generic_functionalized_message
+    def test_generic
         value = Api.eval_expr @interp, "&(show)"
         assert_instance_of  VC::Fun, value
 
@@ -195,7 +205,7 @@ class FunctionalizedMessageTest < Minitest::Test
     end
 
 
-    def test_functionalized_message
+    def test_specific
         value = Api.eval_expr @interp, "&(Int.negate)"
         assert_instance_of  VC::Fun, value
 

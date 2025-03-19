@@ -133,12 +133,16 @@ private
             unless head.kind_of? Rule::Case::Class
                 raise X::SyntaxError.new(
                     rule.loc,
-                    format("Inconsistent rule types in case-expression, " +
-                            "1st is %s(#%d), but another is %s(#%d)",
+                    format("Inconsistent rule categories " +
+                                "in case-expression, " +
+                            "1st is %s : %s(#%d), " +
+                            "but another is %s : %s(#%d)",
+                        self.to_s,
                         self.type_sym.to_s,
-                        self.line_num,
+                        self.loc.line_num + 1,
+                        __escape_string_format__(head.to_s),
                         head.type_sym.to_s,
-                        head.line_num,
+                        head.loc.line_num + 1
                     )
                 )
             end

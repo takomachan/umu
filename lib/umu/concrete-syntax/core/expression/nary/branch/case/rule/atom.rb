@@ -47,7 +47,10 @@ class Atom < Abstract
     def desugar_for_rule(env, case_expr)
         ASSERT.kind_of case_expr, Branch::Case
 
-        fst_head_value  = self.atom_value
+        fst_head_value          = self.atom_value
+        fst_head_type_sym       = self.type_sym
+        fst_head_line_num       = self.loc.line_num
+        fst_head_value_type_sym = self.atom_value.type_sym
 
         leafs = case_expr.rules.inject({}) { |leafs, rule|
             ASSERT.kind_of leafs,   ::Hash
@@ -55,30 +58,41 @@ class Atom < Abstract
 
             head = rule.head
             ASSERT.kind_of head, Rule::Case::Abstract
+
+            head_type_sym       = head.type_sym
+            head_line_num       = head.loc.line_num
             unless head.kind_of? Rule::Case::Atom
                 raise X::SyntaxError.new(
                     rule.loc,
-                    format("Inconsistent rule types in case-expression, " +
-                            "1st is %s(#%d), but another is %s(#%d)",
-                        self.type_sym.to_s,
-                        self.line_num,
-                        head.type_sym.to_s,
-                        head.line_num
+                    format("Inconsistent rule categories " +
+                                "in case-expression, " +
+                            "1st is %s : %s(#%d), " +
+                            "but another is %s : %s(#%d)",
+                        __escape_string_format__(fst_head_value.to_s),
+                        fst_head_type_sym.to_s,
+                        fst_head_line_num + 1,
+                        __escape_string_format__(head.to_s),
+                        head_type_sym.to_s,
+                        head_line_num + 1
                     )
                 )
             end
 
-            head_value  = head.atom_value
+            head_value          = head.atom_value
+            head_value_type_sym = head.atom_value.type_sym
             ASSERT.kind_of head_value, VCA::Abstract
             unless head_value.class == fst_head_value.class
                 raise X::SyntaxError.new(
                     rule.loc,
                     format("Inconsistent rule types in case-expression, " +
-                            "1st is %s(%d), but another is %s(%d)",
-                        fst_head_value.line_num,
-                        fst_head_value.type_sym.to_s,
-                        head_value.type_sym.to_s,
-                        head_value.line_num
+                            "1st is %s : %s(#%d), " +
+                            "but another is %s : %s(#%d)",
+                        __escape_string_format__(fst_head_value.to_s),
+                        fst_head_value_type_sym.to_s,
+                        fst_head_line_num + 1,
+                        __escape_string_format__(head_value.to_s),
+                        head_value_type_sym.to_s,
+                        head_line_num + 1
                     )
                 )
             end
@@ -88,8 +102,9 @@ class Atom < Abstract
             leafs.merge(head_value.val => body_expr) { |val, _, _|
                 raise X::SyntaxError.new(
                     rule.loc,
-                    format("Duplicated rules in case-expression: @%s",
-                        val.to_s
+                    format("Duplicated rules in case-expression: %s : %s",
+                        head_value.to_s,
+                        head_value_type_sym.to_s
                     )
                 )
             }

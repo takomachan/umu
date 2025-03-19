@@ -26,8 +26,8 @@ class List < Abstract
 
         if opt_last_pat && opt_last_pat.opt_type_sym
             raise X::SyntaxError.new(
-                loc,
-                "Can not assert type to tail pattern: '%s'",
+                opt_last_pat.loc,
+                "In list patternm can not assert type to tail: '%s'",
                 opt_last_pat.to_s
             )
         end

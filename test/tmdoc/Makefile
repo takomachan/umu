@@ -6,9 +6,9 @@ FILES = \
     basic_test.rb \
     lexcical_test.rb \
     grammar_test.rb \
-    module_language/declaration/declaration_test.rb \
-    module_language/declaration/structure_test.rb \
-    module_language/declaration/import_test.rb \
+    module_language/module_language_test.rb \
+    module_language/structure_declaration_test.rb \
+    module_language/import_declaration_test.rb \
     core_language/declaration/declaration_test.rb \
     core_language/declaration/value_test.rb \
     core_language/declaration/function_test.rb \
@@ -18,7 +18,7 @@ FILES = \
     core_language/expression/entry/if_expression_test.rb \
     core_language/expression/entry/cond_expression_test.rb \
     core_language/expression/entry/case_expression_test.rb \
-    core_language/expression/entry/case_expression/constant_test.rb \
+    core_language/expression/entry/case_expression/atom_test.rb \
     core_language/expression/entry/case_expression/datum_test.rb \
     core_language/expression/entry/case_expression/class_test.rb \
     core_language/expression/entry/case_expression/poly_test.rb \

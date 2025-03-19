@@ -35,6 +35,13 @@ class Abstract < Umu::Abstraction::Model
     def type_sym
         raise X::InternalSubclassResponsibility
     end
+
+
+private
+
+    def __escape_string_format__(s)
+        s.gsub(/%/, '%%')
+    end
 end
 
 end # Umu::ConcreteSyntax::Core::Expression::Nary::Branch::Rule::Case

@@ -131,7 +131,7 @@ class NamedTupleTest < Minitest::Test
     end
 
 
-    def test_value_type_error
+    def test_should_be_kind_of_specified_type_in_declaration
         assert_raises(X::TypeError) do
                 Api.eval_decls @interp, <<-EOS
                     val (name:n : Unit price:p : Int) =
@@ -204,7 +204,7 @@ class NamedTupleTest < Minitest::Test
     end
 
 
-    def test_lambda_type_error
+    def test_should_be_kind_of_specified_type_in_lambda
         assert_raises(X::TypeError) do
             Api.eval_expr @interp, <<-EOS
                 { (x:x : String y:y : Int) -> x + y } (x:3 y:4)

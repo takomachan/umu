@@ -66,6 +66,13 @@ class IfExpressionTest < Minitest::Test
         assert_instance_of  VCAN::Int, value
         assert_equal        1,         value.val
     end
+
+
+    def test_test_value_should_be_a_bool_type
+        assert_raises(X::TypeError) do
+            Api.eval_expr @interp, "if 3 then 1 else 2"
+        end
+    end
 end
 
 end # Umu::Test::Grammar::CoreLanguage::Expression::Entry

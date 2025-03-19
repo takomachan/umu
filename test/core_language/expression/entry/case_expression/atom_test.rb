@@ -17,9 +17,9 @@ module Entry
 
 module CaseExpression
 
-class ConstantTest < Minitest::Test
+class AtomTest < Minitest::Test
 =begin
-<case-rule-head-constant> ::= INT | FLOAT | STRING | SYMBOL ;
+<case-rule-head-atom> ::= INT | FLOAT | STRING | SYMBOL ;
 =end
 
     def setup
@@ -112,6 +112,54 @@ class ConstantTest < Minitest::Test
         )
         assert_instance_of  VCA::Symbol, value
         assert_equal        :B,          value.val
+    end
+
+
+    def test_should_be_consistent_rule_category
+        script = <<-EOS
+            case x of {
+              | "Apple" -> @A
+              | Banana  -> @B
+            }
+            EOS
+
+        assert_raises(X::SyntaxError) do
+            Api.eval_expr(
+                @interp, script, x:VC.make_string("Apple")
+            )
+        end
+    end
+
+
+    def test_should_be_consistent_rule_type
+        script = <<-EOS
+            case x of {
+              | "Apple" -> @A
+              | @Banana -> @B
+            }
+            EOS
+
+        assert_raises(X::SyntaxError) do
+            Api.eval_expr(
+                @interp, script, x:VC.make_string("Apple")
+            )
+        end
+    end
+
+
+    def test_should_not_be_duplicated_rule
+        script = <<-EOS
+            case x of {
+              | "Apple" -> @A
+              | "Apple" -> @B
+            }
+            EOS
+
+        assert_raises(X::SyntaxError) do
+            Api.eval_expr(
+                @interp, script, x:VC.make_string("Apple")
+            )
+        end
     end
 end
 

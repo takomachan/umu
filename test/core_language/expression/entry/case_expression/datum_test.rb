@@ -27,7 +27,7 @@ class DatumTest < Minitest::Test
     end
 
 
-    def test_class
+    def test_datum
         script = <<-EOS
             case x of {
               | Apple  -> @A
@@ -68,6 +68,38 @@ class DatumTest < Minitest::Test
         )
         assert_instance_of  VCAN::Int, value
         assert_equal        500,       value.val
+    end
+
+
+    def test_should_be_consistent_rule_category
+        script = <<-EOS
+            case x of {
+              | Apple   -> @A
+              | @Banana -> @B
+            }
+            EOS
+
+        assert_raises(X::SyntaxError) do
+            Api.eval_expr(
+                @interp, script, x:VC.make_datum(:Apple, VC.make_unit)
+            )
+        end
+    end
+
+
+    def test_should_not_be_duplicated_rule
+        script = <<-EOS
+            case x of {
+              | Apple   -> @A
+              | Apple   -> @B
+            }
+            EOS
+
+        assert_raises(X::SyntaxError) do
+            Api.eval_expr(
+                @interp, script, x:VC.make_datum(:Apple, VC.make_unit)
+            )
+        end
     end
 end
 

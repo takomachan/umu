@@ -29,7 +29,7 @@ class UnitTest < Minitest::Test
     end
 
 
-    def test_value_type_error
+    def test_should_be_unit_in_declaration
         assert_raises(X::TypeError) do
             Api.eval_decls @interp, "val () = 3"
         end
@@ -43,7 +43,7 @@ class UnitTest < Minitest::Test
     end
 
 
-    def test_lambda_type_error
+    def test_should_be_unit_in_lambda
         assert_raises(X::TypeError) do
             Api.eval_expr @interp, "{ () -> 3 } 4"
         end

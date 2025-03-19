@@ -84,6 +84,13 @@ class ExpressionTest < Minitest::Test
         assert_equal        4,               tail_value.head.val
         assert_instance_of  VCM::List::Nil,  tail_value.tail
     end
+
+
+    def test_last_value_should_be_a_list_type
+        assert_raises(X::TypeError) do
+            Api.eval_expr @interp, "[3 | 4]"
+        end
+    end
 end
 
 
@@ -141,6 +148,55 @@ class IntervalTest < Minitest::Test
         expected_list.zip(list_value).each do |expected, actual_value|
             assert_instance_of  VCAN::Int,     actual_value
             assert_equal        expected,      actual_value.val
+        end
+    end
+
+
+    def test_1st_value_should_be_a_integer_type
+        assert_raises(X::TypeError) do
+            Api.eval_expr @interp, "[3.0 .. 10]"
+        end
+    end
+
+
+    def test_2nd_value_should_be_a_integer_type
+        assert_raises(X::TypeError) do
+            Api.eval_expr @interp, "[3, 4.0 .. 10]"
+        end
+    end
+
+
+    def test_last_value_should_be_a_integer_type
+        assert_raises(X::TypeError) do
+            Api.eval_expr @interp, "[3 .. 10.0]"
+        end
+    end
+
+
+    def test_2nd_value_should_be_between_1st_and_last_value_1
+        assert_raises(X::ValueError) do
+            Api.eval_expr @interp, "[3, 11 .. 10]"
+        end
+    end
+
+
+    def test_2nd_value_should_be_between_1st_and_last_value_2
+        assert_raises(X::ValueError) do
+            Api.eval_expr @interp, "[10, 11 .. 3]"
+        end
+    end
+
+
+    def test_2nd_value_should_be_not_equal_to_1st_value_1
+        assert_raises(X::ValueError) do
+            Api.eval_expr @interp, "[3, 3 .. 10]"
+        end
+    end
+
+
+    def test_2nd_value_should_be_not_equal_to_1st_value_2
+        assert_raises(X::ValueError) do
+            Api.eval_expr @interp, "&[3, 3 ..]"
         end
     end
 end

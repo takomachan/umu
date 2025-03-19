@@ -72,6 +72,17 @@ class BasicMessageTest < Minitest::Test
         assert_equal       9,             value.stop_value.val
         assert_equal       2,             value.step_value.val
     end
+
+
+    def test_message_parameters_should_follow_the_signature
+        assert_raises(X::TypeError) do
+            Api.eval_expr @interp, "1.(to @foo)"
+        end
+
+        assert_raises(X::TypeError) do
+            Api.eval_expr @interp, "1.(to-by @foo @bar)"
+        end
+    end
 end
 
 
@@ -99,6 +110,13 @@ class InfixMessageTest < Minitest::Test
         value = Api.eval_expr @interp, "3.(+ 4)"
         assert_instance_of VCAN::Int, value
         assert_equal       7,         value.val
+    end
+
+
+    def test_message_parameters_should_follow_the_signature
+        assert_raises(X::TypeError) do
+            Api.eval_expr @interp, "3.+ @foo"
+        end
     end
 end
 
@@ -128,6 +146,19 @@ class ApplyMessageTest < Minitest::Test
         assert_instance_of VCAN::Int, value
         assert_equal       7,         value.val
     end
+
+
+    def test_message_parameters_should_follow_the_signature
+        interp = Api.eval_decls @interp, "val xs = [3, 4, 5]"
+
+        assert_raises(X::TypeError) do
+            Api.eval_expr interp, "xs.[@foo]"
+        end
+
+        assert_raises(X::TypeError) do
+            Api.eval_expr interp, "(+).[@foo, @bar]"
+        end
+    end
 end
 
 
@@ -155,6 +186,17 @@ class KeywordMessageTest < Minitest::Test
         assert_equal       1,             value.current_value.val
         assert_equal       9,             value.stop_value.val
         assert_equal       2,             value.step_value.val
+    end
+
+
+    def test_message_parameters_should_follow_the_signature
+        assert_raises(X::TypeError) do
+            Api.eval_expr @interp, "1.(to:@foo)"
+        end
+
+        assert_raises(X::TypeError) do
+            Api.eval_expr @interp, "1.(to:@foo by:@bar)"
+        end
     end
 end
 

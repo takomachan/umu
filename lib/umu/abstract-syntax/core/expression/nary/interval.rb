@@ -135,8 +135,8 @@ private
                 if fst_value.val <= lst_value.val
                     if opt_snd_value
                         snd_value = opt_snd_value
-                        unless (fst_value.val <= snd_value.val &&
-                                snd_value.val <= lst_value.val)
+                        unless (fst_value.val < snd_value.val &&
+                                snd_value.val < lst_value.val)
                             raise X::ValueError.new(
                                 self.loc,
                                 env,
@@ -197,8 +197,14 @@ private
     end
 
 
+private
+
     def __make__(_fst_value, _lst_value, _step_value, _va_context)
         raise X::InternalSubclassResponsibility
+    end
+
+
+    def __validate_second_value__(loc, env, fst_value, snd_value)
     end
 end
 

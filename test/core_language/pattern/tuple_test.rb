@@ -100,7 +100,7 @@ class TupleTest < Minitest::Test
     end
 
 
-    def test_value_type_error
+    def test_should_be_kind_of_specified_type_in_declaration
         assert_raises(X::TypeError) do
             Api.eval_decls @interp, <<-EOS
                 val (name :Int, price) = (@Apple, 300)
@@ -136,7 +136,7 @@ class TupleTest < Minitest::Test
     end
 
 
-    def test_lambda_type_error
+    def test_should_be_kind_of_specified_type_in_lambda
         assert_raises(X::TypeError) do
             Api.eval_expr @interp, <<-EOS
                 { (x : String, y : Int) -> x + y } (3, 4)

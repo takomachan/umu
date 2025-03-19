@@ -37,10 +37,11 @@ module_function
 
         if tail_pat.opt_type_sym
             raise X::SyntaxError.new(
-                loc,
-                format("case: Can not specify type assertion for " +
+                tail_pat.loc,
+                format("In case-expression, " +
+                        "can not specify type assertion for " +
                                                 "tail pattern: '%s'",
-                    tail_pat
+                    tail_pat.to_s,
                 )
             )
         end

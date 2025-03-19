@@ -50,7 +50,7 @@ class Abstract < Case::Abstract
 
                 if case_expr.opt_else_expr
                     Rule::Case.make_poly_otherwise(
-                        case_expr.loc,
+                        case_expr.opt_else_expr.loc,
                         case_expr.opt_else_expr
                     )
                 else
@@ -96,12 +96,16 @@ private
             unless head.kind_of? Rule::Case::Polymorph::Abstract
                 raise X::SyntaxError.new(
                     rule.loc,
-                    format("case: Inconsistent rule types, " +
-                            "1st is %s(#%d), but another is %s(#%d)",
+                    format("Inconsistent rule categories " +
+                                "in case-expression, " +
+                            "1st is %s : %s(#%d), " +
+                            "but another is %s : %s(#%d)",
+                        __escape_string_format__(self.to_s),
                         self.type_sym.to_s,
-                        self.line_num,
+                        self.loc.line_num + 1,
+                        __escape_string_format__(head.to_s),
                         head.type_sym.to_s,
-                        head.line_num
+                        head.loc.line_num + 1
                     )
                 )
             end
@@ -111,8 +115,9 @@ private
                 if opt_nil_rule
                     raise X::SyntaxError.new(
                         rule.loc,
-                        format("case: Duplicated " +
-                                    "empty morph pattern: %s ",
+                        format("Duplicated empty morph patterns " +
+                                "in case-expression: %s : %s",
+                            __escape_string_format__(head.to_s),
                             head.type_sym.to_s
                         )
                     )
@@ -128,8 +133,9 @@ private
                 if opt_cons_rule
                     raise X::SyntaxError.new(
                         rule.loc,
-                        format("case: Duplicated " +
-                                    "not empty morph pattern: %s ",
+                        format("Duplicated not empty morph patterns " +
+                                "in case-expression: %s : %s",
+                            __escape_string_format__(head.to_s),
                             head.type_sym.to_s
                         )
                     )
@@ -175,7 +181,8 @@ private
 
                     if opt_otherwise_rule   # 1. (N,  C,  O)
                         raise X::SyntaxError.new(
-                            loc, "case: Never reached 'else' expression"
+                            opt_otherwise_rule.loc,
+                            "case: Never reached 'else' expression"
                         )
                     else                    # 2. (N,  C,  !O)
                         [nil_rule,       cons_rule,      true]

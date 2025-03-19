@@ -50,7 +50,7 @@ class BasicTest < Minitest::Test
     end
 
 
-    def test_value_with_type_error
+    def test_should_be_kind_of_specified_type_in_declaration
         assert_raises(X::TypeError) do
             Api.eval_decls @interp, "val x : String = 3"
         end
@@ -71,7 +71,7 @@ class BasicTest < Minitest::Test
     end
 
 
-    def test_lambda_with_type_error
+    def test_should_be_kind_of_specified_type_in_lambda
         assert_raises(X::TypeError) do
             Api.eval_expr @interp, "{ x : String -> x + 4 } 3"
         end
@@ -103,7 +103,7 @@ class WildcardTest < Minitest::Test
     end
 
 
-    def test_value_with_type_error
+    def test_should_be_kind_of_specified_type_in_declaration
         assert_raises(X::TypeError) do
             Api.eval_decls @interp, "val _ : String = 3"
         end
@@ -124,7 +124,7 @@ class WildcardTest < Minitest::Test
     end
 
 
-    def test_lambda_with_type_error
+    def test_should_be_kind_of_specified_type_in_lambda
         assert_raises(X::TypeError) do
             Api.eval_expr @interp, "{ _ : String -> 4 } 3"
         end

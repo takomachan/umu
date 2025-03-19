@@ -68,6 +68,16 @@ class RecursiveTest < Minitest::Test
         assert_instance_of VCA::Bool, value
         assert_equal       true,      value.val
     end
+
+
+    def test_should_not_be_duplicated_function_names
+        assert_raises(X::SyntaxError) do
+            Api.eval_decls @interp, <<-EOS
+                fun rec f = x -> f 3
+                and     f = x -> f 4
+                EOS
+        end
+    end
 end
 
 end # Umu::Test::Grammar::CoreLanguage::Declaration

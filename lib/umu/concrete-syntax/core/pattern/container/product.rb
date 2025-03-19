@@ -106,10 +106,10 @@ class Tuple < Abstract
             ASSERT.kind_of hash,    ::Hash
             ASSERT.kind_of vpat,    ElementOfContainer::Variable
 
-            hash.merge(vpat.var_sym => true) { |key, _, _|
+            hash.merge(vpat.var_sym => true) {
                 raise X::SyntaxError.new(
-                    loc,
-                    "Duplicated pattern variable: '%s'", key.to_s
+                    vpat.loc,
+                    "Duplicated pattern variable: '%s'", vpat.to_s
                 )
             }
         end
@@ -202,17 +202,17 @@ class Entry < Abstract
             ASSERT.kind_of vpat,   ElementOfContainer::Variable
 
             [
-                l_hash.merge(label => index) { |key, _, _|
+                l_hash.merge(label => index) {
                     raise X::SyntaxError.new(
-                        loc,
-                        "Duplicated pattern label: '%s'", key.to_s
+                        label.loc,
+                        "Duplicated pattern label: '%s'", label.to_s
                     )
                 },
 
-                v_hash.merge(vpat => true) { |key, _, _|
+                v_hash.merge(vpat => true) {
                     raise X::SyntaxError.new(
-                        loc,
-                        "Duplicated pattern variable: '%s'", key.to_s
+                        vpat.loc,
+                        "Duplicated pattern variable: '%s'", vpat.to_s
                     )
                 },
 

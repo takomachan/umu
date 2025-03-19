@@ -75,12 +75,16 @@ class Datum < Abstract
             unless head.kind_of? Rule::Case::Datum
                 raise X::SyntaxError.new(
                     rule.loc,
-                    format("Inconsistent rule types in case-expression, " +
-                            "1st is %s(#%d), but another is %s(#%d)",
+                    format("Inconsistent rule categories " +
+                                "in case-expression, " +
+                            "1st is %s : %s(#%d), " +
+                            "but another is %s : %s(#%d)",
+                        self.to_s,
                         self.type_sym.to_s,
-                        self.line_num,
+                        self.loc.line_num + 1,
+                        __escape_string_format__(head.to_s),
                         head.type_sym.to_s,
-                        head.line_num
+                        head.loc.line_num + 1
                     )
                 )
             end
@@ -121,11 +125,11 @@ class Datum < Abstract
                     case_expr.desugar_body_expr env, rule
                 end
 
-            leafs.merge(head.tag_sym => body_expr) { |sym, _, _|
+            leafs.merge(head.tag_sym => body_expr) {
                 raise X::SyntaxError.new(
                     rule.loc,
                     format("Duplicated rules in case-expression: %s",
-                        sym.to_s
+                        head.to_s
                     )
                 )
             }

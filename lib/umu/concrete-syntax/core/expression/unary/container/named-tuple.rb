@@ -72,7 +72,7 @@ class Entry < Abstract
             ASSERT.opt_kind_of opt_expr, CSCE::Abstract
 
             [
-                hash.merge(label => index) { |label, _, _|
+                hash.merge(label => index) {
                     raise X::SyntaxError.new(
                         label.loc,
                         format("Duplicated label in named tuple: '%s'",

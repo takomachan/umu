@@ -76,10 +76,14 @@ class IdentifierTest < Minitest::Test
     end
 
 
-    def test_long_identifier
-        value = Api.eval_expr @interp, "Umu::TRUE"
-        assert_instance_of  VCA::Bool, value
-        assert_equal        true,      value.val
+    def test_directory_value_should_be_a_struct_type
+        assert_raises(X::TypeError) do
+            Api.eval_expr @interp, "TRUE::FALSE"
+        end
+
+        assert_raises(X::TypeError) do
+            Api.eval_expr @interp, "Umu::TRUE::FALSE"
+        end
     end
 
 
