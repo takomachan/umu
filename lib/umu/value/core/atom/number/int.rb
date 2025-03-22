@@ -52,6 +52,13 @@ class Int < Abstract
 
 
     define_instance_method(
+        :meth_is_less_than,
+        :'<', [],
+        [self], VCA::Bool
+    )
+
+
+    define_instance_method(
         :meth_succ,
         :succ, [],
         [], self

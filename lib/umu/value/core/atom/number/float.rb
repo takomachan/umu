@@ -362,6 +362,13 @@ class Float < Abstract
 
 
     define_instance_method(
+        :meth_is_less_than,
+        :'<', [],
+        [self], VCA::Bool
+    )
+
+
+    define_instance_method(
         :meth_truncate,
         :truncate, [],
         [VCAN::Int], self
