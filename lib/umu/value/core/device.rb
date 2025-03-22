@@ -36,7 +36,7 @@ class Device < Top
         [], VC::IO::Output
     )
     def self.meth_make_stderr(_loc, _env, _event)
-        VC.make_output ::STDOUT
+        VC.make_output ::STDERR
     end
 
 

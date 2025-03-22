@@ -110,7 +110,16 @@ class Named < Abstract
         [], VCA::String
     )
     def meth_to_string(loc, env, event)
-        VC.make_string self.to_s
+        VC.make_string(
+            format("(%s)",
+                self.map { |label, value|
+                    format("%s:%s",
+                            label.to_s,
+                            value.meth_to_string(loc, env, event).val
+                    )
+                }.join(' ')
+            )
+        )
     end
 
 

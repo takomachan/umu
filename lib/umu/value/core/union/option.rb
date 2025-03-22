@@ -14,6 +14,11 @@ module Union
 module Option
 
 class Abstract < Union::Abstract
+    def self.base_type_sym
+        :Option
+    end
+
+
     def none?
         false
     end
@@ -42,12 +47,24 @@ class Abstract < Union::Abstract
     def meth_is_some(_loc, _env, event)
         VC.make_false
     end
+
+
+    define_instance_method(
+        :meth_is_less_than,
+        :'<', [],
+        [self], VCA::Bool
+    )
 end
 Abstract.freeze
 
 
 
 class None < Abstract
+    def self.order_num
+        __LINE__
+    end
+
+
     define_class_method(
         :meth_make,
         :make, [],
@@ -79,6 +96,11 @@ NONE = None.new.freeze
 
 
 class Some < Abstract
+    def self.order_num
+        __LINE__
+    end
+
+
     define_class_method(
         :meth_make,
         :make, [],

@@ -14,8 +14,12 @@ module Union
 module Result
 
 class Abstract < Union::Abstract
-    attr_reader :contents
+    def self.base_type_sym
+        :Option
+    end
 
+
+    attr_reader :contents
 
     def initialize(contents)
         ASSERT.kind_of contents, VC::Top
@@ -50,6 +54,11 @@ Abstract.freeze
 
 
 class Ok < Abstract
+    def self.order_num
+        __LINE__
+    end
+
+
     define_class_method(
         :meth_make,
         :make, [],
@@ -76,6 +85,11 @@ Ok.freeze
 
 
 class Err < Abstract
+    def self.order_num
+        __LINE__
+    end
+
+
     define_class_method(
         :meth_make,
         :make, [],

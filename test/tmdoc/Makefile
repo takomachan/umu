@@ -43,6 +43,20 @@ FILES = \
     core_language/pattern/named_tuple_test.rb \
     core_language/pattern/list_test.rb \
     core_language/pattern/poly_test.rb \
+    class_library/device_test.rb \
+    class_library/object_test.rb \
+    class_library/unit_test.rb \
+    class_library/atom/atom_test.rb \
+    class_library/atom/bool_test.rb \
+    class_library/atom/int_test.rb \
+    class_library/atom/float_test.rb \
+    class_library/atom/string_test.rb \
+    class_library/atom/symbol_test.rb \
+    class_library/product/tuple_test.rb \
+    class_library/product/named_tuple_test.rb \
+    class_library/union/datum_test.rb \
+    class_library/union/option_test.rb \
+    class_library/union/result_test.rb \
     test_helper.rb \
 
 TMDOCPROC		= tmdoc

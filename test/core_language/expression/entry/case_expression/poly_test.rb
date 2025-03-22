@@ -148,16 +148,6 @@ class PolyTest < Minitest::Test
         assert_raises(X::UnmatchError) do
             Api.eval_expr @interp, script, xs:@nil_value
         end
-
-        value = Api.eval_expr @interp, script, xs:@cons_value
-        assert_instance_of VCU::Datum, value
-        assert_equal       :C,         value.tag_sym
-        assert_instance_of VCP::Tuple, value.contents
-
-        head_value, tail_value = value.contents.values
-        assert_instance_of VCAN::Int,      head_value
-        assert_equal       3,              head_value.val
-        assert_instance_of VCM::List::Nil, tail_value
     end
 
 

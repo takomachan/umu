@@ -12,17 +12,13 @@ module Core
 module Union
 
 class Datum < Abstract
-    attr_reader :tag_sym, :contents
+    def self.base_type_sym
+        :Datum
+    end
 
 
-    def initialize(tag_sym, contents)
-        ASSERT.kind_of tag_sym,     ::Symbol
-        ASSERT.kind_of contents,    VC::Top
-
-        super()
-
-        @tag_sym    = tag_sym
-        @contents   = contents
+    def self.order_num
+        __LINE__
     end
 
 
@@ -36,6 +32,29 @@ class Datum < Abstract
         ASSERT.kind_of contents,    VC::Top
 
         VC.make_datum tag.val, contents
+    end
+
+
+    attr_reader :tag_sym, :contents
+
+    def initialize(tag_sym, contents)
+        ASSERT.kind_of tag_sym,     ::Symbol
+        ASSERT.kind_of contents,    VC::Top
+
+        super()
+
+        @tag_sym    = tag_sym
+        @contents   = contents
+    end
+
+
+    define_instance_method(
+        :meth_tag,
+        :tag, [],
+        [], VCA::Symbol
+    )
+    def meth_tag(_loc, _env, _event)
+        VC.make_symbol self.tag_sym
     end
 
 
@@ -74,24 +93,39 @@ class Datum < Abstract
         ASSERT.kind_of other, VC::Top
 
         VC.make_bool(
-            (
-                other.kind_of?(self.class) &&
-                self.tag_sym == other.tag_sym &&
-                self.contents.meth_is_equal(
-                    loc, env, event, other.contents
-                ).true?
-            )
+            super.true? && self.tag_sym == other.tag_sym
         )
     end
 
 
     define_instance_method(
-        :meth_tag,
-        :tag, [],
-        [], VCA::Symbol
+        :meth_is_less_than,
+        :'<', [],
+        [VCU::Datum], VCA::Bool
     )
-    def meth_tag(_loc, _env, _event)
-        VC.make_symbol self.tag_sym
+    def meth_is_less_than(loc, env, event, other)
+        ASSERT.kind_of other, VCU::Datum
+
+        unless other.contents.kind_of?(self.contents.class)
+            raise X::TypeError.new(
+                loc,
+                env,
+                "Expected a %s, but %s : %s",
+                    self.contents.type_sym,
+                    other.contents.to_s,
+                    other.contents.type_sym
+            )
+        end
+
+        VC.make_bool(
+            if self.tag_sym == other.tag_sym
+                self.contents.meth_is_less_than(
+                    loc, env, event, other.contents
+                ).true?
+            else
+                self.tag_sym < other.tag_sym
+            end
+        )
     end
 end
 Datum.freeze

@@ -25,6 +25,16 @@ class Unit < Object
 
         VC.make_bool other.kind_of?(Unit)
     end
+
+
+    define_instance_method(
+        :meth_is_less_than,
+        :'<', [],
+        [self], VCA::Bool
+    )
+    def meth_is_less_than(_loc, _env, _event, _other)
+        VC.make_false
+    end
 end
 
 UNIT = Unit.new.freeze
