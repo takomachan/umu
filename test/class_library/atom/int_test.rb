@@ -264,6 +264,23 @@ class IntTest < Minitest::Test
             Api.eval_expr @interp, "10.to-by 3 2"
         end
     end
+
+
+    # Type Error
+
+    def test_parameter_should_be_a_int
+        assert_raises(X::TypeError) do
+            Api.eval_expr @interp, "3. + ()"
+        end
+
+        assert_raises(X::TypeError) do
+            Api.eval_expr @interp, "3. + @Apple"
+        end
+
+        assert_raises(X::TypeError) do
+            Api.eval_expr @interp, "3. + 4.0"
+        end
+    end
 end
 
 end # Umu::Test::Library::Class::Atom::Number

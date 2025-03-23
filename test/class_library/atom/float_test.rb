@@ -261,6 +261,23 @@ class FloatTest < Minitest::Test
             Api.eval_expr @interp, "-10.0.random"
         end
     end
+
+
+    # Type Error
+
+    def test_parameter_should_be_a_int
+        assert_raises(X::TypeError) do
+            Api.eval_expr @interp, "3.0. + ()"
+        end
+
+        assert_raises(X::TypeError) do
+            Api.eval_expr @interp, "3.0. + @Apple"
+        end
+
+        assert_raises(X::TypeError) do
+            Api.eval_expr @interp, "3.0. + 4"
+        end
+    end
 end
 
 end # Umu::Test::Library::Class::Atom::Number

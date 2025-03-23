@@ -89,6 +89,48 @@ class Int < Abstract
 
 
     define_instance_method(
+        :meth_add,
+        :'+', [],
+        [self], self
+    )
+
+
+    define_instance_method(
+        :meth_sub,
+        :'-', [],
+        [self], self
+    )
+
+
+    define_instance_method(
+        :meth_multiply,
+        :'*', [],
+        [self], self
+    )
+
+
+    define_instance_method(
+        :meth_divide,
+        :'/', [],
+        [self], self
+    )
+
+
+    define_instance_method(
+        :meth_modulo,
+        :mod, [],
+        [self], self
+    )
+
+
+    define_instance_method(
+        :meth_power,
+        :pow, [],
+        [self], self
+    )
+
+
+    define_instance_method(
         :meth_to,
         :to, [:'to:'],
         [self], VCM::Interval
