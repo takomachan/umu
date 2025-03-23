@@ -168,6 +168,33 @@ class Info < Abstract
 =end
 
 
+    def format_info
+        (
+            if __keyword_method__?
+                [
+                    format("(%s)",
+                        __extract_keywords__.map { |lab, typ|
+                            format "%s:%s", lab, typ.type_sym.to_s
+                        }.join(' ')
+                    ),
+
+                    nil
+                ]
+            else
+                [
+                    self.mess_sym.to_s,
+
+                    self.param_classes.map { |typ|
+                        typ.type_sym.to_s
+                    }.join(' -> ')
+                ]
+            end
+        ) + [
+            self.ret_class.type_sym.to_s
+        ]
+    end
+
+
     def to_signat(env)
         ret_signat    = env.ty_signat_of_class self.ret_class_type
         param_signats = self.param_class_types.map { |klass|

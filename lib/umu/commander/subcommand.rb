@@ -168,16 +168,14 @@ module_function
             super_cmess_infos_of_sym.reverse_each do |class_sym, infos|
                 unless infos.empty?
                     printf("%s  INHERIT FROM: %s\n",
-                            indent_0, class_sym,to_s
+                            indent_0, class_sym.to_s
                     )
 
-                    infos.each do |info|
-                        printf("%s&%s.%s\n",
-                            indent_1,
-                            class_sym.to_s,
-                            info.to_s
-                        )
-                    end
+                    __print_class_message_list__(
+                        indent_1,
+                        class_sym.to_s,
+                        infos
+                    )
                 end
             end
         end
@@ -185,13 +183,11 @@ module_function
         if sub_cmess_infos && ! sub_cmess_infos.empty?
             printf "%sCLASS MESSAGES:\n", indent_0
 
-            sub_cmess_infos.each do |info|
-                printf("%s&%s.%s\n",
-                    indent_1,
-                    class_sym_of_sub_cmess.to_s,
-                    info.to_s
-                )
-            end
+            __print_class_message_list__(
+                indent_1,
+                class_sym_of_sub_cmess.to_s,
+                sub_cmess_infos
+            )
         end
 
         if super_imess_infos_of_sym.any? { |_sym, infos|
@@ -202,16 +198,14 @@ module_function
             super_imess_infos_of_sym.reverse_each do |class_sym, infos|
                 unless infos.empty?
                     printf("%s  INHERIT FROM: %s\n",
-                            indent_0, class_sym,to_s
+                            indent_0, class_sym.to_s
                     )
 
-                    infos.each do |info|
-                        printf("%s%s#%s\n",
-                            indent_1,
-                            class_sym.to_s,
-                            info.to_s
-                        )
-                    end
+                    __print_instance_message_list__(
+                        indent_1,
+                        class_sym.to_s,
+                        infos
+                    )
                 end
             end
         end
@@ -219,14 +213,100 @@ module_function
         if sub_imess_infos && ! sub_imess_infos.empty?
             printf "%sINSTANCE MESSAGES:\n", indent_0
 
-            sub_imess_infos.each do |info|
-                printf("%s%s#%s\n",
-                    indent_1,
-                    class_sym_of_sub_imess.to_s,
-                    info.to_s
-                )
-            end
+            __print_instance_message_list__(
+                indent_1,
+                class_sym_of_sub_imess.to_s,
+                sub_imess_infos
+            )
         end
+    end
+
+
+    def __print_class_message_list__(indent, class_name, infos)
+        __format_message_infos__(infos).each do |info|
+            printf("%s&%s .%s\n",
+                indent,
+                class_name,
+                info
+            )
+        end
+    end
+
+
+    def __print_instance_message_list__(indent, class_name, infos)
+        __format_message_infos__(infos).each do |info|
+            printf("%s%s #%s\n",
+                indent,
+                class_name,
+                info
+            )
+        end
+    end
+
+
+    def __format_message_infos__(infos_1)
+        max_mess_length = infos_1.map { |info|
+                mess_name, opt_param_list, _ret_name = info.format_info
+
+                opt_param_list ? mess_name.length : 0
+            }.max
+
+        infos_2 = infos_1.map { |info|
+            mess_name, opt_param_list, ret_name = info.format_info
+
+            [
+                if opt_param_list
+                    padding = " " * (max_mess_length - mess_name.length)
+
+                    format("%s%s :", mess_name, padding)
+                else
+                    mess_name
+                end
+            ] + [
+                opt_param_list,
+                ret_name
+            ]
+        }
+
+        max_body_length = infos_2.map {
+                |mess_name, opt_param_list, _ret_name|
+
+                (
+                    mess_name + (
+                        opt_param_list ?  opt_param_list : ''
+                    )
+                ).length
+            }.max
+
+        infos_2.map {
+            |mess_name, opt_param_list, ret_name|
+
+            if opt_param_list
+                padding = " " * (
+                            max_body_length - (
+                                mess_name + opt_param_list
+                            ).length
+                        )
+
+                if opt_param_list.length == 0
+                    format("%s %s",
+                        mess_name,
+                        ret_name
+                    )
+                else
+                    format("%s %s%s -> %s",
+                            mess_name,
+                            opt_param_list,
+                            padding,
+                            ret_name
+                    )
+                end
+            else
+                padding = " " * (max_body_length - mess_name.length)
+
+                format "%s%s  -> %s", mess_name, padding, ret_name
+            end
+        }
     end
 
 
