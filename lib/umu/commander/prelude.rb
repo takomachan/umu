@@ -73,75 +73,27 @@ structure Umu = struct {
 
 
 
-    #### Math ####
+    #### Float ####
 
-    structure Math = struct {
-        # NAN           : Float
+    structure Float = struct {
+        # NAN       : Float
         val NAN = &Float.nan
 
         # INFINITY      : Float
         val INFINITY = &Float.infinity
 
-        # PI            : Float
-        val PI = &Float.pi
-
-        # E             : Float
-        val E = &Float.e
-
-        # nan?          : Float -> Bool
+        # nan?      : Float -> Bool
         val nan? = &(Float.nan?)
 
-        # infinite?     : Float -> Bool
+        # infinite? : Float -> Bool
         val infinite? = &(Float.infinite?)
 
-        # equal?        : Float -> Float -> Int -> Bool
-        fun equal? = (x : Float) (y : Float) (n : Int) ->
-            x.truncate n.== (y.truncate n)
-
-        # finite?       : Float -> Bool
+        # finite?   : Float -> Bool
         val finite? = &(Float.finite?)
 
-        # sin           : Float -> Float
-        fun sin = x : Float -> &Float.sin x
-
-        # cos           : Float -> Float
-        fun cos = x : Float -> &Float.cos x
-
-        # tan           : Float -> Float
-        fun tan = x : Float -> &Float.tan x
-
-        # asin          : Float -> Float
-        fun asin = x : Float -> &Float.asin x
-
-        # acos          : Float -> Float
-        fun acos = x : Float -> &Float.acos x
-
-        # atan          : Float -> Float
-        fun atan = x : Float -> &Float.atan x
-
-        # atan2         : Float -> Float -> Float
-        fun atan2 = (y : Float, x : Float) -> &Float.(atan2-y:y x:)
-
-        # sinh          : Float -> Float
-        fun sinh = x : Float -> &Float.sinh x
-
-        # cosh          : Float -> Float
-        fun cosh = x : Float -> &Float.cosh x
-
-        # tanh          : Float -> Float
-        fun tanh = x : Float -> &Float.tanh x
-
-        # exp           : Float -> Float
-        fun exp = x : Float -> &Float.exp x
-
-        # log           : Float -> Float
-        fun log = x : Float -> &Float.log x
-
-        # log10         : Float -> Float
-        fun log10 = x : Float -> &Float.log10 x
-
-        # sqrt          : Float -> Float
-        fun sqrt = x : Float -> &Float.sqrt x
+        # equal?    : Float -> Float -> Int -> Bool
+        fun equal? = (x : Float) (y : Float) (n : Int) ->
+            x.truncate n.== (y.truncate n)
 
         # truncate      : Float -> Int -> Float
         fun truncate = (x : Float) (n : Int) -> x.truncate n
@@ -151,6 +103,60 @@ structure Umu = struct {
 
         # floor         : Float -> Int -> Float
         fun floor = (x : Float) (n : Int) -> x.floor n
+    }
+
+
+
+    #### Math ####
+
+    structure Math = struct {
+        # PI            : Float
+        val PI = &Math.pi
+
+        # E             : Float
+        val E = &Math.e
+
+        # sin           : Float -> Float
+        fun sin = x : Float -> &Math.sin x
+
+        # cos           : Float -> Float
+        fun cos = x : Float -> &Math.cos x
+
+        # tan           : Float -> Float
+        fun tan = x : Float -> &Math.tan x
+
+        # asin          : Float -> Float
+        fun asin = x : Float -> &Math.asin x
+
+        # acos          : Float -> Float
+        fun acos = x : Float -> &Math.acos x
+
+        # atan          : Float -> Float
+        fun atan = x : Float -> &Math.atan x
+
+        # atan2         : Float -> Float -> Float
+        fun atan2 = (y : Float, x : Float) -> &Math.(atan2-y:y x:)
+
+        # sinh          : Float -> Float
+        fun sinh = x : Float -> &Math.sinh x
+
+        # cosh          : Float -> Float
+        fun cosh = x : Float -> &Math.cosh x
+
+        # tanh          : Float -> Float
+        fun tanh = x : Float -> &Math.tanh x
+
+        # exp           : Float -> Float
+        fun exp = x : Float -> &Math.exp x
+
+        # log           : Float -> Float
+        fun log = x : Float -> &Math.log x
+
+        # log10         : Float -> Float
+        fun log10 = x : Float -> &Math.log10 x
+
+        # sqrt          : Float -> Float
+        fun sqrt = x : Float -> &Math.sqrt x
 
         # ldexp         : Float -> Int -> Float
         fun ldexp = (x : Float) (y : Int) -> x.ldexp y
@@ -726,22 +732,22 @@ structure Umu = struct {
         fun (pow) = (x : Number) (y : Number) -> x.pow y
 
 
-        #### Math ####
+        #### Float ####
 
         # NAN       : Float
-        val NAN = Math::NAN
+        val NAN = Float::NAN
 
         # INFINITY  : Float
-        val INFINITY = Math::INFINITY
+        val INFINITY = Float::INFINITY
 
         # nan?      : Float -> Bool
-        val nan? = Math::nan?
+        val nan? = Float::nan?
 
         # infinite? : Float -> Bool
-        val infinite? = Math::infinite?
+        val infinite? = Float::infinite?
 
         # finite?   : Float -> Bool
-        val finite? = Math::finite?
+        val finite? = Float::finite?
 
 
         #### String ####
@@ -1109,7 +1115,7 @@ structure Umu = struct {
                 (n      : Int)
         -> let {
             assert actual kind-of? Float         -> "Float"
-            assert Math::equal? actual expect n -> msg expect actual
+            assert Float::equal? actual expect n -> msg expect actual
         in
             actual
         }

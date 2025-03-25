@@ -37,22 +37,6 @@ class FloatTest < Minitest::Test
     end
 
 
-    def test_cmess_make_pi
-        value = Api.eval_expr @interp, "&Float.pi"
-        assert_instance_of  VCAN::Float, value
-        assert_equal        ::Math::PI.truncate(5),
-                            value.val.truncate(5)
-    end
-
-
-    def test_cmess_make_e
-        value = Api.eval_expr @interp, "&Float.e"
-        assert_instance_of  VCAN::Float, value
-        assert_equal        ::Math::E.truncate(5),
-                            value.val.truncate(5)
-    end
-
-
     # Classifier
 
     def test_imess_is_zero

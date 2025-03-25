@@ -158,6 +158,7 @@ FILES = [
     'value/core/top.rb',
     'value/core/class.rb',
     'value/core/device.rb',
+    'value/core/math.rb',
     'value/core/struct.rb',
     'value/core/opaque.rb',
     'value/core/object.rb',

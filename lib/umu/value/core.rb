@@ -1,6 +1,7 @@
 require_relative 'core/top'
 require_relative 'core/class'
 require_relative 'core/device'
+require_relative 'core/math'
 require_relative 'core/struct'
 require_relative 'core/opaque'
 require_relative 'core/object'
