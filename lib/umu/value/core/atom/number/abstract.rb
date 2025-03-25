@@ -33,16 +33,6 @@ class Abstract < Atom::Abstract
 
 
     define_instance_method(
-        :meth_zero,
-        :zero, [],
-        [], self
-    )
-    def meth_zero(_loc, _env, _event)
-        raise X::InternalSubclassResponsibility
-    end
-
-
-    define_instance_method(
         :meth_is_zero,
         :zero?, [],
         [], VCA::Bool
