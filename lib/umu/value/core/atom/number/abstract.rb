@@ -122,26 +122,6 @@ class Abstract < Atom::Abstract
     end
 
 
-    define_instance_method(
-        :meth_succ,
-        :succ, [],
-        [], VCAN::Abstract
-    )
-    def meth_succ(_loc, _env, _event)
-        raise X::InternalSubclassResponsibility
-    end
-
-
-    define_instance_method(
-        :meth_pred,
-        :pred, [],
-        [], VCAN::Abstract
-    )
-    def meth_pred(_loc, _env, _event)
-        raise X::InternalSubclassResponsibility
-    end
-
-
     def +(other)
         ASSERT.kind_of other, Number::Abstract
 

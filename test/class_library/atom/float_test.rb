@@ -186,20 +186,6 @@ class FloatTest < Minitest::Test
     end
 
 
-    def test_imess_succ
-        value = Api.eval_expr @interp, "3.0.succ"
-        assert_instance_of VCAN::Float, value
-        assert_equal       4.0,         value.val
-    end
-
-
-    def test_imess_pred
-        value = Api.eval_expr @interp, "3.0.pred"
-        assert_instance_of VCAN::Float, value
-        assert_equal       2.0,         value.val
-    end
-
-
     def test_imess_add
         value = Api.eval_expr @interp, "3.0.+ 4.0"
         assert_instance_of VCAN::Float, value
