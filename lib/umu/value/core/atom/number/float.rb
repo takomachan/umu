@@ -65,58 +65,6 @@ class Float < Abstract
 
 
     define_instance_method(
-        :meth_to_float,
-        :'to-f', [],
-        [], VCAN::Float
-    )
-    def meth_to_float(_loc, _env, _event)
-        self
-    end
-
-
-    define_instance_method(
-        :meth_add,
-        :'+', [],
-        [self], self
-    )
-
-
-    define_instance_method(
-        :meth_sub,
-        :'-', [],
-        [self], self
-    )
-
-
-    define_instance_method(
-        :meth_multiply,
-        :'*', [],
-        [self], self
-    )
-
-
-    define_instance_method(
-        :meth_divide,
-        :'/', [],
-        [self], self
-    )
-
-
-    define_instance_method(
-        :meth_modulo,
-        :mod, [],
-        [self], self
-    )
-
-
-    define_instance_method(
-        :meth_power,
-        :pow, [],
-        [self], self
-    )
-
-
-    define_instance_method(
         :meth_is_nan,
         :nan?, [],
         [], VCA::Bool
@@ -151,6 +99,46 @@ class Float < Abstract
         :'<', [],
         [self], VCA::Bool
     )
+
+
+    define_instance_method(
+        :meth_is_greater_than,
+        :'>', [],
+        [self], VCA::Bool
+    )
+
+
+    define_instance_method(
+        :meth_is_less_equal,
+        :'<=', [],
+        [self], VCA::Bool
+    )
+
+
+    define_instance_method(
+        :meth_is_greater_equal,
+        :'>=', [],
+        [self], VCA::Bool
+    )
+
+
+    define_instance_method(
+        :meth_compare,
+        :'<=>', [],
+        [self], VCAN::Int
+    )
+
+
+
+
+    define_instance_method(
+        :meth_to_float,
+        :'to-f', [],
+        [], VCAN::Float
+    )
+    def meth_to_float(_loc, _env, _event)
+        self
+    end
 
 
     define_instance_method(
@@ -214,6 +202,48 @@ class Float < Abstract
 
         VC.make_float self.val.floor(ndigits.val).to_f
     end
+
+
+    define_instance_method(
+        :meth_add,
+        :'+', [],
+        [self], self
+    )
+
+
+    define_instance_method(
+        :meth_sub,
+        :'-', [],
+        [self], self
+    )
+
+
+    define_instance_method(
+        :meth_multiply,
+        :'*', [],
+        [self], self
+    )
+
+
+    define_instance_method(
+        :meth_divide,
+        :'/', [],
+        [self], self
+    )
+
+
+    define_instance_method(
+        :meth_modulo,
+        :mod, [],
+        [self], self
+    )
+
+
+    define_instance_method(
+        :meth_power,
+        :pow, [],
+        [self], self
+    )
 end
 Float.freeze
 

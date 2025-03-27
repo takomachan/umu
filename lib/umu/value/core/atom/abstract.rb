@@ -39,6 +39,13 @@ class Abstract < Object
 
 
     define_instance_method(
+        :meth_is_not_equal,
+        :'<>', [],
+        [VC::Top], VCA::Bool
+    )
+
+
+    define_instance_method(
         :meth_is_less_than,
         :'<', [],
         [self], VCA::Bool

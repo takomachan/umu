@@ -235,17 +235,44 @@ class FloatTest < Minitest::Test
 
     # Type Error
 
-    def test_parameter_should_be_a_int
+    def test_parameter_of_computer_should_be_a_float
         assert_raises(X::TypeError) do
-            Api.eval_expr @interp, "3.0. + ()"
+            Api.eval_expr @interp, "3.0.+ ()"
         end
 
         assert_raises(X::TypeError) do
-            Api.eval_expr @interp, "3.0. + @Apple"
+            Api.eval_expr @interp, "3.0.+ @Apple"
         end
 
         assert_raises(X::TypeError) do
-            Api.eval_expr @interp, "3.0. + 4"
+            Api.eval_expr @interp, "3.0.+ 4"
+        end
+    end
+
+
+    def test_parameter_of_relation_operator_should_be_a_float
+        assert_raises(X::TypeError) do
+            Api.eval_expr @interp, "3.0.< ()"
+        end
+
+        assert_raises(X::TypeError) do
+            Api.eval_expr @interp, "3.0.< @Apple"
+        end
+
+        assert_raises(X::TypeError) do
+            Api.eval_expr @interp, "3.0.< 4"
+        end
+
+        assert_raises(X::TypeError) do
+            Api.eval_expr @interp, "3.0.<= ()"
+        end
+
+        assert_raises(X::TypeError) do
+            Api.eval_expr @interp, "3.0.<= @Apple"
+        end
+
+        assert_raises(X::TypeError) do
+            Api.eval_expr @interp, "3.0.<= 4"
         end
     end
 end

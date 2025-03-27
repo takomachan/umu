@@ -637,27 +637,22 @@ structure Umu = struct {
         fun (==) = x y -> x.== y
 
         # (<>)      : 'a -> 'b -> Bool
-        fun (<>) = x y -> x.== y.not
+        fun (<>) = x y -> x.<> y
 
         # (<)       : 'a -> 'a -> Bool
         fun (<) = x y -> x.< y
 
         # (>)       : 'a -> 'a -> Bool
-        fun (>) = x y -> y.< x
+        fun (>) = x y -> x.> y
 
         # (<=)      : 'a -> 'a -> Bool
-        fun (<=) = x y -> y.< x.not
+        fun (<=) = x y -> x.<= y
 
         # (>=)      : 'a -> 'a -> Bool
-        fun (>=) = x y -> x.< y.not
+        fun (>=) = x y -> x.>= y
 
         # (<=>)     : 'a -> 'a -> Int
-        fun (<=>) = x y -> if x.< y then
-                                -1
-                            elsif x.== y then
-                                0
-                            else
-                                1
+        fun (<=>) = x y -> x.<=> y
 
         # force     : 'a -> 'a
         val force = &(force)

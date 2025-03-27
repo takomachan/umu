@@ -56,6 +56,25 @@ class StringTest < Minitest::Test
         assert_instance_of VCA::String,     value
         assert_equal       'AppleBanana',   value.val
     end
+
+
+    def test_parameter_of_relation_operator_should_be_a_string
+        assert_raises(X::TypeError) do
+            Api.eval_expr @interp, '"Apple".< ()'
+        end
+
+        assert_raises(X::TypeError) do
+            Api.eval_expr @interp, '"Apple".< 3'
+        end
+
+        assert_raises(X::TypeError) do
+            Api.eval_expr @interp, '"Apple".<= ()'
+        end
+
+        assert_raises(X::TypeError) do
+            Api.eval_expr @interp, '"Apple".<= 4'
+        end
+    end
 end
 
 end # Umu::Test::Library::Class::Atom

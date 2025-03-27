@@ -42,13 +42,31 @@ class String < Abstract
 
 
     define_instance_method(
-        :meth_panic,
-        :panic!, [],
-        [], VC::Unit
+        :meth_is_greater_than,
+        :'>', [],
+        [self], VCA::Bool
     )
-    def meth_panic(loc, env, _event)
-        raise X::Panic.new(loc, env, self.to_s)
-    end
+
+
+    define_instance_method(
+        :meth_is_less_equal,
+        :'<=', [],
+        [self], VCA::Bool
+    )
+
+
+    define_instance_method(
+        :meth_is_greater_equal,
+        :'>=', [],
+        [self], VCA::Bool
+    )
+
+
+    define_instance_method(
+        :meth_compare,
+        :'<=>', [],
+        [self], VCAN::Int
+    )
 
 
     define_instance_method(
@@ -60,6 +78,16 @@ class String < Abstract
         ASSERT.kind_of other, String
 
         VC.make_string self.val + other.val
+    end
+
+
+    define_instance_method(
+        :meth_panic,
+        :panic!, [],
+        [], VC::Unit
+    )
+    def meth_panic(loc, env, _event)
+        raise X::Panic.new(loc, env, self.to_s)
     end
 end
 String.freeze

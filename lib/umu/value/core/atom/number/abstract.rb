@@ -63,26 +63,6 @@ class Abstract < Atom::Abstract
 
 
     define_instance_method(
-        :meth_negate,
-        :negate, [],
-        [], self
-    )
-    def meth_negate(_loc, _env, _event)
-        VC.make_number self.class, - self.val
-    end
-
-
-    define_instance_method(
-        :meth_absolute,
-        :abs, [],
-        [], self
-    )
-    def meth_absolute(_loc, _env, _event)
-        VC.make_number self.class, self.val.abs
-    end
-
-
-    define_instance_method(
         :meth_to_int,
         :'to-i', [],
         [], VCAN::Int
@@ -109,6 +89,26 @@ class Abstract < Atom::Abstract
     )
     def meth_to_float(_loc, _env, _event)
         VC.make_float self.val.to_f
+    end
+
+
+    define_instance_method(
+        :meth_negate,
+        :negate, [],
+        [], self
+    )
+    def meth_negate(_loc, _env, _event)
+        VC.make_number self.class, - self.val
+    end
+
+
+    define_instance_method(
+        :meth_absolute,
+        :abs, [],
+        [], self
+    )
+    def meth_absolute(_loc, _env, _event)
+        VC.make_number self.class, self.val.abs
     end
 
 

@@ -59,6 +59,44 @@ class Int < Abstract
 
 
     define_instance_method(
+        :meth_is_greater_than,
+        :'>', [],
+        [self], VCA::Bool
+    )
+
+
+    define_instance_method(
+        :meth_is_less_equal,
+        :'<=', [],
+        [self], VCA::Bool
+    )
+
+
+    define_instance_method(
+        :meth_is_greater_equal,
+        :'>=', [],
+        [self], VCA::Bool
+    )
+
+
+    define_instance_method(
+        :meth_compare,
+        :'<=>', [],
+        [self], VCAN::Int
+    )
+
+
+    define_instance_method(
+        :meth_to_int,
+        :'to-i', [],
+        [], VCAN::Int
+    )
+    def meth_to_int(_loc, _env, _event)
+        self
+    end
+
+
+    define_instance_method(
         :meth_succ,
         :succ, [],
         [], self
@@ -75,16 +113,6 @@ class Int < Abstract
     )
     def meth_pred(_loc, _env, _event)
         VC.make_integer(self.val.pred)
-    end
-
-
-    define_instance_method(
-        :meth_to_int,
-        :'to-i', [],
-        [], VCAN::Int
-    )
-    def meth_to_int(_loc, _env, _event)
-        self
     end
 
 

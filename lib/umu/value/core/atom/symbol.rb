@@ -34,6 +34,34 @@ class Symbol < Abstract
         :'<', [],
         [self], VCA::Bool
     )
+
+
+    define_instance_method(
+        :meth_is_greater_than,
+        :'>', [],
+        [self], VCA::Bool
+    )
+
+
+    define_instance_method(
+        :meth_is_less_equal,
+        :'<=', [],
+        [self], VCA::Bool
+    )
+
+
+    define_instance_method(
+        :meth_is_greater_equal,
+        :'>=', [],
+        [self], VCA::Bool
+    )
+
+
+    define_instance_method(
+        :meth_compare,
+        :'<=>', [],
+        [self], VCAN::Int
+    )
 end
 Symbol.freeze
 

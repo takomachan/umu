@@ -30,6 +30,17 @@ class AtomTest < Minitest::Test
     end
 
 
+    def test_imess_not_equal
+        value = Api.eval_expr @interp, "3.<> 3"
+        assert_instance_of VCA::Bool,   value
+        assert_equal       false,       value.val
+
+        value = Api.eval_expr @interp, "3.<> 4"
+        assert_instance_of VCA::Bool,   value
+        assert_equal       true,        value.val
+    end
+
+
     def test_imess_less_than
         value = Api.eval_expr @interp, "3.< 3"
         assert_instance_of VCA::Bool,   value
@@ -38,6 +49,70 @@ class AtomTest < Minitest::Test
         value = Api.eval_expr @interp, "3.< 4"
         assert_instance_of VCA::Bool,   value
         assert_equal       true,        value.val
+
+        value = Api.eval_expr @interp, "4.< 3"
+        assert_instance_of VCA::Bool,   value
+        assert_equal       false,       value.val
+    end
+
+
+    def test_imess_less_equal
+        value = Api.eval_expr @interp, "3.<= 3"
+        assert_instance_of VCA::Bool,   value
+        assert_equal       true,        value.val
+
+        value = Api.eval_expr @interp, "3.<= 4"
+        assert_instance_of VCA::Bool,   value
+        assert_equal       true,        value.val
+
+        value = Api.eval_expr @interp, "4.<= 3"
+        assert_instance_of VCA::Bool,   value
+        assert_equal       false,       value.val
+    end
+
+
+    def test_imess_greater_than
+        value = Api.eval_expr @interp, "3.> 3"
+        assert_instance_of VCA::Bool,   value
+        assert_equal       false,       value.val
+
+        value = Api.eval_expr @interp, "3.> 4"
+        assert_instance_of VCA::Bool,   value
+        assert_equal       false,       value.val
+
+        value = Api.eval_expr @interp, "4.> 3"
+        assert_instance_of VCA::Bool,   value
+        assert_equal       true,        value.val
+    end
+
+
+    def test_imess_greater_equal
+        value = Api.eval_expr @interp, "3.>= 3"
+        assert_instance_of VCA::Bool,   value
+        assert_equal       true,        value.val
+
+        value = Api.eval_expr @interp, "3.>= 4"
+        assert_instance_of VCA::Bool,   value
+        assert_equal       false,       value.val
+
+        value = Api.eval_expr @interp, "4.>= 3"
+        assert_instance_of VCA::Bool,   value
+        assert_equal       true,        value.val
+    end
+
+
+    def test_imess_compare
+        value = Api.eval_expr @interp, "3.<=> 3"
+        assert_instance_of VCAN::Int,   value
+        assert_equal       0,           value.val
+
+        value = Api.eval_expr @interp, "3.<=> 4"
+        assert_instance_of VCAN::Int,   value
+        assert_equal       (-1),        value.val
+
+        value = Api.eval_expr @interp, "4.<=> 3"
+        assert_instance_of VCAN::Int,   value
+        assert_equal       1,           value.val
     end
 end
 
